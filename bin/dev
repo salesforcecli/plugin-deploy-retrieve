@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.env.NODE_ENV = 'development';
+
 const g = global.oclif = global.oclif || {};
 
 // In dev mode, always show stack traces
