@@ -2,12 +2,6 @@
 
 [![NPM](https://img.shields.io/npm/v/@salesforce/plugin-project.svg?label=@salesforce/plugin-project)](https://www.npmjs.com/package/@salesforce/plugin-project) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-project/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-project/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-project.svg)](https://npmjs.org/package/@salesforce/plugin-project) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-project/main/LICENSE.txt)
 
-## Learn about the plugin-project
-
-This plugin is bundled with the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli). For more information on the CLI, read the [getting started guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm).
-
-We always recommend using the latest version of these commands bundled with the CLI, however, you can install a specific version or tag if needed.
-
 ## Install
 
 ```bash
