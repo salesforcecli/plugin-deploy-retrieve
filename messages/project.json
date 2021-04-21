@@ -1,0 +1,6 @@
+{
+  "deploy": {
+    "commandDescription": "deploy a Salesforce project\nDeploy a project, including org metadata and functions. Be default, the deploy analyze your project and assume sensible defaults when possible, otherwise it will prompt. To always prompt and not assume defaults, use \"--interctive\".\nTo run specialized deploys, especially when interactivity isn't an option like continuous deployment, used the scoped deploy commands like \"sf project deploy org\" or \"sf project deploy functions\"",
+    "examples": ["<%= config.bin %> <%= command.id %>", "<%= config.bin %> <%= command.id %> --remote"]
+  }
+}
