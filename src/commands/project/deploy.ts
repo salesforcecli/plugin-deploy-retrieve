@@ -7,12 +7,13 @@
 
 import * as os from 'os';
 import { Command, Flags } from '@oclif/core';
-import { AnyJson } from '@salesforce/ts-types';
 import { Messages } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
 
 const messages = Messages.loadMessages('@salesforce/plugin-project', 'project');
+
+export type DeployResult = Record<string, unknown>;
 
 export default class ProjectDeploy extends Command {
   public static description = messages.getMessage('deploy.commandDescription');
@@ -32,7 +33,7 @@ export default class ProjectDeploy extends Command {
     }),
   };
 
-  public async run(): Promise<AnyJson> {
+  public async run(): Promise<DeployResult> {
     const { flags } = await this.parse(ProjectDeploy);
     this.log(JSON.stringify(flags));
     return {};
