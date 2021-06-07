@@ -59,6 +59,7 @@ sf plugins
 ## Commands
 
 <!-- commands -->
+* [`sf project:deploy`](#sf-projectdeploy)
 
 ## `sf project:deploy`
 
@@ -74,10 +75,10 @@ OPTIONS
   --target-env=target-env  TBD
 
 DESCRIPTION
-  Deploy a project, including org metadata and functions. Be default, the deploy analyze your project and assume
-  sensible defaults when possible, otherwise it will prompt. To always prompt and not assume defaults, use
+  Deploy a project, including org metadata and functions. Be default, the deploy analyze your project and assume 
+  sensible defaults when possible, otherwise it will prompt. To always prompt and not assume defaults, use 
   "--interctive".
-  To run specialized deploys, especially when interactivity isn't an option like continuous deployment, used the scoped
+  To run specialized deploys, especially when interactivity isn't an option like continuous deployment, used the scoped 
   deploy commands like "sf project deploy org" or "sf project deploy functions"
 
 EXAMPLES
@@ -86,5 +87,4 @@ EXAMPLES
 ```
 
 _See code: [src/commands/project/deploy.ts](https://github.com/salesforcecli/plugin-project/blob/v0.0.1/src/commands/project/deploy.ts)_
-
 <!-- commandsstop -->
