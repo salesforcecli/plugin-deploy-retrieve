@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-project",
   "description": "project commands for sf",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {

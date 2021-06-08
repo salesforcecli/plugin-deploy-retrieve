@@ -86,5 +86,5 @@ EXAMPLES
   sf project:deploy --remote
 ```
 
-_See code: [src/commands/project/deploy.ts](https://github.com/salesforcecli/plugin-project/blob/v0.0.1/src/commands/project/deploy.ts)_
+_See code: [src/commands/project/deploy.ts](https://github.com/salesforcecli/plugin-project/blob/v0.0.2/src/commands/project/deploy.ts)_
 <!-- commandsstop -->
