@@ -29,7 +29,7 @@ parameters:
     default: ''
     type: string
   repo_tag:
-    description: "The tag of the module repo to checkout, '' defaults to branch/PR"
+    description: 'The tag of the module repo to checkout, '''' defaults to branch/PR'
     default: ''
     type: string
 workflows:
@@ -61,6 +61,14 @@ workflows:
           sfdx_version: latest
           requires:
             - release-management/test-package
+        release-management/release-package:
+          sign: true
+          github-release: true
+          requires:
+            - release-management/test-package
+          filters:
+            branches:
+              only: main
       - release-management/test-nut:
           name: nuts-on-windows
           sfdx_version: latest
@@ -99,3 +107,13 @@ workflows:
               os:
                 - linux
                 - windows
+  dependabot-automerge:
+    triggers:
+      - schedule:
+          cron: '0 2,5,8,11 * * *'
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - release-management/dependabot-automerge
