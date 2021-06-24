@@ -1,7 +1,9 @@
 [
-  {
-    "command": "project:deploy",
-    "plugin": "@salesforce/plugin-project",
-    "flags": ["directory", "interactive", "target-env"]
-  }
+    {
+        "command": "project:deploy",
+        "plugin": "@salesforce/plugin-project",
+        "flags": [
+            "interactive"
+        ]
+    }
 ]
