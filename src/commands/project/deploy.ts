@@ -10,7 +10,7 @@ import { Command, Flags } from '@oclif/core';
 import { Aliases, Config, ConfigAggregator, Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
 import { ensureString } from '@salesforce/ts-types';
-import { Deployer, generateTableChoices } from '@salesforce/plugin-project-utils';
+import { Deployable, Deployer, generateTableChoices } from '@salesforce/plugin-project-utils';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -32,20 +32,17 @@ export default class ProjectDeploy extends Command {
   };
 
   public async run(): Promise<DeployResult> {
-    const maxEventListeners = new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 0;
-    process.setMaxListeners(maxEventListeners || 1000);
+    const maxEventListeners = new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000;
+    process.setMaxListeners(maxEventListeners);
     const { flags } = await this.parse(ProjectDeploy);
 
     this.log('Analyzing project');
 
     const username = await this.promptForUsername();
 
-    let deployers: Set<Deployer> = new Set();
-    await this.config.runHook('project:findDeployers', { deployers, username });
-
-    deployers = await this.promptUserToChoseDeployers(deployers);
-
-    await this.config.runHook('project:mergeDeployers', { deployers, username });
+    let deployers = (await this.config.runHook('project:findDeployers', { username })) as Deployer[];
+    deployers = deployers.reduce((x, y) => x.concat(y), [] as Deployer[]);
+    deployers = await this.selectDeployers(deployers);
 
     for (const deployer of deployers) {
       await deployer.setup(flags);
@@ -71,27 +68,41 @@ export default class ProjectDeploy extends Command {
     }
   }
 
-  public async promptUserToChoseDeployers(deployers: Set<Deployer>): Promise<Set<Deployer>> {
-    const columns = {
-      name: 'APP OR PACKAGE',
-      type: 'TYPE',
-      path: 'PATH',
-    };
-    const options = Array.from(deployers).map((deployer) => ({
-      name: deployer.getAppName(),
-      type: deployer.getAppType(),
-      path: deployer.getAppPath(),
-      value: deployer,
+  public async selectDeployers(deployers: Deployer[]): Promise<Deployer[]> {
+    const deployables = deployers.reduce((x, y) => x.concat(y.deployables), [] as Deployable[]);
+    const columns = { name: 'APP OR PACKAGE', type: 'TYPE', path: 'PATH' };
+    const options = deployables.map((deployable) => ({
+      name: deployable.getAppName(),
+      type: deployable.getAppType(),
+      path: deployable.getAppPath(),
+      value: deployable,
     }));
     const responses = await prompt<Answers>([
       {
-        name: 'chooseApps',
+        name: 'deployables',
         message: 'Select apps and packages to deploy:',
         type: 'checkbox',
-        choices: generateTableChoices<Deployer>(columns, options),
+        choices: generateTableChoices<Deployable>(columns, options),
       },
     ]);
 
-    return new Set(responses.chooseApps as Deployer[]);
+    const chosenDeployables = responses.deployables as Deployable[];
+    const chosenDeployers: Map<Deployer, Deployable[]> = new Map();
+    for (const deployable of chosenDeployables) {
+      const parent = deployable.getParent();
+      if (chosenDeployers.has(parent)) {
+        const existing = chosenDeployers.get(parent) || [];
+        chosenDeployers.set(parent, [...existing, deployable]);
+      } else {
+        chosenDeployers.set(parent, [deployable]);
+      }
+    }
+
+    const final: Deployer[] = [];
+    for (const [parent, children] of chosenDeployers.entries()) {
+      parent.selectDeployables(children);
+      final.push(parent);
+    }
+    return final;
   }
 }
