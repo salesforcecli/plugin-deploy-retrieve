@@ -431,10 +431,10 @@
     is-wsl "^2.1.1"
     tslib "^2.0.0"
 
-"@oclif/core@^0.5.15":
-  version "0.5.15"
-  resolved "https://registry.npmjs.org/@oclif/core/-/core-0.5.15.tgz#4045f441f2dfe7becdcb1a56051b86ea1cc1aada"
-  integrity sha512-AIR6spDs/dFJm3QfYlPTiDtzaeDrZZgrsP8Ky+nNd3XE4MyxoBI6/A0NZtemTUAStbcx1aohKclfwllYxbPBxw==
+"@oclif/core@^0.5.16":
+  version "0.5.16"
+  resolved "https://registry.npmjs.org/@oclif/core/-/core-0.5.16.tgz#bc859aa74a150c4f0b1bc6307ce99cef902ebbad"
+  integrity sha512-AXiWXkiHbgg26h/I5yVk4VN3dv9cuKp4GSpc8B323WEz4E6R3a7UMCvpPvN1V4LL4rHcsvgmTlkHZQZ7P3LkwQ==
   dependencies:
     "@oclif/linewrap" "^1.0.0"
     chalk "^4.1.0"
