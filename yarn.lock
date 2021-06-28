@@ -792,10 +792,10 @@
     cli-ux "^5.5.1"
     tslib "^2"
 
-"@salesforce/plugin-project-utils@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.npmjs.org/@salesforce/plugin-project-utils/-/plugin-project-utils-0.0.2.tgz#0ac4a7220e4a54fcc9769f50e460d1d072aee99c"
-  integrity sha512-S8dWB10xKerCC2scXAOixnd0Z5hgWLdcMLEVOHog9Gq/294UlFzbBA5LSlAyFIgJzkaNigdcBHBGhVea3o0yjA==
+"@salesforce/plugin-project-utils@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.npmjs.org/@salesforce/plugin-project-utils/-/plugin-project-utils-0.0.3.tgz#7031d288d1a756671a12c990d432f9f8315a323f"
+  integrity sha512-TY0VAjKTkK3dhXw6TT+JaCm6b0uT9+iBV/cAFGCrHI4CH4npLzxACs6RqiNWI1e1zuRsX6+dXoZa5Vgqf+z8Ew==
   dependencies:
     "@salesforce/kit" "^1.5.8"
     "@salesforce/ts-types" "^1.5.13"
