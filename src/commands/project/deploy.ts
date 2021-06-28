@@ -5,12 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { prompt, Answers } from 'inquirer';
 import { Command, Flags } from '@oclif/core';
-import { Aliases, Config, ConfigAggregator, Messages } from '@salesforce/core';
-import { Env } from '@salesforce/kit';
-import { ensureString } from '@salesforce/ts-types';
-import { Deployable, Deployer, generateTableChoices } from '@salesforce/plugin-project-utils';
+import { Messages } from '@salesforce/core';
+import { Deployable, Deployer, generateTableChoices, Prompter } from '@salesforce/plugin-project-utils';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -32,15 +29,11 @@ export default class ProjectDeploy extends Command {
   };
 
   public async run(): Promise<DeployResult> {
-    const maxEventListeners = new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000;
-    process.setMaxListeners(maxEventListeners);
     const { flags } = await this.parse(ProjectDeploy);
 
     this.log('Analyzing project');
 
-    const username = await this.promptForUsername();
-
-    let deployers = (await this.config.runHook('project:findDeployers', { username })) as Deployer[];
+    let deployers = (await this.config.runHook('project:findDeployers', {})) as Deployer[];
     deployers = deployers.reduce((x, y) => x.concat(y), [] as Deployer[]);
     deployers = await this.selectDeployers(deployers);
 
@@ -51,25 +44,8 @@ export default class ProjectDeploy extends Command {
     return {};
   }
 
-  public async promptForUsername(): Promise<string> {
-    const aliasOrUsername = ConfigAggregator.getValue(Config.DEFAULT_USERNAME)?.value as string;
-
-    if (!aliasOrUsername) {
-      const { username } = await prompt<Answers>([
-        {
-          name: 'username',
-          message: 'Enter the target org for this deploy:',
-          type: 'input',
-        },
-      ]);
-      return ensureString(username);
-    } else {
-      return (await Aliases.fetch(aliasOrUsername)) || aliasOrUsername;
-    }
-  }
-
   public async selectDeployers(deployers: Deployer[]): Promise<Deployer[]> {
-    const deployables = deployers.reduce((x, y) => x.concat(y.deployables), [] as Deployable[]);
+    const deployables: Deployable[] = deployers.reduce((x, y) => x.concat(y.deployables), [] as Deployable[]);
     const columns = { name: 'APP OR PACKAGE', type: 'TYPE', path: 'PATH' };
     const options = deployables.map((deployable) => ({
       name: deployable.getAppName(),
@@ -77,7 +53,8 @@ export default class ProjectDeploy extends Command {
       path: deployable.getAppPath(),
       value: deployable,
     }));
-    const responses = await prompt<Answers>([
+    const prompter = new Prompter();
+    const responses = await prompter.prompt<{ deployables: Deployable[] }>([
       {
         name: 'deployables',
         message: 'Select apps and packages to deploy:',
@@ -86,9 +63,8 @@ export default class ProjectDeploy extends Command {
       },
     ]);
 
-    const chosenDeployables = responses.deployables as Deployable[];
     const chosenDeployers: Map<Deployer, Deployable[]> = new Map();
-    for (const deployable of chosenDeployables) {
+    for (const deployable of responses.deployables) {
       const parent = deployable.getParent();
       if (chosenDeployers.has(parent)) {
         const existing = chosenDeployers.get(parent) || [];

@@ -792,10 +792,10 @@
     cli-ux "^5.5.1"
     tslib "^2"
 
-"@salesforce/plugin-project-utils@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.npmjs.org/@salesforce/plugin-project-utils/-/plugin-project-utils-0.0.3.tgz#7031d288d1a756671a12c990d432f9f8315a323f"
-  integrity sha512-TY0VAjKTkK3dhXw6TT+JaCm6b0uT9+iBV/cAFGCrHI4CH4npLzxACs6RqiNWI1e1zuRsX6+dXoZa5Vgqf+z8Ew==
+"@salesforce/plugin-project-utils@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/@salesforce/plugin-project-utils/-/plugin-project-utils-0.0.5.tgz#e94b8654164f7a63bd8a77bad9798424f56200da"
+  integrity sha512-nrDmFPpxJCiKam8FDR4MU9X4XEy4j67oweSkl6DzPgqfdTG9ss3/G1X1dzNh4xcScTQ+oG5W+xpJsL3h0bpLow==
   dependencies:
     "@salesforce/kit" "^1.5.8"
     "@salesforce/ts-types" "^1.5.13"
@@ -957,14 +957,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/inquirer@^7.3.2":
-  version "7.3.2"
-  resolved "https://registry.npmjs.org/@types/inquirer/-/inquirer-7.3.2.tgz#35d2ef4d98dd42feeb4e1256cdeb9f13f457d420"
-  integrity sha512-EkeX/hU0SWinA2c7Qu/+6+7KbepFPYJcjankUgtA/VSY6BlVHybL0Cgyey9PDbXwhNXnNGBLU3t+MORp23RgAw==
-  dependencies:
-    "@types/through" "*"
-    rxjs "^6.4.0"
-
 "@types/jsforce@1.9.23":
   version "1.9.23"
   resolved "https://registry.npmjs.org/@types/jsforce/-/jsforce-1.9.23.tgz#06c2b604e02bfc8ba1143c6bf53530e565f18bae"
@@ -1035,13 +1027,6 @@
   version "6.0.1"
   resolved "https://registry.npmjs.org/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.1.tgz#681df970358c82836b42f989188d133e218c458e"
   integrity sha512-yYezQwGWty8ziyYLdZjwxyMb0CZR49h8JALHGrxjQHWlqGgc8kLdHEgWrgL0uZ29DMvEVBDnHU2Wg36zKSIUtA==
-
-"@types/through@*":
-  version "0.0.30"
-  resolved "https://registry.npmjs.org/@types/through/-/through-0.0.30.tgz#e0e42ce77e897bd6aead6f6ea62aeb135b8a3895"
-  integrity sha512-FvnCJljyxhPM3gkRgWmxmDZyAQSiBQQWLI0A0VFL0K7W1oRUrPJSqNO0NvTnLkBcotdlp3lKvaT0JrnyRDkzOg==
-  dependencies:
-    "@types/node" "*"
 
 "@typescript-eslint/eslint-plugin@^4.2.0":
   version "4.26.1"
