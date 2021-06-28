@@ -7,6 +7,7 @@
 
 import { Command, Flags } from '@oclif/core';
 import { Messages } from '@salesforce/core';
+import { Env } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter } from '@salesforce/plugin-project-utils';
 
 Messages.importMessagesDirectory(__dirname);
@@ -29,6 +30,7 @@ export default class ProjectDeploy extends Command {
   };
 
   public async run(): Promise<DeployResult> {
+    process.setMaxListeners(new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000);
     const { flags } = await this.parse(ProjectDeploy);
 
     this.log('Analyzing project');
