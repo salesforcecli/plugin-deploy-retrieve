@@ -6,7 +6,7 @@
  */
 
 import { Command, Flags } from '@oclif/core';
-import { Messages } from '@salesforce/core';
+import { fs, Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter } from '@salesforce/plugin-project-utils';
 
@@ -25,13 +25,14 @@ export default class ProjectDeploy extends Command {
   public static flags = {
     interactive: Flags.boolean({
       summary: messages.getMessage('flags.interactive.summary'),
-      default: true,
     }),
   };
 
   public async run(): Promise<DeployResult> {
     process.setMaxListeners(new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000);
     const { flags } = await this.parse(ProjectDeploy);
+
+    flags.interactive = await this.isInteractive(flags.interactive);
 
     this.log('Analyzing project');
 
@@ -44,6 +45,16 @@ export default class ProjectDeploy extends Command {
       await deployer.deploy();
     }
     return {};
+  }
+
+  /**
+   * If the deploy file exists, we do not want the command to be interactive. But if the file
+   * does not exist then we want to force the command to be interactive.
+   */
+  public async isInteractive(interactive: boolean): Promise<boolean> {
+    if (interactive) return true;
+    const deployFileExists = await fs.fileExists('project-deploy-options.json');
+    return deployFileExists ? false : true;
   }
 
   public async selectDeployers(deployers: Deployer[]): Promise<Deployer[]> {
