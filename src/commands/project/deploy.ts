@@ -14,8 +14,6 @@ Messages.importMessagesDirectory(__dirname);
 
 const messages = Messages.loadMessages('@salesforce/plugin-project', 'project.deploy');
 
-export type DeployResult = Record<string, unknown>;
-
 export default class ProjectDeploy extends Command {
   public static summary = messages.getMessage('summary');
   public static description = messages.getMessage('description');
@@ -28,7 +26,7 @@ export default class ProjectDeploy extends Command {
     }),
   };
 
-  public async run(): Promise<DeployResult> {
+  public async run(): Promise<void> {
     process.setMaxListeners(new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000);
     const { flags } = await this.parse(ProjectDeploy);
 
@@ -38,13 +36,21 @@ export default class ProjectDeploy extends Command {
 
     let deployers = (await this.config.runHook('project:findDeployers', {})) as Deployer[];
     deployers = deployers.reduce((x, y) => x.concat(y), [] as Deployer[]);
-    deployers = await this.selectDeployers(deployers);
 
-    for (const deployer of deployers) {
-      await deployer.setup(flags);
-      await deployer.deploy();
+    if (deployers.length === 0) {
+      this.log('Found nothing in the project to deploy');
+    } else {
+      deployers = await this.selectDeployers(deployers);
+
+      if (deployers.length === 0) {
+        this.log('Nothing was selected to deploy.');
+      }
+
+      for (const deployer of deployers) {
+        await deployer.setup(flags);
+        await deployer.deploy();
+      }
     }
-    return {};
   }
 
   /**

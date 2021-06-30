@@ -5,14 +5,13 @@
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
-    "@oclif/core": "^0.5.17",
+    "@oclif/core": "^0.5.19",
     "@salesforce/core": "^3.1.1-v3.1",
     "@salesforce/plugin-project-utils": "^0.0.5",
     "tslib": "^2"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1",
-    "@oclif/plugin-command-snapshot": "^2.1.1",
+    "@oclif/plugin-command-snapshot": "^2.2.0",
     "@salesforce/cli-plugins-testkit": "^1.1.5",
     "@salesforce/dev-config": "^2.1.2",
     "@salesforce/dev-scripts": "^0.9.14",
@@ -38,6 +37,7 @@
     "lint-staged": "^11.0.0",
     "mocha": "^8.3.0",
     "nyc": "^15.1.0",
+    "oclif": "^1.18.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^3.1.0",
     "shx": "0.3.3",
@@ -106,7 +106,7 @@
     "test:deprecation-policy": "./bin/dev snapshot:compare",
     "test:json-schema": "./bin/dev schema:compare",
     "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
-    "version": "oclif-dev readme"
+    "version": "oclif readme"
   },
   "husky": {
     "hooks": {
