@@ -107,5 +107,5 @@ EXAMPLE
   sf project:deploy
 ```
 
-_See code: [src/commands/project/deploy.ts](https://github.com/salesforcecli/plugin-project/blob/v0.0.3/src/commands/project/deploy.ts)_
+_See code: [src/commands/project/deploy.ts](https://github.com/salesforcecli/plugin-project/blob/v0.0.4/src/commands/project/deploy.ts)_
 <!-- commandsstop -->
