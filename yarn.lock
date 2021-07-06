@@ -1113,6 +1113,16 @@
     cli-ux "^5.6.2"
     inquirer "^8.1.1"
 
+"@salesforce/plugin-project-utils@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.npmjs.org/@salesforce/plugin-project-utils/-/plugin-project-utils-0.0.7.tgz#e7b1427b7579255d54bdbf0e8795292e5e6e1e6e"
+  integrity sha512-sMEFpOELbZ2RP+zaYlasGgdVV/lorx8eh3j6lgJVVzXoxJntSEA188Ejnx2o8F0qTwIpwzgltkoeXlWiFbJqkQ==
+  dependencies:
+    "@salesforce/kit" "^1.5.8"
+    "@salesforce/ts-types" "^1.5.13"
+    cli-ux "^5.6.2"
+    inquirer "^8.1.1"
+
 "@salesforce/prettier-config@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@salesforce/prettier-config/-/prettier-config-0.0.2.tgz#ded39bf7cb75238edc9db6dd093649111350f8bc"
