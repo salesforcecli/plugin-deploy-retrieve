@@ -7,7 +7,7 @@
   "dependencies": {
     "@oclif/core": "^0.5.19",
     "@salesforce/core": "^3.1.1-v3.1",
-    "@salesforce/plugin-project-utils": "^0.0.5",
+    "@salesforce/plugin-project-utils": "^0.0.7",
     "tslib": "^2"
   },
   "devDependencies": {
@@ -18,7 +18,7 @@
     "@salesforce/dev-scripts": "^0.9.14",
     "@salesforce/plugin-command-reference": "^1.3.0",
     "@salesforce/plugin-functions": "^0.2.13",
-    "@salesforce/plugin-project-org": "^0.0.1",
+    "@salesforce/plugin-project-org": "^0.0.2",
     "@salesforce/prettier-config": "^0.0.2",
     "@salesforce/ts-sinon": "1.3.18",
     "@typescript-eslint/eslint-plugin": "^4.2.0",

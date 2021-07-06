@@ -8,11 +8,19 @@
 import { Command, Flags } from '@oclif/core';
 import { fs, Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
-import { Deployable, Deployer, generateTableChoices, Prompter } from '@salesforce/plugin-project-utils';
+import {
+  Deployable,
+  Deployer,
+  generateTableChoices,
+  ProjectDeployOptions,
+  Prompter,
+} from '@salesforce/plugin-project-utils';
 
 Messages.importMessagesDirectory(__dirname);
 
 const messages = Messages.loadMessages('@salesforce/plugin-project', 'project.deploy');
+
+export const DEPLOY_OPTIONS_FILE = 'project-deploy-options.json';
 
 export default class ProjectDeploy extends Command {
   public static summary = messages.getMessage('summary');
@@ -31,23 +39,41 @@ export default class ProjectDeploy extends Command {
     const { flags } = await this.parse(ProjectDeploy);
 
     flags.interactive = await this.isInteractive(flags.interactive);
+    const options = await this.readOptions();
 
     this.log('Analyzing project');
 
-    let deployers = (await this.config.runHook('project:findDeployers', {})) as Deployer[];
+    if (!flags.interactive) {
+      this.log(`Using options found in ${DEPLOY_OPTIONS_FILE}`);
+    }
+
+    let deployers = (await this.config.runHook('project:findDeployers', options)) as Deployer[];
     deployers = deployers.reduce((x, y) => x.concat(y), [] as Deployer[]);
 
     if (deployers.length === 0) {
       this.log('Found nothing in the project to deploy');
     } else {
-      deployers = await this.selectDeployers(deployers);
+      if (flags.interactive) {
+        deployers = await this.selectDeployers(deployers);
+      }
 
       if (deployers.length === 0) {
         this.log('Nothing was selected to deploy.');
       }
 
+      const deployOptions: ProjectDeployOptions = {};
       for (const deployer of deployers) {
-        await deployer.setup(flags);
+        const opts = options[deployer.getName()] ?? {};
+        deployOptions[deployer.getName()] = await deployer.setup(flags, opts);
+      }
+
+      if (flags.interactive && (await this.askToSave())) {
+        await fs.writeJson(DEPLOY_OPTIONS_FILE, deployOptions, { space: 2 });
+        this.log();
+        this.log(`Your deploy options have been saved to ${DEPLOY_OPTIONS_FILE}`);
+      }
+
+      for (const deployer of deployers) {
         await deployer.deploy();
       }
     }
@@ -59,8 +85,26 @@ export default class ProjectDeploy extends Command {
    */
   public async isInteractive(interactive: boolean): Promise<boolean> {
     if (interactive) return true;
-    const deployFileExists = await fs.fileExists('project-deploy-options.json');
+    const deployFileExists = await fs.fileExists(DEPLOY_OPTIONS_FILE);
     return deployFileExists ? false : true;
+  }
+
+  public async readOptions(): Promise<ProjectDeployOptions> {
+    if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
+      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as ProjectDeployOptions;
+    } else {
+      return {};
+    }
+  }
+
+  public async askToSave(): Promise<boolean> {
+    const prompter = new Prompter();
+    const { save } = await prompter.prompt<{ save: boolean }>({
+      name: 'save',
+      message: 'Would you like to save these deploy options for future runs?',
+      type: 'confirm',
+    });
+    return save;
   }
 
   public async selectDeployers(deployers: Deployer[]): Promise<Deployer[]> {
