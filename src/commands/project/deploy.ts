@@ -20,7 +20,7 @@ Messages.importMessagesDirectory(__dirname);
 
 const messages = Messages.loadMessages('@salesforce/plugin-project', 'project.deploy');
 
-export const DEPLOY_OPTIONS_JSON = 'project-deploy-options.json';
+export const DEPLOY_OPTIONS_FILE = 'project-deploy-options.json';
 
 export default class ProjectDeploy extends Command {
   public static summary = messages.getMessage('summary');
@@ -44,7 +44,7 @@ export default class ProjectDeploy extends Command {
     this.log('Analyzing project');
 
     if (!flags.interactive) {
-      this.log(`Using options found in ${DEPLOY_OPTIONS_JSON}`);
+      this.log(`Using options found in ${DEPLOY_OPTIONS_FILE}`);
     }
 
     let deployers = (await this.config.runHook('project:findDeployers', options)) as Deployer[];
@@ -68,9 +68,9 @@ export default class ProjectDeploy extends Command {
       }
 
       if (flags.interactive && (await this.askToSave())) {
-        await fs.writeJson(DEPLOY_OPTIONS_JSON, deployOptions, { space: 2 });
+        await fs.writeJson(DEPLOY_OPTIONS_FILE, deployOptions, { space: 2 });
         this.log();
-        this.log(`Your deploy options have been saved to ${DEPLOY_OPTIONS_JSON}`);
+        this.log(`Your deploy options have been saved to ${DEPLOY_OPTIONS_FILE}`);
       }
 
       for (const deployer of deployers) {
@@ -85,13 +85,13 @@ export default class ProjectDeploy extends Command {
    */
   public async isInteractive(interactive: boolean): Promise<boolean> {
     if (interactive) return true;
-    const deployFileExists = await fs.fileExists(DEPLOY_OPTIONS_JSON);
+    const deployFileExists = await fs.fileExists(DEPLOY_OPTIONS_FILE);
     return deployFileExists ? false : true;
   }
 
   public async readOptions(): Promise<ProjectDeployOptions> {
-    if (await fs.fileExists(DEPLOY_OPTIONS_JSON)) {
-      return (await fs.readJson(DEPLOY_OPTIONS_JSON)) as ProjectDeployOptions;
+    if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
+      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as ProjectDeployOptions;
     } else {
       return {};
     }
