@@ -29,7 +29,7 @@ parameters:
     default: ''
     type: string
   repo_tag:
-    description: "The tag of the module repo to checkout, '' defaults to branch/PR"
+    description: 'The tag of the module repo to checkout, '''' defaults to branch/PR'
     default: ''
     type: string
 workflows:
@@ -99,3 +99,13 @@ workflows:
               os:
                 - linux
                 - windows
+  dependabot-automerge:
+    triggers:
+      - schedule:
+          cron: '0 2,5,8,11 * * *'
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - release-management/dependabot-automerge
