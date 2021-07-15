@@ -12,7 +12,7 @@ import {
   Deployable,
   Deployer,
   generateTableChoices,
-  ProjectDeployOptions,
+  DeployOptions,
   Prompter,
 } from '@salesforce/plugin-deploy-retrieve-utils';
 
@@ -22,7 +22,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'de
 
 export const DEPLOY_OPTIONS_FILE = 'deploy-options.json';
 
-export default class ProjectDeploy extends Command {
+export default class Deploy extends Command {
   public static summary = messages.getMessage('summary');
   public static description = messages.getMessage('description');
   public static examples = messages.getMessages('examples');
@@ -36,7 +36,7 @@ export default class ProjectDeploy extends Command {
 
   public async run(): Promise<void> {
     process.setMaxListeners(new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000);
-    const { flags } = await this.parse(ProjectDeploy);
+    const { flags } = await this.parse(Deploy);
 
     flags.interactive = await this.isInteractive(flags.interactive);
     const options = await this.readOptions();
@@ -61,7 +61,7 @@ export default class ProjectDeploy extends Command {
         this.log('Nothing was selected to deploy.');
       }
 
-      const deployOptions: ProjectDeployOptions = {};
+      const deployOptions: DeployOptions = {};
       for (const deployer of deployers) {
         const opts = options[deployer.getName()] ?? {};
         deployOptions[deployer.getName()] = await deployer.setup(flags, opts);
@@ -89,9 +89,9 @@ export default class ProjectDeploy extends Command {
     return deployFileExists ? false : true;
   }
 
-  public async readOptions(): Promise<ProjectDeployOptions> {
+  public async readOptions(): Promise<DeployOptions> {
     if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
-      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as ProjectDeployOptions;
+      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as DeployOptions;
     } else {
       return {};
     }
