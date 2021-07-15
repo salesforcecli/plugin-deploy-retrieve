@@ -1,11 +1,11 @@
 # plugin-project
 
-[![NPM](https://img.shields.io/npm/v/@salesforce/plugin-project.svg?label=@salesforce/plugin-project)](https://www.npmjs.com/package/@salesforce/plugin-project) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-project/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-project/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-project.svg)](https://npmjs.org/package/@salesforce/plugin-project) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-project/main/LICENSE.txt)
+[![NPM](https://img.shields.io/npm/v/@salesforce/plugin-deploy-retrieve.svg?label=@salesforce/plugin-deploy-retrieve)](https://www.npmjs.com/package/@salesforce/plugin-deploy-retrieve) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-deploy-retrieve/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-deploy-retrieve/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-deploy-retrieve.svg)](https://npmjs.org/package/@salesforce/plugin-deploy-retrieve) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-deploy-retrieve/main/LICENSE.txt)
 
 ## Install
 
 ```bash
-sf plugins:install plugin-project@x.y.z
+sf plugins:install plugin-deploy-retrieve@x.y.z
 ```
 
 ## Contributing
@@ -35,18 +35,18 @@ To build the plugin locally, make sure to have yarn installed and run the follow
 
 ```bash
 # Clone the repository
-git clone git@github.com:salesforcecli/plugin-project
+git clone git@github.com:salesforcecli/plugin-deploy-retrieve
 
 # Install the dependencies and compile
 yarn install
 yarn build
 ```
 
-To use your plugin, run using the local `./bin/run` or `./bin/run.cmd` file.
+To use your plugin, run using the local `./bin/dev` or `./bin/dev.cmd` file.
 
 ```bash
 # Run using local run file.
-./bin/run project
+./bin/run deploy
 ```
 
 There should be no differences when running via the Salesforce CLI or using the local run file. However, it can be useful to link the plugin to do some additional testing or run your commands from anywhere on your machine.
@@ -61,7 +61,8 @@ sf plugins
 ## Commands
 
 <!-- commands -->
-* [`sf project:deploy`](#sf-projectdeploy)
+
+- [`sf project:deploy`](#sf-projectdeploy)
 
 ## `sf project:deploy`
 
@@ -75,20 +76,20 @@ OPTIONS
   --interactive
 
 DESCRIPTION
-  For example, if your local project contains a package directory with metadata source files, the command asks if you 
-  want to deploy that Salesforce app to an org. The command lists your connected orgs and asks which one you want to 
+  For example, if your local project contains a package directory with metadata source files, the command asks if you
+  want to deploy that Salesforce app to an org. The command lists your connected orgs and asks which one you want to
   deploy to.  If the command finds Apex tests, it asks if you want to run them and at which level.
 
-  Similarly, if the command finds a local functions directory, the command prompts if you want to deploy it and to which 
-  compute environment. The command prompts and connects you to a compute environment of your choice if you’re not 
+  Similarly, if the command finds a local functions directory, the command prompts if you want to deploy it and to which
+  compute environment. The command prompts and connects you to a compute environment of your choice if you’re not
   currently connected to any.
 
   This command must be run from within a project.
 
-  The command stores your responses in a local file and uses them as defaults when you rerun the command. Specify 
+  The command stores your responses in a local file and uses them as defaults when you rerun the command. Specify
   --interactive to force the command to reprompt.
 
-  Use this command for quick and simple deploys. For more complicated deployments, use the environment-specific 
+  Use this command for quick and simple deploys. For more complicated deployments, use the environment-specific
   commands, such as "sf project deploy org", that provide additional flags.
 
 EXAMPLE
@@ -96,4 +97,5 @@ EXAMPLE
 ```
 
 _See code: [src/commands/project/deploy.ts](https://github.com/salesforcecli/plugin-project/blob/v0.0.5/src/commands/project/deploy.ts)_
+
 <!-- commandsstop -->

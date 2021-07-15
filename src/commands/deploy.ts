@@ -14,13 +14,13 @@ import {
   generateTableChoices,
   ProjectDeployOptions,
   Prompter,
-} from '@salesforce/plugin-project-utils';
+} from '@salesforce/plugin-deploy-retrieve-utils';
 
 Messages.importMessagesDirectory(__dirname);
 
-const messages = Messages.loadMessages('@salesforce/plugin-project', 'project.deploy');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
 
-export const DEPLOY_OPTIONS_FILE = 'project-deploy-options.json';
+export const DEPLOY_OPTIONS_FILE = 'deploy-options.json';
 
 export default class ProjectDeploy extends Command {
   public static summary = messages.getMessage('summary');

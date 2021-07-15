@@ -1,9 +1,7 @@
 [
-    {
-        "command": "project:deploy",
-        "plugin": "@salesforce/plugin-project",
-        "flags": [
-            "interactive"
-        ]
-    }
+  {
+    "command": "deploy",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["interactive"]
+  }
 ]
