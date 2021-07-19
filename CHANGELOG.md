@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v0.0.8...v0.0.9) (2021-07-19)
+
+
+### Bug Fixes
+
+* minor updates to the --help ([#85](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/85)) ([a7cf8bd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a7cf8bd77b9bc35f72c20b11010ae3855203f9b2))
+
 ### [0.0.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v0.0.7...v0.0.8) (2021-07-15)
 
 
