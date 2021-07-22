@@ -1,6 +1,6 @@
-# Add a new project command
+# Add a new deploy command
 
-The project plugin does not have any commands for deploying or or retrieving specific pieces of a salesforce project (e.g. metadata to a scratch or functions to a compute environment). Instead, we ask developers to create their own plugin with those commands. In order for the `deploy` or `retrieve` commands to know about the individual plugins, each plugin must implement an [oclif hook](https://oclif.io/docs/hooks) which returns [`Deployers`](https://github.com/salesforcecli/plugin-deploy-retrieve-utils/blob/main/src/deployer.ts) and `Retirevers`.
+The deploy-retrieve plugin does not have any commands for deploying or or retrieving specific pieces of a salesforce project (e.g. metadata to a scratch or functions to a compute environment). Instead, we ask developers to create their own plugin with those commands. In order for the `deploy` or `retrieve` commands to know about the individual plugins, each plugin must implement an [oclif hook](https://oclif.io/docs/hooks) which returns [`Deployers`](https://github.com/salesforcecli/plugin-deploy-retrieve-utils/blob/main/src/deployer.ts) and `Retirevers`.
 
 This method allows developers to own their own plugins while also allowing a simple way for the overarching `project` topic to interact with those plugins.
 

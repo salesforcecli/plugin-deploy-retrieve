@@ -5,8 +5,8 @@
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
-    "@oclif/core": "^0.5.21",
-    "@salesforce/core": "^3.1.1-v3.1",
+    "@oclif/core": "^0.5.24",
+    "@salesforce/core": "3.1.1-v3.1",
     "@salesforce/plugin-deploy-retrieve-utils": "^0.0.9",
     "tslib": "^2"
   },
@@ -79,8 +79,8 @@
       "@salesforce/plugin-deploy-retrieve-metadata"
     ],
     "topics": {
-      "project": {
-        "description": "Commands to deploy and retrieve a project"
+      "deploy": {
+        "description": "Commands to deploy to any Salesforce environment"
       }
     }
   },
