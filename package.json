@@ -80,7 +80,7 @@
     ],
     "topics": {
       "deploy": {
-        "description": "Commands to deploy to any Salesforce environment"
+        "description": "Deploy artifacts, such as metadata, to an environment."
       }
     }
   },
