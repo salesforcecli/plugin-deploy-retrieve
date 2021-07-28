@@ -1,4 +1,4 @@
-# plugin-project
+# plugin-deploy-retrieve
 
 [![NPM](https://img.shields.io/npm/v/@salesforce/plugin-deploy-retrieve.svg?label=@salesforce/plugin-deploy-retrieve)](https://www.npmjs.com/package/@salesforce/plugin-deploy-retrieve) [![CircleCI](https://circleci.com/gh/salesforcecli/plugin-deploy-retrieve/tree/main.svg?style=shield)](https://circleci.com/gh/salesforcecli/plugin-deploy-retrieve/tree/main) [![Downloads/week](https://img.shields.io/npm/dw/@salesforce/plugin-deploy-retrieve.svg)](https://npmjs.org/package/@salesforce/plugin-deploy-retrieve) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/plugin-deploy-retrieve/main/LICENSE.txt)
 
@@ -61,7 +61,8 @@ sf plugins
 ## Commands
 
 <!-- commands -->
-* [`sf deploy`](#sf-deploy)
+
+- [`sf deploy`](#sf-deploy)
 
 ## `sf deploy`
 
@@ -75,18 +76,18 @@ OPTIONS
   --interactive
 
 DESCRIPTION
-  The command first analyzes your project, your active or logged-into environments, and local defaults to determine what 
-  to deploy and where to deploy it. The command then prompts you for information about this particular deployment and 
+  The command first analyzes your project, your active or logged-into environments, and local defaults to determine what
+  to deploy and where to deploy it. The command then prompts you for information about this particular deployment and
   provides intelligent choices based on its analysis.
 
-  For example, if your local project contains a source directory with metadata files in source format, the command asks 
-  if you want to deploy that Salesforce app to an org. The command lists your connected orgs and asks which one you want 
+  For example, if your local project contains a source directory with metadata files in source format, the command asks
+  if you want to deploy that Salesforce app to an org. The command lists your connected orgs and asks which one you want
   to deploy to. If the command finds Apex tests, it asks if you want to run them and at which level.
 
-  The command stores your responses in a local file and uses them as defaults when you rerun the command. Specify 
+  The command stores your responses in a local file and uses them as defaults when you rerun the command. Specify
   --interactive to force the command to reprompt.
 
-  Use this command for quick and simple deploys. For more complicated deployments, use the environment-specific 
+  Use this command for quick and simple deploys. For more complicated deployments, use the environment-specific
   commands, such as "sf deploy metadata", that provide additional flags.
 
 EXAMPLES
@@ -97,4 +98,5 @@ EXAMPLES
 ```
 
 _See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v0.0.11/src/commands/deploy.ts)_
+
 <!-- commandsstop -->
