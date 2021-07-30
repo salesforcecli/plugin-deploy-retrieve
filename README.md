@@ -96,5 +96,5 @@ EXAMPLES
   sf deploy --interactive
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v0.0.12/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v0.0.13/src/commands/deploy.ts)_
 <!-- commandsstop -->
