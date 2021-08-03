@@ -82,7 +82,7 @@
     ],
     "topics": {
       "deploy": {
-        "description": "Deploy artifacts, such as metadata, to an environment."
+        "description": "Commands to deploy artifacts to an environment."
       }
     }
   },
