@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v0.0.14...v0.0.15) (2021-08-03)
+
+
+### Bug Fixes
+
+* update topic descriptions in pacakge.json ([#109](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/109)) ([f6c699c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f6c699c39e8342d7c7a5d01cc5403241bc010bdb))
+
 ### [0.0.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v0.0.13...v0.0.14) (2021-07-30)
 
 
