@@ -81,7 +81,9 @@ DESCRIPTION
 
   For example, if your local project contains a source directory with metadata files in source format, the command asks 
   if you want to deploy that Salesforce app to an org. The command lists your connected orgs and asks which one you want 
-  to deploy to. If the command finds Apex tests, it asks if you want to run them and at which level.
+  to deploy to. The list of orgs starts with scratch orgs, ordered by expiration date with the most recently created one 
+  first, and then Dev Hub and production orgs ordered by name. If the command finds Apex tests, it asks if you want to 
+  run them and at which level.
 
   The command stores your responses in the "deploy-options.json" file in your local project directory and uses them as 
   defaults when you rerun the command. Specify --interactive to force the command to reprompt.
@@ -96,5 +98,5 @@ EXAMPLES
   sf deploy --interactive
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v0.0.15/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v0.0.16/src/commands/deploy.ts)_
 <!-- commandsstop -->
