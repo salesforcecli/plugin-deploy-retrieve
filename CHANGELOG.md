@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v0.0.17...v0.0.18) (2021-08-18)
+
+
+### Bug Fixes
+
+* bump oclif/core and @salesforce/core ([#115](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/115)) ([bf62690](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/bf6269064ba90cf316eb99686ed0019bb84e580b))
+
 ### [0.0.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v0.0.16...v0.0.17) (2021-08-17)
 
 
