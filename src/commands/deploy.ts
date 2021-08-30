@@ -43,7 +43,7 @@ export default class Deploy extends Command {
 
     const hookResults = await SfHook.run(this.config, 'sf:deploy', options);
 
-    let deployers = hookResults.successes.map((s) => s.result).reduce((x, y) => x.concat(y), [] as Deployer[]);
+    let deployers = hookResults.successes.flatMap((s) => s.result);
 
     if (deployers.length === 0) {
       this.log('Found nothing in the project to deploy');
@@ -59,7 +59,7 @@ export default class Deploy extends Command {
       const deployOptions: Deployer.Options = {};
       for (const deployer of deployers) {
         const opts = options[deployer.getName()] ?? {};
-        deployOptions[deployer.getName()] = await deployer.setup(flags, opts as Deployer.Options);
+        deployOptions[deployer.getName()] = await deployer.setup(flags, opts);
       }
 
       if (flags.interactive && (await this.askToSave())) {
@@ -84,9 +84,9 @@ export default class Deploy extends Command {
     return deployFileExists ? false : true;
   }
 
-  public async readOptions(): Promise<Deployer.Options> {
+  public async readOptions(): Promise<Record<string, Deployer.Options>> {
     if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
-      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as Deployer.Options;
+      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as Record<string, Deployer.Options>;
     } else {
       return {};
     }
