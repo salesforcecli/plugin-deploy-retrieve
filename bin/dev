@@ -2,13 +2,14 @@
 
 process.env.NODE_ENV = 'development';
 
-const g = global.oclif = global.oclif || {};
+const g = (global.oclif = global.oclif || {});
+
+const path = require('path');
+const project = path.join(__dirname, '..', 'tsconfig.json');
 
 // In dev mode, always show stack traces
 global.oclif.debug = true;
 
-require('ts-node').register()
+require('ts-node').register({ project });
 
-require('@oclif/core').run()
-.then(require('@oclif/core/flush'))
-.catch(require('@oclif/core/handle'))
+require('@oclif/core').run().then(require('@oclif/core/flush')).catch(require('@oclif/core/handle'));
