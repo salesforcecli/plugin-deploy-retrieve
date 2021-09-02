@@ -8,13 +8,7 @@
 import { Command, Flags } from '@oclif/core';
 import { fs, Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
-import {
-  Deployable,
-  Deployer,
-  generateTableChoices,
-  DeployOptions,
-  Prompter,
-} from '@salesforce/plugin-deploy-retrieve-utils';
+import { Deployable, Deployer, generateTableChoices, Prompter, SfHook } from '@salesforce/sf-plugins-core';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -47,8 +41,9 @@ export default class Deploy extends Command {
       this.log(`Using options found in ${DEPLOY_OPTIONS_FILE}`);
     }
 
-    let deployers = (await this.config.runHook('project:findDeployers', options)) as Deployer[];
-    deployers = deployers.reduce((x, y) => x.concat(y), [] as Deployer[]);
+    const hookResults = await SfHook.run(this.config, 'sf:deploy', options);
+
+    let deployers = hookResults.successes.flatMap((s) => s.result);
 
     if (deployers.length === 0) {
       this.log('Found nothing in the project to deploy');
@@ -61,7 +56,7 @@ export default class Deploy extends Command {
         this.log('Nothing was selected to deploy.');
       }
 
-      const deployOptions: DeployOptions = {};
+      const deployOptions: Deployer.Options = {};
       for (const deployer of deployers) {
         const opts = options[deployer.getName()] ?? {};
         deployOptions[deployer.getName()] = await deployer.setup(flags, opts);
@@ -89,9 +84,9 @@ export default class Deploy extends Command {
     return deployFileExists ? false : true;
   }
 
-  public async readOptions(): Promise<DeployOptions> {
+  public async readOptions(): Promise<Record<string, Deployer.Options>> {
     if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
-      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as DeployOptions;
+      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as Record<string, Deployer.Options>;
     } else {
       return {};
     }
@@ -111,9 +106,9 @@ export default class Deploy extends Command {
     const deployables: Deployable[] = deployers.reduce((x, y) => x.concat(y.deployables), [] as Deployable[]);
     const columns = { name: 'APP OR PACKAGE', type: 'TYPE', path: 'PATH' };
     const options = deployables.map((deployable) => ({
-      name: deployable.getAppName(),
-      type: deployable.getAppType(),
-      path: deployable.getAppPath(),
+      name: deployable.getName(),
+      type: deployable.getType(),
+      path: deployable.getPath(),
       value: deployable,
     }));
     const prompter = new Prompter();
@@ -138,7 +133,7 @@ export default class Deploy extends Command {
     }
 
     const final: Deployer[] = [];
-    for (const [parent, children] of chosenDeployers.entries()) {
+    for (const [parent, children] of Array.from(chosenDeployers.entries())) {
       parent.selectDeployables(children);
       final.push(parent);
     }
