@@ -5,16 +5,36 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { EOL } from 'os';
+import { access, readFile, writeFile } from 'fs/promises';
 import { Command, Flags } from '@oclif/core';
-import { fs, Messages } from '@salesforce/core';
+import { Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter, SfHook } from '@salesforce/sf-plugins-core';
+import { exec } from 'shelljs';
 
 Messages.importMessagesDirectory(__dirname);
 
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
 
 export const DEPLOY_OPTIONS_FILE = 'deploy-options.json';
+
+async function exists(filepath: string): Promise<boolean> {
+  try {
+    await access(filepath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function readJson<T>(filepath: string): Promise<T> {
+  return JSON.parse(await readFile(filepath, 'utf-8')) as T;
+}
+
+async function writeJson<T>(filepath: string, contents: T): Promise<void> {
+  await writeFile(filepath, JSON.stringify(contents, null, 2));
+}
 
 export default class Deploy extends Command {
   public static summary = messages.getMessage('summary');
@@ -56,16 +76,20 @@ export default class Deploy extends Command {
         this.log('Nothing was selected to deploy.');
       }
 
-      const deployOptions: Deployer.Options = {};
+      const deployOptions: Record<string, Deployer.Options> = {};
       for (const deployer of deployers) {
         const opts = options[deployer.getName()] ?? {};
         deployOptions[deployer.getName()] = await deployer.setup(flags, opts);
       }
 
       if (flags.interactive && (await this.askToSave())) {
-        await fs.writeJson(DEPLOY_OPTIONS_FILE, deployOptions, { space: 2 });
+        await writeJson(DEPLOY_OPTIONS_FILE, deployOptions);
         this.log();
         this.log(`Your deploy options have been saved to ${DEPLOY_OPTIONS_FILE}`);
+        if (await this.shouldCommit()) {
+          await this.commit();
+          this.log(`We added ${DEPLOY_OPTIONS_FILE} to the .gitignore for you.`);
+        }
       }
 
       for (const deployer of deployers) {
@@ -80,16 +104,30 @@ export default class Deploy extends Command {
    */
   public async isInteractive(interactive: boolean): Promise<boolean> {
     if (interactive) return true;
-    const deployFileExists = await fs.fileExists(DEPLOY_OPTIONS_FILE);
+    const deployFileExists = await exists(DEPLOY_OPTIONS_FILE);
     return deployFileExists ? false : true;
   }
 
   public async readOptions(): Promise<Record<string, Deployer.Options>> {
-    if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
-      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as Record<string, Deployer.Options>;
+    if (await exists(DEPLOY_OPTIONS_FILE)) {
+      return readJson<Record<string, Deployer.Options>>(DEPLOY_OPTIONS_FILE);
     } else {
       return {};
     }
+  }
+
+  public async commit(): Promise<void> {
+    const gitignore = await readFile('.gitignore', 'utf-8');
+    if (!gitignore.includes(DEPLOY_OPTIONS_FILE)) {
+      const addition = `${EOL}${EOL}# Deploy Options${EOL}${DEPLOY_OPTIONS_FILE}${EOL}`;
+      await writeFile('.gitignore', `${gitignore}${addition}`);
+    }
+    exec('git add .gitignore', { silent: true });
+    exec(`git commit -am "Add ${DEPLOY_OPTIONS_FILE} to .gitignore"`, { silent: true });
+  }
+
+  public async shouldCommit(): Promise<boolean> {
+    return (await exists('.git')) && (await exists('functions'));
   }
 
   public async askToSave(): Promise<boolean> {
