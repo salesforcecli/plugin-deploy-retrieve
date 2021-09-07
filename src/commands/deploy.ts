@@ -6,9 +6,8 @@
  */
 
 import { EOL } from 'os';
-import { access, readFile, writeFile } from 'fs/promises';
 import { Command, Flags } from '@oclif/core';
-import { Messages } from '@salesforce/core';
+import { fs, Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter, SfHook } from '@salesforce/sf-plugins-core';
 import { exec } from 'shelljs';
@@ -18,23 +17,6 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
 
 export const DEPLOY_OPTIONS_FILE = 'deploy-options.json';
-
-async function exists(filepath: string): Promise<boolean> {
-  try {
-    await access(filepath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function readJson<T>(filepath: string): Promise<T> {
-  return JSON.parse(await readFile(filepath, 'utf-8')) as T;
-}
-
-async function writeJson<T>(filepath: string, contents: T): Promise<void> {
-  await writeFile(filepath, JSON.stringify(contents, null, 2));
-}
 
 export default class Deploy extends Command {
   public static summary = messages.getMessage('summary');
@@ -83,7 +65,7 @@ export default class Deploy extends Command {
       }
 
       if (flags.interactive && (await this.askToSave())) {
-        await writeJson(DEPLOY_OPTIONS_FILE, deployOptions);
+        await fs.writeJson(DEPLOY_OPTIONS_FILE, deployOptions);
         this.log();
         this.log(`Your deploy options have been saved to ${DEPLOY_OPTIONS_FILE}`);
         if (await this.shouldCommit()) {
@@ -104,30 +86,30 @@ export default class Deploy extends Command {
    */
   public async isInteractive(interactive: boolean): Promise<boolean> {
     if (interactive) return true;
-    const deployFileExists = await exists(DEPLOY_OPTIONS_FILE);
+    const deployFileExists = await fs.fileExists(DEPLOY_OPTIONS_FILE);
     return deployFileExists ? false : true;
   }
 
   public async readOptions(): Promise<Record<string, Deployer.Options>> {
-    if (await exists(DEPLOY_OPTIONS_FILE)) {
-      return readJson<Record<string, Deployer.Options>>(DEPLOY_OPTIONS_FILE);
+    if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
+      return fs.readJsonMap<Record<string, Deployer.Options>>(DEPLOY_OPTIONS_FILE);
     } else {
       return {};
     }
   }
 
   public async commit(): Promise<void> {
-    const gitignore = await readFile('.gitignore', 'utf-8');
+    const gitignore = await fs.readFile('.gitignore', 'utf-8');
     if (!gitignore.includes(DEPLOY_OPTIONS_FILE)) {
       const addition = `${EOL}${EOL}# Deploy Options${EOL}${DEPLOY_OPTIONS_FILE}${EOL}`;
-      await writeFile('.gitignore', `${gitignore}${addition}`);
+      await fs.writeFile('.gitignore', `${gitignore}${addition}`);
     }
     exec('git add .gitignore', { silent: true });
     exec(`git commit -am "Add ${DEPLOY_OPTIONS_FILE} to .gitignore"`, { silent: true });
   }
 
   public async shouldCommit(): Promise<boolean> {
-    return (await exists('.git')) && (await exists('functions'));
+    return (await fs.fileExists('.git')) && (await fs.fileExists('functions'));
   }
 
   public async askToSave(): Promise<boolean> {
