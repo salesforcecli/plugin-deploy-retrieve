@@ -5,10 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { EOL } from 'os';
 import { Command, Flags } from '@oclif/core';
 import { fs, Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter, SfHook } from '@salesforce/sf-plugins-core';
+import { exec } from 'shelljs';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -56,16 +58,20 @@ export default class Deploy extends Command {
         this.log('Nothing was selected to deploy.');
       }
 
-      const deployOptions: Deployer.Options = {};
+      const deployOptions: Record<string, Deployer.Options> = {};
       for (const deployer of deployers) {
         const opts = options[deployer.getName()] ?? {};
         deployOptions[deployer.getName()] = await deployer.setup(flags, opts);
       }
 
       if (flags.interactive && (await this.askToSave())) {
-        await fs.writeJson(DEPLOY_OPTIONS_FILE, deployOptions, { space: 2 });
+        await fs.writeJson(DEPLOY_OPTIONS_FILE, deployOptions);
         this.log();
         this.log(`Your deploy options have been saved to ${DEPLOY_OPTIONS_FILE}`);
+        if (await this.shouldCommit()) {
+          await this.commit();
+          this.log(`We added ${DEPLOY_OPTIONS_FILE} to the .gitignore for you.`);
+        }
       }
 
       for (const deployer of deployers) {
@@ -86,10 +92,24 @@ export default class Deploy extends Command {
 
   public async readOptions(): Promise<Record<string, Deployer.Options>> {
     if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
-      return (await fs.readJson(DEPLOY_OPTIONS_FILE)) as Record<string, Deployer.Options>;
+      return fs.readJsonMap<Record<string, Deployer.Options>>(DEPLOY_OPTIONS_FILE);
     } else {
       return {};
     }
+  }
+
+  public async commit(): Promise<void> {
+    const gitignore = await fs.readFile('.gitignore', 'utf-8');
+    if (!gitignore.includes(DEPLOY_OPTIONS_FILE)) {
+      const addition = `${EOL}${EOL}# Deploy Options${EOL}${DEPLOY_OPTIONS_FILE}${EOL}`;
+      await fs.writeFile('.gitignore', `${gitignore}${addition}`);
+    }
+    exec('git add .gitignore', { silent: true });
+    exec(`git commit -am "Add ${DEPLOY_OPTIONS_FILE} to .gitignore"`, { silent: true });
+  }
+
+  public async shouldCommit(): Promise<boolean> {
+    return (await fs.fileExists('.git')) && (await fs.fileExists('functions'));
   }
 
   public async askToSave(): Promise<boolean> {
