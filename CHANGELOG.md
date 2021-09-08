@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v0.0.19...v0.0.20) (2021-09-08)
+
+
+### Features
+
+* add deploy-options.json to .gitignore when functions exist ([#131](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/131)) ([5ae94f9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5ae94f98c03445f09cfe86a52b29d3b7344e937b))
+
 ### [0.0.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v0.0.18...v0.0.19) (2021-09-02)
 
 
