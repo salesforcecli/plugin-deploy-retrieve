@@ -6,11 +6,12 @@
  */
 
 import { EOL } from 'os';
-import { Command, Flags } from '@oclif/core';
+import { Flags } from '@oclif/core';
 import { fs, Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter, SfHook } from '@salesforce/sf-plugins-core';
 import { exec } from 'shelljs';
+import { SfCommand } from '@salesforce/command';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -18,7 +19,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'de
 
 export const DEPLOY_OPTIONS_FILE = 'deploy-options.json';
 
-export default class Deploy extends Command {
+export default class Deploy extends SfCommand<void> {
   public static summary = messages.getMessage('summary');
   public static description = messages.getMessage('description');
   public static examples = messages.getMessages('examples');
