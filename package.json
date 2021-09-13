@@ -5,9 +5,10 @@
   "author": "Salesforce",
   "bugs": "https://github.com/salesforcecli/cli/issues",
   "dependencies": {
-    "@oclif/core": "^0.5.34",
-    "@salesforce/core": "3.4.5",
-    "@salesforce/sf-plugins-core": "^0.0.15",
+    "@oclif/core": "^0.5.35",
+    "@salesforce/command": "^4.1.1",
+    "@salesforce/core": "3.6.0",
+    "@salesforce/sf-plugins-core": "^0.0.18",
     "shelljs": "^0.8.4",
     "tslib": "^2"
   },
@@ -39,7 +40,7 @@
     "lint-staged": "^11.0.0",
     "mocha": "^8.4.0",
     "nyc": "^15.1.0",
-    "oclif": "^2.0.0-main.1",
+    "oclif": "^2.0.0-main.2",
     "prettier": "^2.0.5",
     "pretty-quick": "^3.1.0",
     "shx": "0.3.3",
