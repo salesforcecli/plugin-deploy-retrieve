@@ -9,9 +9,8 @@ import { EOL } from 'os';
 import { Flags } from '@oclif/core';
 import { fs, Messages } from '@salesforce/core';
 import { Env } from '@salesforce/kit';
-import { Deployable, Deployer, generateTableChoices, Prompter, SfHook } from '@salesforce/sf-plugins-core';
+import { Deployable, Deployer, generateTableChoices, Prompter, SfCommand, SfHook } from '@salesforce/sf-plugins-core';
 import { exec } from 'shelljs';
-import { SfCommand } from '@salesforce/command';
 
 Messages.importMessagesDirectory(__dirname);
 
