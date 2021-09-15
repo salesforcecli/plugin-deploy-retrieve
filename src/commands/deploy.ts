@@ -22,7 +22,7 @@ export default class Deploy extends SfCommand<void> {
   public static summary = messages.getMessage('summary');
   public static description = messages.getMessage('description');
   public static examples = messages.getMessages('examples');
-  public static disableJsonFlag = true;
+  public static enableJsonFlag = false;
 
   public static flags = {
     interactive: Flags.boolean({
