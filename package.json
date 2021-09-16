@@ -5,9 +5,9 @@
   "author": "Salesforce",
   "bugs": "https://github.com/salesforcecli/cli/issues",
   "dependencies": {
-    "@oclif/core": "^0.5.37",
-    "@salesforce/sf-plugins-core": "^0.0.22",
+    "@oclif/core": "^0.5.38",
     "@salesforce/core": "3.6.1",
+    "@salesforce/sf-plugins-core": "^0.0.23",
     "shelljs": "^0.8.4",
     "tslib": "^2"
   },
@@ -108,7 +108,7 @@
     "test:deprecation-policy": "./bin/dev snapshot:compare",
     "test:json-schema": "./bin/dev schema:compare",
     "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
-    "version": "oclif-dev readme"
+    "version": "oclif readme"
   },
   "husky": {
     "hooks": {
