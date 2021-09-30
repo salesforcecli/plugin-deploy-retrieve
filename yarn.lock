@@ -1158,10 +1158,10 @@
     cli-ux "^5.6.3"
     tslib "^2"
 
-"@salesforce/plugin-functions@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.0.0.tgz#a9ac6e5103f746b47c28aea47d9d6f07cdb564d8"
-  integrity sha512-lO6tD6uGhF6t5MEDOYG7M5PMST18Py4F0MjM8JHEdh6USjSX9HDVlkkbgMvWYkzsnHLmxUc4LL+VXB3LZr7xmg==
+"@salesforce/plugin-functions@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.0.2.tgz#cfdd145dd155fbe9f9098b74c32bbd511ceecc7f"
+  integrity sha512-KJgXCSFuXeAFZJUx3wfLGlgbk+CjVPSYXOPt08kVV1G/R3h2p4447Y24mhwVOkoVipFJab2V5ErEHLMgCjE95Q==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku-cli/schema" "^1.0.25"
