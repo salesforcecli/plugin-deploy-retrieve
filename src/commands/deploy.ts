@@ -52,6 +52,8 @@ export default class Deploy extends SfCommand<void> {
     } else {
       if (flags.interactive) {
         deployers = await this.selectDeployers(deployers);
+      } else {
+        deployers = deployers.filter((d) => !!options[d.getName()]);
       }
 
       if (deployers.length === 0) {
