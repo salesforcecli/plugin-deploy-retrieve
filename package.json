@@ -3,7 +3,7 @@
   "description": "deploy and retrieve commands for sf",
   "version": "1.0.3",
   "author": "Salesforce",
-  "bugs": "https://github.com/salesforcecli/cli/issues",
+  "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
     "@oclif/core": "^1.0.0",
     "@salesforce/core": "3.6.5",
