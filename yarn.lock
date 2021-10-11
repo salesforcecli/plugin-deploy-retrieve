@@ -1173,13 +1173,13 @@
     cli-ux "^5.6.3"
     inquirer "^8.1.1"
 
-"@salesforce/sf-plugins-core@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-1.0.1.tgz#4787cdf5d28addbe3773f6a4f375ae36bbf2f9bd"
-  integrity sha512-7p7PjaHhZJ6/E1MjS29dAWeiEVmucTqmC3wA/LTXn2tq7uXwcW9JrnEShScEs3OJ5tB/jAcGO/V+zbavOLVbZQ==
+"@salesforce/sf-plugins-core@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-1.0.2.tgz#134b003d8665eb7599654e1af8443fee47c64938"
+  integrity sha512-zsbtB7HSjp3bikWZOT3DIIWjw8padX+BzEw+cWxTiJ7gKIVpGP//pFdWVv/jSSqpKi9ok68/7qW7KwBrqp8ksQ==
   dependencies:
-    "@oclif/core" "^1.0.0"
-    "@salesforce/core" "^3.6.5"
+    "@oclif/core" "^1.0.1"
+    "@salesforce/core" "^3.6.6"
     "@salesforce/kit" "^1.5.17"
     "@salesforce/ts-types" "^1.5.20"
     cli-ux "^5.6.3"
@@ -3633,6 +3633,11 @@ eslint-config-salesforce-typescript@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/eslint-config-salesforce-typescript/-/eslint-config-salesforce-typescript-0.2.7.tgz#18c966f72928ce9b4e36552384d2ce90c5b711e3"
   integrity sha512-v5gY1fSKbBOVoDznJW1wMIIyGH2x0HKKIsGtBpu4jla+z8VhH/UfTPv3yMa2a7HGfD7YnAW+XY6ksVlXqjpOeQ==
+
+eslint-config-salesforce-typescript@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/eslint-config-salesforce-typescript/-/eslint-config-salesforce-typescript-0.2.8.tgz#73cbc0e87a30118407d455feabf154fd251f7002"
+  integrity sha512-CDPcYWIfEVJFbcNG6IdhKW3whp0MujjuM4uRFESQ1Eq4cO8bMbZrwbLypUWxdMgZz7Ua3luMHmIKgkmR4k9FSg==
 
 eslint-config-salesforce@^0.1.6:
   version "0.1.6"
