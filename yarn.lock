@@ -883,9 +883,9 @@
     safe-json-stringify "~1"
 
 "@salesforce/cli-plugins-testkit@^1.4.11":
-  version "1.4.11"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-1.4.11.tgz#6db0ce6c05c9089cf7d1926df8f15cd7edbe904a"
-  integrity sha512-9JrthcjAJf4HARO5LXkXquFC9++S3p6ptUlzb5E6a/t5zp02IfHR1mPP+gL9p9X+6lL37Ro9yJnd2+2ffXofAg==
+  version "1.4.12"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-1.4.12.tgz#4a216456db8a58315bd91207c2ab616bca029473"
+  integrity sha512-W9R/0JVNYpJVm7rQa2MoPq22+BVrzdcUl3h6GOJXn6QIayIMYmXfLiu1Tzrcm/8YwnQuBsfQUPe26I2LHQEM4w==
   dependencies:
     "@salesforce/core" "^2.24.0"
     "@salesforce/kit" "^1.5.13"
@@ -947,7 +947,7 @@
     mkdirp "1.0.4"
     sfdx-faye "^1.0.9"
 
-"@salesforce/core@2.28.0", "@salesforce/core@^2.2.0", "@salesforce/core@^2.20.10", "@salesforce/core@^2.23.4", "@salesforce/core@^2.24.0":
+"@salesforce/core@2.28.0":
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.28.0.tgz#2fb3d7be0dfac8505332f558b7dd4274afd34901"
   integrity sha512-CFw2xloL3UwuvLm+0nK588kFVGPRZFmUzeUBYFCIz+34CJShc1B7yN+anPlZcHWgT12Ih9yzKYaki0BjCeIgKQ==
@@ -990,7 +990,7 @@
     sfdx-faye "^1.0.9"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^2.28.0":
+"@salesforce/core@^2.2.0", "@salesforce/core@^2.20.10", "@salesforce/core@^2.23.4", "@salesforce/core@^2.24.0", "@salesforce/core@^2.28.0":
   version "2.28.2"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-2.28.2.tgz#02fed89297c8d373d7c0784390abbc0791599268"
   integrity sha512-ohKNx4v1QL5LMESavn9Bs0ZNA4cw3IGL+dOvP601SphKPCOMiDfZYzfqhtET4R4uTAnJKvtUsuyvQUwL2479jg==
@@ -1057,28 +1057,12 @@
     typescript "^4.1.3"
     xunit-file "^1.0.0"
 
-"@salesforce/kit@^1.2.2", "@salesforce/kit@^1.5.0":
-  version "1.5.13"
-  resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.5.13.tgz#e7e141e95f3f1586de1448ec54139feed30706bc"
-  integrity sha512-Saq/JyTEbvmfUD/rgCGkYf2mv71Vm0mC8ibH4RUxg1omdPCOPm/YW2ZycQB6pN9mvCyZnCl8VGXjDSGiIv/+gw==
-  dependencies:
-    "@salesforce/ts-types" "^1.5.17"
-    tslib "^2.2.0"
-
-"@salesforce/kit@^1.5.13", "@salesforce/kit@^1.5.17":
+"@salesforce/kit@^1.2.2", "@salesforce/kit@^1.5.0", "@salesforce/kit@^1.5.13", "@salesforce/kit@^1.5.17", "@salesforce/kit@^1.5.8":
   version "1.5.17"
   resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.5.17.tgz#4fd9c50ba2e072c50d319654f86f86808c544795"
   integrity sha512-Uuh+v7WPSo+L21moVprl+jbDTl3ndmcJM5et/vFLZW4ur6CCJCJSoReM9ttF1qZuQskyCyhVZo6/aMZrVUe+rQ==
   dependencies:
     "@salesforce/ts-types" "^1.5.20"
-    tslib "^2.2.0"
-
-"@salesforce/kit@^1.5.8":
-  version "1.5.14"
-  resolved "https://registry.npmjs.org/@salesforce/kit/-/kit-1.5.14.tgz#013853ffc53e10e7add2abfa266372b29fda8317"
-  integrity sha512-vGzNltfWo7wtaDR0Drgf3nAMWsJ5ZheM4LODfFZeorsFk4Xj8J6hPJWuMcYUT07yCenECQalOjT0SU3p77QgYA==
-  dependencies:
-    "@salesforce/ts-types" "^1.5.13"
     tslib "^2.2.0"
 
 "@salesforce/plugin-command-reference@^1.3.15":
@@ -1676,11 +1660,6 @@ ansi-regex@^4.1.0:
   resolved "https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.1.0.tgz#8b9f8f08cf1acb843756a839ca8c7e3168c51997"
   integrity sha512-1apePfXM1UOSqw0o9IiFAovVz9M5S1Dg+4TrDwfMewQ6p/rmMueb7tWZjQ1rx4Loy1ArBggoqGpfqqdI4rondg==
 
-ansi-regex@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.0.tgz#388539f55179bf39339c81af30a654d69f87cb75"
-  integrity sha512-bY6fj56OUQ0hU1KjFNDQuJFezqKdrAyFdIevADiqrWHwSlbmBNMHp5ak2f40Pm8JTFyM2mqxkG6ngkHO11f/lg==
-
 ansi-regex@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"
@@ -1752,20 +1731,7 @@ archiver-utils@^2.1.0:
     normalize-path "^3.0.0"
     readable-stream "^2.0.0"
 
-archiver@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/archiver/-/archiver-5.2.0.tgz#25aa1b3d9febf7aec5b0f296e77e69960c26db94"
-  integrity sha512-QEAKlgQuAtUxKeZB9w5/ggKXh21bZS+dzzuQ0RPBC20qtDCbTyzqmisoeJP46MP39fg4B4IcyvR+yeyEBdblsQ==
-  dependencies:
-    archiver-utils "^2.1.0"
-    async "^3.2.0"
-    buffer-crc32 "^0.2.1"
-    readable-stream "^3.6.0"
-    readdir-glob "^1.0.0"
-    tar-stream "^2.1.4"
-    zip-stream "^4.0.4"
-
-archiver@^5.3.0:
+archiver@^5.2.0, archiver@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/archiver/-/archiver-5.3.0.tgz#dd3e097624481741df626267564f7dd8640a45ba"
   integrity sha512-iUw+oDwK0fgNpvveEsdQ0Ase6IIKztBJU2U0E9MzszMfmVVUyv1QJhS2ITW9ZCqx8dktAxVAjWWkKehuZE8OPg==
@@ -2826,16 +2792,6 @@ component-emitter@^1.2.1:
   resolved "https://registry.npmjs.org/component-emitter/-/component-emitter-1.3.0.tgz#16e4070fba8ae29b679f2215853ee181ab2eabc0"
   integrity sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg==
 
-compress-commons@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/compress-commons/-/compress-commons-4.0.2.tgz#d6896be386e52f37610cef9e6fa5defc58c31bd7"
-  integrity sha512-qhd32a9xgzmpfoga1VQEiLEwdKZ6Plnpx5UCgIsf89FSolyJ7WnifY4Gtjgv5WR6hWAyRaHxC5MiEhU/38U70A==
-  dependencies:
-    buffer-crc32 "^0.2.13"
-    crc32-stream "^4.0.1"
-    normalize-path "^3.0.0"
-    readable-stream "^3.6.0"
-
 compress-commons@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/compress-commons/-/compress-commons-4.1.1.tgz#df2a09a7ed17447642bad10a85cc9a19e5c42a7d"
@@ -3005,7 +2961,7 @@ crc-32@^1.2.0:
     exit-on-epipe "~1.0.1"
     printj "~1.1.0"
 
-crc32-stream@^4.0.1, crc32-stream@^4.0.2:
+crc32-stream@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/crc32-stream/-/crc32-stream-4.0.2.tgz#c922ad22b38395abe9d3870f02fa8134ed709007"
   integrity sha512-DxFZ/Hk473b/muq1VJ///PMNLj0ZMnzye9thBpmjpJKCc5eMgB95aK8zCGrGfQ90cWo561Te6HK9D+j4KPdM6w==
@@ -9070,7 +9026,7 @@ stringify-object@^3.3.0:
     is-obj "^1.0.1"
     is-regexp "^1.0.0"
 
-strip-ansi@6.0.1:
+strip-ansi@6.0.1, strip-ansi@^6.0.0:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -9097,13 +9053,6 @@ strip-ansi@^5.0.0, strip-ansi@^5.1.0, strip-ansi@^5.2.0:
   integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
   dependencies:
     ansi-regex "^4.1.0"
-
-strip-ansi@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.0.tgz#0b1571dd7669ccd4f3e06e14ef1eed26225ae532"
-  integrity sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==
-  dependencies:
-    ansi-regex "^5.0.0"
 
 strip-bom-buf@^1.0.0:
   version "1.0.0"
@@ -9266,7 +9215,7 @@ tar-stream@^2.0.0:
     inherits "^2.0.3"
     readable-stream "^3.1.1"
 
-tar-stream@^2.1.4, tar-stream@^2.2.0:
+tar-stream@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/tar-stream/-/tar-stream-2.2.0.tgz#acad84c284136b060dc3faa64474aa9aebd77287"
   integrity sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==
@@ -10380,15 +10329,6 @@ yosay@^2.0.2:
     strip-ansi "^3.0.0"
     taketalk "^1.0.0"
     wrap-ansi "^2.0.0"
-
-zip-stream@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/zip-stream/-/zip-stream-4.0.4.tgz#3a8f100b73afaa7d1ae9338d910b321dec77ff3a"
-  integrity sha512-a65wQ3h5gcQ/nQGWV1mSZCEzCML6EK/vyVPcrPNynySP1j3VBbQKh3nhC8CbORb+jfl2vXvh56Ul5odP1bAHqw==
-  dependencies:
-    archiver-utils "^2.1.0"
-    compress-commons "^4.0.2"
-    readable-stream "^3.6.0"
 
 zip-stream@^4.1.0:
   version "4.1.0"
