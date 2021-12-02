@@ -782,9 +782,9 @@
     tslib "^1.9.3"
 
 "@oclif/plugin-command-snapshot@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-3.1.1.tgz#27cf85f47f2ded8b2ca879575fcfb62298eed53c"
-  integrity sha512-U8cTSfBjLW/79A5mjNGra6Tg3c22b+kWeq4ZWk8OvGhyC6EC6071UQqiFlvewBEHnC1Cq26h2pXZqLSRYoXB7w==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-3.1.2.tgz#8b8abceac56a5c367e2e945becb6ddad3aa725d2"
+  integrity sha512-3jeFbmUkkcbUthEGjzFBGWUTuaQioje7FftYv3csbJfAZr1WsoWfcI92G7f5rPKHxpdzXF51GuxEudiExVOacA==
   dependencies:
     "@oclif/core" "^1.0.1"
     chalk "^4.1.1"
