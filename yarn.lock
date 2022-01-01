@@ -1121,9 +1121,9 @@
     tslib "^2"
 
 "@salesforce/plugin-functions@^1.1.4":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.2.2.tgz#567df7ae3fe39d40ca1486bdbb44cd87644069a6"
-  integrity sha512-UepG/FOtVbwZZq0N7E4Aqaf7RMyunveYzoiG+unegRcSTsyqrJchGKLYOp71Riif9zlVNBGjqJWKNHI05Gx2Pg==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.3.0.tgz#a640864c227b6740b9c6c416cb35a0c76f6d5e7c"
+  integrity sha512-rxa8pIKfwpjr8lneyYYJ/3HgC6VspIrJcKXmKecWSk96DrVqrkkhAxQp2ht/pLr+6qxYmhvRyeC9jdVI7erV7Q==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku-cli/schema" "^1.0.25"
@@ -1147,6 +1147,7 @@
     fs-extra "^10.0.0"
     global-agent "^3.0.0"
     handlebars "^4.7.7"
+    jsforce "^1.11.0"
     kbpgp "^2.1.15"
     lodash "^4.17.21"
     netrc-parser "^3.1.6"
@@ -4130,7 +4131,7 @@ faye-websocket@~0.9.1:
   dependencies:
     websocket-driver ">=0.5.1"
 
-faye@^1.2.0, faye@^1.4.0:
+faye@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/faye/-/faye-1.4.0.tgz#01d3d26ed5642c1cb203eed358afb1c1444b8669"
   integrity sha512-kRrIg4be8VNYhycS2PY//hpBJSzZPr/DBbcy9VWelhZMW3KhyLkQR0HL0k0MNpmVoNFF4EdfMFkNAWjTP65g6w==
@@ -5936,28 +5937,7 @@ jsforce@2.0.0-beta.7:
     strip-ansi "^6.0.0"
     xml2js "^0.4.22"
 
-jsforce@^1.10.0, jsforce@^1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-1.10.1.tgz#ca1cf58d4439d94e1f84482d83081acd12c93269"
-  integrity sha512-rv+UpBR9n/sWdgLhyPOJuKgT9ZKngypYf9XOHoXVRpSllvTFCjn+M3H81Nu1oYjPH9JKXVS8hL1dmmq8+kOAJg==
-  dependencies:
-    base64-url "^2.2.0"
-    co-prompt "^1.0.0"
-    coffeescript "^1.10.0"
-    commander "^2.9.0"
-    csv-parse "^4.10.1"
-    csv-stringify "^1.0.4"
-    faye "^1.2.0"
-    inherits "^2.0.1"
-    lodash "^4.17.19"
-    multistream "^2.0.5"
-    opn "^5.3.0"
-    promise "^7.1.1"
-    readable-stream "^2.1.0"
-    request "^2.72.0"
-    xml2js "^0.4.16"
-
-jsforce@^1.11.0:
+jsforce@^1.10.0, jsforce@^1.10.1, jsforce@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-1.11.0.tgz#7e853b82c534f1fe8e18f432a344bae81881a133"
   integrity sha512-vYNXJXXdz9ZQNdfRqq/MCJ/zU7JGA7iEduwafQDzChR9FeqXgTNfHTppLVbw9mIniKkQZemmxSOtl7N04lj/5Q==
