@@ -1134,9 +1134,9 @@
     tslib "^2"
 
 "@salesforce/plugin-functions@^1.1.4":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.2.2.tgz#567df7ae3fe39d40ca1486bdbb44cd87644069a6"
-  integrity sha512-UepG/FOtVbwZZq0N7E4Aqaf7RMyunveYzoiG+unegRcSTsyqrJchGKLYOp71Riif9zlVNBGjqJWKNHI05Gx2Pg==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.3.0.tgz#a640864c227b6740b9c6c416cb35a0c76f6d5e7c"
+  integrity sha512-rxa8pIKfwpjr8lneyYYJ/3HgC6VspIrJcKXmKecWSk96DrVqrkkhAxQp2ht/pLr+6qxYmhvRyeC9jdVI7erV7Q==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku-cli/schema" "^1.0.25"
@@ -1160,6 +1160,7 @@
     fs-extra "^10.0.0"
     global-agent "^3.0.0"
     handlebars "^4.7.7"
+    jsforce "^1.11.0"
     kbpgp "^2.1.15"
     lodash "^4.17.21"
     netrc-parser "^3.1.6"
