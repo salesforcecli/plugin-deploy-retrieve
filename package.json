@@ -112,5 +112,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "main": "lib/index.js"
 }
