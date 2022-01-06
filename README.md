@@ -61,7 +61,8 @@ sf plugins
 ## Commands
 
 <!-- commands -->
-* [`sf deploy`](#sf-deploy)
+
+- [`sf deploy`](#sf-deploy)
 
 ## `sf deploy`
 
@@ -105,5 +106,6 @@ EXAMPLES
     $ sf deploy --interactive
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.0.4/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.0.5/src/commands/deploy.ts)_
+
 <!-- commandsstop -->
