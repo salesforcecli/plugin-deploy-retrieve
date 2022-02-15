@@ -88,6 +88,9 @@
     "topics": {
       "deploy": {
         "description": "Commands to deploy artifacts to an environment."
+      },
+      "retrieve": {
+        "description": "Commands to retrieve artifacts from an environment."
       }
     }
   },
