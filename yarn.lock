@@ -1359,6 +1359,17 @@
     shelljs "^0.8.4"
     tslib "^1"
 
+"@salesforce/plugin-config@^2.2.9":
+  version "2.3.0"
+  resolved "https://registry.npmjs.org/@salesforce/plugin-config/-/plugin-config-2.3.0.tgz#6ba79071aa2885511d21b2258b0b659e30a2182d"
+  integrity sha512-TLxvVFBhl5YPVzvzXdV3PDaqeWcF9DKmoTA/flTm1pDZvD6K7cTB0n1uqquErHQQx6H5wad0UDhzuLRir5CitQ==
+  dependencies:
+    "@oclif/core" "^1.2.0"
+    "@salesforce/core" "3.7.3"
+    "@salesforce/sf-plugins-core" "^1.2.0"
+    chalk "^4.1.1"
+    tslib "^2"
+
 "@salesforce/plugin-functions@^1.1.4":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.5.0.tgz#e3edb8a482938274e9b69514f29635f02698d0cd"
@@ -1416,7 +1427,7 @@
   resolved "https://registry.npmjs.org/@salesforce/schemas/-/schemas-1.0.1.tgz#d1db56759d2b22a7688e1821aec564e979237ad2"
   integrity sha512-78pP1GB/DbIS8nSWGL0GpQ27g02drrEo0vzYdRipGYAIXHMzlh1gqEsq0pOiIQlPm1MxWyEqbmf4GG5qSVsd0Q==
 
-"@salesforce/sf-plugins-core@^1.0.4", "@salesforce/sf-plugins-core@^1.2.1":
+"@salesforce/sf-plugins-core@^1.0.4", "@salesforce/sf-plugins-core@^1.2.0", "@salesforce/sf-plugins-core@^1.2.1":
   version "1.2.1"
   resolved "https://registry.npmjs.org/@salesforce/sf-plugins-core/-/sf-plugins-core-1.2.1.tgz#cd81f8bcd9113d825dbf0309c645f738d13538ec"
   integrity sha512-dha1gnJ0WGljj+RmIoKfK9mumqvOuXSFfv46hxvLTk8RSc9NLv1GvaZznTzO6MtarMMxpsFiyfKft/nTgnE/Yw==
