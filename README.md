@@ -63,6 +63,8 @@ sf plugins
 <!-- commands -->
 
 - [`sf deploy`](#sf-deploy)
+- [`sf deploy metadata`](#sf-deploy-metadata)
+- [`sf retrieve metadata`](#sf-retrieve-metadata)
 
 ## `sf deploy`
 
@@ -106,6 +108,214 @@ EXAMPLES
     $ sf deploy --interactive
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.0.5/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.0.6/src/commands/deploy.ts)_
+
+## `sf deploy metadata`
+
+Deploy metadata in source format to an org from your local project.
+
+```
+USAGE
+  $ sf deploy metadata [--json] [-m <value> | -x <value> | -d <value>] [-o <value>] [-l
+    NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg] [-w <value>]
+
+FLAGS
+  -d, --source-dir=<value>...  Path to the local source files to deploy.
+  -l, --test-level=<option>    [default: NoTestRun] Deployment Apex testing level.
+                               <options: NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg>
+  -m, --metadata=<value>...    Metadata component names to deploy.
+  -o, --target-org=<value>     Login username or alias for the target org.
+  -w, --wait=<value>           [default: 33] Number of minutes to wait for command to complete and display results.
+  -x, --manifest=<value>       Full file path for manifest (package.xml) of components to deploy.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Deploy metadata in source format to an org from your local project.
+
+  You must run this command from within a project.
+
+  This command doesn't support source-tracking. The source you deploy overwrites the corresponding metadata in your org.
+  This command doesn’t attempt to merge your source with the versions in your org.
+
+  To run the command asynchronously, set --wait to 0, which immediately returns the job ID. This way, you can continue
+  to use the CLI.
+
+  To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with
+  multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax
+  applies to --manifest and --source-dir.
+
+EXAMPLES
+  Deploy the source files in a directory:
+
+    $ sf deploy metadata  --source-dir path/to/source
+
+  Deploy a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
+
+    $ sf deploy metadata --source-dir path/to/apex/classes/MyClass.cls path/to/source/objects
+    $ sf deploy metadata --source-dir path/to/apex/classes/MyClass.cls --source-dir path/to/source/objects
+
+  Deploy all Apex classes:
+
+    $ sf deploy metadata --metadata ApexClass
+
+  Deploy a specific Apex class:
+
+    $ sf deploy metadata --metadata ApexClass:MyApexClass
+
+  Deploy all custom objects and Apex classes (both examples are equivalent):
+
+    $ sf deploy metadata --metadata CustomObject ApexClass
+    $ sf deploy metadata --metadata CustomObject --metadata ApexClass
+
+  Deploy all Apex classes and a profile that has a space in its name:
+
+    $ sf deploy metadata --metadata ApexClass --metadata "Profile:My Profile"
+
+  Deploy all components listed in a manifest:
+
+    $ sf deploy metadata --manifest path/to/package.xml
+
+  Run the tests that aren’t in any managed packages as part of a deployment:
+
+    $ sf deploy metadata --metadata ApexClass --test-level RunLocalTests
+
+FLAG DESCRIPTIONS
+  -d, --source-dir=<value>...  Path to the local source files to deploy.
+
+    The supplied path can be to a single file (in which case the operation is applied to only one file) or to a folder
+    (in which case the operation is applied to all metadata types in the directory and its subdirectories).
+
+    If you specify this flag, don’t specify --metadata or --manifest.
+
+  -l, --test-level=NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg  Deployment Apex testing level.
+
+    Valid values are:
+
+    - NoTestRun — No tests are run. This test level applies only to deployments to development environments, such as
+    sandbox, Developer Edition, or trial orgs. This test level is the default for development environments.
+
+    - RunSpecifiedTests — Runs only the tests that you specify with the --run-tests flag. Code coverage requirements
+    differ from the default coverage requirements when using this test level. Executed tests must comprise a minimum of
+    75% code coverage for each class and trigger in the deployment package. This coverage is computed for each class and
+    trigger individually and is different than the overall coverage percentage.
+
+    - RunLocalTests — All tests in your org are run, except the ones that originate from installed managed and unlocked
+    packages. This test level is the default for production deployments that include Apex classes or triggers.
+
+    - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
+
+    If you don’t specify a test level, the default behavior depends on the contents of your deployment package. For more
+    information, see [Running Tests in a
+    Deployment](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm)
+    in the "Metadata API Developer Guide".
+
+  -o, --target-org=<value>  Login username or alias for the target org.
+
+    Overrides your default org.
+
+  -w, --wait=<value>  Number of minutes to wait for command to complete and display results.
+
+    If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
+
+  -x, --manifest=<value>  Full file path for manifest (package.xml) of components to deploy.
+
+    All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
+```
+
+## `sf retrieve metadata`
+
+Retrieve metadata in source format from an org to your local project.
+
+```
+USAGE
+  $ sf retrieve metadata [--json] [-a <value>] [-x <value> | -m <value> | -d <value>] [-n <value>] [-o <value>] [-w
+    <value>]
+
+FLAGS
+  -a, --api-version=<value>      Target API version for the retrieve.
+  -d, --source-dir=<value>...    File paths for source to retrieve from the org.
+  -m, --metadata=<value>...      Metadata component names to retrieve.
+  -n, --package-name=<value>...  Package names to retrieve.
+  -o, --target-org=<value>       Login username or alias for the target org.
+  -w, --wait=<value>             [default: 33] Number of minutes to wait for the command to complete and display results
+                                 to the terminal window.
+  -x, --manifest=<value>         File path for the manifest (package.xml) that specifies the components to retrieve.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Retrieve metadata in source format from an org to your local project.
+
+  You must run this command from within a project.
+
+  This command doesn't support source-tracking. The source you retrieve overwrites the corresponding source files in
+  your local project. This command doesn’t attempt to merge the source from your org with your local source files.
+
+  To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag
+  with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same
+  syntax applies to --manifest and --source-dir.
+
+EXAMPLES
+  Retrieve the source files in a directory:
+
+    $ sf retrieve metadata --source-dir path/to/source
+
+  Retrieve a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
+
+    $ sf retrieve metadata --source-dir path/to/apex/classes/MyClass.cls path/to/source/objects
+    $ sf retrieve metadata --source-dir path/to/apex/classes/MyClass.cls --source-dir path/to/source/objects
+
+  Retrieve all Apex classes:
+
+    $ sf retrieve metadata --metadata ApexClass
+
+  Retrieve a specific Apex class:
+
+    $ sf retrieve metadata --metadata ApexClass:MyApexClass
+
+  Retrieve all custom objects and Apex classes (both examples are equivalent):
+
+    $ sf retrieve metadata --metadata CustomObject ApexClass
+    $ sf retrieve metadata --metadata CustomObject --metadata ApexClass
+
+  Retrieve all metadata components listed in a manifest:
+
+    $ sf retrieve metadata --manifest path/to/package.xml
+
+  Retrieve metadata from a package:
+
+    $ sf retrieve metadata --package-name MyPackageName
+
+  Retrieve metadata from multiple packages, one of which has a space in its name (both examples are equivalent):
+
+    $ sf retrieve metadata --package-name Package1 "PackageName With Spaces" Package3
+    $ sf retrieve metadata --package-name Package1 --package-name "PackageName With Spaces" --package-name Package3
+
+FLAG DESCRIPTIONS
+  -a, --api-version=<value>  Target API version for the retrieve.
+
+    Use this flag to override the default API version, which is the latest version supported the CLI, with the API
+    version in your package.xml file.
+
+  -d, --source-dir=<value>...  File paths for source to retrieve from the org.
+
+    The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder
+    (in which case the operation is applied to all source files in the directory and its subdirectories).
+
+  -o, --target-org=<value>  Login username or alias for the target org.
+
+    Overrides your default org.
+
+  -w, --wait=<value>  Number of minutes to wait for the command to complete and display results to the terminal window.
+
+    If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
+
+  -x, --manifest=<value>  File path for the manifest (package.xml) that specifies the components to retrieve.
+
+    If you specify this parameter, don’t specify --metadata or --source-dir.
+```
 
 <!-- commandsstop -->
