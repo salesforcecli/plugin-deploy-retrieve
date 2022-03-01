@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.1.0...v1.1.1) (2022-03-01)
+
+### Bug Fixes
+
+- use deprecate fs from sfdx-core ([ba2cb57](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ba2cb57a3748e52c090fcbd8fb19047cbc481159))
+- use deprecate fs from sfdx-core ([b45ebbe](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b45ebbe7eccbe5b4f0e181a8516a84df4bf1e975))
+
 ## [1.1.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.0.6...v1.1.0) (2022-02-24)
 
 ### Features
