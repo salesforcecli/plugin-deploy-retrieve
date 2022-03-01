@@ -7,7 +7,8 @@
 
 import * as path from 'path';
 import { ComponentSet, RegistryAccess } from '@sf/sdr';
-import { fs, SfdxError, Logger } from '@salesforce/core';
+import { SfdxError, Logger } from '@salesforce/core';
+import { pathExistsSync } from 'fs-extra';
 
 export type ManifestOption = {
   manifestPath: string;
@@ -45,7 +46,7 @@ export class ComponentSetBuilder {
         logger.debug(`Building ComponentSet from sourcepath: ${sourcepath.toString()}`);
         const fsPaths: string[] = [];
         sourcepath.forEach((filepath) => {
-          if (!fs.fileExistsSync(filepath)) {
+          if (!pathExistsSync(filepath)) {
             throw new SfdxError(`The sourcepath "${filepath}" is not a valid source file path.`);
           }
           fsPaths.push(path.resolve(filepath));

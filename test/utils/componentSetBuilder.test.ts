@@ -10,7 +10,8 @@ import * as sinon from 'sinon';
 import { assert, expect } from 'chai';
 import { ComponentSet, FromSourceOptions } from '@sf/sdr';
 import { stubMethod } from '@salesforce/ts-sinon';
-import { fs as fsCore, SfdxError } from '@salesforce/core';
+import { SfdxError } from '@salesforce/core';
+import * as fse from 'fs-extra';
 import { ComponentSetBuilder } from '../../src/utils/componentSetBuilder';
 
 describe('ComponentSetBuilder', () => {
@@ -40,7 +41,7 @@ describe('ComponentSetBuilder', () => {
     let fromManifestStub: sinon.SinonStub;
 
     beforeEach(() => {
-      fileExistsSyncStub = stubMethod(sandbox, fsCore, 'fileExistsSync');
+      fileExistsSyncStub = stubMethod(sandbox, fse, 'pathExistsSync');
       fromSourceStub = stubMethod(sandbox, ComponentSet, 'fromSource');
       fromManifestStub = stubMethod(sandbox, ComponentSet, 'fromManifest');
       componentSet = new ComponentSet();

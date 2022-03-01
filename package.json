@@ -9,7 +9,9 @@
     "@salesforce/core": "3.7.3",
     "@salesforce/sf-plugins-core": "^1.2.1",
     "@sf/sdr": "npm:@salesforce/source-deploy-retrieve@^5.9.9",
+    "@types/fs-extra": "^9.0.13",
     "chalk": "^4.1.2",
+    "fs-extra": "^10.0.1",
     "shelljs": "^0.8.4",
     "tslib": "^2"
   },
