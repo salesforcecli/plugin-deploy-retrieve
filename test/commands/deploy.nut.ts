@@ -7,7 +7,7 @@
 
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { fs } from '@salesforce/core';
+import { writeJson } from 'fs-extra';
 import { TestLevel } from '../../src/utils/testLevel';
 import { MetadataDeployer } from '../../src/utils/metadataDeployer';
 
@@ -35,7 +35,7 @@ describe('deploy NUTs', () => {
           apps: ['force-app'],
         },
       };
-      await fs.writeJson(path.join(sourceTestkit.projectDir, 'deploy-options.json'), deployOptions);
+      await writeJson(path.join(sourceTestkit.projectDir, 'deploy-options.json'), deployOptions);
       await sourceTestkit.execute('deploy', { json: false });
       await sourceTestkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
     });
