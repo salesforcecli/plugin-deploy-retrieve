@@ -7,8 +7,9 @@
 
 import { EOL } from 'os';
 import { Flags } from '@oclif/core';
-import { fs, Messages } from '@salesforce/core';
-import { Env } from '@salesforce/kit';
+import { Messages } from '@salesforce/core';
+import { writeJson, pathExists, writeFile, readFile } from 'fs-extra';
+import { Env, parseJsonMap } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter, SfCommand, SfHook } from '@salesforce/sf-plugins-core';
 import { exec } from 'shelljs';
 
@@ -67,7 +68,7 @@ export default class Deploy extends SfCommand<void> {
       }
 
       if (flags.interactive && (await this.askToSave())) {
-        await fs.writeJson(DEPLOY_OPTIONS_FILE, deployOptions);
+        await writeJson(DEPLOY_OPTIONS_FILE, deployOptions);
         this.log();
         this.log(`Your deploy options have been saved to ${DEPLOY_OPTIONS_FILE}`);
         if (await this.shouldCommit()) {
@@ -88,30 +89,30 @@ export default class Deploy extends SfCommand<void> {
    */
   public async isInteractive(interactive: boolean): Promise<boolean> {
     if (interactive) return true;
-    const deployFileExists = await fs.fileExists(DEPLOY_OPTIONS_FILE);
+    const deployFileExists = await pathExists(DEPLOY_OPTIONS_FILE);
     return deployFileExists ? false : true;
   }
 
   public async readOptions(): Promise<Record<string, Deployer.Options>> {
-    if (await fs.fileExists(DEPLOY_OPTIONS_FILE)) {
-      return fs.readJsonMap<Record<string, Deployer.Options>>(DEPLOY_OPTIONS_FILE);
+    if (await pathExists(DEPLOY_OPTIONS_FILE)) {
+      return parseJsonMap<Record<string, Deployer.Options>>(await readFile(DEPLOY_OPTIONS_FILE, 'utf8'));
     } else {
       return {};
     }
   }
 
   public async commit(): Promise<void> {
-    const gitignore = await fs.readFile('.gitignore', 'utf-8');
+    const gitignore = await readFile('.gitignore', 'utf-8');
     if (!gitignore.includes(DEPLOY_OPTIONS_FILE)) {
       const addition = `${EOL}${EOL}# Deploy Options${EOL}${DEPLOY_OPTIONS_FILE}${EOL}`;
-      await fs.writeFile('.gitignore', `${gitignore}${addition}`);
+      await writeFile('.gitignore', `${gitignore}${addition}`);
     }
     exec('git add .gitignore', { silent: true });
     exec(`git commit -am "Add ${DEPLOY_OPTIONS_FILE} to .gitignore"`, { silent: true });
   }
 
   public async shouldCommit(): Promise<boolean> {
-    return (await fs.fileExists('.git')) && (await fs.fileExists('functions'));
+    return (await pathExists('.git')) && (await pathExists('functions'));
   }
 
   public async askToSave(): Promise<boolean> {
