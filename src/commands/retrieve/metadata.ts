@@ -20,14 +20,10 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getArray, getBoolean, getString } from '@salesforce/ts-types';
 import { getPackageDirs, resolveTargetOrg } from '../../utils/orgs';
 import { displayPackages, displaySuccesses, PackageRetrieval } from '../../utils/output';
-import { validateOneOfCommandFlags } from '../../utils/requiredFlagValidator';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
 const mdTrasferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
-
-// One of these flags must be specified for a valid deploy.
-const requiredFlags = ['manifest', 'metadata', 'package-name', 'source-dir'];
 
 export type RetrieveMetadataResult = FileResponse[];
 
@@ -46,17 +42,20 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       summary: messages.getMessage('flags.manifest.summary'),
       description: messages.getMessage('flags.manifest.description'),
       exclusive: ['metadata', 'source-dir'],
+      exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
       exclusive: ['manifest', 'source-dir'],
+      exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
     'package-name': Flags.string({
       char: 'n',
       summary: messages.getMessage('flags.package-name.summary'),
       multiple: true,
+      exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
     'source-dir': Flags.string({
       char: 'd',
@@ -64,6 +63,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       description: messages.getMessage('flags.source-dir.description'),
       multiple: true,
       exclusive: ['manifest', 'metadata'],
+      exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
     'target-org': Flags.string({
       char: 'o',
@@ -95,8 +95,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
 
   public async run(): Promise<RetrieveMetadataResult> {
     const flags = (await this.parse(RetrieveMetadata)).flags;
-
-    validateOneOfCommandFlags(requiredFlags, flags);
 
     const componentSet = await ComponentSetBuilder.build({
       apiversion: flags['api-version'],

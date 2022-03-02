@@ -6,9 +6,15 @@
  */
 import { ConfigAggregator, SfdxPropertyKeys } from '@salesforce/core';
 
-export const resolveRestDeploy = function (): string {
-  const restDeploy = (ConfigAggregator.getValue(SfdxPropertyKeys.REST_DEPLOY).value === 'true' ? true : false)
-    ? 'REST'
-    : 'SOAP';
-  return restDeploy;
+export const resolveRestDeploy = function (flag: 'SOAP' | 'REST'): 'SOAP' | 'REST' {
+  if (flag === 'SOAP') return 'SOAP';
+  const restDeployConfig = ConfigAggregator.getValue(SfdxPropertyKeys.REST_DEPLOY).value;
+
+  if (restDeployConfig === 'false') {
+    return 'SOAP';
+  } else if (restDeployConfig === 'true') {
+    return 'REST';
+  } else {
+    return 'SOAP';
+  }
 };

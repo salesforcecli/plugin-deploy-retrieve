@@ -11,3 +11,8 @@ export enum TestLevel {
   RunLocalTests = 'RunLocalTests',
   RunAllTestsInOrg = 'RunAllTestsInOrg',
 }
+
+export enum API {
+  SOAP = 'SOAP',
+  REST = 'REST',
+}

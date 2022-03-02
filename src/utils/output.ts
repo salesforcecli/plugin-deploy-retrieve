@@ -18,7 +18,7 @@ import {
   Successes,
 } from '@salesforce/source-deploy-retrieve';
 import { get } from '@salesforce/ts-types';
-import { TestLevel } from './testLevel';
+import { TestLevel } from './types';
 
 function info(message: string): string {
   return blue(bold(message));

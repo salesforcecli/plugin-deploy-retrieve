@@ -12,16 +12,12 @@ import { DeployResult, FileResponse, RequestStatus, ComponentSetBuilder } from '
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getPackageDirs, getSourceApiVersion, resolveTargetOrg } from '../../utils/orgs';
 import { asRelativePaths, displayFailures, displaySuccesses, displayTestResults } from '../../utils/output';
-import { TestLevel } from '../../utils/testLevel';
 import { DeployProgress } from '../../utils/progressBar';
 import { resolveRestDeploy } from '../../utils/config';
-import { validateOneOfCommandFlags } from '../../utils/requiredFlagValidator';
+import { apiFlag, testLevelFlag } from '../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
-
-// One of these flags must be specified for a valid deploy.
-const requiredFlags = ['manifest', 'metadata', 'source-dir'];
 
 export type TestResults = {
   passing: number;
@@ -40,17 +36,39 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static flags = {
+    'dry-run': Flags.boolean({
+      description: messages.getMessage('flags.dry-run.description'),
+    }),
+    api: apiFlag({
+      description: messages.getMessage('flags.api.description'),
+    }),
+    'ignore-errors': Flags.boolean({
+      char: 'r',
+      description: messages.getMessage('flags.ignore-errors.description'),
+    }),
+    'ignore-warnings': Flags.boolean({
+      char: 'g',
+      description: messages.getMessage('flags.ignore-warnings.description'),
+    }),
+    'run-tests': Flags.string({
+      char: 't',
+      multiple: true,
+      description: messages.getMessage('flags.run-tests.description'),
+      default: [],
+    }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
       exclusive: ['manifest', 'source-dir'],
+      exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     manifest: Flags.string({
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),
       summary: messages.getMessage('flags.manifest.summary'),
       exclusive: ['metadata', 'source-dir'],
+      exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     'source-dir': Flags.string({
       char: 'd',
@@ -58,18 +76,17 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       summary: messages.getMessage('flags.source-dir.summary'),
       multiple: true,
       exclusive: ['manifest', 'metadata'],
+      exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     'target-org': Flags.string({
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
       summary: messages.getMessage('flags.target-org.summary'),
     }),
-    'test-level': Flags.string({
+    'test-level': testLevelFlag({
       char: 'l',
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
-      options: Object.values(TestLevel),
-      default: TestLevel.NoTestRun,
     }),
     wait: Flags.duration({
       char: 'w',
@@ -94,9 +111,6 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
 
   public async run(): Promise<DeployMetadataResult> {
     const flags = (await this.parse(DeployMetadata)).flags;
-    const testLevel = flags['test-level'] as TestLevel;
-    validateOneOfCommandFlags(requiredFlags, flags);
-
     const componentSet = await ComponentSetBuilder.build({
       sourceapiversion: await getSourceApiVersion(),
       sourcepath: flags['source-dir'],
@@ -111,12 +125,19 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     });
 
     const targetOrg = await resolveTargetOrg(flags['target-org']);
-
-    this.log(`${EOL}${messages.getMessage('deploy.metadata.api', [targetOrg, resolveRestDeploy()])}${EOL}`);
+    const api = resolveRestDeploy(flags.api);
+    this.log(`${EOL}${messages.getMessage('deploy.metadata.api', [targetOrg, api])}${EOL}`);
 
     const deploy = await componentSet.deploy({
       usernameOrConnection: targetOrg,
-      apiOptions: { testLevel },
+      apiOptions: {
+        ignoreWarnings: flags['ignore-warnings'],
+        rollbackOnError: !flags['ignore-errors'],
+        testLevel: flags['test-level'],
+        checkOnly: flags['dry-run'],
+        rest: api === 'REST',
+        runTests: flags['run-tests'],
+      },
     });
 
     new DeployProgress(deploy, this.jsonEnabled()).start();
@@ -127,7 +148,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     if (!this.jsonEnabled()) {
       displaySuccesses(result);
       displayFailures(result);
-      displayTestResults(result, testLevel);
+      displayTestResults(result, flags['test-level']);
     }
 
     const files = asRelativePaths(result?.getFileResponses() || []);

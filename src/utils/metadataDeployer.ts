@@ -21,7 +21,7 @@ import { Deployable, Deployer, generateTableChoices } from '@salesforce/sf-plugi
 
 import { ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import { displayFailures, displaySuccesses, displayTestResults } from './output';
-import { TestLevel } from './testLevel';
+import { TestLevel } from './types';
 import { DeployProgress } from './progressBar';
 import { resolveRestDeploy } from './config';
 
