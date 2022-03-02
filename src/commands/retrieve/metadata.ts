@@ -18,7 +18,7 @@ import { FileResponse, RetrieveResult, ComponentSetBuilder } from '@salesforce/s
 
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getArray, getBoolean, getString } from '@salesforce/ts-types';
-import { getPackageDirs } from '../../utils/orgs';
+import { getPackageDirs, resolveTargetOrg } from '../../utils/orgs';
 import { displayPackages, displaySuccesses, PackageRetrieval } from '../../utils/output';
 import { validateOneOfCommandFlags } from '../../utils/requiredFlagValidator';
 
@@ -65,7 +65,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       multiple: true,
       exclusive: ['manifest', 'metadata'],
     }),
-    'target-org': Flags.requiredOrg({
+    'target-org': Flags.string({
       char: 'o',
       summary: messages.getMessage('flags.target-org.summary'),
       description: messages.getMessage('flags.target-org.description'),
@@ -115,7 +115,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
     const project = await SfProject.resolve();
 
     const retrieve = await componentSet.retrieve({
-      usernameOrConnection: flags['target-org'].getUsername(),
+      usernameOrConnection: await resolveTargetOrg(flags['target-org']),
       merge: true,
       output: project.getDefaultPackage().fullPath,
       packageOptions: flags['package-name'],

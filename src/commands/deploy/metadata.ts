@@ -10,7 +10,7 @@ import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } 
 import { get, getString } from '@salesforce/ts-types';
 import { DeployResult, FileResponse, RequestStatus, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { getPackageDirs, getSourceApiVersion } from '../../utils/orgs';
+import { getPackageDirs, getSourceApiVersion, resolveTargetOrg } from '../../utils/orgs';
 import { asRelativePaths, displayFailures, displaySuccesses, displayTestResults } from '../../utils/output';
 import { TestLevel } from '../../utils/testLevel';
 import { DeployProgress } from '../../utils/progressBar';
@@ -59,7 +59,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       multiple: true,
       exclusive: ['manifest', 'metadata'],
     }),
-    'target-org': Flags.requiredOrg({
+    'target-org': Flags.string({
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
       summary: messages.getMessage('flags.target-org.summary'),
@@ -110,7 +110,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       },
     });
 
-    const targetOrg = flags['target-org'].getUsername();
+    const targetOrg = await resolveTargetOrg(flags['target-org']);
 
     this.log(`${EOL}${messages.getMessage('deploy.metadata.api', [targetOrg, resolveRestDeploy()])}${EOL}`);
 
