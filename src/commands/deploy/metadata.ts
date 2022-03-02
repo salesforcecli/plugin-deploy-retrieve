@@ -6,13 +6,11 @@
  */
 
 import { EOL } from 'os';
-import { Flags } from '@oclif/core';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
-import { Duration } from '@salesforce/kit';
 import { get, getString } from '@salesforce/ts-types';
 import { DeployResult, FileResponse, RequestStatus, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
-import { SfCommand, toHelpSection } from '@salesforce/sf-plugins-core';
-import { getPackageDirs, resolveTargetOrg, getSourceApiVersion } from '../../utils/orgs';
+import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
+import { getPackageDirs, getSourceApiVersion } from '../../utils/orgs';
 import { asRelativePaths, displayFailures, displaySuccesses, displayTestResults } from '../../utils/output';
 import { TestLevel } from '../../utils/testLevel';
 import { DeployProgress } from '../../utils/progressBar';
@@ -61,7 +59,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       multiple: true,
       exclusive: ['manifest', 'metadata'],
     }),
-    'target-org': Flags.string({
+    'target-org': Flags.requiredOrg({
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
       summary: messages.getMessage('flags.target-org.summary'),
@@ -73,11 +71,12 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       options: Object.values(TestLevel),
       default: TestLevel.NoTestRun,
     }),
-    wait: Flags.integer({
+    wait: Flags.duration({
       char: 'w',
       summary: messages.getMessage('flags.wait.summary'),
       description: messages.getMessage('flags.wait.description'),
-      default: 33,
+      unit: 'minutes',
+      defaultValue: 33,
     }),
   };
 
@@ -111,7 +110,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       },
     });
 
-    const targetOrg = await resolveTargetOrg(flags['target-org']);
+    const targetOrg = flags['target-org'].getUsername();
 
     this.log(`${EOL}${messages.getMessage('deploy.metadata.api', [targetOrg, resolveRestDeploy()])}${EOL}`);
 
@@ -122,7 +121,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
 
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
-    const result = await deploy.pollStatus(500, Duration.minutes(flags.wait).seconds);
+    const result = await deploy.pollStatus(500, flags.wait.seconds);
     this.setExitCode(result);
 
     if (!this.jsonEnabled()) {

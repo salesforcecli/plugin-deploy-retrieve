@@ -6,21 +6,19 @@
  */
 
 import * as path from 'path';
-import { Flags } from '@oclif/core';
 import {
   EnvironmentVariable,
   Messages,
   OrgConfigProperties,
   SfdxPropertyKeys,
-  SfdxProject,
-  SfdxError,
+  SfProject,
+  SfError,
 } from '@salesforce/core';
-import { Duration } from '@salesforce/kit';
 import { FileResponse, RetrieveResult, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 
-import { SfCommand, toHelpSection } from '@salesforce/sf-plugins-core';
+import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getArray, getBoolean, getString } from '@salesforce/ts-types';
-import { getPackageDirs, resolveTargetOrg } from '../../utils/orgs';
+import { getPackageDirs } from '../../utils/orgs';
 import { displayPackages, displaySuccesses, PackageRetrieval } from '../../utils/output';
 import { validateOneOfCommandFlags } from '../../utils/requiredFlagValidator';
 
@@ -38,7 +36,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static flags = {
-    'api-version': Flags.string({
+    'api-version': Flags.orgApiVersion({
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
       description: messages.getMessage('flags.api-version.description'),
@@ -67,14 +65,15 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       multiple: true,
       exclusive: ['manifest', 'metadata'],
     }),
-    'target-org': Flags.string({
+    'target-org': Flags.requiredOrg({
       char: 'o',
       summary: messages.getMessage('flags.target-org.summary'),
       description: messages.getMessage('flags.target-org.description'),
     }),
-    wait: Flags.integer({
+    wait: Flags.duration({
       char: 'w',
-      default: 33,
+      defaultValue: 33,
+      unit: 'minutes',
       summary: messages.getMessage('flags.wait.summary'),
       description: messages.getMessage('flags.wait.description'),
     }),
@@ -113,10 +112,10 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       },
     });
 
-    const project = await SfdxProject.resolve();
+    const project = await SfProject.resolve();
 
     const retrieve = await componentSet.retrieve({
-      usernameOrConnection: await resolveTargetOrg(flags['target-org']),
+      usernameOrConnection: flags['target-org'].getUsername(),
       merge: true,
       output: project.getDefaultPackage().fullPath,
       packageOptions: flags['package-name'],
@@ -139,7 +138,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
     this.spinner.start(messages.getMessage('RetrieveTitle'));
 
     await retrieve.start();
-    const result = await retrieve.pollStatus(500, Duration.minutes(flags.wait).seconds);
+    const result = await retrieve.pollStatus(500, flags.wait.seconds);
 
     const fileResponses = result?.getFileResponses() || [];
 
@@ -147,13 +146,13 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
 
     return fileResponses;
   }
-  private async displayResults(result: RetrieveResult, flags): Promise<void> {
+  private async displayResults(result: RetrieveResult, flags: unknown): Promise<void> {
     if (!getBoolean(flags, 'json', false)) {
       if (result.response.status === 'Succeeded') {
         displaySuccesses(result);
         displayPackages(result, await this.getPackages(result, flags));
       } else {
-        throw new SfdxError(
+        throw new SfError(
           getString(result.response, 'errorMessage', result.response.status),
           getString(result.response, 'errorStatusCode', 'unknown')
         );
@@ -163,7 +162,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
 
   private async getPackages(result: RetrieveResult, flags): Promise<PackageRetrieval[]> {
     const packages: PackageRetrieval[] = [];
-    const projectPath = await SfdxProject.resolveProjectPath();
+    const projectPath = await SfProject.resolveProjectPath();
     const packageNames = getArray(flags, 'package-name', []) as string[];
     packageNames.forEach((name) => {
       packages.push({ name, path: path.join(projectPath, name) });
