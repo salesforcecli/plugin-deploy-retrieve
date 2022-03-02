@@ -6,7 +6,7 @@
  */
 
 import { env } from '@salesforce/kit';
-import { MetadataApiDeploy } from '@sf/sdr';
+import { MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { Messages } from '@salesforce/core';
 import { Progress } from '@salesforce/sf-plugins-core';
 

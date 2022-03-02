@@ -10,11 +10,9 @@ import { Flags } from '@oclif/core';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { get, getString } from '@salesforce/ts-types';
-import { DeployResult, FileResponse } from '@sf/sdr';
-import { RequestStatus } from '@sf/sdr/lib/src/client/types';
+import { DeployResult, FileResponse, RequestStatus, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection } from '@salesforce/sf-plugins-core';
 import { getPackageDirs, resolveTargetOrg, getSourceApiVersion } from '../../utils/orgs';
-import { ComponentSetBuilder, ManifestOption } from '../../utils/componentSetBuilder';
 import { asRelativePaths, displayFailures, displaySuccesses, displayTestResults } from '../../utils/output';
 import { TestLevel } from '../../utils/testLevel';
 import { DeployProgress } from '../../utils/progressBar';
@@ -88,11 +86,11 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     OrgConfigProperties.TARGET_ORG,
     SfdxPropertyKeys.API_VERSION
   );
+
   public static envVariablesSection = toHelpSection(
     'ENVIRONMENT VARIABLES',
     EnvironmentVariable.SF_TARGET_ORG,
-    EnvironmentVariable.SFDX_DEFAULTUSERNAME,
-    EnvironmentVariable.SFDX_USE_PROGRESS_BAR
+    EnvironmentVariable.SF_USE_PROGRESS_BAR
   );
 
   public async run(): Promise<DeployMetadataResult> {
@@ -103,10 +101,10 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     const componentSet = await ComponentSetBuilder.build({
       sourceapiversion: await getSourceApiVersion(),
       sourcepath: flags['source-dir'],
-      manifest: (flags.manifest && {
+      manifest: flags.manifest && {
         manifestPath: flags.manifest,
         directoryPaths: await getPackageDirs(),
-      }) as ManifestOption,
+      },
       metadata: flags.metadata && {
         metadataEntries: flags.metadata,
         directoryPaths: await getPackageDirs(),
@@ -132,8 +130,11 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       displayFailures(result);
       displayTestResults(result, testLevel);
     }
+
+    const files = asRelativePaths(result?.getFileResponses() || []);
+
     return {
-      files: asRelativePaths(result?.getFileResponses() || []),
+      files,
       tests: this.getTestResults(result),
     };
   }

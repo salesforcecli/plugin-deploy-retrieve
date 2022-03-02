@@ -9,8 +9,14 @@ import * as os from 'os';
 import * as path from 'path';
 import { CliUx } from '@oclif/core';
 import { blue, bold, dim, red, underline } from 'chalk';
-import { DeployResult, FileResponse, RetrieveResult } from '@sf/sdr';
-import { RequestStatus, Failures, Successes } from '@sf/sdr/lib/src/client/types';
+import {
+  DeployResult,
+  FileResponse,
+  RetrieveResult,
+  RequestStatus,
+  Failures,
+  Successes,
+} from '@salesforce/source-deploy-retrieve';
 import { get } from '@salesforce/ts-types';
 import { TestLevel } from './testLevel';
 

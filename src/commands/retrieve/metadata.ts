@@ -16,12 +16,11 @@ import {
   SfdxError,
 } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
-import { FileResponse, RetrieveResult } from '@sf/sdr';
+import { FileResponse, RetrieveResult, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 
 import { SfCommand, toHelpSection } from '@salesforce/sf-plugins-core';
 import { getArray, getBoolean, getString } from '@salesforce/ts-types';
 import { getPackageDirs, resolveTargetOrg } from '../../utils/orgs';
-import { ComponentSetBuilder, ManifestOption } from '../../utils/componentSetBuilder';
 import { displayPackages, displaySuccesses, PackageRetrieval } from '../../utils/output';
 import { validateOneOfCommandFlags } from '../../utils/requiredFlagValidator';
 
@@ -104,10 +103,10 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       apiversion: flags['api-version'],
       sourcepath: flags['source-dir'],
       packagenames: flags['package-name'],
-      manifest: (flags.manifest && {
+      manifest: flags.manifest && {
         manifestPath: flags.manifest,
         directoryPaths: await getPackageDirs(),
-      }) as ManifestOption,
+      },
       metadata: flags.metadata && {
         metadataEntries: flags.metadata,
         directoryPaths: await getPackageDirs(),

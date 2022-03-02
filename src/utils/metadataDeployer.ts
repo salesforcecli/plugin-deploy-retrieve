@@ -19,7 +19,7 @@ import {
 } from '@salesforce/core';
 import { Deployable, Deployer, generateTableChoices } from '@salesforce/sf-plugins-core';
 
-import { ComponentSetBuilder } from './componentSetBuilder';
+import { ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import { displayFailures, displaySuccesses, displayTestResults } from './output';
 import { TestLevel } from './testLevel';
 import { DeployProgress } from './progressBar';
