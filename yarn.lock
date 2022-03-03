@@ -885,10 +885,45 @@
     widest-line "^3.1.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/core@^1.3.1", "@oclif/core@^1.5.0":
+"@oclif/core@^1.3.1":
   version "1.5.0"
   resolved "https://registry.npmjs.org/@oclif/core/-/core-1.5.0.tgz#0cbbda158baca0453c510a8088ca9dd75ca2ea24"
   integrity sha512-dVFdPijU4fwTbTV0SodCLxOTF4EcKTa9YvIKAHz/ZhJGxbkCJofcJZV/htCgrS7hNbp3jvoO2pYHAUbJEZ3qmA==
+  dependencies:
+    "@oclif/linewrap" "^1.0.0"
+    "@oclif/screen" "^3.0.2"
+    ansi-escapes "^4.3.0"
+    ansi-styles "^4.2.0"
+    cardinal "^2.1.1"
+    chalk "^4.1.2"
+    clean-stack "^3.0.1"
+    cli-progress "^3.10.0"
+    debug "^4.3.3"
+    ejs "^3.1.6"
+    fs-extra "^9.1.0"
+    get-package-type "^0.1.0"
+    globby "^11.0.4"
+    hyperlinker "^1.0.0"
+    indent-string "^4.0.0"
+    is-wsl "^2.2.0"
+    js-yaml "^3.13.1"
+    lodash "^4.17.21"
+    natural-orderby "^2.0.3"
+    object-treeify "^1.1.4"
+    password-prompt "^1.1.2"
+    semver "^7.3.5"
+    string-width "^4.2.3"
+    strip-ansi "^6.0.1"
+    supports-color "^8.1.1"
+    supports-hyperlinks "^2.2.0"
+    tslib "^2.3.1"
+    widest-line "^3.1.0"
+    wrap-ansi "^7.0.0"
+
+"@oclif/core@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.npmjs.org/@oclif/core/-/core-1.5.1.tgz#29969ebd244d1bbf0d98418a3c3620909afa4367"
+  integrity sha512-dlJpww5UAHv46Z7p37ytQIKDkwOmA3uQY6ChPRY6Q9/YfDD4H0z3JfA+lfVfwHkZcIpiq9XsCkhCmBw7Uoh6Iw==
   dependencies:
     "@oclif/linewrap" "^1.0.0"
     "@oclif/screen" "^3.0.2"
@@ -1502,12 +1537,12 @@
     "@salesforce/ts-types" "^1.5.20"
     inquirer "^8.2.0"
 
-"@salesforce/sf-plugins-core@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.npmjs.org/@salesforce/sf-plugins-core/-/sf-plugins-core-1.4.1.tgz#5a00bb071f6fed32c11be144fa0fde4bab34d1c5"
-  integrity sha512-swY0rlZQ1Jf+SWDZRXURcfG22pGdd7KHprcuKkbs47h4m5D58gmClrabcmPbIJlzgeFG6daAuYC5Y2ygA4Rybg==
+"@salesforce/sf-plugins-core@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/@salesforce/sf-plugins-core/-/sf-plugins-core-1.5.0.tgz#f47355d0ef8756df9919e99b529a30f5eafe5096"
+  integrity sha512-mu0vGSXFcQKCtqgid92Q8AUSDcljD/PxecZ4l0o0BZBpmcadbBEYrrpbe9jqcxFxmm2PwB5riNDQRTWQS3qFHg==
   dependencies:
-    "@oclif/core" "^1.5.0"
+    "@oclif/core" "^1.5.1"
     "@salesforce/core" "^3.7.7"
     "@salesforce/kit" "^1.5.17"
     "@salesforce/ts-types" "^1.5.20"

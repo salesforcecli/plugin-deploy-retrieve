@@ -13,8 +13,7 @@ export const apiFlag = (opts = {}): Interfaces.OptionFlag<API | undefined> => {
   return Flags.build<API | undefined>({
     options: Object.values(API),
     helpValue: `<${Object.values(API).join('|')}>`,
-    // TODO: Move this to defaultHelp once https://github.com/oclif/core/pull/386 is merged
-    default: async (): Promise<API> => Promise.resolve(resolveRestDeploy()),
+    defaultHelp: async (): Promise<API> => Promise.resolve(resolveRestDeploy()),
     parse: (input: string | undefined) => Promise.resolve(input as API),
     ...opts,
   })();

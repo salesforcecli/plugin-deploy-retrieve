@@ -10,7 +10,7 @@ import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } 
 import { get, getString } from '@salesforce/ts-types';
 import { DeployResult, FileResponse, RequestStatus, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { getPackageDirs, getSourceApiVersion, resolveTargetOrg } from '../../utils/orgs';
+import { getPackageDirs, getSourceApiVersion } from '../../utils/orgs';
 import { asRelativePaths, displayFailures, displaySuccesses, displayTestResults } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { apiFlag, testLevelFlag } from '../../utils/flags';
@@ -72,8 +72,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       exclusive: ['manifest', 'metadata'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
-    // TODO: make this Flags.requiredOrg once https://github.com/oclif/core/pull/386 is merged
-    'target-org': Flags.string({
+    'target-org': Flags.requiredOrg({
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
       summary: messages.getMessage('flags.target-org.summary'),
@@ -129,7 +128,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       },
     });
 
-    const targetOrg = await resolveTargetOrg(flags['target-org']);
+    const targetOrg = flags['target-org'].getUsername();
 
     this.log(`${EOL}${messages.getMessage('deploy.metadata.api', [targetOrg, flags.api])}${EOL}`);
 

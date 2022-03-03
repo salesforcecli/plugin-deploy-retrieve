@@ -18,7 +18,7 @@ import { FileResponse, RetrieveResult, ComponentSetBuilder } from '@salesforce/s
 
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getArray, getBoolean, getString } from '@salesforce/ts-types';
-import { getPackageDirs, resolveTargetOrg } from '../../utils/orgs';
+import { getPackageDirs } from '../../utils/orgs';
 import { displayPackages, displaySuccesses, PackageRetrieval } from '../../utils/output';
 
 Messages.importMessagesDirectory(__dirname);
@@ -44,7 +44,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       exclusive: ['metadata', 'source-dir'],
       exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
-    // TODO: make this Flags.requiredOrg once https://github.com/oclif/core/pull/386 is merged
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
@@ -66,7 +65,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       exclusive: ['manifest', 'metadata'],
       exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
-    'target-org': Flags.string({
+    'target-org': Flags.requiredOrg({
       char: 'o',
       summary: messages.getMessage('flags.target-org.summary'),
       description: messages.getMessage('flags.target-org.description'),
@@ -114,7 +113,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
     const project = await SfProject.resolve();
 
     const retrieve = await componentSet.retrieve({
-      usernameOrConnection: await resolveTargetOrg(flags['target-org']),
+      usernameOrConnection: flags['target-org'].getUsername(),
       merge: true,
       output: project.getDefaultPackage().fullPath,
       packageOptions: flags['package-name'],
