@@ -5,16 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { ConfigAggregator, SfdxPropertyKeys } from '@salesforce/core';
+import { API } from './types';
 
-export const resolveRestDeploy = function (flag: 'SOAP' | 'REST'): 'SOAP' | 'REST' {
-  if (flag === 'SOAP') return 'SOAP';
+export function resolveRestDeploy(): API {
   const restDeployConfig = ConfigAggregator.getValue(SfdxPropertyKeys.REST_DEPLOY).value;
 
   if (restDeployConfig === 'false') {
-    return 'SOAP';
+    return API.SOAP;
   } else if (restDeployConfig === 'true') {
-    return 'REST';
+    return API.REST;
   } else {
-    return 'SOAP';
+    return API.SOAP;
   }
-};
+}

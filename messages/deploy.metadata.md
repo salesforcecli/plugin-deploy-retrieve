@@ -104,25 +104,29 @@ Full file path for manifest (package.xml) of components to deploy.
 
 All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
 
-# flags.dry-run.description
+# flags.dry-run.summary
 
 Validate deploy and run Apex tests but don’t save to the org.
 
-# flags.api.description
+# flags.api.summary
 
 The API to use for deploying.
 
-# flags.ignore-errors.description
+# flags.ignore-errors.summary
 
 Ignore any errors and don’t roll back deployment.
 
-# flags.ignore-warnings.description
+# flags.ignore-warnings.summary
 
 Ignore warnings and allow a deployment to complete successfully.
 
-# flags.run-tests.description
+# flags.tests.summary
 
 Apex tests to run when --test-level is RunSpecifiedTests.
+
+# flags.verbose.summary
+
+Show verbose output of the deploy result.
 
 # deploy.metadata.api
 

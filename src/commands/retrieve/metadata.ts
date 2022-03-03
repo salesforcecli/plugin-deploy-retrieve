@@ -37,13 +37,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       summary: messages.getMessage('flags.api-version.summary'),
       description: messages.getMessage('flags.api-version.description'),
     }),
-    manifest: Flags.string({
+    manifest: Flags.file({
       char: 'x',
       summary: messages.getMessage('flags.manifest.summary'),
       description: messages.getMessage('flags.manifest.description'),
       exclusive: ['metadata', 'source-dir'],
       exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
+    // TODO: make this Flags.requiredOrg once https://github.com/oclif/core/pull/386 is merged
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),

@@ -13,8 +13,8 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getPackageDirs, getSourceApiVersion, resolveTargetOrg } from '../../utils/orgs';
 import { asRelativePaths, displayFailures, displaySuccesses, displayTestResults } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
-import { resolveRestDeploy } from '../../utils/config';
 import { apiFlag, testLevelFlag } from '../../utils/flags';
+import { API } from '../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -36,38 +36,32 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static flags = {
-    'dry-run': Flags.boolean({
-      description: messages.getMessage('flags.dry-run.description'),
-    }),
     api: apiFlag({
-      description: messages.getMessage('flags.api.description'),
+      summary: messages.getMessage('flags.api.summary'),
+    }),
+    'dry-run': Flags.boolean({
+      summary: messages.getMessage('flags.dry-run.summary'),
     }),
     'ignore-errors': Flags.boolean({
       char: 'r',
-      description: messages.getMessage('flags.ignore-errors.description'),
+      summary: messages.getMessage('flags.ignore-errors.summary'),
     }),
     'ignore-warnings': Flags.boolean({
       char: 'g',
-      description: messages.getMessage('flags.ignore-warnings.description'),
+      summary: messages.getMessage('flags.ignore-warnings.summary'),
     }),
-    'run-tests': Flags.string({
-      char: 't',
-      multiple: true,
-      description: messages.getMessage('flags.run-tests.description'),
-      default: [],
+    manifest: Flags.file({
+      char: 'x',
+      description: messages.getMessage('flags.manifest.description'),
+      summary: messages.getMessage('flags.manifest.summary'),
+      exclusive: ['metadata', 'source-dir'],
+      exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
       exclusive: ['manifest', 'source-dir'],
-      exactlyOne: ['manifest', 'source-dir', 'metadata'],
-    }),
-    manifest: Flags.string({
-      char: 'x',
-      description: messages.getMessage('flags.manifest.description'),
-      summary: messages.getMessage('flags.manifest.summary'),
-      exclusive: ['metadata', 'source-dir'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     'source-dir': Flags.string({
@@ -78,15 +72,25 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       exclusive: ['manifest', 'metadata'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
+    // TODO: make this Flags.requiredOrg once https://github.com/oclif/core/pull/386 is merged
     'target-org': Flags.string({
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
       summary: messages.getMessage('flags.target-org.summary'),
     }),
+    tests: Flags.string({
+      char: 't',
+      multiple: true,
+      summary: messages.getMessage('flags.tests.summary'),
+      default: [],
+    }),
     'test-level': testLevelFlag({
       char: 'l',
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
+    }),
+    verbose: Flags.boolean({
+      summary: messages.getMessage('flags.verbose.summary'),
     }),
     wait: Flags.duration({
       char: 'w',
@@ -94,6 +98,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       description: messages.getMessage('flags.wait.description'),
       unit: 'minutes',
       defaultValue: 33,
+      helpValue: '<minutes>',
     }),
   };
 
@@ -125,18 +130,18 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     });
 
     const targetOrg = await resolveTargetOrg(flags['target-org']);
-    const api = resolveRestDeploy(flags.api);
-    this.log(`${EOL}${messages.getMessage('deploy.metadata.api', [targetOrg, api])}${EOL}`);
+
+    this.log(`${EOL}${messages.getMessage('deploy.metadata.api', [targetOrg, flags.api])}${EOL}`);
 
     const deploy = await componentSet.deploy({
       usernameOrConnection: targetOrg,
       apiOptions: {
-        ignoreWarnings: flags['ignore-warnings'],
-        rollbackOnError: !flags['ignore-errors'],
-        testLevel: flags['test-level'],
         checkOnly: flags['dry-run'],
-        rest: api === 'REST',
-        runTests: flags['run-tests'],
+        ignoreWarnings: flags['ignore-warnings'],
+        rest: flags.api === API.REST,
+        rollbackOnError: !flags['ignore-errors'],
+        runTests: flags.tests,
+        testLevel: flags['test-level'],
       },
     });
 
