@@ -7,6 +7,7 @@
 
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { FileResponse } from '@salesforce/source-deploy-retrieve';
 
 describe('deploy metadata NUTs', () => {
   let sourceTestkit: SourceTestkit;
@@ -65,6 +66,31 @@ describe('deploy metadata NUTs', () => {
 
       await sourceTestkit.deploy({ args: `--manifest ${packageXml}` });
       await sourceTestkit.expect.filesToBeDeployed(['force-app/main/default/classes/*']);
+    });
+  });
+
+  describe('--api flag', () => {
+    it('should deploy force-app with SOAP API', async () => {
+      await sourceTestkit.modifyLocalGlobs(['force-app/main/default/classes/*.cls'], '// comment');
+      await sourceTestkit.modifyLocalGlobs(['force-app/main/default/aura/**/*.cmp'], '<!-- comment -->');
+      await sourceTestkit.deploy({ args: '--metadata ApexClass AuraDefinitionBundle --api SOAP' });
+      await sourceTestkit.expect.filesToBeDeployed([
+        'force-app/main/default/classes/*',
+        'force-app/main/default/aura/**/*',
+      ]);
+    });
+
+    it('should deploy force-app with REST API', async () => {
+      await sourceTestkit.modifyLocalGlobs(['force-app/main/default/classes/*.cls'], '// comment');
+      await sourceTestkit.modifyLocalGlobs(['force-app/main/default/aura/**/*.cmp'], '<!-- comment -->');
+      const deploy = await sourceTestkit.deploy<{ files: FileResponse[] }>({
+        args: '--metadata ApexClass AuraDefinitionBundle --api REST',
+      });
+      await sourceTestkit.expect.filesToBeDeployedViaResult(
+        ['force-app/main/default/classes/*', 'force-app/main/default/aura/**/*'],
+        [],
+        deploy.result.files
+      );
     });
   });
 });
