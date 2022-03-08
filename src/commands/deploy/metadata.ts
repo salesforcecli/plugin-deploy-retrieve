@@ -46,6 +46,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       options: Object.values(API),
       helpValue: `<${Object.values(API).join('|')}>`,
       defaultHelp: async (): Promise<API> => Promise.resolve(resolveRestDeploy()),
+      default: async (): Promise<API> => Promise.resolve(resolveRestDeploy()),
       parse: (input: string) => Promise.resolve(input as API),
       summary: messages.getMessage('flags.api.summary'),
     })(),

@@ -8,7 +8,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import { CliUx } from '@oclif/core';
-import { blue, bold, dim, red, underline } from 'chalk';
+import { blue, bold, dim, red, underline, green } from 'chalk';
 import {
   DeployResult,
   FileResponse,
@@ -17,8 +17,8 @@ import {
   Failures,
   Successes,
   ComponentSet,
+  CodeCoverage,
 } from '@salesforce/source-deploy-retrieve';
-import { get } from '@salesforce/ts-types';
 import { API, TestLevel } from './types';
 
 function info(message: string): string {
@@ -29,15 +29,21 @@ function error(message: string): string {
   return red(bold(message));
 }
 
+function success(message: string): string {
+  return green(bold(message));
+}
+
 function table(
-  responses: FileResponse[] | Array<Record<string, unknown>>,
+  responses: FileResponse[] | CodeCoverage[] | Array<Record<string, unknown>>,
   columns: Record<string, unknown>,
-  options: Record<string, unknown>
+  options?: Record<string, unknown>
 ): void {
   // Interfaces cannot be casted to Record<string, unknown> so we have to cast to unknown first
   // See https://github.com/microsoft/TypeScript/issues/15300
-  CliUx.ux.table(responses as unknown as Array<Record<string, unknown>>, columns, options);
+  CliUx.ux.table(responses as unknown as Array<Record<string, unknown>>, columns, options ?? {});
 }
+
+const check = green('✓');
 
 export type PackageRetrieval = {
   name: string;
@@ -122,32 +128,89 @@ export function displayTestResults(result: DeployResult, testLevel: TestLevel, v
     return;
   }
 
-  if (verbose && result?.response?.numberTestErrors) {
-    const failures = toArray(result.response.details?.runTestResult?.failures);
-    const failureCount = result.response.details.runTestResult?.numFailures;
-    const tests = sortTestResults(failures) as Failures[];
-    CliUx.ux.log();
-    CliUx.ux.log(error(`Test Failures [${failureCount}]`));
-    for (const test of tests) {
-      const testName = underline(`${test.name}.${test.methodName}`);
-      const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
-      CliUx.ux.log(`• ${testName}`);
-      CliUx.ux.log(`  ${dim('message')}: ${test.message}`);
-      CliUx.ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
-      CliUx.ux.log();
-    }
+  if (verbose) {
+    displayVerboseTestFailures(result);
+    displayVerboseTestSuccesses(result);
+    displayVerboseTestCoverage(result);
   }
 
   CliUx.ux.log();
   CliUx.ux.log(info('Test Results Summary'));
-  const passing = get(result, 'response.numberTestsCompleted', 0) as number;
-  const failing = get(result, 'response.numberTestErrors', 0) as number;
-  const total = get(result, 'response.numberTestsTotal', 0) as number;
-  const time = get(result, 'response.details.runTestResult.totalTime', 0) as number;
+  const passing = result.response.numberTestsCompleted ?? 0;
+  const failing = result.response.numberTestErrors ?? 0;
+  const total = result.response.numberTestsTotal ?? 0;
+  const time = result.response.details.runTestResult.totalTime ?? 0;
   CliUx.ux.log(`Passing: ${passing}`);
   CliUx.ux.log(`Failing: ${failing}`);
   CliUx.ux.log(`Total: ${total}`);
   if (time) CliUx.ux.log(`Time: ${time}`);
+}
+
+function displayVerboseTestFailures(result: DeployResult): void {
+  if (!result.response.numberTestErrors) return;
+  const failures = toArray(result.response.details?.runTestResult?.failures);
+  const failureCount = result.response.details.runTestResult?.numFailures;
+  const testFailures = sortTestResults(failures) as Failures[];
+  CliUx.ux.log();
+  CliUx.ux.log(error(`Test Failures [${failureCount}]`));
+  for (const test of testFailures) {
+    const testName = underline(`${test.name}.${test.methodName}`);
+    const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
+    CliUx.ux.log(`• ${testName}`);
+    CliUx.ux.log(`  ${dim('message')}: ${test.message}`);
+    CliUx.ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
+    CliUx.ux.log();
+  }
+}
+
+function displayVerboseTestSuccesses(result: DeployResult): void {
+  const successes = toArray(result.response.details?.runTestResult?.successes);
+  if (successes.length > 0) {
+    const testSuccesses = sortTestResults(successes) as Successes[];
+    CliUx.ux.log();
+    CliUx.ux.log(success(`Test Success [${successes.length}]`));
+    for (const test of testSuccesses) {
+      const testName = underline(`${test.name}.${test.methodName}`);
+      CliUx.ux.log(`${check} ${testName}`);
+    }
+  }
+}
+
+function displayVerboseTestCoverage(result: DeployResult): void {
+  const codeCoverage = toArray(result.response.details.runTestResult?.codeCoverage);
+  if (codeCoverage.length) {
+    const coverage = codeCoverage.sort((a, b) => {
+      return a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
+    });
+    CliUx.ux.log();
+    CliUx.ux.log(info('Apex Code Coverage'));
+    coverage.map((cov: CodeCoverage & { lineNotCovered: string }) => {
+      const numLocationsNum = parseInt(cov.numLocations, 10);
+      const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
+      const color = numLocationsNotCovered > 0 ? red : green;
+
+      let pctCovered = 100;
+      const coverageDecimal: number = parseFloat(
+        ((numLocationsNum - numLocationsNotCovered) / numLocationsNum).toFixed(2)
+      );
+      if (numLocationsNum > 0) {
+        pctCovered = coverageDecimal * 100;
+      }
+      cov.numLocations = color(`${pctCovered}%`);
+
+      if (!cov.locationsNotCovered) {
+        cov.lineNotCovered = '';
+      }
+      const locations = toArray(cov.locationsNotCovered);
+      cov.lineNotCovered = locations.map((location) => location.line).join(',');
+    });
+
+    table(coverage, {
+      name: { header: 'Name' },
+      numLocations: { header: '% Covered' },
+      lineNotCovered: { header: 'Uncovered Lines' },
+    });
+  }
 }
 
 export function displayFailures(result: DeployResult | RetrieveResult): void {
@@ -169,7 +232,7 @@ export function displayFailures(result: DeployResult | RetrieveResult): void {
 
 export function displayDeletes(result: DeployResult): void {
   const fileResponses = asRelativePaths(result.getFileResponses() ?? []);
-  const deletions = sortFileResponses(fileResponses.filter((f) => f.state !== 'Deleted'));
+  const deletions = sortFileResponses(fileResponses.filter((f) => f.state === 'Deleted'));
 
   if (!deletions.length) return;
 
