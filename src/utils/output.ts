@@ -16,9 +16,10 @@ import {
   RequestStatus,
   Failures,
   Successes,
+  ComponentSet,
 } from '@salesforce/source-deploy-retrieve';
 import { get } from '@salesforce/ts-types';
-import { TestLevel } from './types';
+import { API, TestLevel } from './types';
 
 function info(message: string): string {
   return blue(bold(message));
@@ -115,13 +116,13 @@ export function displayPackages(result: RetrieveResult, packages: PackageRetriev
   }
 }
 
-export function displayTestResults(result: DeployResult, testLevel: TestLevel): void {
+export function displayTestResults(result: DeployResult, testLevel: TestLevel, verbose = false): void {
   if (testLevel === TestLevel.NoTestRun) {
     CliUx.ux.log();
     return;
   }
 
-  if (result?.response?.numberTestErrors) {
+  if (verbose && result?.response?.numberTestErrors) {
     const failures = toArray(result.response.details?.runTestResult?.failures);
     const failureCount = result.response.details.runTestResult?.numFailures;
     const tests = sortTestResults(failures) as Failures[];
@@ -164,4 +165,43 @@ export function displayFailures(result: DeployResult | RetrieveResult): void {
   const options = { title: error(`Component Failures [${failures.length}]`) };
   CliUx.ux.log();
   table(failures, columns, options);
+}
+
+export function displayDeletes(result: DeployResult): void {
+  const fileResponses = asRelativePaths(result.getFileResponses() ?? []);
+  const deletions = sortFileResponses(fileResponses.filter((f) => f.state !== 'Deleted'));
+
+  if (!deletions.length) return;
+
+  const columns = {
+    fullName: { header: 'Name' },
+    type: { header: 'Type' },
+    filePath: { header: 'Path' },
+  };
+
+  const options = { title: info('Deleted Source') };
+  CliUx.ux.log();
+
+  table(deletions, columns, options);
+}
+
+export function getVersionMessage(componentSet: ComponentSet, api: API): string {
+  // commands pass in the.componentSet, which may not exist in some tests or mdapi deploys
+  if (!componentSet) {
+    return `*** Deploying with ${api} ***`;
+  }
+  // neither
+  if (!componentSet.sourceApiVersion && !componentSet.apiVersion) {
+    return `*** Deploying with ${api} ***`;
+  }
+  // either OR both match (SDR will use either)
+  if (
+    !componentSet.sourceApiVersion ||
+    !componentSet.apiVersion ||
+    componentSet.sourceApiVersion === componentSet.apiVersion
+  ) {
+    return `*** Deploying with ${api} API v${componentSet.apiVersion ?? componentSet.sourceApiVersion} ***`;
+  }
+  // has both but they don't match
+  return `*** Deploying v${componentSet.sourceApiVersion} metadata with ${api} API v${componentSet.apiVersion} connection ***`;
 }

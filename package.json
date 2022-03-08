@@ -22,6 +22,8 @@
     "@salesforce/plugin-command-reference": "^1.3.15",
     "@salesforce/plugin-config": "^2.2.9",
     "@salesforce/plugin-functions": "^1.1.4",
+    "@salesforce/plugin-source": "^1.8.18",
+    "@salesforce/plugin-user": "^1.7.1",
     "@salesforce/prettier-config": "^0.0.2",
     "@salesforce/source-testkit": "^0.0.17",
     "@salesforce/ts-sinon": "1.3.21",
@@ -30,6 +32,7 @@
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "chai": "^4.2.0",
+    "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^6.11.0",
@@ -47,6 +50,7 @@
     "oclif": "^2.4.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^3.1.0",
+    "salesforcedx-templates": "^49.8.0",
     "shx": "0.3.4",
     "sinon": "11.1.1",
     "ts-node": "^10.0.0",
@@ -84,11 +88,14 @@
       "sf:deploy": "./lib/hooks/deploy"
     },
     "devPlugins": [
-      "@oclif/plugin-help",
       "@oclif/plugin-command-snapshot",
+      "@oclif/plugin-help",
       "@salesforce/plugin-command-reference",
       "@salesforce/plugin-config",
-      "@salesforce/plugin-functions"
+      "@salesforce/plugin-functions",
+      "@salesforce/plugin-source",
+      "@salesforce/plugin-user",
+      "salesforcedx-templates"
     ],
     "topics": {
       "deploy": {
@@ -118,7 +125,11 @@
     "test:command-reference": "./bin/dev commandreference:generate --erroronwarnings",
     "test:deprecation-policy": "./bin/dev snapshot:compare",
     "test:json-schema": "./bin/dev schema:compare",
-    "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
+    "test:nuts": "ts-node ./test/nuts/generateNuts.ts && nyc mocha \"**/*.nut.ts\"  --slow 4500 --timeout 600000 --parallel --retries 0",
+    "test:nuts:deploy:metadata:manifest": "cross-env PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER=deploy.metadata.manifest ts-node ./test/nuts/generateNuts.ts && mocha \"test/nuts/generated/*.nut.ts\" --slow 4500 --timeout 600000 --parallel --retries 0",
+    "test:nuts:deploy:metadata:metadata": "cross-env PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER=deploy.metadata.metadata ts-node ./test/nuts/generateNuts.ts && mocha \"test/nuts/generated/*.nut.ts\" --slow 4500 --timeout 600000 --parallel --retries 0",
+    "test:nuts:deploy:metadata:source-dir": "cross-env PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER=deploy.metadata.source-dir ts-node ./test/nuts/generateNuts.ts && mocha \"test/nuts/generated/*.nut.ts\" --slow 4500 --timeout 600000 --parallel --retries 0",
+    "test:nuts:deploy:metadata:test-level": "cross-env PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER=deploy.metadata.test-level ts-node ./test/nuts/generateNuts.ts && mocha \"test/nuts/generated/*.nut.ts\" --slow 4500 --timeout 600000 --parallel --retries 0",
     "version": "oclif readme"
   },
   "publishConfig": {

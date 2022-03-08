@@ -130,7 +130,7 @@ Show verbose output of the deploy result.
 
 # deploy.metadata.api
 
-Deploying to %s using %s API.
+Deploying to %s using %s API v%s
 
 # errors.NoOrgsToSelect
 

@@ -5,16 +5,21 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { EOL } from 'os';
+import { Flags as OclifFlags } from '@oclif/core';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
-import { get, getString } from '@salesforce/ts-types';
 import { DeployResult, FileResponse, RequestStatus, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getPackageDirs, getSourceApiVersion } from '../../utils/orgs';
-import { asRelativePaths, displayFailures, displaySuccesses, displayTestResults } from '../../utils/output';
+import {
+  displayDeletes,
+  displayFailures,
+  displaySuccesses,
+  displayTestResults,
+  getVersionMessage,
+} from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
-import { apiFlag, testLevelFlag } from '../../utils/flags';
-import { API } from '../../utils/types';
+import { API, TestLevel } from '../../utils/types';
+import { resolveRestDeploy } from '../../utils/config';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -23,11 +28,12 @@ export type TestResults = {
   passing: number;
   failing: number;
   total: number;
-  time?: number;
+  time?: string;
 };
 
 export type DeployMetadataResult = {
   files: FileResponse[];
+  jobId: string;
   tests?: TestResults;
 };
 
@@ -36,19 +42,26 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static flags = {
-    api: apiFlag({
+    api: OclifFlags.build<API>({
+      options: Object.values(API),
+      helpValue: `<${Object.values(API).join('|')}>`,
+      defaultHelp: async (): Promise<API> => Promise.resolve(resolveRestDeploy()),
+      parse: (input: string) => Promise.resolve(input as API),
       summary: messages.getMessage('flags.api.summary'),
-    }),
+    })(),
     'dry-run': Flags.boolean({
       summary: messages.getMessage('flags.dry-run.summary'),
+      default: false,
     }),
     'ignore-errors': Flags.boolean({
       char: 'r',
       summary: messages.getMessage('flags.ignore-errors.summary'),
+      default: false,
     }),
     'ignore-warnings': Flags.boolean({
       char: 'g',
       summary: messages.getMessage('flags.ignore-warnings.summary'),
+      default: false,
     }),
     manifest: Flags.file({
       char: 'x',
@@ -83,11 +96,14 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       summary: messages.getMessage('flags.tests.summary'),
       default: [],
     }),
-    'test-level': testLevelFlag({
+    'test-level': OclifFlags.build<TestLevel | undefined>({
+      options: Object.values(TestLevel),
+      default: TestLevel.NoTestRun,
+      parse: (input: string) => Promise.resolve(input as TestLevel),
       char: 'l',
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
-    }),
+    })(),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
     }),
@@ -129,9 +145,6 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     });
 
     const targetOrg = flags['target-org'].getUsername();
-
-    this.log(`${EOL}${messages.getMessage('deploy.metadata.api', [targetOrg, flags.api])}${EOL}`);
-
     const deploy = await componentSet.deploy({
       usernameOrConnection: targetOrg,
       apiOptions: {
@@ -144,6 +157,8 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       },
     });
 
+    this.log(getVersionMessage(componentSet, flags.api));
+    this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus(500, flags.wait.seconds);
@@ -152,30 +167,29 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     if (!this.jsonEnabled()) {
       displaySuccesses(result);
       displayFailures(result);
-      displayTestResults(result, flags['test-level']);
+      displayDeletes(result);
+      displayTestResults(result, flags['test-level'], flags.verbose);
     }
 
-    const files = asRelativePaths(result?.getFileResponses() || []);
-
     return {
-      files,
+      jobId: result.response.id,
+      files: result.getFileResponses() || [],
       tests: this.getTestResults(result),
     };
   }
 
   private setExitCode(result: DeployResult): void {
-    const status = getString(result, 'response.status');
-    if (status !== RequestStatus.Succeeded) {
+    if (result.response.status !== RequestStatus.Succeeded) {
       process.exitCode = 1;
     }
   }
 
   private getTestResults(result: DeployResult): TestResults {
-    const passing = get(result, 'response.numberTestsCompleted', 0) as number;
-    const failing = get(result, 'response.numberTestErrors', 0) as number;
-    const total = get(result, 'response.numberTestsTotal', 0) as number;
+    const passing = result.response.numberTestsCompleted ?? 0;
+    const failing = result.response.numberTestErrors ?? 0;
+    const total = result.response.numberTestsTotal ?? 0;
     const testResults = { passing, failing, total };
-    const time = get(result, 'response.details.runTestResult.totalTime', 0) as number;
+    const time = result.response.details.runTestResult.totalTime;
     return time ? { ...testResults, time } : testResults;
   }
 }
