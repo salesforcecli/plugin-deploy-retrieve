@@ -115,6 +115,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       unit: 'minutes',
       defaultValue: 33,
       helpValue: '<minutes>',
+      min: 1,
     }),
   };
 
