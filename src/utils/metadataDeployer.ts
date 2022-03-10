@@ -6,7 +6,7 @@
  */
 
 import { EOL } from 'os';
-import { cyan } from 'chalk';
+import { cyan, red } from 'chalk';
 import { Duration } from '@salesforce/kit';
 import {
   AuthInfo,
@@ -142,7 +142,32 @@ export class MetadataDeployer extends Deployer {
     const aliasOrUsername = ConfigAggregator.getValue(OrgConfigProperties.TARGET_ORG)?.value as string;
     const globalInfo = await GlobalInfo.getInstance();
     const allAliases = globalInfo.aliases.getAll();
-    if (!aliasOrUsername) {
+    let targetOrgAuth: OrgAuthorization;
+    // make sure the "target-org" can be used in this deploy
+    if (aliasOrUsername) {
+      targetOrgAuth = (
+        await AuthInfo.listAllAuthorizations(
+          (a) => a.username === aliasOrUsername || a.aliases.some((alias) => alias === aliasOrUsername)
+        )
+      ).find((a) => a);
+      if (targetOrgAuth) {
+        if (targetOrgAuth?.isExpired) {
+          const continueAnswer = await this.prompt<{ continue: boolean }>([
+            {
+              name: 'continue',
+              type: 'confirm',
+              message: red(messages.getMessage('warning.TargetOrgIsExpired', [aliasOrUsername])),
+            },
+          ]);
+          if (!continueAnswer.continue) {
+            throw messages.createError('error.UserTerminatedDeployForExpiredOrg');
+          }
+        } else {
+          return globalInfo.aliases.resolveUsername(aliasOrUsername);
+        }
+      }
+    }
+    if (!aliasOrUsername || targetOrgAuth?.isExpired) {
       const authorizations = (
         await AuthInfo.listAllAuthorizations((orgAuth) => !orgAuth.error && orgAuth.isExpired !== true)
       ).map((orgAuth) => {
@@ -174,8 +199,6 @@ export class MetadataDeployer extends Deployer {
       } else {
         throw messages.createError('errors.NoOrgsToSelect');
       }
-    } else {
-      return globalInfo.aliases.resolveUsername(aliasOrUsername);
     }
   }
 
