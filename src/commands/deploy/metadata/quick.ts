@@ -8,41 +8,29 @@
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
 import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { displayDeployResults, getVersionMessage } from '../../utils/output';
-import { DeployProgress } from '../../utils/progressBar';
-import { TestLevel, TestResults } from '../../utils/types';
-import { executeDeploy, apiFlag, testLevelFlag, getTestResults } from '../../utils/deploy';
+import { displayDeployResults, getVersionMessage } from '../../../utils/output';
+import { DeployProgress } from '../../../utils/progressBar';
+import { TestLevel, TestResults } from '../../../utils/types';
+import { executeDeploy, apiFlag, testLevelFlag, getTestResults } from '../../../utils/deploy';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.quick');
 
-export type DeployMetadataResult = {
+export type DeployMetadataQuickResult = {
   files: FileResponse[];
   jobId: string;
   tests?: TestResults;
 };
 
-export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
+export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickResult> {
+  public static readonly hidden = true; // hidden until `sf deploy metadata resume` is implemented.
+  public static readonly state = 'beta';
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static flags = {
     api: apiFlag({
       summary: messages.getMessage('flags.api.summary'),
-    }),
-    'dry-run': Flags.boolean({
-      summary: messages.getMessage('flags.dry-run.summary'),
-      default: false,
-    }),
-    'ignore-errors': Flags.boolean({
-      char: 'r',
-      summary: messages.getMessage('flags.ignore-errors.summary'),
-      default: false,
-    }),
-    'ignore-warnings': Flags.boolean({
-      char: 'g',
-      summary: messages.getMessage('flags.ignore-warnings.summary'),
-      default: false,
     }),
     manifest: Flags.file({
       char: 'x',
@@ -75,10 +63,10 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       char: 't',
       multiple: true,
       summary: messages.getMessage('flags.tests.summary'),
-      default: [],
     }),
     'test-level': testLevelFlag({
-      default: TestLevel.NoTestRun,
+      options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],
+      default: TestLevel.RunLocalTests,
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
     }),
@@ -108,11 +96,11 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     EnvironmentVariable.SF_USE_PROGRESS_BAR
   );
 
-  public async run(): Promise<DeployMetadataResult> {
-    const flags = (await this.parse(DeployMetadata)).flags;
-    const { deploy, componentSet } = await executeDeploy(flags);
+  public async run(): Promise<DeployMetadataQuickResult> {
+    const flags = (await this.parse(DeployMetadataQuick)).flags;
+    const { deploy, componentSet } = await executeDeploy({ ...flags, 'dry-run': true });
 
-    this.log(getVersionMessage('Deploying', componentSet, flags.api));
+    this.log(getVersionMessage('Quick Deploying', componentSet, flags.api));
     this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 

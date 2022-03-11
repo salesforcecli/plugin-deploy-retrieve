@@ -18,8 +18,8 @@ import { FileResponse, RetrieveResult, ComponentSetBuilder } from '@salesforce/s
 
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getArray, getBoolean, getString } from '@salesforce/ts-types';
-import { getPackageDirs } from '../../utils/orgs';
 import { displayPackages, displaySuccesses, PackageRetrieval } from '../../utils/output';
+import { getPackageDirs } from '../../utils/project';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');

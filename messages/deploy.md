@@ -1,5 +1,5 @@
 # summary
-  
+
 Deploy a project interactively to any Salesforce environment.
 
 # description
@@ -18,12 +18,17 @@ Use this command for quick and simple deploys. For more complicated deployments,
 
 - Deploy a project and use stored values from a previous command run:
 
-     <%= config.bin %> <%= command.id %>
+  <%= config.bin %> <%= command.id %>
 
 - Reprompt for all deployment inputs:
 
-     <%= config.bin %> <%= command.id %> --interactive
+  <%= config.bin %> <%= command.id %> --interactive
 
 # flags.interactive.summary
 
 Force the CLI to prompt for all deployment inputs.
+
+# errors.NoOrgsToSelect
+
+Can't find any active scratch orgs, Dev Hubs, or other orgs.
+Either log into an org or create a scratch org, and then try again.

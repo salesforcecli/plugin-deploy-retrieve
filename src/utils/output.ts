@@ -90,6 +90,13 @@ export function toArray<T>(entryOrArray: T | T[] | undefined): T[] {
   return [];
 }
 
+export function displayDeployResults(result: DeployResult, testLevel: TestLevel, verbose: boolean): void {
+  displaySuccesses(result);
+  displayFailures(result);
+  displayDeletes(result);
+  displayTestResults(result, testLevel, verbose);
+}
+
 export function displaySuccesses(result: DeployResult | RetrieveResult): void {
   const fileResponses = asRelativePaths(result.getFileResponses() ?? []);
   const successes = sortFileResponses(fileResponses.filter((f) => f.state !== 'Failed'));
@@ -248,14 +255,14 @@ export function displayDeletes(result: DeployResult): void {
   table(deletions, columns, options);
 }
 
-export function getVersionMessage(componentSet: ComponentSet, api: API): string {
+export function getVersionMessage(action: string, componentSet: ComponentSet, api: API): string {
   // commands pass in the.componentSet, which may not exist in some tests or mdapi deploys
   if (!componentSet) {
-    return `*** Deploying with ${api} ***`;
+    return `*** ${action} with ${api} ***`;
   }
   // neither
   if (!componentSet.sourceApiVersion && !componentSet.apiVersion) {
-    return `*** Deploying with ${api} ***`;
+    return `*** ${action} with ${api} ***`;
   }
   // either OR both match (SDR will use either)
   if (
@@ -263,8 +270,8 @@ export function getVersionMessage(componentSet: ComponentSet, api: API): string 
     !componentSet.apiVersion ||
     componentSet.sourceApiVersion === componentSet.apiVersion
   ) {
-    return `*** Deploying with ${api} API v${componentSet.apiVersion ?? componentSet.sourceApiVersion} ***`;
+    return `*** ${action} with ${api} API v${componentSet.apiVersion ?? componentSet.sourceApiVersion} ***`;
   }
   // has both but they don't match
-  return `*** Deploying v${componentSet.sourceApiVersion} metadata with ${api} API v${componentSet.apiVersion} connection ***`;
+  return `*** ${action} v${componentSet.sourceApiVersion} metadata with ${api} API v${componentSet.apiVersion} connection ***`;
 }

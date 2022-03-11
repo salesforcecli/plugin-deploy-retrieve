@@ -1,6 +1,6 @@
 # summary
 
-Deploy metadata in source format to an org from your local project.
+Deploy metadata in source format to an org from your local project. Returns a deployment id that you can use to resume a deployment at a later time.
 
 # description
 
@@ -16,7 +16,7 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 - Deploy the source files in a directory:
 
-      <%= config.bin %> <%= command.id %>  --source-dir path/to/source
+      <%= config.bin %> <%= command.id %> --source-dir path/to/source
 
 - Deploy a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
 
@@ -68,8 +68,6 @@ Deployment Apex testing level.
 
 Valid values are:
 
-- NoTestRun — No tests are run. This test level applies only to deployments to development environments, such as sandbox, Developer Edition, or trial orgs. This test level is the default for development environments.
-
 - RunSpecifiedTests — Runs only the tests that you specify with the --run-tests flag. Code coverage requirements differ from the default coverage requirements when using this test level. Executed tests must comprise a minimum of 75% code coverage for each class and trigger in the deployment package. This coverage is computed for each class and trigger individually and is different than the overall coverage percentage.
 
 - RunLocalTests — All tests in your org are run, except the ones that originate from installed managed and unlocked packages. This test level is the default for production deployments that include Apex classes or triggers.
@@ -104,21 +102,9 @@ Full file path for manifest (package.xml) of components to deploy.
 
 All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
 
-# flags.dry-run.summary
-
-Validate deploy and run Apex tests but don’t save to the org.
-
 # flags.api.summary
 
 The API to use for deploying.
-
-# flags.ignore-errors.summary
-
-Ignore any errors and don’t roll back deployment.
-
-# flags.ignore-warnings.summary
-
-Ignore warnings and allow a deployment to complete successfully.
 
 # flags.tests.summary
 
