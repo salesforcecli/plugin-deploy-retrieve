@@ -9,7 +9,7 @@ import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 
-describe('deploy metadata quick NUTs', () => {
+describe('deploy metadata validate NUTs', () => {
   let sourceTestkit: SourceTestkit;
 
   before(async () => {
@@ -26,7 +26,7 @@ describe('deploy metadata quick NUTs', () => {
 
   describe('--source-dir flag', () => {
     it('should deploy force-app', async () => {
-      const deploy = await sourceTestkit.execute<{ id: string; files: FileResponse[] }>('deploy:metadata:quick', {
+      const deploy = await sourceTestkit.execute<{ id: string; files: FileResponse[] }>('deploy:metadata:validate', {
         args: '--source-dir force-app',
         json: true,
         exitCode: 0,
