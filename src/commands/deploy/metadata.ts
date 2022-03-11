@@ -92,7 +92,8 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     'ENVIRONMENT VARIABLES',
     EnvironmentVariable.SF_TARGET_ORG,
     EnvironmentVariable.SFDX_DEFAULTUSERNAME,
-    EnvironmentVariable.SFDX_USE_PROGRESS_BAR
+    EnvironmentVariable.SFDX_USE_PROGRESS_BAR,
+    EnvironmentVariable.SF_USE_PROGRESS_BAR
   );
 
   public async run(): Promise<DeployMetadataResult> {
