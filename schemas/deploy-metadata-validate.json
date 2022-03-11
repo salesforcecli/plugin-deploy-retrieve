@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$ref": "#/definitions/DeployMetadataQuickResult",
+  "$ref": "#/definitions/DeployMetadataValidateResult",
   "definitions": {
-    "DeployMetadataQuickResult": {
+    "DeployMetadataValidateResult": {
       "type": "object",
       "properties": {
         "files": {

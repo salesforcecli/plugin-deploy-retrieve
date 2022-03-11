@@ -16,13 +16,13 @@ import { executeDeploy, apiFlag, testLevelFlag, getTestResults } from '../../../
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.quick');
 
-export type DeployMetadataQuickResult = {
+export type DeployMetadataValidateResult = {
   files: FileResponse[];
   jobId: string;
   tests?: TestResults;
 };
 
-export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickResult> {
+export default class DeployMetadataValidate extends SfCommand<DeployMetadataValidateResult> {
   public static readonly hidden = true; // hidden until `sf deploy metadata resume` is implemented.
   public static readonly state = 'beta';
   public static readonly description = messages.getMessage('description');
@@ -96,11 +96,11 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
     EnvironmentVariable.SF_USE_PROGRESS_BAR
   );
 
-  public async run(): Promise<DeployMetadataQuickResult> {
-    const flags = (await this.parse(DeployMetadataQuick)).flags;
+  public async run(): Promise<DeployMetadataValidateResult> {
+    const flags = (await this.parse(DeployMetadataValidate)).flags;
     const { deploy, componentSet } = await executeDeploy({ ...flags, 'dry-run': true });
 
-    this.log(getVersionMessage('Quick Deploying', componentSet, flags.api));
+    this.log(getVersionMessage('Validating Deployment', componentSet, flags.api));
     this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 

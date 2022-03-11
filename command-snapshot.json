@@ -26,7 +26,7 @@
     "alias": []
   },
   {
-    "command": "deploy:metadata:quick",
+    "command": "deploy:metadata:validate",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": [
       "api",
