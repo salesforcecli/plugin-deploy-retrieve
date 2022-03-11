@@ -8,7 +8,7 @@
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { writeJson } from 'fs-extra';
-import { TestLevel } from '../../src/utils/testLevel';
+import { TestLevel } from '../../src/utils/types';
 import { MetadataDeployer } from '../../src/utils/metadataDeployer';
 
 describe('deploy NUTs', () => {

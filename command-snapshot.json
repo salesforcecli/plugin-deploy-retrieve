@@ -8,7 +8,21 @@
   {
     "command": "deploy:metadata",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["json", "manifest", "metadata", "source-dir", "target-org", "test-level", "wait"],
+    "flags": [
+      "api",
+      "dry-run",
+      "ignore-errors",
+      "ignore-warnings",
+      "json",
+      "manifest",
+      "metadata",
+      "source-dir",
+      "target-org",
+      "test-level",
+      "tests",
+      "verbose",
+      "wait"
+    ],
     "alias": []
   },
   {

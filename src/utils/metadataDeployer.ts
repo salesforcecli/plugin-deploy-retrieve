@@ -21,7 +21,7 @@ import { Deployable, Deployer, generateTableChoices } from '@salesforce/sf-plugi
 
 import { ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import { displayFailures, displaySuccesses, displayTestResults } from './output';
-import { TestLevel } from './testLevel';
+import { API, TestLevel } from './types';
 import { DeployProgress } from './progressBar';
 import { resolveRestDeploy } from './config';
 
@@ -123,11 +123,15 @@ export class MetadataDeployer extends Deployer {
   public async deploy(): Promise<void> {
     const directories = this.deployables.map((d) => d.pkg.fullPath);
     const name = this.deployables.map((p) => cyan.bold(p.getPath())).join(', ');
-    this.log(`${EOL}Deploying ${name} to ${this.username} using ${resolveRestDeploy()} API`);
+    const api = resolveRestDeploy();
+    this.log(`${EOL}Deploying ${name} to ${this.username} using ${api} API`);
     const componentSet = await ComponentSetBuilder.build({ sourcepath: directories });
     const deploy = await componentSet.deploy({
       usernameOrConnection: this.username,
-      apiOptions: { testLevel: this.testLevel },
+      apiOptions: {
+        testLevel: this.testLevel,
+        rest: api === API.REST,
+      },
     });
 
     new DeployProgress(deploy).start();
