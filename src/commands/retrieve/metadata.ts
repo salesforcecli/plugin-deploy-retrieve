@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, salesforce.com, inc.
+ * Copyright (c) 2022, salesforce.com, inc.
  * All rights reserved.
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
@@ -95,7 +95,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
 
   public async run(): Promise<RetrieveMetadataResult> {
     const flags = (await this.parse(RetrieveMetadata)).flags;
-
+    this.spinner.start(messages.getMessage('spinner.start'));
     const componentSet = await ComponentSetBuilder.build({
       apiversion: flags['api-version'],
       sourcepath: flags['source-dir'],
@@ -112,12 +112,18 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
 
     const project = await SfProject.resolve();
 
+    this.spinner.status = messages.getMessage('spinner.sending', [
+      componentSet.sourceApiVersion || componentSet.apiVersion,
+    ]);
+
     const retrieve = await componentSet.retrieve({
       usernameOrConnection: flags['target-org'].getUsername(),
       merge: true,
       output: project.getDefaultPackage().fullPath,
       packageOptions: flags['package-name'],
     });
+
+    this.spinner.status = messages.getMessage('spinner.polling');
 
     retrieve.onUpdate((data) => {
       this.spinner.status = mdTrasferMessages.getMessage(data.status);
@@ -133,11 +139,9 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       throw error;
     });
 
-    this.spinner.start(messages.getMessage('RetrieveTitle'));
-
     await retrieve.start();
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
-
+    this.spinner.stop();
     const fileResponses = result?.getFileResponses() || [];
 
     await this.displayResults(result, flags);
