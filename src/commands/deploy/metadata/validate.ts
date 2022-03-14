@@ -14,7 +14,7 @@ import { TestLevel, TestResults } from '../../../utils/types';
 import { executeDeploy, apiFlag, testLevelFlag, getTestResults } from '../../../utils/deploy';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.quick');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
 
 export type DeployMetadataValidateResult = {
   files: FileResponse[];
@@ -28,9 +28,15 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
+  public static readonly requiresProject = true;
   public static flags = {
     api: apiFlag({
       summary: messages.getMessage('flags.api.summary'),
+    }),
+    'api-version': Flags.orgApiVersion({
+      char: 'a',
+      summary: messages.getMessage('flags.api-version.summary'),
+      description: messages.getMessage('flags.api-version.description'),
     }),
     manifest: Flags.file({
       char: 'x',

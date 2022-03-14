@@ -127,3 +127,11 @@ Apex tests to run when --test-level is RunSpecifiedTests.
 # flags.verbose.summary
 
 Show verbose output of the deploy result.
+
+# flags.api-version.summary
+
+Target API version for the retrieve.
+
+# flags.api-version.description
+
+Use this flag to override the default API version, which is the latest version supported the CLI, with the API version in your package.xml file.

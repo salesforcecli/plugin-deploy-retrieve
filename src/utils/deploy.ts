@@ -15,6 +15,7 @@ type Options = {
   api: API;
   'target-org': Org | string;
   'test-level': TestLevel;
+  'api-version'?: string;
   'dry-run'?: boolean;
   'ignore-errors'?: boolean;
   'ignore-warnings'?: boolean;
@@ -40,6 +41,7 @@ export async function executeDeploy(
   opts: Partial<Options>
 ): Promise<{ deploy: MetadataApiDeploy; componentSet: ComponentSet }> {
   const componentSet = await ComponentSetBuilder.build({
+    apiversion: opts['api-version'],
     sourceapiversion: await getSourceApiVersion(),
     sourcepath: opts['source-dir'],
     manifest: opts.manifest && {

@@ -32,6 +32,11 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     api: apiFlag({
       summary: messages.getMessage('flags.api.summary'),
     }),
+    'api-version': Flags.orgApiVersion({
+      char: 'a',
+      summary: messages.getMessage('flags.api-version.summary'),
+      description: messages.getMessage('flags.api-version.description'),
+    }),
     'dry-run': Flags.boolean({
       summary: messages.getMessage('flags.dry-run.summary'),
       default: false,
