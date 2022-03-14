@@ -125,7 +125,7 @@
     "test:command-reference": "./bin/dev commandreference:generate --erroronwarnings",
     "test:deprecation-policy": "./bin/dev snapshot:compare",
     "test:json-schema": "./bin/dev schema:compare",
-    "test:nuts": "ts-node ./test/nuts/generateNuts.ts && nyc mocha \"**/*.nut.ts\"  --slow 4500 --timeout 600000 --parallel --retries 0",
+    "test:nuts": "ts-node ./test/nuts/generateNuts.ts && nyc mocha \"**/*.nut.ts\"  --slow 4500 --timeout 600000 --retries 0",
     "test:nuts:deploy:metadata:manifest": "cross-env PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER=deploy.metadata.manifest ts-node ./test/nuts/generateNuts.ts && mocha \"test/nuts/generated/*.nut.ts\" --slow 4500 --timeout 600000 --parallel --retries 0",
     "test:nuts:deploy:metadata:metadata": "cross-env PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER=deploy.metadata.metadata ts-node ./test/nuts/generateNuts.ts && mocha \"test/nuts/generated/*.nut.ts\" --slow 4500 --timeout 600000 --parallel --retries 0",
     "test:nuts:deploy:metadata:source-dir": "cross-env PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER=deploy.metadata.source-dir ts-node ./test/nuts/generateNuts.ts && mocha \"test/nuts/generated/*.nut.ts\" --slow 4500 --timeout 600000 --parallel --retries 0",

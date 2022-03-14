@@ -19,6 +19,7 @@ import {
   ComponentSet,
   CodeCoverage,
 } from '@salesforce/source-deploy-retrieve';
+import { NamedPackageDir } from '@salesforce/core';
 import { API, TestLevel } from './types';
 
 function info(message: string): string {
@@ -44,11 +45,6 @@ function table(
 }
 
 const check = green('✓');
-
-export type PackageRetrieval = {
-  name: string;
-  path: string;
-};
 
 export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
   fileResponses.forEach((file) => {
@@ -116,11 +112,11 @@ export function displaySuccesses(result: DeployResult | RetrieveResult): void {
   table(successes, columns, options);
 }
 
-export function displayPackages(result: RetrieveResult, packages: PackageRetrieval[]): void {
+export function displayPackages(result: RetrieveResult, packages: NamedPackageDir[]): void {
   if (packages?.length) {
     const columns = {
       name: { header: 'Package Name' },
-      path: { header: 'Converted Location' },
+      fullPath: { header: 'Converted Location' },
     };
     const title = 'Retrieved Packages';
     const options = { title: info(title) };

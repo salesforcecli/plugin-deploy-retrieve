@@ -10,10 +10,10 @@ import { SourceTestkit } from '@salesforce/source-testkit';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 
 describe('deploy metadata validate NUTs', () => {
-  let sourceTestkit: SourceTestkit;
+  let testkit: SourceTestkit;
 
   before(async () => {
-    sourceTestkit = await SourceTestkit.create({
+    testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
       executable: path.join(process.cwd(), 'bin', 'dev'),
       nut: __filename,
@@ -21,21 +21,17 @@ describe('deploy metadata validate NUTs', () => {
   });
 
   after(async () => {
-    await sourceTestkit?.clean();
+    await testkit?.clean();
   });
 
   describe('--source-dir flag', () => {
     it('should deploy force-app', async () => {
-      const deploy = await sourceTestkit.execute<{ id: string; files: FileResponse[] }>('deploy:metadata:validate', {
+      const deploy = await testkit.execute<{ id: string; files: FileResponse[] }>('deploy:metadata:validate', {
         args: '--source-dir force-app',
         json: true,
         exitCode: 0,
       });
-      await sourceTestkit.expect.filesToBeDeployedViaResult(
-        ['force-app/**/*'],
-        ['force-app/test/**/*'],
-        deploy.result.files
-      );
+      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
   });
 });

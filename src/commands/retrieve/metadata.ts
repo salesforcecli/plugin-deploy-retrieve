@@ -9,16 +9,17 @@ import * as path from 'path';
 import {
   EnvironmentVariable,
   Messages,
+  NamedPackageDir,
   OrgConfigProperties,
   SfdxPropertyKeys,
-  SfProject,
   SfError,
+  SfProject,
 } from '@salesforce/core';
 import { FileResponse, RetrieveResult, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { getArray, getBoolean, getString } from '@salesforce/ts-types';
-import { displayPackages, displaySuccesses, PackageRetrieval } from '../../utils/output';
+import { getString } from '@salesforce/ts-types';
+import { displayPackages, displaySuccesses } from '../../utils/output';
 import { getPackageDirs } from '../../utils/project';
 
 Messages.importMessagesDirectory(__dirname);
@@ -31,6 +32,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
+  public static readonly requiresProject = true;
   public static flags = {
     'api-version': Flags.orgApiVersion({
       char: 'a',
@@ -42,20 +44,17 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       summary: messages.getMessage('flags.manifest.summary'),
       description: messages.getMessage('flags.manifest.description'),
       exclusive: ['metadata', 'source-dir'],
-      exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
       exclusive: ['manifest', 'source-dir'],
-      exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
     'package-name': Flags.string({
       char: 'n',
       summary: messages.getMessage('flags.package-name.summary'),
       multiple: true,
-      exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
     'source-dir': Flags.string({
       char: 'd',
@@ -63,7 +62,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       description: messages.getMessage('flags.source-dir.description'),
       multiple: true,
       exclusive: ['manifest', 'metadata'],
-      exactlyOne: ['manifest', 'metadata', 'package-name', 'source-dir'],
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -110,8 +108,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       },
     });
 
-    const project = await SfProject.resolve();
-
     this.spinner.status = messages.getMessage('spinner.sending', [
       componentSet.sourceApiVersion || componentSet.apiVersion,
     ]);
@@ -119,7 +115,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
     const retrieve = await componentSet.retrieve({
       usernameOrConnection: flags['target-org'].getUsername(),
       merge: true,
-      output: project.getDefaultPackage().fullPath,
+      output: this.project.getDefaultPackage().fullPath,
       packageOptions: flags['package-name'],
     });
 
@@ -144,30 +140,31 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
     this.spinner.stop();
     const fileResponses = result?.getFileResponses() || [];
 
-    await this.displayResults(result, flags);
+    if (!this.jsonEnabled()) {
+      await this.displayResults(result, flags['package-name']);
+    }
 
     return fileResponses;
   }
-  private async displayResults(result: RetrieveResult, flags: unknown): Promise<void> {
-    if (!getBoolean(flags, 'json', false)) {
-      if (result.response.status === 'Succeeded') {
-        displaySuccesses(result);
-        displayPackages(result, await this.getPackages(result, flags));
-      } else {
-        throw new SfError(
-          getString(result.response, 'errorMessage', result.response.status),
-          getString(result.response, 'errorStatusCode', 'unknown')
-        );
-      }
+
+  private async displayResults(result: RetrieveResult, packageNames: string[] = []): Promise<void> {
+    if (result.response.status === 'Succeeded') {
+      displaySuccesses(result);
+      displayPackages(result, await this.getPackages(result, packageNames));
+    } else {
+      throw new SfError(
+        getString(result.response, 'errorMessage', result.response.status),
+        getString(result.response, 'errorStatusCode', 'unknown')
+      );
     }
   }
 
-  private async getPackages(result: RetrieveResult, flags): Promise<PackageRetrieval[]> {
-    const packages: PackageRetrieval[] = [];
+  private async getPackages(result: RetrieveResult, packageNames: string[] = []): Promise<NamedPackageDir[]> {
+    const packages: NamedPackageDir[] = [];
     const projectPath = await SfProject.resolveProjectPath();
-    const packageNames = getArray(flags, 'package-name', []) as string[];
     packageNames.forEach((name) => {
-      packages.push({ name, path: path.join(projectPath, name) });
+      const packagePath = path.join(projectPath, name);
+      packages.push({ name, path: packagePath, fullPath: path.resolve(packagePath) });
     });
     return packages;
   }
