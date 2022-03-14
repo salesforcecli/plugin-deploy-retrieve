@@ -10,6 +10,7 @@
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": [
       "api",
+      "api-version",
       "dry-run",
       "ignore-errors",
       "ignore-warnings",
@@ -30,6 +31,7 @@
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": [
       "api",
+      "api-version",
       "json",
       "manifest",
       "metadata",
