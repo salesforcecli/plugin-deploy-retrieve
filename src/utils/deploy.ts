@@ -6,8 +6,10 @@
  */
 
 import { Interfaces, Flags } from '@oclif/core';
-import { ConfigAggregator, Org, SfdxPropertyKeys } from '@salesforce/core';
+import { ConfigAggregator, Global, Org, SfdxPropertyKeys, TTLConfig } from '@salesforce/core';
+import { Duration } from '@salesforce/kit';
 import { ComponentSet, ComponentSetBuilder, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
+import { JsonMap } from '@salesforce/ts-types';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel, TestResults } from './types';
 
@@ -23,7 +25,11 @@ type Options = {
   metadata?: string[];
   'source-dir'?: string[];
   tests?: string[];
+  wait?: Duration;
+  verbose?: boolean;
 };
+
+type CachedOptions = Omit<Options, 'wait' | 'target-org'> & { 'target-org': string; wait: number } & JsonMap;
 
 export function resolveRestDeploy(): API {
   const restDeployConfig = ConfigAggregator.getValue(SfdxPropertyKeys.REST_DEPLOY).value;
@@ -67,6 +73,9 @@ export async function executeDeploy(
     },
   });
 
+  const cache = await DeployCache.create();
+  cache.set(deploy.id, { ...opts, 'target-org': targetOrg, wait: opts.wait.quantity });
+  await cache.write();
   return { deploy, componentSet };
 }
 
@@ -99,4 +108,26 @@ export function getTestResults(result: DeployResult): TestResults {
   const testResults = { passing, failing, total };
   const time = result.response.details.runTestResult.totalTime;
   return time ? { ...testResults, time } : testResults;
+}
+
+export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
+  public static getFileName(): string {
+    return 'deploy-cache.json';
+  }
+
+  public static getDefaultOptions(): TTLConfig.Options {
+    return {
+      isGlobal: false,
+      isState: true,
+      filename: DeployCache.getFileName(),
+      stateFolder: Global.SF_STATE_FOLDER,
+      ttl: Duration.days(1),
+    };
+  }
+
+  public static async unset(key: string): Promise<void> {
+    const cache = await DeployCache.create();
+    cache.unset(key);
+    await cache.write();
+  }
 }

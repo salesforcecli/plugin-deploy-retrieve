@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2021, salesforce.com, inc.
+ * Copyright (c) 2022, salesforce.com, inc.
  * All rights reserved.
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-
+import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
 import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
@@ -23,7 +23,7 @@ export type DeployMetadataValidateResult = {
 };
 
 export default class DeployMetadataValidate extends SfCommand<DeployMetadataValidateResult> {
-  public static readonly hidden = true; // hidden until `sf deploy metadata resume` is implemented.
+  public static readonly hidden = true;
   public static readonly state = 'beta';
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
@@ -116,6 +116,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
     if (!this.jsonEnabled()) {
       displayDeployResults(result, flags['test-level'], flags.verbose);
     }
+
+    this.log(`\nRun ${bold('sf deploy metadata resume')} to execute this deploy.`);
 
     return {
       jobId: result.response.id,
