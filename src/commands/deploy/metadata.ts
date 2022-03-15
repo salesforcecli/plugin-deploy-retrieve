@@ -5,14 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
 import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { displayDeployResults, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { TestLevel, TestResults } from '../../utils/types';
-import { executeDeploy, apiFlag, testLevelFlag, getTestResults, DeployCache } from '../../utils/deploy';
+import { executeDeploy, apiFlag, testLevelFlag, getTestResults } from '../../utils/deploy';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -131,17 +130,11 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       displayDeployResults(result, flags['test-level'], flags.verbose);
     }
 
-    await DeployCache.unset(deploy.id);
     return {
       jobId: result.response.id,
       files: result.getFileResponses() || [],
       tests: getTestResults(result),
     };
-  }
-
-  protected async catch(error: SfCommand.Error): Promise<SfCommand.Error> {
-    this.log(`\nTry Running ${bold('sf deploy metadata resume')} to resume this deploy.`);
-    return super.catch(error);
   }
 
   private setExitCode(result: DeployResult): void {
