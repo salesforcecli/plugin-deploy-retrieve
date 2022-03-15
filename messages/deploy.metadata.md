@@ -115,14 +115,26 @@ The API to use for deploying.
 # flags.ignore-errors.summary
 
 Ignore any errors and don’t roll back deployment.
+        
+# flags.ignore-errors.description
+
+When deploying to a production org, keep this flag set to false (default value). When set to true, components without errors are deployed and components with errors are skipped, and could result in an inconsistent production org. 
 
 # flags.ignore-warnings.summary
 
 Ignore warnings and allow a deployment to complete successfully.
 
+# flags.ignore-warnings.description
+     
+If a warning occurs and this flag is set to true, the success status of the deployment is set to true. When this flag is set to false, success is set to false, and the warning is treated like an error.
+
 # flags.tests.summary
 
 Apex tests to run when --test-level is RunSpecifiedTests.
+        
+# flags.tests.description
+
+Separate multiple test names with commas, and enclose the entire flag value in double quotes if a test contains a space.
 
 # flags.verbose.summary
 
@@ -130,8 +142,8 @@ Show verbose output of the deploy result.
 
 # flags.api-version.summary
 
-Target API version for the retrieve.
+Target API version for the deploy.
 
 # flags.api-version.description
 
-Use this flag to override the default API version, which is the latest version supported the CLI, with the API version in your package.xml file.
+Use this flag to override the default API version, which is the latest version supported the CLI, with the API version of your package.xml file.
