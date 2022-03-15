@@ -108,6 +108,10 @@ All child components are included. If you specify this flag, don’t specify --m
 
 Deploying to %s using %s API.
 
+# save.as.default
+
+Save %s as default target-org?
+
 # errors.NoOrgsToSelect
 
 Can't find any active scratch orgs, Dev Hubs, or other orgs.

@@ -195,6 +195,19 @@ export class MetadataDeployer extends Deployer {
             choices: generateTableChoices(columns, options, false),
           },
         ]);
+        if (targetOrgAuth?.isExpired) {
+          const setTargetOrg = await this.prompt<{ save: boolean }>([
+            {
+              name: 'save',
+              type: 'confirm',
+              message: messages.getMessage('save.as.default', [username]),
+            },
+          ]);
+          if (setTargetOrg.save) {
+            const authInfo = await AuthInfo.create({ username });
+            await authInfo.setAsDefault({ org: true });
+          }
+        }
         return username;
       } else {
         throw messages.createError('errors.NoOrgsToSelect');
