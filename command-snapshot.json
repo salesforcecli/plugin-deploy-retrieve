@@ -27,24 +27,6 @@
     "alias": []
   },
   {
-    "command": "deploy:metadata:validate",
-    "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": [
-      "api",
-      "api-version",
-      "json",
-      "manifest",
-      "metadata",
-      "source-dir",
-      "target-org",
-      "test-level",
-      "tests",
-      "verbose",
-      "wait"
-    ],
-    "alias": []
-  },
-  {
     "command": "retrieve:metadata",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["api-version", "json", "manifest", "metadata", "package-name", "source-dir", "target-org", "wait"],
