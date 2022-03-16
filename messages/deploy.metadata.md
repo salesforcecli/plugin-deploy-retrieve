@@ -147,3 +147,20 @@ Target API version for the deploy.
 # flags.api-version.description
 
 Use this flag to override the default API version, which is the latest version supported the CLI, with the API version of your package.xml file.
+
+# save.as.default
+
+Save %s as default target-org?
+
+# errors.NoOrgsToSelect
+
+Can't find any active scratch orgs, Dev Hubs, or other orgs.
+Either log into an org or create a scratch org, and then try again.
+
+# error.UserTerminatedDeployForExpiredOrg
+
+The target-org found in the configuration is expired. The user terminated the deploy.
+
+# warning.TargetOrgIsExpired
+
+The target-org, "%s", is expired. Do you want to pick another org?
