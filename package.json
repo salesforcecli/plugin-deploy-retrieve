@@ -8,7 +8,7 @@
     "@oclif/core": "^1.6.0",
     "@salesforce/core": "^3.8.0",
     "@salesforce/sf-plugins-core": "^1.7.2",
-    "@sf/sdr": "npm:@salesforce/source-deploy-retrieve@^5.12.4",
+    "@salesforce/source-deploy-retrieve": "^5.12.4",
     "chalk": "^4.1.2",
     "fs-extra": "^10.0.1",
     "shelljs": "^0.8.5",
@@ -55,6 +55,10 @@
     "sinon": "11.1.2",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.2"
+  },
+  "resolutions": {
+    "@oclif/core": "^1.6.0",
+    "@salesforce/sf-plugins-core": "^1.7.2"
   },
   "config": {
     "commitizen": {
