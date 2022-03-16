@@ -120,13 +120,13 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
 
   public async run(): Promise<DeployMetadataResult> {
     const flags = (await this.parse(DeployMetadata)).flags;
-    const { deploy, componentSet } = await executeDeploy(flags);
+    const { deploy, componentSet } = await executeDeploy({ ...flags, 'target-org': flags['target-org'].getUsername() });
 
     this.log(getVersionMessage('Deploying', componentSet, flags.api));
     this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
-    const result = await deploy.pollStatus(500, flags.wait.seconds - 59);
+    const result = await deploy.pollStatus(500, flags.wait.seconds);
     this.setExitCode(result);
 
     if (!this.jsonEnabled()) {

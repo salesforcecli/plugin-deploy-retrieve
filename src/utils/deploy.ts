@@ -6,7 +6,7 @@
  */
 
 import { Interfaces, Flags } from '@oclif/core';
-import { ConfigAggregator, Org, SfdxPropertyKeys } from '@salesforce/core';
+import { ConfigAggregator, SfdxPropertyKeys } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { ComponentSet, ComponentSetBuilder, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { getPackageDirs, getSourceApiVersion } from './project';
@@ -14,7 +14,7 @@ import { API, TestLevel, TestResults } from './types';
 
 type Options = {
   api: API;
-  'target-org': Org | string;
+  'target-org': string;
   'test-level': TestLevel;
   'api-version'?: string;
   'dry-run'?: boolean;
@@ -57,9 +57,8 @@ export async function executeDeploy(
     },
   });
 
-  const targetOrg = typeof opts['target-org'] === 'string' ? opts['target-org'] : opts['target-org'].getUsername();
   const deploy = await componentSet.deploy({
-    usernameOrConnection: targetOrg,
+    usernameOrConnection: opts['target-org'],
     apiOptions: {
       checkOnly: opts['dry-run'] || false,
       ignoreWarnings: opts['ignore-warnings'] || false,
