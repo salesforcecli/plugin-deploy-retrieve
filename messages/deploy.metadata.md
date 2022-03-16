@@ -108,7 +108,19 @@ All child components are included. If you specify this flag, don’t specify --m
 
 Deploying to %s using %s API.
 
+# save.as.default
+
+Save %s as default target-org?
+
 # errors.NoOrgsToSelect
 
 Can't find any active scratch orgs, Dev Hubs, or other orgs.
 Either log into an org or create a scratch org, and then try again.
+
+# error.UserTerminatedDeployForExpiredOrg
+
+The target-org found in the configuration is expired. The user terminated the deploy.
+
+# warning.TargetOrgIsExpired
+
+The target-org, "%s", is expired. Do you want to pick another org?

@@ -37,7 +37,7 @@
     "eslint-config-salesforce-license": "^0.1.6",
     "eslint-config-salesforce-typescript": "^0.2.8",
     "eslint-plugin-header": "^3.1.1",
-    "eslint-plugin-import": "2.24.2",
+    "eslint-plugin-import": "2.25.4",
     "eslint-plugin-jsdoc": "^35.5.1",
     "eslint-plugin-prettier": "^3.4.1",
     "husky": "^7.0.4",
@@ -48,7 +48,7 @@
     "prettier": "^2.5.1",
     "pretty-quick": "^3.1.3",
     "shx": "0.3.4",
-    "sinon": "11.1.1",
+    "sinon": "11.1.2",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.2"
   },

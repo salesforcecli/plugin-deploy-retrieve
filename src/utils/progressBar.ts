@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { env } from '@salesforce/kit';
+import { envVars as env, EnvironmentVariable } from '@salesforce/core';
 import { MetadataApiDeploy } from '@sf/sdr';
 import { Messages } from '@salesforce/core';
 import { Progress } from '@salesforce/sf-plugins-core';
@@ -23,7 +23,7 @@ export class DeployProgress extends Progress {
   };
 
   public constructor(private deploy: MetadataApiDeploy, jsonEnabled = false) {
-    super(!jsonEnabled && env.getBoolean('SF_USE_PROGRESS_BAR', true));
+    super(!jsonEnabled && env.getBoolean(EnvironmentVariable.SF_USE_PROGRESS_BAR, true));
   }
 
   public start(): void {
