@@ -44,11 +44,13 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     'ignore-errors': Flags.boolean({
       char: 'r',
       summary: messages.getMessage('flags.ignore-errors.summary'),
+      description: messages.getMessage('flags.ignore-errors.description'),
       default: false,
     }),
     'ignore-warnings': Flags.boolean({
       char: 'g',
       summary: messages.getMessage('flags.ignore-warnings.summary'),
+      description: messages.getMessage('flags.ignore-warnings.description'),
       default: false,
     }),
     manifest: Flags.file({
@@ -82,6 +84,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       char: 't',
       multiple: true,
       summary: messages.getMessage('flags.tests.summary'),
+      description: messages.getMessage('flags.tests.description'),
       default: [],
     }),
     'test-level': testLevelFlag({
