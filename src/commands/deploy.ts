@@ -6,7 +6,7 @@
  */
 
 import { EOL } from 'os';
-import { Flags } from '@oclif/core';
+import { Flags, Hook } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { writeJson, pathExists, writeFile, readFile } from 'fs-extra';
 import { Env, parseJsonMap } from '@salesforce/kit';
@@ -45,6 +45,8 @@ export default class Deploy extends SfCommand<void> {
     }
 
     const hookResults = await SfHook.run(this.config, 'sf:deploy', options);
+
+    this.checkForHookFailures(hookResults);
 
     let deployers = hookResults.successes.flatMap((s) => s.result);
 
@@ -161,5 +163,24 @@ export default class Deploy extends SfCommand<void> {
       final.push(parent);
     }
     return final;
+  }
+  public checkForHookFailures(hookResults: Hook.Result<Deployer[]>): void {
+    if (hookResults.failures?.length) {
+      // display a table of the errors encountered; Plugin Name, Error Message
+      const columns = {
+        pluginName: { header: 'Plugin Name' },
+        errorName: { header: 'Error Name' },
+        errorMessage: { header: 'Error Message' },
+      };
+
+      const failureData = hookResults.failures.map((failure) => {
+        return { pluginName: failure.plugin.name, errorName: failure.error.name, errorMessage: failure.error.message };
+      });
+      this.styledHeader(messages.getMessage('error.initialization.title'));
+      this.table(failureData, columns);
+      const err = messages.createError('error.initialization');
+      err.data = hookResults.failures;
+      throw err;
+    }
   }
 }

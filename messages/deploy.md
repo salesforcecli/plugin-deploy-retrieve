@@ -1,5 +1,5 @@
 # summary
-  
+
 Deploy a project interactively to any Salesforce environment.
 
 # description
@@ -18,12 +18,20 @@ Use this command for quick and simple deploys. For more complicated deployments,
 
 - Deploy a project and use stored values from a previous command run:
 
-     <%= config.bin %> <%= command.id %>
+  <%= config.bin %> <%= command.id %>
 
 - Reprompt for all deployment inputs:
 
-     <%= config.bin %> <%= command.id %> --interactive
+  <%= config.bin %> <%= command.id %> --interactive
 
 # flags.interactive.summary
 
 Force the CLI to prompt for all deployment inputs.
+
+# error.initialization
+
+One or more initialization steps failed.
+
+# error.initialization.title
+
+Initialization Failures
