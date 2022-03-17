@@ -168,13 +168,12 @@ export default class Deploy extends SfCommand<void> {
     if (hookResults.failures?.length) {
       // display a table of the errors encountered; Plugin Name, Error Message
       const columns = {
-        pluginName: { header: 'Plugin Name' },
         errorName: { header: 'Error Name' },
         errorMessage: { header: 'Error Message' },
       };
 
       const failureData = hookResults.failures.map((failure) => {
-        return { pluginName: failure.plugin.name, errorName: failure.error.name, errorMessage: failure.error.message };
+        return { errorName: failure.error.name, errorMessage: failure.error.message };
       });
       this.styledHeader(messages.getMessage('error.initialization.title'));
       this.table(failureData, columns);
