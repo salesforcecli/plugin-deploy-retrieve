@@ -11,7 +11,7 @@ import { exec } from 'shelljs';
 
 const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
 
-describe.only('retrieve metadata NUTs', () => {
+describe('retrieve metadata NUTs', () => {
   let testkit: SourceTestkit;
 
   before(async () => {
