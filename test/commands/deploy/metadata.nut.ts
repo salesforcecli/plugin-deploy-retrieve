@@ -62,26 +62,4 @@ describe('deploy metadata NUTs', () => {
       await testkit.expect.filesToBeDeployed(['force-app/main/default/classes/*']);
     });
   });
-
-  describe('--api flag', () => {
-    it('should deploy force-app with SOAP API', async () => {
-      await testkit.modifyLocalGlobs(['force-app/main/default/classes/*.cls'], '// comment');
-      await testkit.modifyLocalGlobs(['force-app/main/default/aura/**/*.cmp'], '<!-- comment -->');
-      await testkit.deploy({ args: '--metadata ApexClass AuraDefinitionBundle --api SOAP' });
-      await testkit.expect.filesToBeDeployed(['force-app/main/default/classes/*', 'force-app/main/default/aura/**/*']);
-    });
-
-    it('should deploy force-app with REST API', async () => {
-      await testkit.modifyLocalGlobs(['force-app/main/default/classes/*.cls'], '// comment');
-      await testkit.modifyLocalGlobs(['force-app/main/default/aura/**/*.cmp'], '<!-- comment -->');
-      const deploy = await testkit.deploy<{ files: FileResponse[] }>({
-        args: '--metadata ApexClass AuraDefinitionBundle --api REST',
-      });
-      await testkit.expect.filesToBeDeployedViaResult(
-        ['force-app/main/default/classes/*', 'force-app/main/default/aura/**/*'],
-        [],
-        deploy.result.files
-      );
-    });
-  });
 });
