@@ -8,6 +8,7 @@
 import { Interfaces, Flags } from '@oclif/core';
 import { ConfigAggregator, SfdxPropertyKeys } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
+import { Nullable } from '@salesforce/ts-types';
 import { ComponentSet, ComponentSetBuilder, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel, TestResults } from './types';
@@ -27,6 +28,11 @@ type Options = {
   wait?: Duration;
   verbose?: boolean;
 };
+
+export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
+  if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
+  return true;
+}
 
 export function resolveRestDeploy(): API {
   const restDeployConfig = ConfigAggregator.getValue(SfdxPropertyKeys.REST_DEPLOY).value;

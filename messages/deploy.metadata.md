@@ -157,6 +157,10 @@ Either log into an org or create a scratch org, and then try again.
 
 The target-org found in the configuration is expired. The user terminated the deploy.
 
+# error.NoTestsSpecified
+
+You must specify tests using the --tests flag if the --test-level flag is set to RunSpecifiedTests.
+
 # warning.TargetOrgIsExpired
 
 The target-org, "%s", is expired. Do you want to pick another org?

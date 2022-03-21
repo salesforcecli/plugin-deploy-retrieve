@@ -4,14 +4,13 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
 import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { displayDeployResults, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { TestLevel, TestResults } from '../../utils/types';
-import { executeDeploy, testLevelFlag, getTestResults, resolveRestDeploy } from '../../utils/deploy';
+import { executeDeploy, testLevelFlag, getTestResults, resolveRestDeploy, validateTests } from '../../utils/deploy';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -115,13 +114,18 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
 
   public async run(): Promise<DeployMetadataResult> {
     const { flags } = await this.parse(DeployMetadata);
+    if (!validateTests(flags['test-level'], flags.tests)) {
+      throw messages.createError('error.NoTestsSpecified');
+    }
     const api = resolveRestDeploy();
     const { deploy, componentSet } = await executeDeploy({
       ...flags,
       'target-org': flags['target-org'].getUsername(),
       api,
     });
-    this.log(getVersionMessage('Deploying', componentSet, api));
+
+    const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
+    this.log(getVersionMessage(action, componentSet, api));
     this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
@@ -130,6 +134,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
 
     if (!this.jsonEnabled()) {
       displayDeployResults(result, flags['test-level'], flags.verbose);
+      if (flags['dry-run']) this.log('Dry-run complete.');
     }
 
     return {

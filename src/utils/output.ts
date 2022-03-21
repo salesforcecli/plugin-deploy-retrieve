@@ -131,8 +131,9 @@ export function displayTestResults(result: DeployResult, testLevel: TestLevel, v
     return;
   }
 
+  displayVerboseTestFailures(result);
+
   if (verbose) {
-    displayVerboseTestFailures(result);
     displayVerboseTestSuccesses(result);
     displayVerboseTestCoverage(result);
   }
