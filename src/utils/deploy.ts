@@ -6,10 +6,16 @@
  */
 
 import { Interfaces, Flags } from '@oclif/core';
-import { ConfigAggregator, SfdxPropertyKeys } from '@salesforce/core';
+import { ConfigAggregator, Global, SfdxPropertyKeys, TTLConfig } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { Nullable } from '@salesforce/ts-types';
-import { ComponentSet, ComponentSetBuilder, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
+import {
+  ComponentSet,
+  ComponentSetBuilder,
+  MetadataApiDeploy,
+  MetadataApiDeployStatus,
+} from '@salesforce/source-deploy-retrieve';
+import { JsonMap } from '@salesforce/ts-types';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel, TestResults } from './types';
 
@@ -34,6 +40,8 @@ export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): 
   return true;
 }
 
+type CachedOptions = Omit<Options, 'wait' | 'target-org'> & { 'target-org': string; wait: number } & JsonMap;
+
 export function resolveRestDeploy(): API {
   const restDeployConfig = ConfigAggregator.getValue(SfdxPropertyKeys.REST_DEPLOY).value;
 
@@ -46,10 +54,8 @@ export function resolveRestDeploy(): API {
   }
 }
 
-export async function executeDeploy(
-  opts: Partial<Options>
-): Promise<{ deploy: MetadataApiDeploy; componentSet: ComponentSet }> {
-  const componentSet = await ComponentSetBuilder.build({
+export async function buildComponentSet(opts: Partial<Options>): Promise<ComponentSet> {
+  return ComponentSetBuilder.build({
     apiversion: opts['api-version'],
     sourceapiversion: await getSourceApiVersion(),
     sourcepath: opts['source-dir'],
@@ -62,9 +68,16 @@ export async function executeDeploy(
       directoryPaths: await getPackageDirs(),
     },
   });
+}
 
+export async function executeDeploy(
+  opts: Partial<Options>,
+  id?: string
+): Promise<{ deploy: MetadataApiDeploy; componentSet: ComponentSet }> {
+  const componentSet = await buildComponentSet(opts);
   const deploy = await componentSet.deploy({
     usernameOrConnection: opts['target-org'],
+    id,
     apiOptions: {
       checkOnly: opts['dry-run'] || false,
       ignoreWarnings: opts['ignore-warnings'] || false,
@@ -75,6 +88,9 @@ export async function executeDeploy(
     },
   });
 
+  const cache = await DeployCache.create();
+  cache.set(deploy.id, { ...opts, wait: opts.wait.quantity });
+  await cache.write();
   return { deploy, componentSet };
 }
 
@@ -89,11 +105,33 @@ export const testLevelFlag = (
   })();
 };
 
-export function getTestResults(result: DeployResult): TestResults {
-  const passing = result.response.numberTestsCompleted ?? 0;
-  const failing = result.response.numberTestErrors ?? 0;
-  const total = result.response.numberTestsTotal ?? 0;
+export function getTestResults(response: MetadataApiDeployStatus): TestResults {
+  const passing = response.numberTestsCompleted ?? 0;
+  const failing = response.numberTestErrors ?? 0;
+  const total = response.numberTestsTotal ?? 0;
   const testResults = { passing, failing, total };
-  const time = result.response.details.runTestResult.totalTime;
+  const time = response.details?.runTestResult.totalTime;
   return time ? { ...testResults, time } : testResults;
+}
+
+export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
+  public static getFileName(): string {
+    return 'deploy-cache.json';
+  }
+
+  public static getDefaultOptions(): TTLConfig.Options {
+    return {
+      isGlobal: false,
+      isState: true,
+      filename: DeployCache.getFileName(),
+      stateFolder: Global.SF_STATE_FOLDER,
+      ttl: Duration.days(1),
+    };
+  }
+
+  public static async unset(key: string): Promise<void> {
+    const cache = await DeployCache.create();
+    cache.unset(key);
+    await cache.write();
+  }
 }
