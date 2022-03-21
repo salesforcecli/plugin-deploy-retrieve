@@ -7,7 +7,6 @@
 
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { FileResponse } from '@salesforce/source-deploy-retrieve';
 
 describe('deploy metadata NUTs', () => {
   let testkit: SourceTestkit;
