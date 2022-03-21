@@ -11,7 +11,7 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { displayDeployResults, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { TestLevel, TestResults } from '../../utils/types';
-import { executeDeploy, apiFlag, testLevelFlag, getTestResults } from '../../utils/deploy';
+import { executeDeploy, testLevelFlag, getTestResults, resolveRestDeploy } from '../../utils/deploy';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -29,9 +29,6 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
   public static readonly requiresProject = true;
 
   public static flags = {
-    api: apiFlag({
-      summary: messages.getMessage('flags.api.summary'),
-    }),
     'api-version': Flags.orgApiVersion({
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
@@ -118,9 +115,13 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
 
   public async run(): Promise<DeployMetadataResult> {
     const { flags } = await this.parse(DeployMetadata);
-    const { deploy, componentSet } = await executeDeploy({ ...flags, 'target-org': flags['target-org'].getUsername() });
-
-    this.log(getVersionMessage('Deploying', componentSet, flags.api));
+    const api = resolveRestDeploy();
+    const { deploy, componentSet } = await executeDeploy({
+      ...flags,
+      'target-org': flags['target-org'].getUsername(),
+      api,
+    });
+    this.log(getVersionMessage('Deploying', componentSet, api));
     this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 

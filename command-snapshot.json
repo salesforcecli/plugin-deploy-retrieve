@@ -9,7 +9,6 @@
     "command": "deploy:metadata",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": [
-      "api",
       "api-version",
       "dry-run",
       "ignore-errors",

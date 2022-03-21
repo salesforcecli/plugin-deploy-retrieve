@@ -108,10 +108,6 @@ All child components are included. If you specify this flag, don’t specify --m
 
 Validate deploy and run Apex tests but don’t save to the org.
 
-# flags.api.summary
-
-The API to use for deploying.
-
 # flags.ignore-errors.summary
 
 Ignore any errors and don’t roll back deployment.

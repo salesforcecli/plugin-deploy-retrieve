@@ -72,16 +72,6 @@ export async function executeDeploy(
   return { deploy, componentSet };
 }
 
-export const apiFlag = (opts: Partial<Interfaces.OptionFlag<API>> = {}): Interfaces.OptionFlag<API> => {
-  return Flags.build<API>({
-    options: Object.values(API),
-    helpValue: `<${Object.values(API).join('|')}>`,
-    default: async (): Promise<API> => Promise.resolve(resolveRestDeploy()),
-    parse: (input: string) => Promise.resolve(input as API),
-    ...opts,
-  })();
-};
-
 export const testLevelFlag = (
   opts: Partial<Interfaces.OptionFlag<TestLevel | undefined>> = {}
 ): Interfaces.OptionFlag<TestLevel | undefined> => {
