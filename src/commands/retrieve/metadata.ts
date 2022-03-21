@@ -44,6 +44,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       summary: messages.getMessage('flags.manifest.summary'),
       description: messages.getMessage('flags.manifest.description'),
       exclusive: ['metadata', 'source-dir'],
+      exists: true,
     }),
     metadata: Flags.string({
       char: 'm',

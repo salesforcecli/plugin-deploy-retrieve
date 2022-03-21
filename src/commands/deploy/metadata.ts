@@ -57,14 +57,13 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),
       summary: messages.getMessage('flags.manifest.summary'),
-      exclusive: ['metadata', 'source-dir'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
+      exists: true,
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
-      exclusive: ['manifest', 'source-dir'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     'source-dir': Flags.string({
@@ -72,7 +71,6 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       description: messages.getMessage('flags.source-dir.description'),
       summary: messages.getMessage('flags.source-dir.summary'),
       multiple: true,
-      exclusive: ['manifest', 'metadata'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     'target-org': Flags.requiredOrg({
@@ -119,7 +117,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
   );
 
   public async run(): Promise<DeployMetadataResult> {
-    const flags = (await this.parse(DeployMetadata)).flags;
+    const { flags } = await this.parse(DeployMetadata);
     const { deploy, componentSet } = await executeDeploy({ ...flags, 'target-org': flags['target-org'].getUsername() });
 
     this.log(getVersionMessage('Deploying', componentSet, flags.api));

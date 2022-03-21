@@ -76,7 +76,6 @@ export const apiFlag = (opts: Partial<Interfaces.OptionFlag<API>> = {}): Interfa
   return Flags.build<API>({
     options: Object.values(API),
     helpValue: `<${Object.values(API).join('|')}>`,
-    defaultHelp: async (): Promise<API> => Promise.resolve(resolveRestDeploy()),
     default: async (): Promise<API> => Promise.resolve(resolveRestDeploy()),
     parse: (input: string) => Promise.resolve(input as API),
     ...opts,
