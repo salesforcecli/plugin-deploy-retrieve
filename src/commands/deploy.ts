@@ -164,6 +164,7 @@ export default class Deploy extends SfCommand<void> {
     }
     return final;
   }
+
   public checkForHookFailures(hookResults: Hook.Result<Deployer[]>): void {
     if (hookResults.failures?.length) {
       // display a table of the errors encountered; Plugin Name, Error Message

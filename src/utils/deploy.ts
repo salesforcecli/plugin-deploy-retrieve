@@ -26,6 +26,7 @@ type Options = {
   api: API;
   'target-org': string;
   'test-level': TestLevel;
+  async?: boolean;
   'api-version'?: string;
   'dry-run'?: boolean;
   'ignore-errors'?: boolean;
@@ -36,17 +37,18 @@ type Options = {
   tests?: string[];
   wait?: Duration;
   verbose?: boolean;
+  concise?: boolean;
 };
+
+type CachedOptions = Omit<Options, 'wait'> & { wait: number } & JsonMap;
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
   if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
   return true;
 }
 
-type CachedOptions = Omit<Options, 'wait'> & { wait: number } & JsonMap;
-
-export function resolveRestDeploy(): API {
-  const restDeployConfig = ConfigAggregator.getValue(ConfigVars.ORG_METADATA_REST_DEPLOY).value;
+export function resolveApi(): API {
+  const restDeployConfig = ConfigAggregator.getValue(ConfigVars.ORG_METADATA_REST_DEPLOY)?.value;
   if (restDeployConfig === 'false') {
     return API.SOAP;
   } else if (restDeployConfig === 'true') {

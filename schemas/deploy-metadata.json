@@ -3,115 +3,122 @@
   "$ref": "#/definitions/DeployResultJson",
   "definitions": {
     "DeployResultJson": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "files": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/FileResponse"
-          }
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FileResponse"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/definitions/RequestStatus"
+            },
+            "success": {
+              "type": "boolean"
+            },
+            "done": {
+              "type": "boolean"
+            },
+            "canceledBy": {
+              "type": "string"
+            },
+            "canceledByName": {
+              "type": "string"
+            },
+            "checkOnly": {
+              "type": "boolean"
+            },
+            "completedDate": {
+              "type": "string"
+            },
+            "createdBy": {
+              "type": "string"
+            },
+            "createdByName": {
+              "type": "string"
+            },
+            "createdDate": {
+              "type": "string"
+            },
+            "details": {
+              "$ref": "#/definitions/DeployDetails"
+            },
+            "errorMessage": {
+              "type": "string"
+            },
+            "errorStatusCode": {
+              "type": "string"
+            },
+            "ignoreWarnings": {
+              "type": "boolean"
+            },
+            "lastModifiedDate": {
+              "type": "string"
+            },
+            "numberComponentErrors": {
+              "type": "number"
+            },
+            "numberComponentsDeployed": {
+              "type": "number"
+            },
+            "numberComponentsTotal": {
+              "type": "number"
+            },
+            "numberTestErrors": {
+              "type": "number"
+            },
+            "numberTestsCompleted": {
+              "type": "number"
+            },
+            "numberTestsTotal": {
+              "type": "number"
+            },
+            "runTestsEnabled": {
+              "type": "boolean"
+            },
+            "rollbackOnError": {
+              "type": "boolean"
+            },
+            "startDate": {
+              "type": "string"
+            },
+            "stateDetail": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "checkOnly",
+            "createdBy",
+            "createdByName",
+            "createdDate",
+            "details",
+            "done",
+            "files",
+            "id",
+            "ignoreWarnings",
+            "lastModifiedDate",
+            "numberComponentErrors",
+            "numberComponentsDeployed",
+            "numberComponentsTotal",
+            "numberTestErrors",
+            "numberTestsCompleted",
+            "numberTestsTotal",
+            "rollbackOnError",
+            "runTestsEnabled",
+            "status",
+            "success"
+          ]
         },
-        "id": {
-          "type": "string"
-        },
-        "status": {
-          "$ref": "#/definitions/RequestStatus"
-        },
-        "success": {
-          "type": "boolean"
-        },
-        "done": {
-          "type": "boolean"
-        },
-        "canceledBy": {
-          "type": "string"
-        },
-        "canceledByName": {
-          "type": "string"
-        },
-        "checkOnly": {
-          "type": "boolean"
-        },
-        "completedDate": {
-          "type": "string"
-        },
-        "createdBy": {
-          "type": "string"
-        },
-        "createdByName": {
-          "type": "string"
-        },
-        "createdDate": {
-          "type": "string"
-        },
-        "details": {
-          "$ref": "#/definitions/DeployDetails"
-        },
-        "errorMessage": {
-          "type": "string"
-        },
-        "errorStatusCode": {
-          "type": "string"
-        },
-        "ignoreWarnings": {
-          "type": "boolean"
-        },
-        "lastModifiedDate": {
-          "type": "string"
-        },
-        "numberComponentErrors": {
-          "type": "number"
-        },
-        "numberComponentsDeployed": {
-          "type": "number"
-        },
-        "numberComponentsTotal": {
-          "type": "number"
-        },
-        "numberTestErrors": {
-          "type": "number"
-        },
-        "numberTestsCompleted": {
-          "type": "number"
-        },
-        "numberTestsTotal": {
-          "type": "number"
-        },
-        "runTestsEnabled": {
-          "type": "boolean"
-        },
-        "rollbackOnError": {
-          "type": "boolean"
-        },
-        "startDate": {
-          "type": "string"
-        },
-        "stateDetail": {
-          "type": "string"
+        {
+          "$ref": "#/definitions/AsyncDeployResultJson"
         }
-      },
-      "required": [
-        "checkOnly",
-        "createdBy",
-        "createdByName",
-        "createdDate",
-        "details",
-        "done",
-        "files",
-        "id",
-        "ignoreWarnings",
-        "lastModifiedDate",
-        "numberComponentErrors",
-        "numberComponentsDeployed",
-        "numberComponentsTotal",
-        "numberTestErrors",
-        "numberTestsCompleted",
-        "numberTestsTotal",
-        "rollbackOnError",
-        "runTestsEnabled",
-        "status",
-        "success"
       ]
     },
     "FileResponse": {
@@ -548,6 +555,34 @@
         "methodName",
         "name",
         "time"
+      ],
+      "additionalProperties": false
+    },
+    "AsyncDeployResultJson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "done": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "const": "Queued"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FileResponse"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "done",
+        "status",
+        "files"
       ],
       "additionalProperties": false
     }

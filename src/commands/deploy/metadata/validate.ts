@@ -5,14 +5,15 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { bold } from 'chalk';
-import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
+import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
 import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
+import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../../utils/types';
-import { executeDeploy, testLevelFlag, resolveRestDeploy, determineExitCode } from '../../../utils/deploy';
+import { executeDeploy, testLevelFlag, resolveApi, determineExitCode } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
+import { ConfigVars } from '../../../configMeta';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
@@ -29,6 +30,10 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
       description: messages.getMessage('flags.api-version.description'),
+    }),
+    async: Flags.boolean({
+      summary: messages.getMessage('flags.async.summary'),
+      description: messages.getMessage('flags.async.description'),
     }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
@@ -90,7 +95,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public static configurationVariablesSection = toHelpSection(
     'CONFIGURATION VARIABLES',
     OrgConfigProperties.TARGET_ORG,
-    SfdxPropertyKeys.API_VERSION
+    OrgConfigProperties.ORG_API_VERSION,
+    ConfigVars.ORG_METADATA_REST_DEPLOY
   );
 
   public static envVariablesSection = toHelpSection(
@@ -102,8 +108,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   public async run(): Promise<DeployResultJson> {
-    const flags = (await this.parse(DeployMetadataValidate)).flags;
-    const api = resolveRestDeploy();
+    const { flags } = await this.parse(DeployMetadataValidate);
+    const api = resolveApi();
     const { deploy, componentSet } = await executeDeploy({
       ...flags,
       'dry-run': true,
@@ -114,6 +120,12 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     this.log(getVersionMessage('Validating Deployment', componentSet, api));
     this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
+
+    if (flags.async) {
+      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
+      if (!this.jsonEnabled()) asyncFormatter.display();
+      return asyncFormatter.getJson();
+    }
 
     const result = await deploy.pollStatus(500, flags.wait.seconds);
     this.setExitCode(result);
