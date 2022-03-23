@@ -103,7 +103,12 @@
     ],
     "topics": {
       "deploy": {
-        "description": "Commands to deploy artifacts to an environment."
+        "description": "Commands to deploy artifacts to an environment.",
+        "subtopics": {
+          "metadata": {
+            "description": "Commands to deploy metadata to a Salesforce org."
+          }
+        }
       },
       "retrieve": {
         "description": "Commands to retrieve artifacts from an environment."
