@@ -34,4 +34,4 @@ One or more initialization steps failed.
 
 # error.initialization.title
 
-Initialization Step Failures - The following table describes each failure
+Initialization Failures. The following table describes each failure:
