@@ -19,14 +19,13 @@ import {
 } from '@salesforce/core';
 import { Deployable, Deployer, generateTableChoices } from '@salesforce/sf-plugins-core';
 
-import { ComponentSetBuilder } from './componentSetBuilder';
 import { displayFailures, displaySuccesses, displayTestResults } from './output';
-import { TestLevel } from './testLevel';
+import { TestLevel } from './types';
 import { DeployProgress } from './progressBar';
-import { resolveRestDeploy } from './config';
+import { executeDeploy, resolveRestDeploy } from './deploy';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
 
 type OrgAuthWithTimestamp = OrgAuthorization & { timestamp: Date };
 
@@ -123,11 +122,14 @@ export class MetadataDeployer extends Deployer {
   public async deploy(): Promise<void> {
     const directories = this.deployables.map((d) => d.pkg.fullPath);
     const name = this.deployables.map((p) => cyan.bold(p.getPath())).join(', ');
-    this.log(`${EOL}Deploying ${name} to ${this.username} using ${resolveRestDeploy()} API`);
-    const componentSet = await ComponentSetBuilder.build({ sourcepath: directories });
-    const deploy = await componentSet.deploy({
-      usernameOrConnection: this.username,
-      apiOptions: { testLevel: this.testLevel },
+    const api = resolveRestDeploy();
+    this.log(`${EOL}Deploying ${name} to ${this.username} using ${api} API`);
+
+    const { deploy } = await executeDeploy({
+      'target-org': this.username,
+      'source-dir': directories,
+      'test-level': this.testLevel,
+      api,
     });
 
     new DeployProgress(deploy).start();

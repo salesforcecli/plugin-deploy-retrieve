@@ -11,3 +11,15 @@ export enum TestLevel {
   RunLocalTests = 'RunLocalTests',
   RunAllTestsInOrg = 'RunAllTestsInOrg',
 }
+
+export enum API {
+  SOAP = 'SOAP',
+  REST = 'REST',
+}
+
+export type TestResults = {
+  passing: number;
+  failing: number;
+  total: number;
+  time?: string;
+};
