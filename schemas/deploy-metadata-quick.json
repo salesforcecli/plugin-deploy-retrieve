@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$ref": "#/definitions/DeployMetadataResult",
+  "$ref": "#/definitions/DeployMetadataQuickResult",
   "definitions": {
-    "DeployMetadataResult": {
+    "DeployMetadataQuickResult": {
       "type": "object",
       "properties": {
         "files": {
@@ -19,7 +19,6 @@
         }
       },
       "required": [
-        "files",
         "jobId"
       ],
       "additionalProperties": false
