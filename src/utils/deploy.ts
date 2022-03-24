@@ -6,16 +6,19 @@
  */
 
 import { Interfaces, Flags } from '@oclif/core';
-import { ConfigAggregator, Global, SfdxPropertyKeys, TTLConfig } from '@salesforce/core';
+import { ConfigAggregator, Global, TTLConfig } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { Nullable } from '@salesforce/ts-types';
 import {
   ComponentSet,
   ComponentSetBuilder,
+  DeployResult,
   MetadataApiDeploy,
   MetadataApiDeployStatus,
+  RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { JsonMap } from '@salesforce/ts-types';
+import { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel, TestResults } from './types';
 
@@ -40,11 +43,10 @@ export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): 
   return true;
 }
 
-type CachedOptions = Omit<Options, 'wait' | 'target-org'> & { 'target-org': string; wait: number } & JsonMap;
+type CachedOptions = Omit<Options, 'wait'> & { wait: number } & JsonMap;
 
 export function resolveRestDeploy(): API {
-  const restDeployConfig = ConfigAggregator.getValue(SfdxPropertyKeys.REST_DEPLOY).value;
-
+  const restDeployConfig = ConfigAggregator.getValue(ConfigVars.ORG_METADATA_REST_DEPLOY).value;
   if (restDeployConfig === 'false') {
     return API.SOAP;
   } else if (restDeployConfig === 'true') {
@@ -89,7 +91,7 @@ export async function executeDeploy(
   });
 
   const cache = await DeployCache.create();
-  cache.set(deploy.id, { ...opts, wait: opts.wait?.quantity ?? 33 });
+  cache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
   await cache.write();
   return { deploy, componentSet };
 }
@@ -112,6 +114,24 @@ export function getTestResults(response: MetadataApiDeployStatus): TestResults {
   const testResults = { passing, failing, total };
   const time = response.details?.runTestResult.totalTime;
   return time ? { ...testResults, time } : testResults;
+}
+
+const StatusCodeMap = new Map<RequestStatus, number>([
+  [RequestStatus.Succeeded, 0],
+  [RequestStatus.Canceled, 1],
+  [RequestStatus.Failed, 1],
+  [RequestStatus.SucceededPartial, 68],
+  [RequestStatus.InProgress, 69],
+  [RequestStatus.Pending, 69],
+  [RequestStatus.Canceling, 69],
+]);
+
+export function determineExitCode(result: DeployResult, async = false): number {
+  if (async) {
+    return result.response.status === RequestStatus.Succeeded ? 0 : 1;
+  }
+
+  return StatusCodeMap.get(result.response.status);
 }
 
 export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {

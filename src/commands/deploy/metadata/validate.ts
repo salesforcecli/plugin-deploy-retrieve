@@ -11,7 +11,13 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { displayDeployResults, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
 import { TestLevel, TestResults } from '../../../utils/types';
-import { executeDeploy, testLevelFlag, getTestResults, resolveRestDeploy } from '../../../utils/deploy';
+import {
+  executeDeploy,
+  testLevelFlag,
+  getTestResults,
+  resolveRestDeploy,
+  determineExitCode,
+} from '../../../utils/deploy';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
@@ -27,6 +33,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
+  public static readonly state = 'beta';
+
   public static flags = {
     'api-version': Flags.orgApiVersion({
       char: 'a',
@@ -136,8 +144,6 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
   }
 
   private setExitCode(result: DeployResult): void {
-    if (result.response.status !== RequestStatus.Succeeded) {
-      process.exitCode = 1;
-    }
+    process.exitCode = determineExitCode(result);
   }
 }

@@ -5,12 +5,19 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
-import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { displayDeployResults, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { TestLevel, TestResults } from '../../utils/types';
-import { executeDeploy, testLevelFlag, getTestResults, resolveRestDeploy, validateTests } from '../../utils/deploy';
+import {
+  executeDeploy,
+  testLevelFlag,
+  getTestResults,
+  resolveRestDeploy,
+  validateTests,
+  determineExitCode,
+} from '../../utils/deploy';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -145,8 +152,6 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
   }
 
   private setExitCode(result: DeployResult): void {
-    if (result.response.status !== RequestStatus.Succeeded) {
-      process.exitCode = 1;
-    }
+    process.exitCode = determineExitCode(result);
   }
 }

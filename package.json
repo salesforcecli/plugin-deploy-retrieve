@@ -91,6 +91,7 @@
     "hooks": {
       "sf:deploy": "./lib/hooks/deploy"
     },
+    "configMeta": "./lib/configMeta",
     "devPlugins": [
       "@oclif/plugin-command-snapshot",
       "@oclif/plugin-help",

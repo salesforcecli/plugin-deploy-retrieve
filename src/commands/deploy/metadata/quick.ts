@@ -10,7 +10,7 @@ import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, FileResponse, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { AnyJson } from '@salesforce/ts-types';
-import { buildComponentSet, DeployCache, getTestResults } from '../../../utils/deploy';
+import { buildComponentSet, DeployCache, determineExitCode, getTestResults } from '../../../utils/deploy';
 import { displayDeployResults, getVersionMessage } from '../../../utils/output';
 import { API, TestResults } from '../../../utils/types';
 
@@ -28,6 +28,8 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
+  public static readonly state = 'beta';
+
   public static flags = {
     'job-id': Flags.salesforceId({
       char: 'i',
@@ -60,12 +62,9 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
   public async run(): Promise<DeployMetadataQuickResult> {
     const flags = (await this.parse(DeployMetadataQuick)).flags;
     const cache = await DeployCache.create();
-    let jobId = flags['job-id'] || '';
 
-    if (flags['use-most-recent']) {
-      jobId = cache.getLatestKey();
-      if (!jobId) throw messages.createError('error.NoRecentJobId');
-    }
+    const jobId = flags['use-most-recent'] ? cache.getLatestKey() : flags['job-id'];
+    if (!jobId && flags['use-most-recent']) throw messages.createError('error.NoRecentJobId');
 
     if (!cache.has(jobId)) {
       throw messages.createError('error.InvalidJobId', [jobId]);
@@ -89,6 +88,8 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
     }
 
     await DeployCache.unset(jobId);
+
+    this.setExitCode(result);
 
     return {
       jobId,
@@ -125,5 +126,9 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
     const res = await this.org.getConnection().metadata.checkDeployStatus(id, true);
     const deployStatus = res as unknown as MetadataApiDeployStatus;
     return new DeployResult(deployStatus as unknown as MetadataApiDeployStatus, componentSet);
+  }
+
+  private setExitCode(result: DeployResult): void {
+    process.exitCode = determineExitCode(result);
   }
 }
