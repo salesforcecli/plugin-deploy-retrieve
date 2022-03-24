@@ -89,7 +89,7 @@ export async function executeDeploy(
   });
 
   const cache = await DeployCache.create();
-  cache.set(deploy.id, { ...opts, wait: opts.wait.quantity });
+  cache.set(deploy.id, { ...opts, wait: opts.wait?.quantity ?? 33 });
   await cache.write();
   return { deploy, componentSet };
 }
