@@ -9,7 +9,7 @@ import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 
-describe.only('deploy metadata quick NUTs', () => {
+describe('deploy metadata quick NUTs', () => {
   let testkit: SourceTestkit;
 
   before(async () => {
