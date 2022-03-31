@@ -79,7 +79,6 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       multiple: true,
       summary: messages.getMessage('flags.tests.summary'),
       description: messages.getMessage('flags.tests.description'),
-      default: [],
     }),
     'test-level': testLevelFlag({
       default: TestLevel.NoTestRun,
