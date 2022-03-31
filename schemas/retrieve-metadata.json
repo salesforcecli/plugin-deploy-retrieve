@@ -24,10 +24,19 @@
             },
             "state": {
               "type": "string",
-              "enum": ["Created", "Changed", "Unchanged", "Deleted"]
+              "enum": [
+                "Created",
+                "Changed",
+                "Unchanged",
+                "Deleted"
+              ]
             }
           },
-          "required": ["fullName", "state", "type"],
+          "required": [
+            "fullName",
+            "state",
+            "type"
+          ],
           "additionalProperties": false
         },
         {
@@ -57,10 +66,19 @@
             },
             "problemType": {
               "type": "string",
-              "enum": ["Warning", "Error"]
+              "enum": [
+                "Warning",
+                "Error"
+              ]
             }
           },
-          "required": ["error", "fullName", "problemType", "state", "type"],
+          "required": [
+            "error",
+            "fullName",
+            "problemType",
+            "state",
+            "type"
+          ],
           "additionalProperties": false
         }
       ]
