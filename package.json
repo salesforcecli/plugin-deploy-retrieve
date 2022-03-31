@@ -58,8 +58,7 @@
   },
   "resolutions": {
     "@oclif/core": "^1.6.4",
-    "@salesforce/sf-plugins-core": "^1.11.0",
-    "@salesforce/core": "^3.11.0"
+    "@salesforce/sf-plugins-core": "^1.11.0"
   },
   "config": {
     "commitizen": {

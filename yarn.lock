@@ -1228,7 +1228,74 @@
     chalk "^2.4.2"
     cli-ux "^4.9.3"
 
-"@salesforce/core@2.28.0", "@salesforce/core@2.32.0", "@salesforce/core@^2.1.4", "@salesforce/core@^2.20.10", "@salesforce/core@^2.20.11", "@salesforce/core@^2.24.0", "@salesforce/core@^2.3.0", "@salesforce/core@^2.31.0", "@salesforce/core@^2.33.1", "@salesforce/core@^2.35.0", "@salesforce/core@^3.11.0", "@salesforce/core@^3.8.0":
+"@salesforce/core@2.28.0":
+  version "2.28.0"
+  resolved "https://registry.npmjs.org/@salesforce/core/-/core-2.28.0.tgz#2fb3d7be0dfac8505332f558b7dd4274afd34901"
+  integrity sha512-CFw2xloL3UwuvLm+0nK588kFVGPRZFmUzeUBYFCIz+34CJShc1B7yN+anPlZcHWgT12Ih9yzKYaki0BjCeIgKQ==
+  dependencies:
+    "@salesforce/bunyan" "^2.0.0"
+    "@salesforce/kit" "^1.5.0"
+    "@salesforce/schemas" "^1.0.1"
+    "@salesforce/ts-types" "^1.5.13"
+    "@types/graceful-fs" "^4.1.5"
+    "@types/jsforce" "^1.9.29"
+    "@types/mkdirp" "^1.0.1"
+    debug "^3.1.0"
+    graceful-fs "^4.2.4"
+    jsen "0.6.6"
+    jsforce "^1.10.1"
+    jsonwebtoken "8.5.0"
+    mkdirp "1.0.4"
+    sfdx-faye "^1.0.9"
+    ts-retry-promise "^0.6.0"
+
+"@salesforce/core@2.32.0":
+  version "2.32.0"
+  resolved "https://registry.npmjs.org/@salesforce/core/-/core-2.32.0.tgz#2649562f3be9bf05f436b06bc5a20014aa9a5aea"
+  integrity sha512-bJ9LidLQ+6xoAaC2q0M/609AmrOIVp9ErjkC/mYdlIK2XAEZWYbnbhdBGzlzInjD7KFR65Gmq+Y0c3+ESSYFrg==
+  dependencies:
+    "@salesforce/bunyan" "^2.0.0"
+    "@salesforce/kit" "^1.5.0"
+    "@salesforce/schemas" "^1.0.1"
+    "@salesforce/ts-types" "^1.5.13"
+    "@types/graceful-fs" "^4.1.5"
+    "@types/jsforce" "^1.9.35"
+    "@types/mkdirp" "^1.0.1"
+    debug "^3.1.0"
+    faye "^1.4.0"
+    graceful-fs "^4.2.4"
+    jsen "0.6.6"
+    jsforce "^1.11.0"
+    jsonwebtoken "8.5.0"
+    mkdirp "1.0.4"
+    semver "^7.3.5"
+    ts-retry-promise "^0.6.0"
+
+"@salesforce/core@^2.1.4", "@salesforce/core@^2.20.10", "@salesforce/core@^2.20.11", "@salesforce/core@^2.24.0", "@salesforce/core@^2.3.0", "@salesforce/core@^2.31.0", "@salesforce/core@^2.33.1", "@salesforce/core@^2.35.0":
+  version "2.36.0"
+  resolved "https://registry.npmjs.org/@salesforce/core/-/core-2.36.0.tgz#eadade3d663f0a2e11d0cc9f9097c528c182997d"
+  integrity sha512-VsKt7SXArxrOelaJl5Ez21Pmtdp2eU6qimqZ5clxnNaZDZKOySDPYnKHu7AYCt1LUNFN9cfsX8K5yOHxS+wT+w==
+  dependencies:
+    "@salesforce/bunyan" "^2.0.0"
+    "@salesforce/kit" "^1.5.17"
+    "@salesforce/schemas" "^1.0.1"
+    "@salesforce/ts-types" "^1.5.20"
+    "@types/graceful-fs" "^4.1.5"
+    "@types/jsforce" "^1.9.41"
+    "@types/mkdirp" "^1.0.1"
+    archiver "^5.3.0"
+    debug "^3.1.0"
+    faye "^1.4.0"
+    graceful-fs "^4.2.4"
+    js2xmlparser "^4.0.1"
+    jsen "0.6.6"
+    jsforce "^1.11.0"
+    jsonwebtoken "8.5.0"
+    mkdirp "1.0.4"
+    semver "^7.3.5"
+    ts-retry-promise "^0.6.0"
+
+"@salesforce/core@^3.11.0", "@salesforce/core@^3.8.0":
   version "3.11.0"
   resolved "https://registry.npmjs.org/@salesforce/core/-/core-3.11.0.tgz#e1ec10189103a9133117af938156fb9f3eb2aef2"
   integrity sha512-OqEkFfgfL2WvuzasjgrsGVa2SB00FCdfu09hPBK3URnR418+ztk283TDNOQ15AGW5oI8EWdEEKpOI+oAXmWS3A==
@@ -1418,7 +1485,7 @@
   resolved "https://registry.npmjs.org/@salesforce/prettier-config/-/prettier-config-0.0.2.tgz#ded39bf7cb75238edc9db6dd093649111350f8bc"
   integrity sha512-KExM355BLbxCW6siGBV7oUOotXvvVp0tAWERgzUkM2FcMb9fWrjwXDrIHc8V0UdDlA3UXtFltDWgN+Yqi+BA/g==
 
-"@salesforce/schemas@^1.1.0":
+"@salesforce/schemas@^1.0.1", "@salesforce/schemas@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@salesforce/schemas/-/schemas-1.1.0.tgz#bbf94a11ee036f2b0ec6ba82306cd9565a6ba26b"
   integrity sha512-6D7DvE6nFxpLyyTnrOIbbAeCJw2r/EpinFAcMh6gU0gA/CGfSbwV/8uR3uHLYL2zCyCZLH8jJ4dZ3BzCMqc+Eg==
@@ -1518,7 +1585,7 @@
     sinon "^5.1.1"
     tslib "^2.2.0"
 
-"@salesforce/ts-types@^1.2.0", "@salesforce/ts-types@^1.4.2", "@salesforce/ts-types@^1.5.17", "@salesforce/ts-types@^1.5.20", "@salesforce/ts-types@^1.5.5":
+"@salesforce/ts-types@^1.2.0", "@salesforce/ts-types@^1.4.2", "@salesforce/ts-types@^1.5.13", "@salesforce/ts-types@^1.5.17", "@salesforce/ts-types@^1.5.20", "@salesforce/ts-types@^1.5.5":
   version "1.5.20"
   resolved "https://registry.npmjs.org/@salesforce/ts-types/-/ts-types-1.5.20.tgz#f6875a710ceca48223b240026a14af6d3b39882f"
   integrity sha512-Ov6um4CWd63EvkRavkHG0J/P9XYL55sdkDWPMr7+AIgqh5flHxDRz09/C4e9M94aX30rzJxW4TVX6EBf4Cu2BQ==
@@ -1696,6 +1763,13 @@
   resolved "https://registry.npmjs.org/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#0ea7b61496902b95890dc4c3a116b60cb8dae812"
   integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
 
+"@types/jsforce@^1.9.29", "@types/jsforce@^1.9.35", "@types/jsforce@^1.9.41":
+  version "1.9.41"
+  resolved "https://registry.npmjs.org/@types/jsforce/-/jsforce-1.9.41.tgz#08b31a0d04e14fd5f8a232196e16bc742e22bbed"
+  integrity sha512-J0dReK6EPGR98b4fAowqqQqFXH4DGtPxY2lLrZGcuCthrHYkYNrKnfGf2xM1jwiBC5CGdSEDmWEDwRwwmX25tA==
+  dependencies:
+    "@types/node" "*"
+
 "@types/json-schema@^7.0.7", "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
@@ -1728,7 +1802,7 @@
   resolved "https://registry.npmjs.org/@types/minimist/-/minimist-1.2.2.tgz#ee771e2ba4b3dc5b372935d549fd9617bf345b8c"
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
-"@types/mkdirp@^1.0.2":
+"@types/mkdirp@^1.0.1", "@types/mkdirp@^1.0.2":
   version "1.0.2"
   resolved "https://registry.npmjs.org/@types/mkdirp/-/mkdirp-1.0.2.tgz#8d0bad7aa793abe551860be1f7ae7f3198c16666"
   integrity sha512-o0K1tSO0Dx5X6xlU5F1D6625FawhC3dU3iqr25lluNv/+/QIVH8RLNEiVokgIZo+mz+87w/3Mkg/VvQS+J51fQ==
@@ -2219,7 +2293,7 @@ arrify@^2.0.1:
   resolved "https://registry.npmjs.org/arrify/-/arrify-2.0.1.tgz#c9655e9331e0abcd588d2a7cad7e9956f66701fa"
   integrity sha512-3duEwti880xqi4eAMN8AyR4a0ByT90zoYdLlevfrvU43vb0YZwZVfxOgxWrLXXXpyugL0hNZc9G6BiB5B3nUug==
 
-asap@*, asap@^2.0.0, asap@~2.0.3:
+asap@*, asap@^2.0.0, asap@~2.0.3, asap@~2.0.6:
   version "2.0.6"
   resolved "https://registry.npmjs.org/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
@@ -3436,7 +3510,7 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.1, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-csprng@*:
+csprng@*, csprng@~0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/csprng/-/csprng-0.1.2.tgz#4bc68f12fa368d252a59841cbaca974b18ab45e2"
   integrity sha1-S8aPEvo2jSUqWYQcusqXSxirReI=
@@ -4475,6 +4549,13 @@ faye-websocket@>=0.9.1:
   dependencies:
     websocket-driver ">=0.5.1"
 
+faye-websocket@~0.9.1:
+  version "0.9.4"
+  resolved "https://registry.npmjs.org/faye-websocket/-/faye-websocket-0.9.4.tgz#885934c79effb0409549e0c0a3801ed17a40cdad"
+  integrity sha1-iFk0x57/sECVSeDAo4Ae0XpAza0=
+  dependencies:
+    websocket-driver ">=0.5.1"
+
 faye@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/faye/-/faye-1.4.0.tgz#01d3d26ed5642c1cb203eed358afb1c1444b8669"
@@ -5197,7 +5278,7 @@ got@^6.2.0:
     unzip-response "^2.0.1"
     url-parse-lax "^1.0.0"
 
-graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.5, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2, graceful-fs@^4.2.3, graceful-fs@^4.2.6, graceful-fs@^4.2.8, graceful-fs@^4.2.9:
+graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.5, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2, graceful-fs@^4.2.3, graceful-fs@^4.2.4, graceful-fs@^4.2.6, graceful-fs@^4.2.8, graceful-fs@^4.2.9:
   version "4.2.9"
   resolved "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.9.tgz#041b05df45755e587a24942279b9d113146e1c96"
   integrity sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==
@@ -6247,7 +6328,7 @@ jsforce@2.0.0-beta.7:
     strip-ansi "^6.0.0"
     xml2js "^0.4.22"
 
-jsforce@^1.11.0:
+jsforce@^1.10.1, jsforce@^1.11.0:
   version "1.11.0"
   resolved "https://registry.npmjs.org/jsforce/-/jsforce-1.11.0.tgz#7e853b82c534f1fe8e18f432a344bae81881a133"
   integrity sha512-vYNXJXXdz9ZQNdfRqq/MCJ/zU7JGA7iEduwafQDzChR9FeqXgTNfHTppLVbw9mIniKkQZemmxSOtl7N04lj/5Q==
@@ -6351,6 +6432,22 @@ jsonparse@^1.2.0, jsonparse@^1.3.1:
   resolved "https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz#3f4dae4a91fac315f71062f8521cc239f1366280"
   integrity sha1-P02uSpH6wxX3EGL4UhzCOfE2YoA=
 
+jsonwebtoken@8.5.0:
+  version "8.5.0"
+  resolved "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-8.5.0.tgz#ebd0ca2a69797816e1c5af65b6c759787252947e"
+  integrity sha512-IqEycp0znWHNA11TpYi77bVgyBO/pGESDh7Ajhas+u0ttkGkKYIIAjniL4Bw5+oVejVF+SYkaI7XKfwCCyeTuA==
+  dependencies:
+    jws "^3.2.1"
+    lodash.includes "^4.3.0"
+    lodash.isboolean "^3.0.3"
+    lodash.isinteger "^4.0.4"
+    lodash.isnumber "^3.0.3"
+    lodash.isplainobject "^4.0.6"
+    lodash.isstring "^4.0.1"
+    lodash.once "^4.0.0"
+    ms "^2.1.1"
+    semver "^5.6.0"
+
 jsonwebtoken@8.5.1:
   version "8.5.1"
   resolved "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz#00e71e0b8df54c2121a1f26137df2280673bcc0d"
@@ -6411,7 +6508,7 @@ jwa@^1.4.1:
     ecdsa-sig-formatter "1.0.11"
     safe-buffer "^5.0.1"
 
-jws@^3.2.2:
+jws@^3.2.1, jws@^3.2.2:
   version "3.2.2"
   resolved "https://registry.npmjs.org/jws/-/jws-3.2.2.tgz#001099f3639468c9414000e99995fa52fb478304"
   integrity sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA==
@@ -8549,7 +8646,7 @@ proxy-from-env@^1.0.0, proxy-from-env@^1.1.0:
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
   integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
 
-psl@^1.1.28, psl@^1.1.33:
+psl@^1.1.24, psl@^1.1.28, psl@^1.1.33:
   version "1.8.0"
   resolved "https://registry.npmjs.org/psl/-/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
   integrity sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ==
@@ -8566,6 +8663,11 @@ punycode@1.3.2:
   version "1.3.2"
   resolved "https://registry.npmjs.org/punycode/-/punycode-1.3.2.tgz#9653a036fb7c1ee42342f2325cceefea3926c48d"
   integrity sha1-llOgNvt8HuQjQvIyXM7v6jkmxI0=
+
+punycode@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
+  integrity sha1-wNWmOycYgArY4esPpSachN1BhF4=
 
 punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
@@ -9184,6 +9286,17 @@ setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
+
+sfdx-faye@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.npmjs.org/sfdx-faye/-/sfdx-faye-1.0.9.tgz#24e678ddb783d7085f3e40a2c155ac367416be26"
+  integrity sha512-/p0Ifvhh9rVYj6YmYOBU+psQsP+9RrNrUU4lr1p+HhZhTgnviMIabcgKZUN12S69zUpl0YagpFdMhmxKGkf+5g==
+  dependencies:
+    asap "~2.0.6"
+    csprng "~0.1.2"
+    faye-websocket "~0.9.1"
+    tough-cookie "~2.4.3"
+    tunnel-agent "~0.6.0"
 
 sha.js@^2.4.9:
   version "2.4.11"
@@ -9989,6 +10102,14 @@ tough-cookie@*:
     punycode "^2.1.1"
     universalify "^0.1.2"
 
+tough-cookie@~2.4.3:
+  version "2.4.3"
+  resolved "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.4.3.tgz#53f36da3f47783b0925afa06ff9f3b165280f781"
+  integrity sha512-Q5srk/4vDM54WJsJio3XNn6K2sCG+CQ8G5Wz6bZhRZoAe/+TxjWB/GlFAnYEbkYVlON9FMk/fE3h2RLpPXo4lQ==
+  dependencies:
+    psl "^1.1.24"
+    punycode "^1.4.1"
+
 tough-cookie@~2.5.0:
   version "2.5.0"
   resolved "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.5.0.tgz#cd9fb2a0aa1d5a12b473bd9fb96fa3dcff65ade2"
@@ -10114,7 +10235,7 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
-tunnel-agent@*, tunnel-agent@^0.6.0:
+tunnel-agent@*, tunnel-agent@^0.6.0, tunnel-agent@~0.6.0:
   version "0.6.0"
   resolved "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.6.0.tgz#27a5dea06b36b04a0a9966774b290868f0fc40fd"
   integrity sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=
