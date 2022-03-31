@@ -29,7 +29,7 @@ parameters:
     default: ''
     type: string
   repo_tag:
-    description: 'The tag of the module repo to checkout, '''' defaults to branch/PR'
+    description: "The tag of the module repo to checkout, '' defaults to branch/PR"
     default: ''
     type: string
 workflows:
@@ -52,16 +52,21 @@ workflows:
                 - lts
                 - maintenance
       - release-management/test-nut:
-          name: nuts-on-linux
           sfdx_version: latest
           requires:
             - release-management/test-package
-      - release-management/test-nut:
-          name: nuts-on-windows
-          sfdx_version: latest
-          os: windows
-          requires:
-            - release-management/test-package
+          size: xlarge
+          matrix:
+            parameters:
+              os: [windows, linux]
+              command:
+                [
+                  'yarn test:nuts:deploy:metadata:manifest',
+                  'yarn test:nuts:deploy:metadata:metadata',
+                  'yarn test:nuts:deploy:metadata:source-dir',
+                  'yarn test:nuts:deploy:metadata:test-level',
+                  'yarn test:nuts:static',
+                ]
       - release-management/release-package:
           sign: true
           github-release: true
