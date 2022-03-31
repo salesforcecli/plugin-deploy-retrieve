@@ -1308,10 +1308,10 @@
     shx "^0.3.3"
     tslib "^2.2.0"
 
-"@salesforce/plugin-command-reference@^2.2.1":
-  version "2.2.7"
-  resolved "https://registry.npmjs.org/@salesforce/plugin-command-reference/-/plugin-command-reference-2.2.7.tgz#daff9b5fa47dba0d6a7e09c5d6116fce610f61ca"
-  integrity sha512-zzLh0YPW5y1YXkK5X7SwRHoAwB/VlVFVNtvkpNqFkCsQGJQNKyCkqt+6QXZlZ2pfyYQj7F8nrxw34Azg/AmUGA==
+"@salesforce/plugin-command-reference@^2.2.8":
+  version "2.2.8"
+  resolved "https://registry.npmjs.org/@salesforce/plugin-command-reference/-/plugin-command-reference-2.2.8.tgz#b75571df46ad5210ce5170cb42de57cd6965ff84"
+  integrity sha512-vyJzYDOGDmF3NyVhdRwLNkM+lVj3pzwbusHq4eGJDsxrlgWALeg0IVbEeEI+qUk32BK/wpwcJNbPRTc4Bem36w==
   dependencies:
     "@oclif/core" "^1.6.3"
     "@salesforce/core" "^3.8.0"
