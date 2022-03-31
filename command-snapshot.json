@@ -1,34 +1,73 @@
 [
-  {
-    "command": "deploy",
-    "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["interactive"],
-    "alias": []
-  },
-  {
-    "command": "deploy:metadata",
-    "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": [
-      "api-version",
-      "dry-run",
-      "ignore-errors",
-      "ignore-warnings",
-      "json",
-      "manifest",
-      "metadata",
-      "source-dir",
-      "target-org",
-      "test-level",
-      "tests",
-      "verbose",
-      "wait"
-    ],
-    "alias": []
-  },
-  {
-    "command": "retrieve:metadata",
-    "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["api-version", "json", "manifest", "metadata", "package-name", "source-dir", "target-org", "wait"],
-    "alias": []
-  }
+    {
+        "command": "deploy",
+        "plugin": "@salesforce/plugin-deploy-retrieve",
+        "flags": [
+            "interactive"
+        ],
+        "alias": []
+    },
+    {
+        "command": "deploy:metadata",
+        "plugin": "@salesforce/plugin-deploy-retrieve",
+        "flags": [
+            "api-version",
+            "dry-run",
+            "ignore-errors",
+            "ignore-warnings",
+            "json",
+            "manifest",
+            "metadata",
+            "source-dir",
+            "target-org",
+            "test-level",
+            "tests",
+            "verbose",
+            "wait"
+        ],
+        "alias": []
+    },
+    {
+        "command": "deploy:metadata:quick",
+        "plugin": "@salesforce/plugin-deploy-retrieve",
+        "flags": [
+            "job-id",
+            "json",
+            "use-most-recent",
+            "wait"
+        ],
+        "alias": []
+    },
+    {
+        "command": "deploy:metadata:validate",
+        "plugin": "@salesforce/plugin-deploy-retrieve",
+        "flags": [
+            "api-version",
+            "json",
+            "manifest",
+            "metadata",
+            "source-dir",
+            "target-org",
+            "test-level",
+            "tests",
+            "verbose",
+            "wait"
+        ],
+        "alias": []
+    },
+    {
+        "command": "retrieve:metadata",
+        "plugin": "@salesforce/plugin-deploy-retrieve",
+        "flags": [
+            "api-version",
+            "json",
+            "manifest",
+            "metadata",
+            "package-name",
+            "source-dir",
+            "target-org",
+            "wait"
+        ],
+        "alias": []
+    }
 ]
