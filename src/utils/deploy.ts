@@ -21,6 +21,7 @@ import { JsonMap } from '@salesforce/ts-types';
 import { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel, TestResults } from './types';
+import { DEPLOY_STATUS_CODES } from './errorCodes';
 
 type Options = {
   api: API;
@@ -116,22 +117,12 @@ export function getTestResults(response: MetadataApiDeployStatus): TestResults {
   return time ? { ...testResults, time } : testResults;
 }
 
-const StatusCodeMap = new Map<RequestStatus, number>([
-  [RequestStatus.Succeeded, 0],
-  [RequestStatus.Canceled, 1],
-  [RequestStatus.Failed, 1],
-  [RequestStatus.SucceededPartial, 68],
-  [RequestStatus.InProgress, 69],
-  [RequestStatus.Pending, 69],
-  [RequestStatus.Canceling, 69],
-]);
-
 export function determineExitCode(result: DeployResult, async = false): number {
   if (async) {
     return result.response.status === RequestStatus.Succeeded ? 0 : 1;
   }
 
-  return StatusCodeMap.get(result.response.status);
+  return DEPLOY_STATUS_CODES.get(result.response.status);
 }
 
 export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {

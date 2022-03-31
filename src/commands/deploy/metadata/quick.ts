@@ -11,6 +11,7 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, FileResponse, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { AnyJson } from '@salesforce/ts-types';
 import { buildComponentSet, DeployCache, determineExitCode, getTestResults } from '../../../utils/deploy';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { displayDeployResults, getVersionMessage } from '../../../utils/output';
 import { API, TestResults } from '../../../utils/types';
 
@@ -56,6 +57,8 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
   };
 
   public static envVariablesSection = toHelpSection('ENVIRONMENT VARIABLES', EnvironmentVariable.SF_TARGET_ORG);
+
+  public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   private org: Org;
 

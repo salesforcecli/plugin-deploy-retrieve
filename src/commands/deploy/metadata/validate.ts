@@ -18,6 +18,7 @@ import {
   resolveRestDeploy,
   determineExitCode,
 } from '../../../utils/deploy';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
@@ -104,6 +105,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
     EnvironmentVariable.SF_TARGET_ORG,
     EnvironmentVariable.SF_USE_PROGRESS_BAR
   );
+
+  public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   public async run(): Promise<DeployMetadataValidateResult> {
     const flags = (await this.parse(DeployMetadataValidate)).flags;

@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
+import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
 import { DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { displayDeployResults, getVersionMessage } from '../../utils/output';
@@ -18,6 +18,7 @@ import {
   validateTests,
   determineExitCode,
 } from '../../utils/deploy';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -110,7 +111,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
   public static configurationVariablesSection = toHelpSection(
     'CONFIGURATION VARIABLES',
     OrgConfigProperties.TARGET_ORG,
-    SfdxPropertyKeys.API_VERSION
+    OrgConfigProperties.ORG_API_VERSION
   );
 
   public static envVariablesSection = toHelpSection(
@@ -118,6 +119,8 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     EnvironmentVariable.SF_TARGET_ORG,
     EnvironmentVariable.SF_USE_PROGRESS_BAR
   );
+
+  public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   public async run(): Promise<DeployMetadataResult> {
     const { flags } = await this.parse(DeployMetadata);
