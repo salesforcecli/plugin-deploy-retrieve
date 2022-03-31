@@ -65,6 +65,7 @@ workflows:
       - release-management/release-package:
           sign: true
           github-release: true
+          node_version: 'latest'
           requires:
             - release-management/test-package
           filters:
