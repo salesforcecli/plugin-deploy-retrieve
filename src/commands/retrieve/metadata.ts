@@ -1,36 +1,30 @@
 /*
- * Copyright (c) 2021, salesforce.com, inc.
+ * Copyright (c) 2022, salesforce.com, inc.
  * All rights reserved.
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
 import * as path from 'path';
-import { Flags } from '@oclif/core';
 import {
   EnvironmentVariable,
   Messages,
+  NamedPackageDir,
   OrgConfigProperties,
   SfdxPropertyKeys,
-  SfdxProject,
-  SfdxError,
+  SfError,
+  SfProject,
 } from '@salesforce/core';
-import { Duration } from '@salesforce/kit';
-import { FileResponse, RetrieveResult } from '@sf/sdr';
+import { FileResponse, RetrieveResult, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 
-import { SfCommand, toHelpSection } from '@salesforce/sf-plugins-core';
-import { getArray, getBoolean, getString } from '@salesforce/ts-types';
-import { getPackageDirs, resolveTargetOrg } from '../../utils/orgs';
-import { ComponentSetBuilder, ManifestOption } from '../../utils/componentSetBuilder';
-import { displayPackages, displaySuccesses, PackageRetrieval } from '../../utils/output';
-import { validateOneOfCommandFlags } from '../../utils/requiredFlagValidator';
+import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
+import { getString } from '@salesforce/ts-types';
+import { displayPackages, displaySuccesses } from '../../utils/output';
+import { getPackageDirs } from '../../utils/project';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
 const mdTrasferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
-
-// One of these flags must be specified for a valid deploy.
-const requiredFlags = ['manifest', 'metadata', 'package-name', 'source-dir'];
 
 export type RetrieveMetadataResult = FileResponse[];
 
@@ -38,17 +32,19 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
+  public static readonly requiresProject = true;
   public static flags = {
-    'api-version': Flags.string({
+    'api-version': Flags.orgApiVersion({
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
       description: messages.getMessage('flags.api-version.description'),
     }),
-    manifest: Flags.string({
+    manifest: Flags.file({
       char: 'x',
       summary: messages.getMessage('flags.manifest.summary'),
       description: messages.getMessage('flags.manifest.description'),
       exclusive: ['metadata', 'source-dir'],
+      exists: true,
     }),
     metadata: Flags.string({
       char: 'm',
@@ -68,14 +64,15 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       multiple: true,
       exclusive: ['manifest', 'metadata'],
     }),
-    'target-org': Flags.string({
+    'target-org': Flags.requiredOrg({
       char: 'o',
       summary: messages.getMessage('flags.target-org.summary'),
       description: messages.getMessage('flags.target-org.description'),
     }),
-    wait: Flags.integer({
+    wait: Flags.duration({
       char: 'w',
-      default: 33,
+      defaultValue: 33,
+      unit: 'minutes',
       summary: messages.getMessage('flags.wait.summary'),
       description: messages.getMessage('flags.wait.description'),
     }),
@@ -97,31 +94,33 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
 
   public async run(): Promise<RetrieveMetadataResult> {
     const flags = (await this.parse(RetrieveMetadata)).flags;
-
-    validateOneOfCommandFlags(requiredFlags, flags);
-
+    this.spinner.start(messages.getMessage('spinner.start'));
     const componentSet = await ComponentSetBuilder.build({
       apiversion: flags['api-version'],
       sourcepath: flags['source-dir'],
       packagenames: flags['package-name'],
-      manifest: (flags.manifest && {
+      manifest: flags.manifest && {
         manifestPath: flags.manifest,
         directoryPaths: await getPackageDirs(),
-      }) as ManifestOption,
+      },
       metadata: flags.metadata && {
         metadataEntries: flags.metadata,
         directoryPaths: await getPackageDirs(),
       },
     });
 
-    const project = await SfdxProject.resolve();
+    this.spinner.status = messages.getMessage('spinner.sending', [
+      componentSet.sourceApiVersion || componentSet.apiVersion,
+    ]);
 
     const retrieve = await componentSet.retrieve({
-      usernameOrConnection: await resolveTargetOrg(flags['target-org']),
+      usernameOrConnection: flags['target-org'].getUsername(),
       merge: true,
-      output: project.getDefaultPackage().fullPath,
+      output: this.project.getDefaultPackage().fullPath,
       packageOptions: flags['package-name'],
     });
+
+    this.spinner.status = messages.getMessage('spinner.polling');
 
     retrieve.onUpdate((data) => {
       this.spinner.status = mdTrasferMessages.getMessage(data.status);
@@ -137,37 +136,36 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
       throw error;
     });
 
-    this.spinner.start(messages.getMessage('RetrieveTitle'));
-
     await retrieve.start();
-    const result = await retrieve.pollStatus(500, Duration.minutes(flags.wait).seconds);
-
+    const result = await retrieve.pollStatus(500, flags.wait.seconds);
+    this.spinner.stop();
     const fileResponses = result?.getFileResponses() || [];
 
-    await this.displayResults(result, flags);
+    if (!this.jsonEnabled()) {
+      await this.displayResults(result, flags['package-name']);
+    }
 
     return fileResponses;
   }
-  private async displayResults(result: RetrieveResult, flags): Promise<void> {
-    if (!getBoolean(flags, 'json', false)) {
-      if (result.response.status === 'Succeeded') {
-        displaySuccesses(result);
-        displayPackages(result, await this.getPackages(result, flags));
-      } else {
-        throw new SfdxError(
-          getString(result.response, 'errorMessage', result.response.status),
-          getString(result.response, 'errorStatusCode', 'unknown')
-        );
-      }
+
+  private async displayResults(result: RetrieveResult, packageNames: string[] = []): Promise<void> {
+    if (result.response.status === 'Succeeded') {
+      displaySuccesses(result);
+      displayPackages(result, await this.getPackages(result, packageNames));
+    } else {
+      throw new SfError(
+        getString(result.response, 'errorMessage', result.response.status),
+        getString(result.response, 'errorStatusCode', 'unknown')
+      );
     }
   }
 
-  private async getPackages(result: RetrieveResult, flags): Promise<PackageRetrieval[]> {
-    const packages: PackageRetrieval[] = [];
-    const projectPath = await SfdxProject.resolveProjectPath();
-    const packageNames = getArray(flags, 'package-name', []) as string[];
+  private async getPackages(result: RetrieveResult, packageNames: string[] = []): Promise<NamedPackageDir[]> {
+    const packages: NamedPackageDir[] = [];
+    const projectPath = await SfProject.resolveProjectPath();
     packageNames.forEach((name) => {
-      packages.push({ name, path: path.join(projectPath, name) });
+      const packagePath = path.join(projectPath, name);
+      packages.push({ name, path: packagePath, fullPath: path.resolve(packagePath) });
     });
     return packages;
   }

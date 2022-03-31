@@ -8,14 +8,14 @@
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { writeJson } from 'fs-extra';
-import { TestLevel } from '../../src/utils/testLevel';
+import { TestLevel } from '../../src/utils/types';
 import { MetadataDeployer } from '../../src/utils/metadataDeployer';
 
 describe('deploy NUTs', () => {
-  let sourceTestkit: SourceTestkit;
+  let testkit: SourceTestkit;
 
   before(async () => {
-    sourceTestkit = await SourceTestkit.create({
+    testkit = await SourceTestkit.create({
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
       executable: path.join(process.cwd(), 'bin', 'dev'),
       nut: __filename,
@@ -23,7 +23,7 @@ describe('deploy NUTs', () => {
   });
 
   after(async () => {
-    await sourceTestkit?.clean();
+    await testkit?.clean();
   });
 
   describe('deploy-options.json', () => {
@@ -31,13 +31,13 @@ describe('deploy NUTs', () => {
       const deployOptions = {
         [MetadataDeployer.NAME]: {
           testLevel: TestLevel.NoTestRun,
-          username: sourceTestkit.username,
+          username: testkit.username,
           apps: ['force-app'],
         },
       };
-      await writeJson(path.join(sourceTestkit.projectDir, 'deploy-options.json'), deployOptions);
-      await sourceTestkit.execute('deploy', { json: false });
-      await sourceTestkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+      await writeJson(path.join(testkit.projectDir, 'deploy-options.json'), deployOptions);
+      await testkit.execute('deploy', { json: false });
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
     });
   });
 });

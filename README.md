@@ -108,7 +108,7 @@ EXAMPLES
     $ sf deploy --interactive
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.1.2/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.1.3/src/commands/deploy.ts)_
 
 ## `sf deploy metadata`
 
@@ -116,17 +116,24 @@ Deploy metadata in source format to an org from your local project.
 
 ```
 USAGE
-  $ sf deploy metadata [--json] [-m <value> | -x <value> | -d <value>] [-o <value>] [-l
-    NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg] [-w <value>]
+  $ sf deploy metadata [--json] [-a <value>] [--dry-run] [-r] [-g] [-x <value>] [-m <value>] [-d <value>] [-o
+    <value>] [-t <value>] [-l NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg] [--verbose] [-w <value>]
 
 FLAGS
+  -a, --api-version=<value>    Target API version for the deploy.
   -d, --source-dir=<value>...  Path to the local source files to deploy.
+  -g, --ignore-warnings        Ignore warnings and allow a deployment to complete successfully.
   -l, --test-level=<option>    [default: NoTestRun] Deployment Apex testing level.
                                <options: NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg>
   -m, --metadata=<value>...    Metadata component names to deploy.
   -o, --target-org=<value>     Login username or alias for the target org.
-  -w, --wait=<value>           [default: 33] Number of minutes to wait for command to complete and display results.
+  -r, --ignore-errors          Ignore any errors and don’t roll back deployment.
+  -t, --tests=<value>...       [default: ] Apex tests to run when --test-level is RunSpecifiedTests.
+  -w, --wait=<minutes>         [default: 33 minutes] Number of minutes to wait for command to complete and display
+                               results.
   -x, --manifest=<value>       Full file path for manifest (package.xml) of components to deploy.
+  --dry-run                    Validate deploy and run Apex tests but don’t save to the org.
+  --verbose                    Show verbose output of the deploy result.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -182,12 +189,22 @@ EXAMPLES
     $ sf deploy metadata --metadata ApexClass --test-level RunLocalTests
 
 FLAG DESCRIPTIONS
+  -a, --api-version=<value>  Target API version for the deploy.
+
+    Use this flag to override the default API version, which is the latest version supported the CLI, with the API
+    version of your package.xml file.
+
   -d, --source-dir=<value>...  Path to the local source files to deploy.
 
     The supplied path can be to a single file (in which case the operation is applied to only one file) or to a folder
     (in which case the operation is applied to all metadata types in the directory and its subdirectories).
 
     If you specify this flag, don’t specify --metadata or --manifest.
+
+  -g, --ignore-warnings  Ignore warnings and allow a deployment to complete successfully.
+
+    If a warning occurs and this flag is set to true, the success status of the deployment is set to true. When this
+    flag is set to false, success is set to false, and the warning is treated like an error.
 
   -l, --test-level=NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg  Deployment Apex testing level.
 
@@ -215,7 +232,18 @@ FLAG DESCRIPTIONS
 
     Overrides your default org.
 
-  -w, --wait=<value>  Number of minutes to wait for command to complete and display results.
+  -r, --ignore-errors  Ignore any errors and don’t roll back deployment.
+
+    When deploying to a production org, keep this flag set to false (default value). When set to true, components
+    without errors are deployed and components with errors are skipped, and could result in an inconsistent production
+    org.
+
+  -t, --tests=<value>...  Apex tests to run when --test-level is RunSpecifiedTests.
+
+    Separate multiple test names with commas, and enclose the entire flag value in double quotes if a test contains a
+    space.
+
+  -w, --wait=<minutes>  Number of minutes to wait for command to complete and display results.
 
     If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 
@@ -239,8 +267,8 @@ FLAGS
   -m, --metadata=<value>...      Metadata component names to retrieve.
   -n, --package-name=<value>...  Package names to retrieve.
   -o, --target-org=<value>       Login username or alias for the target org.
-  -w, --wait=<value>             [default: 33] Number of minutes to wait for the command to complete and display results
-                                 to the terminal window.
+  -w, --wait=<value>             [default: 33 minutes] Number of minutes to wait for the command to complete and display
+                                 results to the terminal window.
   -x, --manifest=<value>         File path for the manifest (package.xml) that specifies the components to retrieve.
 
 GLOBAL FLAGS

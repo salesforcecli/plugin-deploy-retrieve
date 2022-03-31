@@ -8,11 +8,19 @@
 import * as os from 'os';
 import * as path from 'path';
 import { CliUx } from '@oclif/core';
-import { blue, bold, dim, red, underline } from 'chalk';
-import { DeployResult, FileResponse, RetrieveResult } from '@sf/sdr';
-import { RequestStatus, Failures, Successes } from '@sf/sdr/lib/src/client/types';
-import { get } from '@salesforce/ts-types';
-import { TestLevel } from './testLevel';
+import { blue, bold, dim, red, underline, green } from 'chalk';
+import {
+  DeployResult,
+  FileResponse,
+  RetrieveResult,
+  RequestStatus,
+  Failures,
+  Successes,
+  ComponentSet,
+  CodeCoverage,
+} from '@salesforce/source-deploy-retrieve';
+import { NamedPackageDir } from '@salesforce/core';
+import { API, TestLevel } from './types';
 
 function info(message: string): string {
   return blue(bold(message));
@@ -22,20 +30,21 @@ function error(message: string): string {
   return red(bold(message));
 }
 
+function success(message: string): string {
+  return green(bold(message));
+}
+
 function table(
-  responses: FileResponse[] | Array<Record<string, unknown>>,
+  responses: FileResponse[] | CodeCoverage[] | Array<Record<string, unknown>>,
   columns: Record<string, unknown>,
-  options: Record<string, unknown>
+  options?: Record<string, unknown>
 ): void {
   // Interfaces cannot be casted to Record<string, unknown> so we have to cast to unknown first
   // See https://github.com/microsoft/TypeScript/issues/15300
-  CliUx.ux.table(responses as unknown as Array<Record<string, unknown>>, columns, options);
+  CliUx.ux.table(responses as unknown as Array<Record<string, unknown>>, columns, options ?? {});
 }
 
-export type PackageRetrieval = {
-  name: string;
-  path: string;
-};
+const check = green('✓');
 
 export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
   fileResponses.forEach((file) => {
@@ -77,6 +86,13 @@ export function toArray<T>(entryOrArray: T | T[] | undefined): T[] {
   return [];
 }
 
+export function displayDeployResults(result: DeployResult, testLevel: TestLevel, verbose: boolean): void {
+  displaySuccesses(result);
+  displayFailures(result);
+  displayDeletes(result);
+  displayTestResults(result, testLevel, verbose);
+}
+
 export function displaySuccesses(result: DeployResult | RetrieveResult): void {
   const fileResponses = asRelativePaths(result.getFileResponses() ?? []);
   const successes = sortFileResponses(fileResponses.filter((f) => f.state !== 'Failed'));
@@ -96,11 +112,11 @@ export function displaySuccesses(result: DeployResult | RetrieveResult): void {
   table(successes, columns, options);
 }
 
-export function displayPackages(result: RetrieveResult, packages: PackageRetrieval[]): void {
+export function displayPackages(result: RetrieveResult, packages: NamedPackageDir[]): void {
   if (packages?.length) {
     const columns = {
       name: { header: 'Package Name' },
-      path: { header: 'Converted Location' },
+      fullPath: { header: 'Converted Location' },
     };
     const title = 'Retrieved Packages';
     const options = { title: info(title) };
@@ -109,38 +125,96 @@ export function displayPackages(result: RetrieveResult, packages: PackageRetriev
   }
 }
 
-export function displayTestResults(result: DeployResult, testLevel: TestLevel): void {
+export function displayTestResults(result: DeployResult, testLevel: TestLevel, verbose = false): void {
   if (testLevel === TestLevel.NoTestRun) {
     CliUx.ux.log();
     return;
   }
 
-  if (result?.response?.numberTestErrors) {
-    const failures = toArray(result.response.details?.runTestResult?.failures);
-    const failureCount = result.response.details.runTestResult?.numFailures;
-    const tests = sortTestResults(failures) as Failures[];
-    CliUx.ux.log();
-    CliUx.ux.log(error(`Test Failures [${failureCount}]`));
-    for (const test of tests) {
-      const testName = underline(`${test.name}.${test.methodName}`);
-      const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
-      CliUx.ux.log(`• ${testName}`);
-      CliUx.ux.log(`  ${dim('message')}: ${test.message}`);
-      CliUx.ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
-      CliUx.ux.log();
-    }
+  displayVerboseTestFailures(result);
+
+  if (verbose) {
+    displayVerboseTestSuccesses(result);
+    displayVerboseTestCoverage(result);
   }
 
   CliUx.ux.log();
   CliUx.ux.log(info('Test Results Summary'));
-  const passing = get(result, 'response.numberTestsCompleted', 0) as number;
-  const failing = get(result, 'response.numberTestErrors', 0) as number;
-  const total = get(result, 'response.numberTestsTotal', 0) as number;
-  const time = get(result, 'response.details.runTestResult.totalTime', 0) as number;
+  const passing = result.response.numberTestsCompleted ?? 0;
+  const failing = result.response.numberTestErrors ?? 0;
+  const total = result.response.numberTestsTotal ?? 0;
+  const time = result.response.details.runTestResult.totalTime ?? 0;
   CliUx.ux.log(`Passing: ${passing}`);
   CliUx.ux.log(`Failing: ${failing}`);
   CliUx.ux.log(`Total: ${total}`);
   if (time) CliUx.ux.log(`Time: ${time}`);
+}
+
+function displayVerboseTestFailures(result: DeployResult): void {
+  if (!result.response.numberTestErrors) return;
+  const failures = toArray(result.response.details?.runTestResult?.failures);
+  const failureCount = result.response.details.runTestResult?.numFailures;
+  const testFailures = sortTestResults(failures) as Failures[];
+  CliUx.ux.log();
+  CliUx.ux.log(error(`Test Failures [${failureCount}]`));
+  for (const test of testFailures) {
+    const testName = underline(`${test.name}.${test.methodName}`);
+    const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
+    CliUx.ux.log(`• ${testName}`);
+    CliUx.ux.log(`  ${dim('message')}: ${test.message}`);
+    CliUx.ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
+    CliUx.ux.log();
+  }
+}
+
+function displayVerboseTestSuccesses(result: DeployResult): void {
+  const successes = toArray(result.response.details?.runTestResult?.successes);
+  if (successes.length > 0) {
+    const testSuccesses = sortTestResults(successes) as Successes[];
+    CliUx.ux.log();
+    CliUx.ux.log(success(`Test Success [${successes.length}]`));
+    for (const test of testSuccesses) {
+      const testName = underline(`${test.name}.${test.methodName}`);
+      CliUx.ux.log(`${check} ${testName}`);
+    }
+  }
+}
+
+function displayVerboseTestCoverage(result: DeployResult): void {
+  const codeCoverage = toArray(result.response.details.runTestResult?.codeCoverage);
+  if (codeCoverage.length) {
+    const coverage = codeCoverage.sort((a, b) => {
+      return a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
+    });
+    CliUx.ux.log();
+    CliUx.ux.log(info('Apex Code Coverage'));
+    coverage.map((cov: CodeCoverage & { lineNotCovered: string }) => {
+      const numLocationsNum = parseInt(cov.numLocations, 10);
+      const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
+      const color = numLocationsNotCovered > 0 ? red : green;
+
+      let pctCovered = 100;
+      const coverageDecimal: number = parseFloat(
+        ((numLocationsNum - numLocationsNotCovered) / numLocationsNum).toFixed(2)
+      );
+      if (numLocationsNum > 0) {
+        pctCovered = coverageDecimal * 100;
+      }
+      cov.numLocations = color(`${pctCovered}%`);
+
+      if (!cov.locationsNotCovered) {
+        cov.lineNotCovered = '';
+      }
+      const locations = toArray(cov.locationsNotCovered);
+      cov.lineNotCovered = locations.map((location) => location.line).join(',');
+    });
+
+    table(coverage, {
+      name: { header: 'Name' },
+      numLocations: { header: '% Covered' },
+      lineNotCovered: { header: 'Uncovered Lines' },
+    });
+  }
 }
 
 export function displayFailures(result: DeployResult | RetrieveResult): void {
@@ -158,4 +232,43 @@ export function displayFailures(result: DeployResult | RetrieveResult): void {
   const options = { title: error(`Component Failures [${failures.length}]`) };
   CliUx.ux.log();
   table(failures, columns, options);
+}
+
+export function displayDeletes(result: DeployResult): void {
+  const fileResponses = asRelativePaths(result.getFileResponses() ?? []);
+  const deletions = sortFileResponses(fileResponses.filter((f) => f.state === 'Deleted'));
+
+  if (!deletions.length) return;
+
+  const columns = {
+    fullName: { header: 'Name' },
+    type: { header: 'Type' },
+    filePath: { header: 'Path' },
+  };
+
+  const options = { title: info('Deleted Source') };
+  CliUx.ux.log();
+
+  table(deletions, columns, options);
+}
+
+export function getVersionMessage(action: string, componentSet: ComponentSet, api: API): string {
+  // commands pass in the.componentSet, which may not exist in some tests or mdapi deploys
+  if (!componentSet) {
+    return `*** ${action} with ${api} ***`;
+  }
+  // neither
+  if (!componentSet.sourceApiVersion && !componentSet.apiVersion) {
+    return `*** ${action} with ${api} ***`;
+  }
+  // either OR both match (SDR will use either)
+  if (
+    !componentSet.sourceApiVersion ||
+    !componentSet.apiVersion ||
+    componentSet.sourceApiVersion === componentSet.apiVersion
+  ) {
+    return `*** ${action} with ${api} API v${componentSet.apiVersion ?? componentSet.sourceApiVersion} ***`;
+  }
+  // has both but they don't match
+  return `*** ${action} v${componentSet.sourceApiVersion} metadata with ${api} API v${componentSet.apiVersion} connection ***`;
 }

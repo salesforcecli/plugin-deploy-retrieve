@@ -95,6 +95,14 @@ Number of minutes to wait for the command to complete and display results to the
 
 If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 
-# RetrieveTitle
+# spinner.start
 
-Retrieving Metadata
+Preparing retrieve request
+
+# spinner.sending
+
+Sending request to org (metadata API version %s)
+
+# spinner.polling
+
+Waiting for the org to respond
