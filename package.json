@@ -6,7 +6,7 @@
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
     "@oclif/core": "^1.6.4",
-    "@salesforce/core": "^3.8.0",
+    "@salesforce/core": "^3.11.0",
     "@salesforce/sf-plugins-core": "^1.11.0",
     "@salesforce/source-deploy-retrieve": "^5.12.4",
     "chalk": "^4.1.2",
@@ -19,7 +19,7 @@
     "@salesforce/cli-plugins-testkit": "^1.5.20",
     "@salesforce/dev-config": "^3.0.1",
     "@salesforce/dev-scripts": "^2.0.1",
-    "@salesforce/plugin-command-reference": "^2.2.1",
+    "@salesforce/plugin-command-reference": "^2.2.8",
     "@salesforce/plugin-config": "^2.3.0",
     "@salesforce/plugin-functions": "^1.7.0",
     "@salesforce/plugin-source": "^1.8.18",
@@ -91,6 +91,7 @@
     "hooks": {
       "sf:deploy": "./lib/hooks/deploy"
     },
+    "configMeta": "./lib/configMeta",
     "devPlugins": [
       "@oclif/plugin-command-snapshot",
       "@oclif/plugin-help",
@@ -103,7 +104,12 @@
     ],
     "topics": {
       "deploy": {
-        "description": "Commands to deploy artifacts to an environment."
+        "description": "Commands to deploy artifacts to an environment.",
+        "subtopics": {
+          "metadata": {
+            "description": "Commands to deploy metadata to a Salesforce org."
+          }
+        }
       },
       "retrieve": {
         "description": "Commands to retrieve artifacts from an environment."
