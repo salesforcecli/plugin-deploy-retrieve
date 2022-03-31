@@ -856,7 +856,7 @@
     is-wsl "^2.1.1"
     tslib "^2.3.1"
 
-"@oclif/core@^1.0.8", "@oclif/core@^1.2.1", "@oclif/core@^1.3.4", "@oclif/core@^1.3.6", "@oclif/core@^1.5.1", "@oclif/core@^1.6.0", "@oclif/core@^1.6.1", "@oclif/core@^1.6.3", "@oclif/core@^1.6.4":
+"@oclif/core@^1.0.8", "@oclif/core@^1.2.1", "@oclif/core@^1.3.4", "@oclif/core@^1.3.6", "@oclif/core@^1.5.1", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.6.4":
   version "1.6.4"
   resolved "https://registry.npmjs.org/@oclif/core/-/core-1.6.4.tgz#fd213265199a8ef93adb358e15a04d74927eb522"
   integrity sha512-eUnh03MWxs3PHQUdZbo43ceLqmeOgGegsfimeqd6xfhcKwSv8dqarRyAoMCjg7P6Qm5qCjaNFZ6eS4ao349xvQ==
@@ -7959,12 +7959,12 @@ object.values@^1.1.5:
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
 
-oclif@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.npmjs.org/oclif/-/oclif-2.6.2.tgz#78e22370fa8440e55b1eeec6957dbb68cc4d9305"
-  integrity sha512-iraSge5xbR/5noeLXub/IntynP89ZZUYMATQ7K2uPHimGhoXOdm3wivZHBLbdoIxouYF/E+y5CO4vkdsEUQA3A==
+oclif@^2.6.3:
+  version "2.6.3"
+  resolved "https://registry.npmjs.org/oclif/-/oclif-2.6.3.tgz#77295d8342a41bfebcf13f7eba260d26ff5d92ef"
+  integrity sha512-t3w1GnDrZ9GnlO2WxdTRIlb5EmfLo7fkcpKo95q+03HoL4GVUNneraVymyUTYEBsvMyWcX8PbVkcMai/HhBydA==
   dependencies:
-    "@oclif/core" "^1.6.1"
+    "@oclif/core" "^1.6.4"
     "@oclif/plugin-help" "^5.1.11"
     "@oclif/plugin-not-found" "^2.3.1"
     "@oclif/plugin-warn-if-update-available" "^2.0.4"
