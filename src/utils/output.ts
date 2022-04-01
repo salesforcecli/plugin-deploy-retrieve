@@ -47,14 +47,11 @@ function table(
 const check = green('✓');
 
 export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
-  fileResponses.forEach((file) => {
-    if (file.filePath) {
-      file.filePath = path.relative(process.cwd(), file.filePath);
-    }
+  const relative = fileResponses.map((file) => {
+    return file.filePath ? { ...file, filePath: path.relative(process.cwd(), file.filePath) } : file;
   });
-  return fileResponses;
+  return relative;
 }
-
 /**
  * Sorts file responds by type, then by filePath, then by fullName
  */
@@ -108,7 +105,8 @@ export function getVersionMessage(action: string, componentSet: ComponentSet, ap
 }
 
 export class DeployResultFormatter {
-  private files: FileResponse[];
+  private relativeFiles: FileResponse[];
+  private absoluteFiles: FileResponse[];
   private testLevel: TestLevel;
   private verbosity: Verbosity;
 
@@ -116,7 +114,8 @@ export class DeployResultFormatter {
     private result: DeployResult,
     private flags: Partial<{ 'test-level': TestLevel; verbose: boolean; concise: boolean }>
   ) {
-    this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
+    this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
+    this.relativeFiles = asRelativePaths(this.absoluteFiles);
     this.testLevel = this.flags['test-level'] || TestLevel.NoTestRun;
     this.verbosity = this.determineVerbosity();
   }
@@ -129,10 +128,10 @@ export class DeployResultFormatter {
           componentFailures: this.result.response.details.componentFailures,
           runTestResult: this.result.response.details.runTestResult,
         },
-        files: this.files.filter((f) => f.state === 'Failed'),
+        files: this.absoluteFiles.filter((f) => f.state === 'Failed'),
       };
     } else {
-      return { ...this.result.response, files: this.files };
+      return { ...this.result.response, files: this.absoluteFiles };
     }
   }
 
@@ -146,7 +145,7 @@ export class DeployResultFormatter {
   }
 
   private displaySuccesses(): void {
-    const successes = this.files.filter((f) => f.state !== 'Failed');
+    const successes = this.relativeFiles.filter((f) => f.state !== 'Failed');
 
     if (!successes.length) return;
 
@@ -166,7 +165,7 @@ export class DeployResultFormatter {
   private displayFailures(): void {
     if (this.result.response.status === RequestStatus.Succeeded) return;
 
-    const failures = this.files.filter((f) => f.state === 'Failed');
+    const failures = this.relativeFiles.filter((f) => f.state === 'Failed');
     if (!failures.length) return;
 
     const columns = {
@@ -180,7 +179,7 @@ export class DeployResultFormatter {
   }
 
   private displayDeletes(): void {
-    const deletions = this.files.filter((f) => f.state === 'Deleted');
+    const deletions = this.relativeFiles.filter((f) => f.state === 'Deleted');
 
     if (!deletions.length) return;
 
