@@ -36,6 +36,14 @@ Number of minutes to wait for command to complete and display results.
 
 If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 
+# flags.verbose.summary
+
+Show verbose output of the deploy result.
+
+# flags.concise.summary
+
+Show concise output of the deploy result.
+
 # error.InvalidJobId
 
 No job found for ID: %s

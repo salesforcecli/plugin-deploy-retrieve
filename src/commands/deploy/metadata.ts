@@ -5,31 +5,18 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
-import { DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
+import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { displayDeployResults, getVersionMessage } from '../../utils/output';
+import { DeployResultFormatter, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
-import { TestLevel, TestResults } from '../../utils/types';
-import {
-  executeDeploy,
-  testLevelFlag,
-  getTestResults,
-  resolveRestDeploy,
-  validateTests,
-  determineExitCode,
-} from '../../utils/deploy';
+import { DeployResultJson, TestLevel } from '../../utils/types';
+import { executeDeploy, testLevelFlag, resolveRestDeploy, validateTests, determineExitCode } from '../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
-export type DeployMetadataResult = {
-  files: FileResponse[];
-  jobId: string;
-  tests?: TestResults;
-};
-
-export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
+export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
@@ -40,6 +27,10 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
       description: messages.getMessage('flags.api-version.description'),
+    }),
+    concise: Flags.boolean({
+      summary: messages.getMessage('flags.concise.summary'),
+      exclusive: ['verbose'],
     }),
     'dry-run': Flags.boolean({
       summary: messages.getMessage('flags.dry-run.summary'),
@@ -95,6 +86,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
+      exclusive: ['concise'],
     }),
     wait: Flags.duration({
       char: 'w',
@@ -121,7 +113,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
-  public async run(): Promise<DeployMetadataResult> {
+  public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
     if (!validateTests(flags['test-level'], flags.tests)) {
       throw messages.createError('error.NoTestsSpecified');
@@ -141,16 +133,14 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
     const result = await deploy.pollStatus(500, flags.wait.seconds);
     this.setExitCode(result);
 
+    const formatter = new DeployResultFormatter(result, flags);
+
     if (!this.jsonEnabled()) {
-      displayDeployResults(result, flags['test-level'], flags.verbose);
+      formatter.display();
       if (flags['dry-run']) this.log('Dry-run complete.');
     }
 
-    return {
-      jobId: result.response.id,
-      files: result.getFileResponses() || [],
-      tests: getTestResults(result.response),
-    };
+    return formatter.getJson();
   }
 
   private setExitCode(result: DeployResult): void {

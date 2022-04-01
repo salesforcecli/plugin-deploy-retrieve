@@ -7,7 +7,7 @@
 
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { FileResponse } from '@salesforce/source-deploy-retrieve';
+import { DeployResultJson } from '../../../../src/utils/types';
 
 describe('deploy metadata validate NUTs', () => {
   let testkit: SourceTestkit;
@@ -26,7 +26,7 @@ describe('deploy metadata validate NUTs', () => {
 
   describe('--source-dir flag', () => {
     it('should validate deploy for force-app', async () => {
-      const deploy = await testkit.execute<{ jobId: string; files: FileResponse[] }>('deploy:metadata:validate', {
+      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:validate', {
         args: '--source-dir force-app',
         json: true,
         exitCode: 0,

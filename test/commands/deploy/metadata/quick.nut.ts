@@ -7,7 +7,7 @@
 
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { FileResponse } from '@salesforce/source-deploy-retrieve';
+import { DeployResultJson } from '../../../../src/utils/types';
 
 describe('deploy metadata quick NUTs', () => {
   let testkit: SourceTestkit;
@@ -26,7 +26,7 @@ describe('deploy metadata quick NUTs', () => {
 
   describe('--use-most-recent', () => {
     it('should deploy previously validated deployment', async () => {
-      const validation = await testkit.execute<{ jobId: string; files: FileResponse[] }>('deploy:metadata:validate', {
+      const validation = await testkit.execute<DeployResultJson>('deploy:metadata:validate', {
         args: '--source-dir force-app',
         json: true,
         exitCode: 0,
@@ -37,7 +37,7 @@ describe('deploy metadata quick NUTs', () => {
         validation.result.files
       );
 
-      const deploy = await testkit.execute<{ jobId: string; files: FileResponse[] }>('deploy:metadata:quick', {
+      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:quick', {
         args: '--use-most-recent',
         json: true,
         exitCode: 0,
@@ -49,7 +49,7 @@ describe('deploy metadata quick NUTs', () => {
 
   describe('--job-id', () => {
     it('should deploy previously validated deployment', async () => {
-      const validation = await testkit.execute<{ jobId: string; files: FileResponse[] }>('deploy:metadata:validate', {
+      const validation = await testkit.execute<DeployResultJson>('deploy:metadata:validate', {
         args: '--source-dir force-app',
         json: true,
         exitCode: 0,
@@ -60,8 +60,8 @@ describe('deploy metadata quick NUTs', () => {
         validation.result.files
       );
 
-      const deploy = await testkit.execute<{ jobId: string; files: FileResponse[] }>('deploy:metadata:quick', {
-        args: `--job-id ${validation.result.jobId}`,
+      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:quick', {
+        args: `--job-id ${validation.result.id}`,
         json: true,
         exitCode: 0,
       });
@@ -70,14 +70,14 @@ describe('deploy metadata quick NUTs', () => {
     });
 
     it('should fail to deploy previously deployed deployment', async () => {
-      const first = await testkit.execute<{ jobId: string; files: FileResponse[] }>('deploy:metadata', {
+      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
         args: '--source-dir force-app',
         json: true,
         exitCode: 0,
       });
 
-      const deploy = await testkit.execute<{ jobId: string; files: FileResponse[] }>('deploy:metadata:quick', {
-        args: `--job-id ${first.result.jobId}`,
+      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:quick', {
+        args: `--job-id ${first.result.id}`,
         json: true,
         exitCode: 1,
       });

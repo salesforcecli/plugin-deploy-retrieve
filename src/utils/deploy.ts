@@ -14,13 +14,12 @@ import {
   ComponentSetBuilder,
   DeployResult,
   MetadataApiDeploy,
-  MetadataApiDeployStatus,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { JsonMap } from '@salesforce/ts-types';
 import { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
-import { API, TestLevel, TestResults } from './types';
+import { API, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
 
 type Options = {
@@ -107,15 +106,6 @@ export const testLevelFlag = (
     ...opts,
   })();
 };
-
-export function getTestResults(response: MetadataApiDeployStatus): TestResults {
-  const passing = response.numberTestsCompleted ?? 0;
-  const failing = response.numberTestErrors ?? 0;
-  const total = response.numberTestsTotal ?? 0;
-  const testResults = { passing, failing, total };
-  const time = response.details?.runTestResult.totalTime;
-  return time ? { ...testResults, time } : testResults;
-}
 
 export function determineExitCode(result: DeployResult, async = false): number {
   if (async) {
