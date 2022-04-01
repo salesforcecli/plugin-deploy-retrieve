@@ -32,3 +32,11 @@ Force the CLI to prompt for all deployment inputs.
 
 Can't find any active scratch orgs, Dev Hubs, or other orgs.
 Either log into an org or create a scratch org, and then try again.
+
+# error.initialization
+
+One or more initialization steps failed.
+
+# error.initialization.title
+
+Initialization Failures. The following table describes each failure:
