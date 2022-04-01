@@ -12,6 +12,7 @@
         "plugin": "@salesforce/plugin-deploy-retrieve",
         "flags": [
             "api-version",
+            "concise",
             "dry-run",
             "ignore-errors",
             "ignore-warnings",
@@ -31,9 +32,11 @@
         "command": "deploy:metadata:quick",
         "plugin": "@salesforce/plugin-deploy-retrieve",
         "flags": [
+            "concise",
             "job-id",
             "json",
             "use-most-recent",
+            "verbose",
             "wait"
         ],
         "alias": []
@@ -43,6 +46,7 @@
         "plugin": "@salesforce/plugin-deploy-retrieve",
         "flags": [
             "api-version",
+            "concise",
             "json",
             "manifest",
             "metadata",
