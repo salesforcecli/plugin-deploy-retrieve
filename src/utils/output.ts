@@ -222,7 +222,7 @@ export class DeployResultFormatter {
   }
 
   private displayVerboseTestSuccesses(): void {
-    const successes = toArray(this.result.response.details?.runTestResult?.successes);
+    const successes = toArray(this.result.response.details.runTestResult?.successes);
     if (successes.length > 0) {
       const testSuccesses = sortTestResults(successes) as Successes[];
       CliUx.ux.log();
@@ -236,7 +236,7 @@ export class DeployResultFormatter {
 
   private displayVerboseTestFailures(): void {
     if (!this.result.response.numberTestErrors) return;
-    const failures = toArray(this.result.response.details?.runTestResult?.failures);
+    const failures = toArray(this.result.response.details.runTestResult?.failures);
     const failureCount = this.result.response.details.runTestResult?.numFailures;
     const testFailures = sortTestResults(failures) as Failures[];
     CliUx.ux.log();
@@ -259,7 +259,7 @@ export class DeployResultFormatter {
       });
       CliUx.ux.log();
       CliUx.ux.log(info('Apex Code Coverage'));
-      coverage.map((cov: CodeCoverage & { lineNotCovered: string }) => {
+      coverage.forEach((cov: CodeCoverage & { lineNotCovered: string }) => {
         const numLocationsNum = parseInt(cov.numLocations, 10);
         const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
         const color = numLocationsNotCovered > 0 ? red : green;
