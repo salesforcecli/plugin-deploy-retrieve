@@ -6,13 +6,13 @@
  */
 
 import { EnvironmentVariable, Messages } from '@salesforce/core';
-import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson } from '../../../utils/types';
-import { DeployCache, determineExitCode, executeDeploy } from '../../../utils/deploy';
+import { DeployCache, determineExitCode, executeDeploy, shouldRemoveFromCache } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
@@ -65,12 +65,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadataResume);
     const cache = await DeployCache.create();
 
-    const jobId = flags['use-most-recent'] ? cache.getLatestKey() : flags['job-id'];
-    if (!jobId && flags['use-most-recent']) throw messages.createError('error.NoRecentJobId');
-
-    if (!cache.has(jobId)) {
-      throw messages.createError('error.InvalidJobId', [jobId]);
-    }
+    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
     const deployOpts = cache.get(jobId);
     const wait = flags.wait || Duration.minutes(deployOpts.wait);
@@ -91,7 +86,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) formatter.display();
 
-    if (result.response.status === RequestStatus.Succeeded) {
+    if (shouldRemoveFromCache(result.response.status)) {
       cache.unset(deploy.id);
       cache.unset(jobId);
       await cache.write();

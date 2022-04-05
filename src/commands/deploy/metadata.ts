@@ -10,7 +10,15 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../utils/types';
-import { executeDeploy, testLevelFlag, resolveApi, validateTests, determineExitCode } from '../../utils/deploy';
+import {
+  executeDeploy,
+  testLevelFlag,
+  resolveApi,
+  validateTests,
+  determineExitCode,
+  DeployCache,
+  shouldRemoveFromCache,
+} from '../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
 import { ConfigVars } from '../../configMeta';
 
@@ -147,7 +155,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
-    const result = await deploy.pollStatus(500, flags.wait.seconds);
+    const result = await deploy.pollStatus({ timeout: flags.wait });
     this.setExitCode(result);
 
     const formatter = new DeployResultFormatter(result, flags);
@@ -155,6 +163,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!this.jsonEnabled()) {
       formatter.display();
       if (flags['dry-run']) this.log('Dry-run complete.');
+    }
+
+    if (shouldRemoveFromCache(result.response.status)) {
+      await DeployCache.unset(deploy.id);
     }
 
     return formatter.getJson();

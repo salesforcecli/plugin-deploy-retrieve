@@ -1,24 +1,25 @@
 # summary
 
-Execute a deployment to a Salesforce org that's already been validated.
+Cancel a deployment to a Salesforce org.
 
 # description
 
-You can create a validated deployment by running sf deploy metadata validate.
+Use this command to cancel a specified asynchronous deployment.
 
 # examples
 
-- Run a quick deployment:
+- Cacnel a deployment:
 
       <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2
 
 # flags.job-id.summary
 
-Job ID of the deployment you want to quick deploy.
+Job ID of the deployment you want to cancel.
 
 # flags.job-id.description
 
 TBD.
+
 
 # flags.use-most-recent.summary
 
@@ -36,14 +37,6 @@ Number of minutes to wait for command to complete and display results.
 
 If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 
-# flags.verbose.summary
-
-Show verbose output of the deploy result.
-
-# flags.concise.summary
-
-Show concise output of the deploy result.
-
 # flags.async.summary
 
 Run the command asynchronously. This will immediately return the job ID. This way, you can continue to use the CLI.
@@ -52,14 +45,6 @@ Run the command asynchronously. This will immediately return the job ID. This wa
 
 To check the status of the job, use sf deploy metadata report. To resume watching the job, use sf deploy metadata resume.
 
-# flags.target-org.summary
+# error.CannotCancelDeploy
 
-Login username or alias for the target org.
-
-# flags.target-org.description
-
-Overrides your default org.
-
-# error.CannotQuickDeploy
-
-Job id cannot be used for quick deployment. This is likely because the deployment has not been validated.
+Cannot cancel deploy since it's already been completed.

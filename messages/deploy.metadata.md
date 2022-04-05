@@ -154,7 +154,7 @@ Run the command asynchronously. This will immediately return the job ID. This wa
 
 # flags.async.description
 
-To check the status of the job, use TBD.
+To check the status of the job, use sf deploy metadata report. To resume watching the job, use sf deploy metadata resume.
 
 # save.as.default
 
