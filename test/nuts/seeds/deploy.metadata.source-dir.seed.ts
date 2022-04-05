@@ -7,8 +7,8 @@
 
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { FileResponse } from '@salesforce/source-deploy-retrieve';
 import { TEST_REPOS_MAP } from '../testMatrix';
+import { DeployResultJson } from '../../../src/utils/types';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
@@ -38,7 +38,7 @@ context('deploy metadata --source-dir NUTs [name: %REPO_NAME%]', () => {
     for (const testCase of REPO.deploy.sourceDir) {
       it(`should deploy ${testCase.toDeploy.join(', ')}`, async () => {
         const args = testCase.toDeploy.map((t) => `--source-dir ${path.normalize(t)}`).join(' ');
-        const deploy = await testkit.deploy<{ files: FileResponse[] }>({ args });
+        const deploy = await testkit.deploy<DeployResultJson>({ args });
         await testkit.expect.filesToBeDeployedViaResult(testCase.toVerify, testCase.toIgnore, deploy.result.files);
       });
     }

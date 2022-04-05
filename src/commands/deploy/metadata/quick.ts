@@ -8,23 +8,17 @@
 import { EnvironmentVariable, Messages, Org, PollingClient, StatusResult } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { ComponentSet, DeployResult, FileResponse, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
+import { ComponentSet, DeployResult, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { AnyJson } from '@salesforce/ts-types';
-import { buildComponentSet, DeployCache, determineExitCode, getTestResults } from '../../../utils/deploy';
+import { buildComponentSet, DeployCache, determineExitCode } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { displayDeployResults, getVersionMessage } from '../../../utils/output';
-import { API, TestResults } from '../../../utils/types';
+import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
+import { API, DeployResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.quick');
 
-export type DeployMetadataQuickResult = {
-  files?: FileResponse[];
-  jobId: string;
-  tests?: TestResults;
-};
-
-export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickResult> {
+export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
@@ -32,6 +26,10 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
   public static readonly state = 'beta';
 
   public static flags = {
+    concise: Flags.boolean({
+      summary: messages.getMessage('flags.concise.summary'),
+      exclusive: ['verbose'],
+    }),
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
@@ -44,6 +42,10 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
       description: messages.getMessage('flags.use-most-recent.description'),
       summary: messages.getMessage('flags.use-most-recent.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
+    }),
+    verbose: Flags.boolean({
+      summary: messages.getMessage('flags.verbose.summary'),
+      exclusive: ['concise'],
     }),
     wait: Flags.duration({
       char: 'w',
@@ -62,7 +64,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
 
   private org: Org;
 
-  public async run(): Promise<DeployMetadataQuickResult> {
+  public async run(): Promise<DeployResultJson> {
     const flags = (await this.parse(DeployMetadataQuick)).flags;
     const cache = await DeployCache.create();
 
@@ -76,9 +78,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
     const deployOpts = cache.get(jobId);
     this.org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
 
-    const deploy = await this.org
-      .getConnection()
-      .deployRecentValidation({ id: jobId, rest: deployOpts.api === API.REST });
+    await this.org.getConnection().deployRecentValidation({ id: jobId, rest: deployOpts.api === API.REST });
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
 
     this.log(getVersionMessage('Deploying', componentSet, deployOpts.api));
@@ -86,19 +86,17 @@ export default class DeployMetadataQuick extends SfCommand<DeployMetadataQuickRe
 
     const result = await this.poll(jobId, flags.wait, componentSet);
 
+    const formatter = new DeployResultFormatter(result, flags);
+
     if (!this.jsonEnabled()) {
-      displayDeployResults(result, deployOpts['test-level'], deployOpts.verbose);
+      formatter.display();
     }
 
     await DeployCache.unset(jobId);
 
     this.setExitCode(result);
 
-    return {
-      jobId,
-      tests: getTestResults(deploy as unknown as MetadataApiDeployStatus),
-      files: result.getFileResponses() || [],
-    };
+    return formatter.getJson();
   }
 
   protected catch(error: SfCommand.Error): Promise<SfCommand.Error> {
