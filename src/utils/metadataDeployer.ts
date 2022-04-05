@@ -19,7 +19,7 @@ import {
 } from '@salesforce/core';
 import { Deployable, Deployer, generateTableChoices } from '@salesforce/sf-plugins-core';
 
-import { displayFailures, displaySuccesses, displayTestResults } from './output';
+import { DeployResultFormatter } from './output';
 import { TestLevel } from './types';
 import { DeployProgress } from './progressBar';
 import { executeDeploy, resolveRestDeploy } from './deploy';
@@ -135,9 +135,12 @@ export class MetadataDeployer extends Deployer {
     new DeployProgress(deploy).start();
 
     const result = await deploy.pollStatus(500, Duration.minutes(33).seconds);
-    displaySuccesses(result);
-    displayFailures(result);
-    displayTestResults(result, this.testLevel);
+    const formatter = new DeployResultFormatter(result, {
+      'test-level': this.testLevel,
+      verbose: false,
+      concise: false,
+    });
+    formatter.display();
   }
 
   public async promptForUsername(): Promise<string> {

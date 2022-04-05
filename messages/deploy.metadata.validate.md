@@ -114,6 +114,10 @@ Apex tests to run when --test-level is RunSpecifiedTests.
 
 Show verbose output of the deploy result.
 
+# flags.concise.summary
+
+Show concise output of the deploy result.
+
 # flags.api-version.summary
 
 Target API version for the retrieve.

@@ -6,30 +6,18 @@
  */
 import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfdxPropertyKeys } from '@salesforce/core';
-import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { displayDeployResults, getVersionMessage } from '../../../utils/output';
+import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
-import { TestLevel, TestResults } from '../../../utils/types';
-import {
-  executeDeploy,
-  testLevelFlag,
-  getTestResults,
-  resolveRestDeploy,
-  determineExitCode,
-} from '../../../utils/deploy';
+import { DeployResultJson, TestLevel } from '../../../utils/types';
+import { executeDeploy, testLevelFlag, resolveRestDeploy, determineExitCode } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
 
-export type DeployMetadataValidateResult = {
-  files: FileResponse[];
-  jobId: string;
-  tests?: TestResults;
-};
-
-export default class DeployMetadataValidate extends SfCommand<DeployMetadataValidateResult> {
+export default class DeployMetadataValidate extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
@@ -41,6 +29,10 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
       description: messages.getMessage('flags.api-version.description'),
+    }),
+    concise: Flags.boolean({
+      summary: messages.getMessage('flags.concise.summary'),
+      exclusive: ['verbose'],
     }),
     manifest: Flags.file({
       char: 'x',
@@ -82,6 +74,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
+      exclusive: ['concise'],
     }),
     wait: Flags.duration({
       char: 'w',
@@ -108,7 +101,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
-  public async run(): Promise<DeployMetadataValidateResult> {
+  public async run(): Promise<DeployResultJson> {
     const flags = (await this.parse(DeployMetadataValidate)).flags;
     const api = resolveRestDeploy();
     const { deploy, componentSet } = await executeDeploy({
@@ -125,8 +118,10 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
     const result = await deploy.pollStatus(500, flags.wait.seconds);
     this.setExitCode(result);
 
+    const formatter = new DeployResultFormatter(result, flags);
+
     if (!this.jsonEnabled()) {
-      displayDeployResults(result, flags['test-level'], flags.verbose);
+      formatter.display();
     }
 
     if (result.response.status === RequestStatus.Succeeded) {
@@ -139,11 +134,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployMetadataVali
       throw messages.createError('error.FailedValidation', [deploy.id]);
     }
 
-    return {
-      jobId: result.response.id,
-      files: result.getFileResponses() || [],
-      tests: getTestResults(result.response),
-    };
+    return formatter.getJson();
   }
 
   private setExitCode(result: DeployResult): void {

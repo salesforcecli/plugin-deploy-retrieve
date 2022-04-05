@@ -136,6 +136,10 @@ Separate multiple test names with commas, and enclose the entire flag value in d
 
 Show verbose output of the deploy result.
 
+# flags.concise.summary
+
+Show concise output of the deploy result.
+
 # flags.api-version.summary
 
 Target API version for the deploy.

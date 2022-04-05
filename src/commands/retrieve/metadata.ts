@@ -5,30 +5,20 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as path from 'path';
-import {
-  EnvironmentVariable,
-  Messages,
-  NamedPackageDir,
-  OrgConfigProperties,
-  SfdxPropertyKeys,
-  SfError,
-  SfProject,
-} from '@salesforce/core';
-import { FileResponse, RetrieveResult, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
+import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
+import { RetrieveResult, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
-import { displayPackages, displaySuccesses } from '../../utils/output';
+import { RetrieveResultFormatter } from '../../utils/output';
 import { getPackageDirs } from '../../utils/project';
+import { RetrieveResultJson } from '../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
 const mdTrasferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
-export type RetrieveMetadataResult = FileResponse[];
-
-export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> {
+export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -83,18 +73,17 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
   public static configurationVariablesSection = toHelpSection(
     'CONFIGURATION VARIABLES',
     OrgConfigProperties.TARGET_ORG,
-    SfdxPropertyKeys.API_VERSION
+    OrgConfigProperties.ORG_API_VERSION
   );
   public static envVariablesSection = toHelpSection(
     'ENVIRONMENT VARIABLES',
     EnvironmentVariable.SF_TARGET_ORG,
-    EnvironmentVariable.SFDX_DEFAULTUSERNAME,
-    EnvironmentVariable.SFDX_USE_PROGRESS_BAR
+    EnvironmentVariable.SF_USE_PROGRESS_BAR
   );
 
   protected retrieveResult!: RetrieveResult;
 
-  public async run(): Promise<RetrieveMetadataResult> {
+  public async run(): Promise<RetrieveResultJson> {
     const flags = (await this.parse(RetrieveMetadata)).flags;
     this.spinner.start(messages.getMessage('spinner.start'));
     const componentSet = await ComponentSetBuilder.build({
@@ -141,34 +130,20 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
     await retrieve.start();
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
     this.spinner.stop();
-    const fileResponses = result?.getFileResponses() || [];
+
+    const formatter = new RetrieveResultFormatter(result, flags['package-name']);
 
     if (!this.jsonEnabled()) {
-      await this.displayResults(result, flags['package-name']);
+      if (result.response.status === 'Succeeded') {
+        await formatter.display();
+      } else {
+        throw new SfError(
+          getString(result.response, 'errorMessage', result.response.status),
+          getString(result.response, 'errorStatusCode', 'unknown')
+        );
+      }
     }
 
-    return fileResponses;
-  }
-
-  private async displayResults(result: RetrieveResult, packageNames: string[] = []): Promise<void> {
-    if (result.response.status === 'Succeeded') {
-      displaySuccesses(result);
-      displayPackages(result, await this.getPackages(result, packageNames));
-    } else {
-      throw new SfError(
-        getString(result.response, 'errorMessage', result.response.status),
-        getString(result.response, 'errorStatusCode', 'unknown')
-      );
-    }
-  }
-
-  private async getPackages(result: RetrieveResult, packageNames: string[] = []): Promise<NamedPackageDir[]> {
-    const packages: NamedPackageDir[] = [];
-    const projectPath = await SfProject.resolveProjectPath();
-    packageNames.forEach((name) => {
-      const packagePath = path.join(projectPath, name);
-      packages.push({ name, path: packagePath, fullPath: path.resolve(packagePath) });
-    });
-    return packages;
+    return formatter.getJson();
   }
 }
