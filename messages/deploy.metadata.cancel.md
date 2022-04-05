@@ -1,20 +1,20 @@
 # summary
 
-Resume watching a deployment to a Salesforce org.
+Cancel a deployment to a Salesforce org.
 
 # description
 
-TBD.
+Use this command to cancel a specified asynchronous deployment.
 
 # examples
 
-- Resume a deployment:
+- Cacnel a deployment:
 
       <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2
 
 # flags.job-id.summary
 
-Job ID of the deployment you want to resume.
+Job ID of the deployment you want to cancel.
 
 # flags.job-id.description
 
@@ -37,18 +37,14 @@ Number of minutes to wait for command to complete and display results.
 
 If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 
-# flags.verbose.summary
-
-Show verbose output of the deploy result.
-
-# flags.concise.summary
-
-Show concise output of the deploy result.
-
 # error.InvalidJobId
 
 No job found for ID: %s
 
 # error.NoRecentJobId
 
-There are no recent job ids available to resume.
+There are no recent job ids available to cancel.
+
+# error.CannotCancelDeploy
+
+Cannot cancel deploy since it's already been completed.

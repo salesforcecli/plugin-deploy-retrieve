@@ -8,7 +8,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import { CliUx } from '@oclif/core';
-import { blue, bold, dim, red, underline, green } from 'chalk';
+import { blue, bold, dim, red, underline, green, yellow } from 'chalk';
 import {
   DeployResult,
   FileResponse,
@@ -45,6 +45,12 @@ function table(
   // Interfaces cannot be casted to Record<string, unknown> so we have to cast to unknown first
   // See https://github.com/microsoft/TypeScript/issues/15300
   CliUx.ux.table(responses as unknown as Array<Record<string, unknown>>, columns, options ?? {});
+}
+
+function colorStatus(status: RequestStatus): string {
+  if (status === RequestStatus.Succeeded) return green(status);
+  if (status === RequestStatus.Failed) return red(status);
+  else return yellow(status);
 }
 
 const check = green('✓');
@@ -119,8 +125,8 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private verbosity: Verbosity;
 
   public constructor(
-    private result: DeployResult,
-    private flags: Partial<{ 'test-level': TestLevel; verbose: boolean; concise: boolean }>
+    protected result: DeployResult,
+    protected flags: Partial<{ 'test-level': TestLevel; verbose: boolean; concise: boolean }>
   ) {
     this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
     this.relativeFiles = asRelativePaths(this.absoluteFiles);
@@ -302,6 +308,34 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   }
 }
 
+export class DeployReportResultFormatter extends DeployResultFormatter {
+  public display(): void {
+    CliUx.ux.log(`${this.result.response.id}... ${this.result.response.status}`);
+
+    const response = Object.entries(this.result.response).reduce((result, [key, value]) => {
+      if (['number', 'boolean', 'string'].includes(typeof value)) {
+        if (key === 'status') {
+          return result.concat({ key, value: colorStatus(value) });
+        } else {
+          return result.concat({ key, value: value as string | number | boolean });
+        }
+      }
+      return result;
+    }, [] as Array<{ key: string; value: unknown }>);
+
+    CliUx.ux.log();
+    CliUx.ux.table(response, { key: {}, value: {} }, { title: info('Deploy Info') });
+
+    const opts = Object.entries(this.flags).reduce((result, [key, value]) => {
+      if (key === 'timestamp') return result;
+      return result.concat({ key, value });
+    }, [] as Array<{ key: string; value: unknown }>);
+    CliUx.ux.log();
+    CliUx.ux.table(opts, { key: {}, value: {} }, { title: info('Deploy Options') });
+    super.display();
+  }
+}
+
 export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJson> {
   public constructor(private id: string) {}
 
@@ -311,8 +345,24 @@ export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJs
 
   public display(): void {
     CliUx.ux.log(messages.getMessage('info.AsyncDeployQueued'));
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus'));
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployCancel'));
+    CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus', [this.id]));
+    CliUx.ux.log(messages.getMessage('info.AsyncDeployCancel', [this.id]));
+  }
+}
+
+export class DeployCancelResultFormatter implements Formatter<DeployResultJson> {
+  public constructor(protected result: DeployResult) {}
+
+  public getJson(): DeployResultJson {
+    return { ...this.result.response, files: this.result.getFileResponses() ?? [] };
+  }
+
+  public display(): void {
+    if (this.result.response.status === RequestStatus.Canceled) {
+      CliUx.ux.log(`Successfully canceled ${this.result.response.id}`);
+    } else {
+      CliUx.ux.error(`Could not cancel ${this.result.response.id}`);
+    }
   }
 }
 

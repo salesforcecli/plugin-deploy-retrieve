@@ -5,12 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Messages, Org, PollingClient, StatusResult } from '@salesforce/core';
-import { Duration } from '@salesforce/kit';
+import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { ComponentSet, DeployResult, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
-import { AnyJson } from '@salesforce/ts-types';
-import { buildComponentSet, DeployCache, determineExitCode } from '../../../utils/deploy';
+import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { buildComponentSet, DeployCache, determineExitCode, poll } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { API, DeployResultJson } from '../../../utils/types';
@@ -64,8 +62,6 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
-  private org: Org;
-
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadataQuick);
     const cache = await DeployCache.create();
@@ -78,9 +74,9 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     }
 
     const deployOpts = cache.get(jobId);
-    this.org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
+    const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
 
-    await this.org.getConnection().deployRecentValidation({ id: jobId, rest: deployOpts.api === API.REST });
+    await org.getConnection().deployRecentValidation({ id: jobId, rest: deployOpts.api === API.REST });
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
 
     this.log(getVersionMessage('Deploying', componentSet, deployOpts.api));
@@ -92,15 +88,15 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       return asyncFormatter.getJson();
     }
 
-    const result = await this.poll(jobId, flags.wait, componentSet);
+    const result = await poll(org, jobId, flags.wait, componentSet);
 
     const formatter = new DeployResultFormatter(result, flags);
 
-    if (!this.jsonEnabled()) {
-      formatter.display();
-    }
+    if (!this.jsonEnabled()) formatter.display();
 
-    await DeployCache.unset(jobId);
+    if (result.response.status === RequestStatus.Succeeded) {
+      await DeployCache.unset(jobId);
+    }
 
     this.setExitCode(result);
 
@@ -113,28 +109,6 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
     }
     return super.catch(error);
-  }
-
-  protected async poll(id: string, wait: Duration, componentSet: ComponentSet): Promise<DeployResult> {
-    const opts: PollingClient.Options = {
-      frequency: Duration.milliseconds(500),
-      timeout: wait,
-      poll: async (): Promise<StatusResult> => {
-        const deployResult = await this.report(id, componentSet);
-        return {
-          completed: deployResult.response.done,
-          payload: deployResult as unknown as AnyJson,
-        };
-      },
-    };
-    const pollingClient = await PollingClient.create(opts);
-    return pollingClient.subscribe() as unknown as Promise<DeployResult>;
-  }
-
-  protected async report(id: string, componentSet: ComponentSet): Promise<DeployResult> {
-    const res = await this.org.getConnection().metadata.checkDeployStatus(id, true);
-    const deployStatus = res as unknown as MetadataApiDeployStatus;
-    return new DeployResult(deployStatus as unknown as MetadataApiDeployStatus, componentSet);
   }
 
   private setExitCode(result: DeployResult): void {

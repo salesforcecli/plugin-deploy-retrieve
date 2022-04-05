@@ -1,20 +1,20 @@
 # summary
 
-TBD.
+Execute a deployment to a Salesforce org that's already been validated.
 
 # description
 
-TBD.
+You can create a validated deployment by running sf deploy metadata validate.
 
 # examples
 
-- Run a validated deployment:
+- Run a quick deployment:
 
       <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2
 
 # flags.job-id.summary
 
-TBD.
+Job ID of the deployment you want to quick deploy.
 
 # flags.job-id.description
 
@@ -22,7 +22,7 @@ TBD.
 
 # flags.use-most-recent.summary
 
-TBD.
+Use the job id of the most recent deployment.
 
 # flags.use-most-recent.description
 
@@ -50,7 +50,7 @@ Run the command asynchronously. This will immediately return the job ID. This wa
 
 # flags.async.description
 
-To check the status of the job, use TBD.
+To check the status of the job, use sf deploy metadata report. To resume watching the job, use sf deploy metadata resume.
 
 # error.InvalidJobId
 

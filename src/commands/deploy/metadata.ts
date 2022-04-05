@@ -5,12 +5,19 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../utils/types';
-import { executeDeploy, testLevelFlag, resolveApi, validateTests, determineExitCode } from '../../utils/deploy';
+import {
+  executeDeploy,
+  testLevelFlag,
+  resolveApi,
+  validateTests,
+  determineExitCode,
+  DeployCache,
+} from '../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
 import { ConfigVars } from '../../configMeta';
 
@@ -22,6 +29,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
+  public static readonly state = 'beta';
 
   public static flags = {
     'api-version': Flags.orgApiVersion({
@@ -154,6 +162,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!this.jsonEnabled()) {
       formatter.display();
       if (flags['dry-run']) this.log('Dry-run complete.');
+    }
+
+    if (result.response.status === RequestStatus.Succeeded) {
+      await DeployCache.unset(deploy.id);
     }
 
     return formatter.getJson();

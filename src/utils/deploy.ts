@@ -6,14 +6,15 @@
  */
 
 import { Interfaces, Flags } from '@oclif/core';
-import { ConfigAggregator, Global, TTLConfig } from '@salesforce/core';
+import { ConfigAggregator, Global, Org, PollingClient, StatusResult, TTLConfig } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
-import { Nullable } from '@salesforce/ts-types';
+import { AnyJson, Nullable } from '@salesforce/ts-types';
 import {
   ComponentSet,
   ComponentSetBuilder,
   DeployResult,
   MetadataApiDeploy,
+  MetadataApiDeployStatus,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { ConfigVars } from '../configMeta';
@@ -85,10 +86,41 @@ export async function executeDeploy(
     },
   });
 
-  const cache = await DeployCache.create();
-  cache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
-  await cache.write();
+  await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
   return { deploy, componentSet };
+}
+
+export async function cancelDeploy(opts: Partial<Options>, id: string): Promise<DeployResult> {
+  const org = await Org.create({ aliasOrUsername: opts['target-org'] });
+  const deploy = new MetadataApiDeploy({ usernameOrConnection: org.getUsername(), id });
+  const componentSet = await buildComponentSet({ ...opts });
+
+  await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
+
+  await deploy.cancel();
+  return poll(org, deploy.id, opts.wait, componentSet);
+}
+
+export async function poll(org: Org, id: string, wait: Duration, componentSet: ComponentSet): Promise<DeployResult> {
+  const report = async (): Promise<DeployResult> => {
+    const res = await org.getConnection().metadata.checkDeployStatus(id, true);
+    const deployStatus = res as unknown as MetadataApiDeployStatus;
+    return new DeployResult(deployStatus as unknown as MetadataApiDeployStatus, componentSet);
+  };
+
+  const opts: PollingClient.Options = {
+    frequency: Duration.milliseconds(500),
+    timeout: wait,
+    poll: async (): Promise<StatusResult> => {
+      const deployResult = await report();
+      return {
+        completed: deployResult.response.done,
+        payload: deployResult as unknown as AnyJson,
+      };
+    },
+  };
+  const pollingClient = await PollingClient.create(opts);
+  return pollingClient.subscribe() as unknown as Promise<DeployResult>;
 }
 
 export const testLevelFlag = (
@@ -123,6 +155,12 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
       stateFolder: Global.SF_STATE_FOLDER,
       ttl: Duration.days(3),
     };
+  }
+
+  public static async set(key: string, value: Partial<CachedOptions>): Promise<void> {
+    const cache = await DeployCache.create();
+    cache.set(key, value);
+    await cache.write();
   }
 
   public static async unset(key: string): Promise<void> {
