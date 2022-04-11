@@ -128,7 +128,7 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
       isState: true,
       filename: DeployCache.getFileName(),
       stateFolder: Global.SF_STATE_FOLDER,
-      ttl: Duration.days(1),
+      ttl: Duration.days(3),
     };
   }
 
