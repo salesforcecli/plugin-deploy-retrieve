@@ -102,7 +102,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       defaultValue: 33,
       helpValue: '<minutes>',
       min: 1,
-      exclusive: ['wait'],
+      exclusive: ['async'],
     }),
   };
 
