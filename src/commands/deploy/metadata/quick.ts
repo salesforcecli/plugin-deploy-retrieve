@@ -5,14 +5,14 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { EnvironmentVariable, Messages, Org, PollingClient, StatusResult } from '@salesforce/core';
+import { Messages, Org, PollingClient, StatusResult } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { AnyJson } from '@salesforce/ts-types';
 import { buildComponentSet, DeployCache, determineExitCode } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
+import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { API, DeployResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -26,6 +26,10 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   public static readonly state = 'beta';
 
   public static flags = {
+    async: Flags.boolean({
+      summary: messages.getMessage('flags.async.summary'),
+      description: messages.getMessage('flags.async.description'),
+    }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
       exclusive: ['verbose'],
@@ -58,14 +62,12 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     }),
   };
 
-  public static envVariablesSection = toHelpSection('ENVIRONMENT VARIABLES', EnvironmentVariable.SF_TARGET_ORG);
-
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   private org: Org;
 
   public async run(): Promise<DeployResultJson> {
-    const flags = (await this.parse(DeployMetadataQuick)).flags;
+    const { flags } = await this.parse(DeployMetadataQuick);
     const cache = await DeployCache.create();
 
     const jobId = flags['use-most-recent'] ? cache.getLatestKey() : flags['job-id'];
@@ -83,6 +85,12 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     this.log(getVersionMessage('Deploying', componentSet, deployOpts.api));
     this.log(`Deploy ID: ${jobId}`);
+
+    if (flags.async) {
+      const asyncFormatter = new AsyncDeployResultFormatter(jobId);
+      if (!this.jsonEnabled()) asyncFormatter.display();
+      return asyncFormatter.getJson();
+    }
 
     const result = await this.poll(jobId, flags.wait, componentSet);
 

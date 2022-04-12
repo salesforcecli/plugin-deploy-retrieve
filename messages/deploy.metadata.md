@@ -148,6 +148,14 @@ Target API version for the deploy.
 
 Use this flag to override the default API version, which is the latest version supported the CLI, with the API version of your package.xml file.
 
+# flags.async.summary
+
+Run the command asynchronously. This will immediately return the job ID. This way, you can continue to use the CLI.
+
+# flags.async.description
+
+To check the status of the job, use TBD.
+
 # save.as.default
 
 Save %s as default target-org?

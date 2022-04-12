@@ -7,11 +7,12 @@
 import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
 import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { DeployResultFormatter, getVersionMessage } from '../../utils/output';
+import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../utils/types';
-import { executeDeploy, testLevelFlag, resolveRestDeploy, validateTests, determineExitCode } from '../../utils/deploy';
+import { executeDeploy, testLevelFlag, resolveApi, validateTests, determineExitCode } from '../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
+import { ConfigVars } from '../../configMeta';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -28,6 +29,11 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
       description: messages.getMessage('flags.api-version.description'),
+    }),
+    async: Flags.boolean({
+      summary: messages.getMessage('flags.async.summary'),
+      description: messages.getMessage('flags.async.description'),
+      exclusive: ['wait'],
     }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
@@ -97,13 +103,15 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       defaultValue: 33,
       helpValue: '<minutes>',
       min: 1,
+      exclusive: ['async'],
     }),
   };
 
   public static configurationVariablesSection = toHelpSection(
     'CONFIGURATION VARIABLES',
     OrgConfigProperties.TARGET_ORG,
-    OrgConfigProperties.ORG_API_VERSION
+    OrgConfigProperties.ORG_API_VERSION,
+    ConfigVars.ORG_METADATA_REST_DEPLOY
   );
 
   public static envVariablesSection = toHelpSection(
@@ -119,7 +127,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!validateTests(flags['test-level'], flags.tests)) {
       throw messages.createError('error.NoTestsSpecified');
     }
-    const api = resolveRestDeploy();
+
+    const api = resolveApi();
     const { deploy, componentSet } = await executeDeploy({
       ...flags,
       'target-org': flags['target-org'].getUsername(),
@@ -129,6 +138,13 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
     this.log(getVersionMessage(action, componentSet, api));
     this.log(`Deploy ID: ${deploy.id}`);
+
+    if (flags.async) {
+      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
+      if (!this.jsonEnabled()) asyncFormatter.display();
+      return asyncFormatter.getJson();
+    }
+
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus(500, flags.wait.seconds);

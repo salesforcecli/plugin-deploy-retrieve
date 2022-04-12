@@ -126,6 +126,14 @@ Target API version for the retrieve.
 
 Use this flag to override the default API version, which is the latest version supported the CLI, with the API version in your package.xml file.
 
+# flags.async.summary
+
+Run the command asynchronously. This will immediately return the job ID. This way, you can continue to use the CLI.
+
+# flags.async.description
+
+To check the status of the job, use TBD.
+
 # info.SuccessfulValidation
 
 Successfully validated the deployment (%s).

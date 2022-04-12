@@ -84,7 +84,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   protected retrieveResult!: RetrieveResult;
 
   public async run(): Promise<RetrieveResultJson> {
-    const flags = (await this.parse(RetrieveMetadata)).flags;
+    const { flags } = await this.parse(RetrieveMetadata);
     this.spinner.start(messages.getMessage('spinner.start'));
     const componentSet = await ComponentSetBuilder.build({
       apiversion: flags['api-version'],
