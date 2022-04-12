@@ -33,6 +33,7 @@
         "command": "deploy:metadata:cancel",
         "plugin": "@salesforce/plugin-deploy-retrieve",
         "flags": [
+            "async",
             "job-id",
             "json",
             "use-most-recent",
