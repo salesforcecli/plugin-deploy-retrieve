@@ -2,6 +2,10 @@
 
 Deploy has been queued.
 
+# info.AsyncDeployCancelQueued
+
+Deploy has been queued for cancellation.
+
 # info.AsyncDeployCancel
 
 Run sf deploy metadata cancel --job-id %s to cancel the deploy.

@@ -42,8 +42,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   public async run(): Promise<DeployResultJson> {
     const flags = (await this.parse(DeployMetadataReport)).flags;
     const cache = await DeployCache.create();
-    const jobId = flags['use-most-recent'] ? cache.getLatestKey() : flags['job-id'];
-    if (!jobId && flags['use-most-recent']) throw messages.createError('error.NoRecentJobId');
+    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
     const deployOpts = cache.get(jobId);
     const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });

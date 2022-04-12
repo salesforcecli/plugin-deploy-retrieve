@@ -28,11 +28,3 @@ Use the job id of the most recent deployment.
 # flags.use-most-recent.description
 
 TBD.
-
-# error.InvalidJobId
-
-No job found for ID: %s
-
-# error.NoRecentJobId
-
-There are no recent job ids available to report.

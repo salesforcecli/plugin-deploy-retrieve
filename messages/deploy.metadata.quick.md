@@ -52,14 +52,6 @@ Run the command asynchronously. This will immediately return the job ID. This wa
 
 To check the status of the job, use sf deploy metadata report. To resume watching the job, use sf deploy metadata resume.
 
-# error.InvalidJobId
-
-No job found for ID: %s
-
-# error.NoRecentJobId
-
-There are no recent job ids available to quick deploy.
-
 # error.CannotQuickDeploy
 
 Job id cannot be used for quick deployment. This is likely because the deployment has not been validated.

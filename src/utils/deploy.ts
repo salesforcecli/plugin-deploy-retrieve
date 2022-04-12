@@ -6,7 +6,7 @@
  */
 
 import { Interfaces, Flags } from '@oclif/core';
-import { ConfigAggregator, Global, Org, PollingClient, StatusResult, TTLConfig } from '@salesforce/core';
+import { ConfigAggregator, Global, Messages, Org, PollingClient, StatusResult, TTLConfig } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { AnyJson, Nullable } from '@salesforce/ts-types';
 import {
@@ -21,6 +21,9 @@ import { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
+
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
 
 type Options = {
   api: API;
@@ -101,6 +104,13 @@ export async function cancelDeploy(opts: Partial<Options>, id: string): Promise<
   return poll(org, deploy.id, opts.wait, componentSet);
 }
 
+export async function cancelDeployAsync(opts: Partial<Options>, id: string): Promise<{ id: string }> {
+  const org = await Org.create({ aliasOrUsername: opts['target-org'] });
+  const deploy = new MetadataApiDeploy({ usernameOrConnection: org.getUsername(), id });
+  await deploy.cancel();
+  return { id: deploy.id };
+}
+
 export async function poll(org: Org, id: string, wait: Duration, componentSet: ComponentSet): Promise<DeployResult> {
   const report = async (): Promise<DeployResult> => {
     const res = await org.getConnection().metadata.checkDeployStatus(id, true);
@@ -142,6 +152,15 @@ export function determineExitCode(result: DeployResult, async = false): number {
   return DEPLOY_STATUS_CODES.get(result.response.status);
 }
 
+export function shouldRemoveFromCache(status: RequestStatus): boolean {
+  return [
+    RequestStatus.Succeeded,
+    RequestStatus.Failed,
+    RequestStatus.SucceededPartial,
+    RequestStatus.Canceled,
+  ].includes(status);
+}
+
 export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
   public static getFileName(): string {
     return 'deploy-cache.json';
@@ -167,5 +186,16 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     const cache = await DeployCache.create();
     cache.unset(key);
     await cache.write();
+  }
+
+  public resolveLatest(useMostRecent: boolean, key: Nullable<string>): string {
+    const jobId = useMostRecent ? this.getLatestKey() : key;
+    if (!jobId && useMostRecent) throw messages.createError('error.NoRecentJobId');
+
+    if (!this.has(jobId)) {
+      throw messages.createError('error.InvalidJobId', [jobId]);
+    }
+
+    return jobId;
   }
 }

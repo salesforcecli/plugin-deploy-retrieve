@@ -8,9 +8,8 @@
 import { Messages } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
-import { RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { DeployCache, cancelDeploy } from '../../../utils/deploy';
-import { DeployCancelResultFormatter } from '../../../utils/output';
+import { DeployCache, cancelDeploy, shouldRemoveFromCache, cancelDeployAsync } from '../../../utils/deploy';
+import { AsyncDeployCancelResultFormatter, DeployCancelResultFormatter } from '../../../utils/output';
 import { DeployResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -24,6 +23,11 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
   public static readonly state = 'beta';
 
   public static flags = {
+    async: Flags.boolean({
+      summary: messages.getMessage('flags.async.summary'),
+      description: messages.getMessage('flags.async.description'),
+      exclusive: ['wait'],
+    }),
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
@@ -44,34 +48,35 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
       unit: 'minutes',
       helpValue: '<minutes>',
       min: 1,
+      exclusive: ['async'],
     }),
   };
 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadataCancel);
     const cache = await DeployCache.create();
-    const jobId = flags['use-most-recent'] ? cache.getLatestKey() : flags['job-id'];
-    if (!jobId && flags['use-most-recent']) throw messages.createError('error.NoRecentJobId');
-
-    if (!cache.has(jobId)) {
-      throw messages.createError('error.InvalidJobId', [jobId]);
-    }
+    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
     const deployOpts = cache.get(jobId);
-    const wait = flags.wait || Duration.minutes(deployOpts.wait);
-    const result = await cancelDeploy({ ...deployOpts, wait }, jobId);
 
-    const formatter = new DeployCancelResultFormatter(result);
+    if (flags.async) {
+      const asyncResult = await cancelDeployAsync({ 'target-org': deployOpts['target-org'] }, jobId);
+      const formatter = new AsyncDeployCancelResultFormatter(asyncResult.id);
+      if (!this.jsonEnabled()) formatter.display();
+      return formatter.getJson();
+    } else {
+      const wait = flags.wait || Duration.minutes(deployOpts.wait);
+      const result = await cancelDeploy({ ...deployOpts, wait }, jobId);
+      const formatter = new DeployCancelResultFormatter(result);
+      if (!this.jsonEnabled()) formatter.display();
 
-    if (!this.jsonEnabled()) formatter.display();
-
-    if (result.response.status === RequestStatus.Canceled) {
-      cache.unset(result.response.id);
-      cache.unset(jobId);
-      await cache.write();
+      if (shouldRemoveFromCache(result.response.status)) {
+        cache.unset(result.response.id);
+        cache.unset(jobId);
+        await cache.write();
+      }
+      return formatter.getJson();
     }
-
-    return formatter.getJson();
   }
 
   protected catch(error: SfCommand.Error): Promise<SfCommand.Error> {

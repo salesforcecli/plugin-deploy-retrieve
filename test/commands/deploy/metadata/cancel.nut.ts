@@ -5,10 +5,17 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import * as fs from 'fs';
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
 import { DeployResultJson } from '../../../../src/utils/types';
+import { CachedOptions } from '../../../../src/utils/deploy';
+
+function readDeployCache(projectDir: string): Record<string, CachedOptions> {
+  const contents = fs.readFileSync(path.join(projectDir, '.sf', 'deploy-cache.json'), 'utf-8');
+  return JSON.parse(contents) as Record<string, CachedOptions>;
+}
 
 describe('deploy metadata cancel NUTs', () => {
   let testkit: SourceTestkit;
@@ -27,11 +34,14 @@ describe('deploy metadata cancel NUTs', () => {
 
   describe('--use-most-recent', () => {
     it('should cancel most recently started deployment', async () => {
-      await testkit.execute<DeployResultJson>('deploy:metadata', {
+      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
         args: '--source-dir force-app --async',
         json: true,
         exitCode: 0,
       });
+
+      const cacheBefore = readDeployCache(testkit.projectDir);
+      expect(cacheBefore).to.have.property(first.result.id);
 
       const cancel = await testkit.execute<DeployResultJson>('deploy:metadata:cancel', {
         args: '--use-most-recent',
@@ -51,6 +61,9 @@ describe('deploy metadata cancel NUTs', () => {
         expect(cancel.name).to.equal('CancelFailed');
         expect(cancel.message).to.include('Deployment already completed');
       }
+
+      const cacheAfter = readDeployCache(testkit.projectDir);
+      expect(cacheAfter).to.not.have.property(first.result.id);
     });
   });
 
@@ -61,6 +74,9 @@ describe('deploy metadata cancel NUTs', () => {
         json: true,
         exitCode: 0,
       });
+
+      const cacheBefore = readDeployCache(testkit.projectDir);
+      expect(cacheBefore).to.have.property(first.result.id);
 
       const cancel = await testkit.execute<DeployResultJson>('deploy:metadata:cancel', {
         args: `--job-id ${first.result.id}`,
@@ -80,6 +96,9 @@ describe('deploy metadata cancel NUTs', () => {
         expect(cancel.name).to.equal('CancelFailed');
         expect(cancel.message).to.include('Deployment already completed');
       }
+
+      const cacheAfter = readDeployCache(testkit.projectDir);
+      expect(cacheAfter).to.not.have.property(first.result.id);
     });
   });
 });

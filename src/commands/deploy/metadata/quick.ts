@@ -7,8 +7,8 @@
 
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { buildComponentSet, DeployCache, determineExitCode, poll } from '../../../utils/deploy';
+import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { buildComponentSet, DeployCache, determineExitCode, poll, shouldRemoveFromCache } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { API, DeployResultJson } from '../../../utils/types';
@@ -27,6 +27,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     async: Flags.boolean({
       summary: messages.getMessage('flags.async.summary'),
       description: messages.getMessage('flags.async.description'),
+      exclusive: ['wait'],
     }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
@@ -57,6 +58,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       defaultValue: 33,
       helpValue: '<minutes>',
       min: 1,
+      exclusive: ['async'],
     }),
   };
 
@@ -66,12 +68,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadataQuick);
     const cache = await DeployCache.create();
 
-    const jobId = flags['use-most-recent'] ? cache.getLatestKey() : flags['job-id'];
-    if (!jobId && flags['use-most-recent']) throw messages.createError('error.NoRecentJobId');
-
-    if (!cache.has(jobId)) {
-      throw messages.createError('error.InvalidJobId', [jobId]);
-    }
+    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
     const deployOpts = cache.get(jobId);
     const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
@@ -94,7 +91,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) formatter.display();
 
-    if (result.response.status === RequestStatus.Succeeded) {
+    if (shouldRemoveFromCache(result.response.status)) {
       await DeployCache.unset(jobId);
     }
 

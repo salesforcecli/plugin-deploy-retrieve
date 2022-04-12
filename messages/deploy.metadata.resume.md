@@ -44,11 +44,3 @@ Show verbose output of the deploy result.
 # flags.concise.summary
 
 Show concise output of the deploy result.
-
-# error.InvalidJobId
-
-No job found for ID: %s
-
-# error.NoRecentJobId
-
-There are no recent job ids available to resume.

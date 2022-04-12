@@ -8,7 +8,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import { CliUx } from '@oclif/core';
-import { blue, bold, dim, red, underline, green, yellow } from 'chalk';
+import { blue, bold, dim, underline } from 'chalk';
 import {
   DeployResult,
   FileResponse,
@@ -20,6 +20,7 @@ import {
   CodeCoverage,
 } from '@salesforce/source-deploy-retrieve';
 import { Messages, NamedPackageDir, SfProject } from '@salesforce/core';
+import { StandardColors } from '@salesforce/sf-plugins-core';
 import { API, AsyncDeployResultJson, DeployResultJson, RetrieveResultJson, TestLevel, Verbosity } from './types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -30,11 +31,11 @@ function info(message: string): string {
 }
 
 function error(message: string): string {
-  return red(bold(message));
+  return StandardColors.error(bold(message));
 }
 
 function success(message: string): string {
-  return green(bold(message));
+  return StandardColors.success(bold(message));
 }
 
 function table(
@@ -48,12 +49,12 @@ function table(
 }
 
 function colorStatus(status: RequestStatus): string {
-  if (status === RequestStatus.Succeeded) return green(status);
-  if (status === RequestStatus.Failed) return red(status);
-  else return yellow(status);
+  if (status === RequestStatus.Succeeded) return StandardColors.success(status);
+  if (status === RequestStatus.Failed) return StandardColors.error(status);
+  else return StandardColors.warning(status);
 }
 
-const check = green('✓');
+const check = StandardColors.success('✓');
 
 export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
   const relative = fileResponses.map((file) => {
@@ -275,7 +276,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       coverage.forEach((cov: CodeCoverage & { lineNotCovered: string }) => {
         const numLocationsNum = parseInt(cov.numLocations, 10);
         const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
-        const color = numLocationsNotCovered > 0 ? red : green;
+        const color = numLocationsNotCovered > 0 ? StandardColors.error : StandardColors.success;
 
         let pctCovered = 100;
         const coverageDecimal: number = parseFloat(
@@ -363,6 +364,19 @@ export class DeployCancelResultFormatter implements Formatter<DeployResultJson> 
     } else {
       CliUx.ux.error(`Could not cancel ${this.result.response.id}`);
     }
+  }
+}
+
+export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployResultJson> {
+  public constructor(private id: string) {}
+
+  public getJson(): DeployResultJson {
+    return { id: this.id, done: false, status: 'Queued', files: [] };
+  }
+
+  public display(): void {
+    CliUx.ux.log(messages.getMessage('info.AsyncDeployCancelQueued'));
+    CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus', [this.id]));
   }
 }
 

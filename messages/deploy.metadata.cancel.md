@@ -37,13 +37,13 @@ Number of minutes to wait for command to complete and display results.
 
 If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 
-# error.InvalidJobId
+# flags.async.summary
 
-No job found for ID: %s
+Run the command asynchronously. This will immediately return the job ID. This way, you can continue to use the CLI.
 
-# error.NoRecentJobId
+# flags.async.description
 
-There are no recent job ids available to cancel.
+To check the status of the job, use sf deploy metadata report. To resume watching the job, use sf deploy metadata resume.
 
 # error.CannotCancelDeploy
 
