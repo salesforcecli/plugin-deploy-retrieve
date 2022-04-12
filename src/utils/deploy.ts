@@ -16,7 +16,6 @@ import {
   MetadataApiDeploy,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
-import { JsonMap } from '@salesforce/ts-types';
 import { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel } from './types';
@@ -40,7 +39,7 @@ type Options = {
   concise?: boolean;
 };
 
-type CachedOptions = Omit<Options, 'wait'> & { wait: number } & JsonMap;
+export type CachedOptions = Omit<Options, 'wait'> & { wait: number };
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
   if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
@@ -49,13 +48,7 @@ export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): 
 
 export function resolveApi(): API {
   const restDeployConfig = ConfigAggregator.getValue(ConfigVars.ORG_METADATA_REST_DEPLOY)?.value;
-  if (restDeployConfig === 'false') {
-    return API.SOAP;
-  } else if (restDeployConfig === 'true') {
-    return API.REST;
-  } else {
-    return API.SOAP;
-  }
+  return restDeployConfig === 'true' ? API.REST : API.SOAP;
 }
 
 export async function buildComponentSet(opts: Partial<Options>): Promise<ComponentSet> {

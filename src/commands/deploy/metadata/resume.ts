@@ -6,7 +6,7 @@
  */
 
 import { EnvironmentVariable, Messages } from '@salesforce/core';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
@@ -89,13 +89,12 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       concise: deployOpts.concise,
     });
 
-    if (!this.jsonEnabled()) {
-      formatter.display();
-    }
+    if (!this.jsonEnabled()) formatter.display();
 
-    cache.unset(deploy.id);
-    cache.unset(jobId);
-    await cache.write();
+    if (result.response.status === RequestStatus.Succeeded) {
+      cache.unset(deploy.id);
+      await cache.write();
+    }
 
     return formatter.getJson();
   }
