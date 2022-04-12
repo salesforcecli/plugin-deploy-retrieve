@@ -188,11 +188,11 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     await cache.write();
   }
 
-  public resolveLatest(useMostRecent: boolean, key: Nullable<string>): string {
+  public resolveLatest(useMostRecent: boolean, key: Nullable<string>, throwOnNotFound = true): string {
     const jobId = useMostRecent ? this.getLatestKey() : key;
     if (!jobId && useMostRecent) throw messages.createError('error.NoRecentJobId');
 
-    if (!this.has(jobId)) {
+    if (throwOnNotFound && !this.has(jobId)) {
       throw messages.createError('error.InvalidJobId', [jobId]);
     }
 

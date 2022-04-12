@@ -68,7 +68,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadataQuick);
     const cache = await DeployCache.create();
 
-    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
+    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
     const deployOpts = cache.get(jobId);
     const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
