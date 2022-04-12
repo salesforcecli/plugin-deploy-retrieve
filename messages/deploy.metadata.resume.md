@@ -8,7 +8,7 @@ TBD.
 
 # examples
 
-- Run a validated deployment:
+- Resume a deployment:
 
       <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2
 
@@ -19,6 +19,7 @@ TBD.
 # flags.job-id.description
 
 TBD.
+
 
 # flags.use-most-recent.summary
 
@@ -44,22 +45,10 @@ Show verbose output of the deploy result.
 
 Show concise output of the deploy result.
 
-# flags.async.summary
-
-Run the command asynchronously. This will immediately return the job ID. This way, you can continue to use the CLI.
-
-# flags.async.description
-
-To check the status of the job, use TBD.
-
 # error.InvalidJobId
 
 No job found for ID: %s
 
 # error.NoRecentJobId
 
-There are no recent job ids available to quick deploy.
-
-# error.CannotQuickDeploy
-
-Job id cannot be used for quick deployment. This is likely because the deployment has not been validated.
+There are no recent job ids available to resume.

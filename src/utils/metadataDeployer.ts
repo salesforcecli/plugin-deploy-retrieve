@@ -22,7 +22,7 @@ import { Deployable, Deployer, generateTableChoices } from '@salesforce/sf-plugi
 import { DeployResultFormatter } from './output';
 import { TestLevel } from './types';
 import { DeployProgress } from './progressBar';
-import { executeDeploy, resolveRestDeploy } from './deploy';
+import { executeDeploy, resolveApi } from './deploy';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
@@ -122,7 +122,7 @@ export class MetadataDeployer extends Deployer {
   public async deploy(): Promise<void> {
     const directories = this.deployables.map((d) => d.pkg.fullPath);
     const name = this.deployables.map((p) => cyan.bold(p.getPath())).join(', ');
-    const api = resolveRestDeploy();
+    const api = resolveApi();
     this.log(`${EOL}Deploying ${name} to ${this.username} using ${api} API`);
 
     const { deploy } = await executeDeploy({

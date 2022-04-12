@@ -7,7 +7,7 @@
 import { expect } from 'chai';
 import { Hook } from '@oclif/core';
 import { Deployer } from '@salesforce/sf-plugins-core';
-import Deploy from '../../lib/commands/deploy';
+import Deploy from '../../src/commands/deploy';
 import Result = Hook.Result;
 
 class TestDeploy extends Deploy {
@@ -19,6 +19,10 @@ class TestDeploy extends Deploy {
     super([]);
   }
   public async run() {}
+
+  public async styledHeader() {}
+
+  public async table() {}
 }
 
 describe('checkForHookFailures', () => {
