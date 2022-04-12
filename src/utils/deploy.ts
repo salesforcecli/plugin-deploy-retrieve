@@ -16,7 +16,6 @@ import {
   MetadataApiDeploy,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
-import { JsonMap } from '@salesforce/ts-types';
 import { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel } from './types';
@@ -26,6 +25,7 @@ type Options = {
   api: API;
   'target-org': string;
   'test-level': TestLevel;
+  async?: boolean;
   'api-version'?: string;
   'dry-run'?: boolean;
   'ignore-errors'?: boolean;
@@ -36,24 +36,19 @@ type Options = {
   tests?: string[];
   wait?: Duration;
   verbose?: boolean;
+  concise?: boolean;
 };
+
+export type CachedOptions = Omit<Options, 'wait'> & { wait: number };
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
   if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
   return true;
 }
 
-type CachedOptions = Omit<Options, 'wait'> & { wait: number } & JsonMap;
-
-export function resolveRestDeploy(): API {
-  const restDeployConfig = ConfigAggregator.getValue(ConfigVars.ORG_METADATA_REST_DEPLOY).value;
-  if (restDeployConfig === 'false') {
-    return API.SOAP;
-  } else if (restDeployConfig === 'true') {
-    return API.REST;
-  } else {
-    return API.SOAP;
-  }
+export function resolveApi(): API {
+  const restDeployConfig = ConfigAggregator.getValue(ConfigVars.ORG_METADATA_REST_DEPLOY)?.value;
+  return restDeployConfig === 'true' ? API.REST : API.SOAP;
 }
 
 export async function buildComponentSet(opts: Partial<Options>): Promise<ComponentSet> {
@@ -126,7 +121,7 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
       isState: true,
       filename: DeployCache.getFileName(),
       stateFolder: Global.SF_STATE_FOLDER,
-      ttl: Duration.days(1),
+      ttl: Duration.days(3),
     };
   }
 

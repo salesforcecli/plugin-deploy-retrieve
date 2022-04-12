@@ -12,6 +12,7 @@
         "plugin": "@salesforce/plugin-deploy-retrieve",
         "flags": [
             "api-version",
+            "async",
             "concise",
             "dry-run",
             "ignore-errors",
@@ -32,6 +33,20 @@
         "command": "deploy:metadata:quick",
         "plugin": "@salesforce/plugin-deploy-retrieve",
         "flags": [
+            "async",
+            "concise",
+            "job-id",
+            "json",
+            "use-most-recent",
+            "verbose",
+            "wait"
+        ],
+        "alias": []
+    },
+    {
+        "command": "deploy:metadata:resume",
+        "plugin": "@salesforce/plugin-deploy-retrieve",
+        "flags": [
             "concise",
             "job-id",
             "json",
@@ -46,6 +61,7 @@
         "plugin": "@salesforce/plugin-deploy-retrieve",
         "flags": [
             "api-version",
+            "async",
             "concise",
             "json",
             "manifest",

@@ -21,5 +21,12 @@ export enum API {
 
 export type Verbosity = 'verbose' | 'concise' | 'normal';
 
-export type DeployResultJson = MetadataApiDeployStatus & { files: FileResponse[] };
+export type AsyncDeployResultJson = {
+  id: string;
+  done: boolean;
+  status: 'Queued';
+  files: FileResponse[];
+};
+
+export type DeployResultJson = (MetadataApiDeployStatus & { files: FileResponse[] }) | AsyncDeployResultJson;
 export type RetrieveResultJson = MetadataApiRetrieveStatus & { files: FileResponse[] };
