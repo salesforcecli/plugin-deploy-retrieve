@@ -93,6 +93,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
     if (result.response.status === RequestStatus.Succeeded) {
       cache.unset(deploy.id);
+      cache.unset(jobId);
       await cache.write();
     }
 
