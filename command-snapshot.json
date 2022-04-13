@@ -49,6 +49,7 @@
             "concise",
             "job-id",
             "json",
+            "target-org",
             "use-most-recent",
             "verbose",
             "wait"
