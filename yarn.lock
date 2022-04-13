@@ -1510,6 +1510,18 @@
     chalk "^4"
     inquirer "^8.2.0"
 
+"@salesforce/sf-plugins-core@^1.11.3":
+  version "1.11.3"
+  resolved "https://registry.npmjs.org/@salesforce/sf-plugins-core/-/sf-plugins-core-1.11.3.tgz#eca4adf78c79daae3dd139b1967aa7573a83c74e"
+  integrity sha512-h2e1XrwqYEhxfsOmpO/iwV1GCi0Gemx2UVwXe0yrhzNfwnLukGv/XtvWgT3R6p6OoYPtGEWBkovwZeIkokoQOQ==
+  dependencies:
+    "@oclif/core" "^1.6.3"
+    "@salesforce/core" "^3.11.0"
+    "@salesforce/kit" "^1.5.34"
+    "@salesforce/ts-types" "^1.5.20"
+    chalk "^4"
+    inquirer "^8.2.0"
+
 "@salesforce/source-deploy-retrieve@^4.0.2":
   version "4.5.12"
   resolved "https://registry.npmjs.org/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-4.5.12.tgz#37595df53122b65e442930a0646a2c5d346cf7eb"

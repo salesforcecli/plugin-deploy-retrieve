@@ -25,7 +25,7 @@ import { DEPLOY_STATUS_CODES } from './errorCodes';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
 
-type Options = {
+export type DeployOptions = {
   api: API;
   'target-org': string;
   'test-level': TestLevel;
@@ -43,7 +43,7 @@ type Options = {
   concise?: boolean;
 };
 
-export type CachedOptions = Omit<Options, 'wait'> & { wait: number };
+export type CachedOptions = Omit<DeployOptions, 'wait'> & { wait: number };
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
   if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
@@ -55,7 +55,7 @@ export function resolveApi(): API {
   return restDeployConfig === 'true' ? API.REST : API.SOAP;
 }
 
-export async function buildComponentSet(opts: Partial<Options>): Promise<ComponentSet> {
+export async function buildComponentSet(opts: Partial<DeployOptions>): Promise<ComponentSet> {
   return ComponentSetBuilder.build({
     apiversion: opts['api-version'],
     sourceapiversion: await getSourceApiVersion(),
@@ -72,7 +72,7 @@ export async function buildComponentSet(opts: Partial<Options>): Promise<Compone
 }
 
 export async function executeDeploy(
-  opts: Partial<Options>,
+  opts: Partial<DeployOptions>,
   id?: string
 ): Promise<{ deploy: MetadataApiDeploy; componentSet: ComponentSet }> {
   const componentSet = await buildComponentSet(opts);
@@ -93,7 +93,7 @@ export async function executeDeploy(
   return { deploy, componentSet };
 }
 
-export async function cancelDeploy(opts: Partial<Options>, id: string): Promise<DeployResult> {
+export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Promise<DeployResult> {
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   const deploy = new MetadataApiDeploy({ usernameOrConnection: org.getUsername(), id });
   const componentSet = await buildComponentSet({ ...opts });
@@ -104,7 +104,7 @@ export async function cancelDeploy(opts: Partial<Options>, id: string): Promise<
   return poll(org, deploy.id, opts.wait, componentSet);
 }
 
-export async function cancelDeployAsync(opts: Partial<Options>, id: string): Promise<{ id: string }> {
+export async function cancelDeployAsync(opts: Partial<DeployOptions>, id: string): Promise<{ id: string }> {
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   const deploy = new MetadataApiDeploy({ usernameOrConnection: org.getUsername(), id });
   await deploy.cancel();

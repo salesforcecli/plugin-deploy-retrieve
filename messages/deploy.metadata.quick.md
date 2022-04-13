@@ -52,6 +52,14 @@ Run the command asynchronously. This will immediately return the job ID. This wa
 
 To check the status of the job, use sf deploy metadata report. To resume watching the job, use sf deploy metadata resume.
 
+# flags.target-org.summary
+
+Login username or alias for the target org.
+
+# flags.target-org.description
+
+Overrides your default org.
+
 # error.CannotQuickDeploy
 
 Job id cannot be used for quick deployment. This is likely because the deployment has not been validated.

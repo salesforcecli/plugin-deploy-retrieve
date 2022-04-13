@@ -8,7 +8,15 @@
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult } from '@salesforce/source-deploy-retrieve';
-import { buildComponentSet, DeployCache, determineExitCode, poll, shouldRemoveFromCache } from '../../../utils/deploy';
+import {
+  buildComponentSet,
+  DeployCache,
+  DeployOptions,
+  determineExitCode,
+  poll,
+  resolveApi,
+  shouldRemoveFromCache,
+} from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { API, DeployResultJson } from '../../../utils/types';
@@ -40,6 +48,11 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.job-id.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
+    'target-org': Flags.optionalOrg({
+      char: 'o',
+      description: messages.getMessage('flags.target-org.description'),
+      summary: messages.getMessage('flags.target-org.summary'),
+    }),
     'use-most-recent': Flags.boolean({
       char: 'r',
       description: messages.getMessage('flags.use-most-recent.description'),
@@ -70,13 +83,14 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
-    const deployOpts = cache.get(jobId);
-    const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
+    const deployOpts = cache.get(jobId) ?? ({} as DeployOptions);
+    const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
+    const api = resolveApi();
 
-    await org.getConnection().deployRecentValidation({ id: jobId, rest: deployOpts.api === API.REST });
+    await org.getConnection().deployRecentValidation({ id: jobId, rest: api === API.REST });
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
 
-    this.log(getVersionMessage('Deploying', componentSet, deployOpts.api));
+    this.log(getVersionMessage('Deploying', componentSet, api));
     this.log(`Deploy ID: ${jobId}`);
 
     if (flags.async) {
