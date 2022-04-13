@@ -33,6 +33,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveMetadataResult> 
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
+  public static readonly state = 'beta';
+
   public static flags = {
     'api-version': Flags.orgApiVersion({
       char: 'a',
