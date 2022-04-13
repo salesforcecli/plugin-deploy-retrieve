@@ -26,6 +26,7 @@ export default class DeployMetadata extends SfCommand<DeployMetadataResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
+  public static readonly state = 'beta';
 
   public static flags = {
     'api-version': Flags.orgApiVersion({
