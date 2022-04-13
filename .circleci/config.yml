@@ -70,7 +70,7 @@ workflows:
       - release-management/release-package:
           sign: true
           github-release: true
-          node_version: 'latest'
+          node_version: 'lts'
           requires:
             - release-management/test-package
           filters:
