@@ -1,6 +1,6 @@
 # summary
 
-TBD.
+Resume watching a deployment to a Salesforce org.
 
 # description
 
@@ -14,7 +14,7 @@ TBD.
 
 # flags.job-id.summary
 
-TBD.
+Job ID of the deployment you want to resume.
 
 # flags.job-id.description
 
@@ -23,7 +23,7 @@ TBD.
 
 # flags.use-most-recent.summary
 
-TBD.
+Use the job id of the most recent deployment.
 
 # flags.use-most-recent.description
 
@@ -44,11 +44,3 @@ Show verbose output of the deploy result.
 # flags.concise.summary
 
 Show concise output of the deploy result.
-
-# error.InvalidJobId
-
-No job found for ID: %s
-
-# error.NoRecentJobId
-
-There are no recent job ids available to resume.

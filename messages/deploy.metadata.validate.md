@@ -1,14 +1,12 @@
 # summary
 
-Deploy metadata in source format to an org from your local project. Returns a deployment id that you can use to resume a deployment at a later time.
+Deploy metadata in source format to an org from your local project. Returns a job id that you can use to execute a quick deploy at a later time.
 
 # description
 
 You must run this command from within a project.
 
 This command doesn't support source-tracking. The source you deploy overwrites the corresponding metadata in your org. This command doesn’t attempt to merge your source with the versions in your org.
-
-To run the command asynchronously, set --wait to 0, which immediately returns the job ID. This way, you can continue to use the CLI.
 
 To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
@@ -132,7 +130,7 @@ Run the command asynchronously. This will immediately return the job ID. This wa
 
 # flags.async.description
 
-To check the status of the job, use TBD.
+To check the status of the job, use sf deploy metadata report. To resume watching the job, use sf deploy metadata resume.
 
 # info.SuccessfulValidation
 

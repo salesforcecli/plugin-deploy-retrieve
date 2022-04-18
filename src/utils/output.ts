@@ -8,7 +8,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import { CliUx } from '@oclif/core';
-import { blue, bold, dim, red, underline, green } from 'chalk';
+import { blue, bold, dim, underline } from 'chalk';
 import {
   DeployResult,
   FileResponse,
@@ -20,6 +20,7 @@ import {
   CodeCoverage,
 } from '@salesforce/source-deploy-retrieve';
 import { Messages, NamedPackageDir, SfProject } from '@salesforce/core';
+import { StandardColors } from '@salesforce/sf-plugins-core';
 import { API, AsyncDeployResultJson, DeployResultJson, RetrieveResultJson, TestLevel, Verbosity } from './types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -30,11 +31,11 @@ function info(message: string): string {
 }
 
 function error(message: string): string {
-  return red(bold(message));
+  return StandardColors.error(bold(message));
 }
 
 function success(message: string): string {
-  return green(bold(message));
+  return StandardColors.success(bold(message));
 }
 
 function table(
@@ -47,7 +48,13 @@ function table(
   CliUx.ux.table(responses as unknown as Array<Record<string, unknown>>, columns, options ?? {});
 }
 
-const check = green('✓');
+function colorStatus(status: RequestStatus): string {
+  if (status === RequestStatus.Succeeded) return StandardColors.success(status);
+  if (status === RequestStatus.Failed) return StandardColors.error(status);
+  else return StandardColors.warning(status);
+}
+
+const check = StandardColors.success('✓');
 
 export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
   const relative = fileResponses.map((file) => {
@@ -119,8 +126,8 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private verbosity: Verbosity;
 
   public constructor(
-    private result: DeployResult,
-    private flags: Partial<{ 'test-level': TestLevel; verbose: boolean; concise: boolean }>
+    protected result: DeployResult,
+    protected flags: Partial<{ 'test-level': TestLevel; verbose: boolean; concise: boolean }>
   ) {
     this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
     this.relativeFiles = asRelativePaths(this.absoluteFiles);
@@ -269,7 +276,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       coverage.forEach((cov: CodeCoverage & { lineNotCovered: string }) => {
         const numLocationsNum = parseInt(cov.numLocations, 10);
         const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
-        const color = numLocationsNotCovered > 0 ? red : green;
+        const color = numLocationsNotCovered > 0 ? StandardColors.error : StandardColors.success;
 
         let pctCovered = 100;
         const coverageDecimal: number = parseFloat(
@@ -302,6 +309,34 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   }
 }
 
+export class DeployReportResultFormatter extends DeployResultFormatter {
+  public display(): void {
+    CliUx.ux.log(`${this.result.response.id}... ${this.result.response.status}`);
+
+    const response = Object.entries(this.result.response).reduce((result, [key, value]) => {
+      if (['number', 'boolean', 'string'].includes(typeof value)) {
+        if (key === 'status') {
+          return result.concat({ key, value: colorStatus(value) });
+        } else {
+          return result.concat({ key, value: value as string | number | boolean });
+        }
+      }
+      return result;
+    }, [] as Array<{ key: string; value: unknown }>);
+
+    CliUx.ux.log();
+    CliUx.ux.table(response, { key: {}, value: {} }, { title: info('Deploy Info') });
+
+    const opts = Object.entries(this.flags).reduce((result, [key, value]) => {
+      if (key === 'timestamp') return result;
+      return result.concat({ key, value });
+    }, [] as Array<{ key: string; value: unknown }>);
+    CliUx.ux.log();
+    CliUx.ux.table(opts, { key: {}, value: {} }, { title: info('Deploy Options') });
+    super.display();
+  }
+}
+
 export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJson> {
   public constructor(private id: string) {}
 
@@ -311,8 +346,37 @@ export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJs
 
   public display(): void {
     CliUx.ux.log(messages.getMessage('info.AsyncDeployQueued'));
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus'));
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployCancel'));
+    CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus', [this.id]));
+    CliUx.ux.log(messages.getMessage('info.AsyncDeployCancel', [this.id]));
+  }
+}
+
+export class DeployCancelResultFormatter implements Formatter<DeployResultJson> {
+  public constructor(protected result: DeployResult) {}
+
+  public getJson(): DeployResultJson {
+    return { ...this.result.response, files: this.result.getFileResponses() ?? [] };
+  }
+
+  public display(): void {
+    if (this.result.response.status === RequestStatus.Canceled) {
+      CliUx.ux.log(`Successfully canceled ${this.result.response.id}`);
+    } else {
+      CliUx.ux.error(`Could not cancel ${this.result.response.id}`);
+    }
+  }
+}
+
+export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployResultJson> {
+  public constructor(private id: string) {}
+
+  public getJson(): DeployResultJson {
+    return { id: this.id, done: false, status: 'Queued', files: [] };
+  }
+
+  public display(): void {
+    CliUx.ux.log(messages.getMessage('info.AsyncDeployCancelQueued'));
+    CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus', [this.id]));
   }
 }
 
