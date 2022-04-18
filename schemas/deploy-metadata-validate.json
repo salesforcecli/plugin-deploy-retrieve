@@ -560,31 +560,105 @@
     },
     "AsyncDeployResultJson": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "done": {
-          "type": "boolean"
-        },
         "status": {
-          "type": "string",
-          "const": "Queued"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RequestStatus"
+            },
+            {
+              "type": "string",
+              "const": "Queued"
+            }
+          ]
         },
         "files": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/FileResponse"
           }
+        },
+        "canceledBy": {
+          "type": "string"
+        },
+        "canceledByName": {
+          "type": "string"
+        },
+        "checkOnly": {
+          "type": "boolean"
+        },
+        "completedDate": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "createdByName": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "string"
+        },
+        "details": {
+          "$ref": "#/definitions/DeployDetails"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "errorStatusCode": {
+          "type": "string"
+        },
+        "ignoreWarnings": {
+          "type": "boolean"
+        },
+        "lastModifiedDate": {
+          "type": "string"
+        },
+        "numberComponentErrors": {
+          "type": "number"
+        },
+        "numberComponentsDeployed": {
+          "type": "number"
+        },
+        "numberComponentsTotal": {
+          "type": "number"
+        },
+        "numberTestErrors": {
+          "type": "number"
+        },
+        "numberTestsCompleted": {
+          "type": "number"
+        },
+        "numberTestsTotal": {
+          "type": "number"
+        },
+        "runTestsEnabled": {
+          "type": "boolean"
+        },
+        "rollbackOnError": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "type": "string"
+        },
+        "stateDetail": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "done": {
+          "type": "boolean"
         }
       },
       "required": [
-        "id",
-        "done",
-        "status",
-        "files"
-      ],
-      "additionalProperties": false
+        "files",
+        "status"
+      ]
     }
   }
 }

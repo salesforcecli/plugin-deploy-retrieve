@@ -30,6 +30,18 @@
         "alias": []
     },
     {
+        "command": "deploy:metadata:cancel",
+        "plugin": "@salesforce/plugin-deploy-retrieve",
+        "flags": [
+            "async",
+            "job-id",
+            "json",
+            "use-most-recent",
+            "wait"
+        ],
+        "alias": []
+    },
+    {
         "command": "deploy:metadata:quick",
         "plugin": "@salesforce/plugin-deploy-retrieve",
         "flags": [
@@ -37,9 +49,20 @@
             "concise",
             "job-id",
             "json",
+            "target-org",
             "use-most-recent",
             "verbose",
             "wait"
+        ],
+        "alias": []
+    },
+    {
+        "command": "deploy:metadata:report",
+        "plugin": "@salesforce/plugin-deploy-retrieve",
+        "flags": [
+            "job-id",
+            "json",
+            "use-most-recent"
         ],
         "alias": []
     },

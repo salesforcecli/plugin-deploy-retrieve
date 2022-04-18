@@ -5,7 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { FileResponse, MetadataApiDeployStatus, MetadataApiRetrieveStatus } from '@salesforce/source-deploy-retrieve';
+import {
+  FileResponse,
+  MetadataApiDeployStatus,
+  MetadataApiRetrieveStatus,
+  RequestStatus,
+} from '@salesforce/source-deploy-retrieve';
 
 export enum TestLevel {
   NoTestRun = 'NoTestRun',
@@ -21,12 +26,11 @@ export enum API {
 
 export type Verbosity = 'verbose' | 'concise' | 'normal';
 
-export type AsyncDeployResultJson = {
-  id: string;
-  done: boolean;
-  status: 'Queued';
+export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'status'> & {
+  status: RequestStatus | 'Queued';
   files: FileResponse[];
 };
 
 export type DeployResultJson = (MetadataApiDeployStatus & { files: FileResponse[] }) | AsyncDeployResultJson;
+
 export type RetrieveResultJson = MetadataApiRetrieveStatus & { files: FileResponse[] };
