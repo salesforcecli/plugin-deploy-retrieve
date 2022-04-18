@@ -1,50 +1,32 @@
 # summary
 
-Deploy metadata in source format to an org from your local project. Returns a job id that you can use to execute a quick deploy at a later time.
+Validate a metadata deployment without actually executing it.
 
 # description
 
+Use this command to verify whether a deployment will succeed without actually deploying the metadata to your org. This command is similar to "sf deploy metadata", except you're required to run Apex tests, and the command returns a job ID rather than executing the deployment. If the validation succeeds, then you pass this job ID to the "sf deploy metadata quick" command to actually deploy the metadata. This quick deploy takes less time because it skips running Apex tests. The job ID is valid for 10 days from when you started the validation. Validating first is useful if the deployment to your production org take several hours and you don’t want to risk a failed deploy.
+
 You must run this command from within a project.
 
-This command doesn't support source-tracking. The source you deploy overwrites the corresponding metadata in your org. This command doesn’t attempt to merge your source with the versions in your org.
+This command doesn't support source-tracking. When you quick deploy with the resulting job ID, the source you deploy overwrites the corresponding metadata in your org.
 
-To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
+To validate the deployment of multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
 # examples
 
-- Deploy the source files in a directory:
+- NOTE: These examples focus on validating large deployments.  See the help for "sf deploy metadata" for examples of deploying smaller sets of metadata which you can also use to validate.
+
+- Validate the deployment of all source files in a directory to the default org:
 
       <%= config.bin %> <%= command.id %> --source-dir path/to/source
 
-- Deploy a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
+- Asynchronously validate the deployment and run all tests in the org with alias "my-prod-org"; command immediately returns the job ID:
 
-      <%= config.bin %> <%= command.id %> --source-dir path/to/apex/classes/MyClass.cls path/to/source/objects
-      <%= config.bin %> <%= command.id %> --source-dir path/to/apex/classes/MyClass.cls --source-dir path/to/source/objects
+      <%= config.bin %> <%= command.id %> --source-dir path/to/source --async --test-level RunAllTestsInOrg --target-org my-prod-org
 
-- Deploy all Apex classes:
-
-      <%= config.bin %> <%= command.id %> --metadata ApexClass
-
-- Deploy a specific Apex class:
-
-      <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass
-
-- Deploy all custom objects and Apex classes (both examples are equivalent):
-
-      <%= config.bin %> <%= command.id %> --metadata CustomObject ApexClass
-      <%= config.bin %> <%= command.id %> --metadata CustomObject --metadata ApexClass
-
-- Deploy all Apex classes and a profile that has a space in its name:
-
-      <%= config.bin %> <%= command.id %> --metadata ApexClass --metadata "Profile:My Profile"
-
-- Deploy all components listed in a manifest:
+- Validate the deployment of all components listed in a manifest:
 
       <%= config.bin %> <%= command.id %> --manifest path/to/package.xml
-
-- Run the tests that aren’t in any managed packages as part of a deployment:
-
-      <%= config.bin %> <%= command.id %> --metadata ApexClass --test-level RunLocalTests
 
 # flags.target-org.summary
 
@@ -56,7 +38,7 @@ Overrides your default org.
 
 # flags.metadata.summary
 
-Metadata component names to deploy.
+Metadata component names to validate for deployment.
 
 # flags.test-level.summary
 
@@ -71,12 +53,12 @@ Valid values are:
 - RunLocalTests — All tests in your org are run, except the ones that originate from installed managed and unlocked packages. This test level is the default for production deployments that include Apex classes or triggers.
 
 - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
-
-  If you don’t specify a test level, the default behavior depends on the contents of your deployment package. For more information, see [Running Tests in a Deployment](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm) in the "Metadata API Developer Guide".
-
+  
+If you don’t specify a test level, the default behavior depends on the contents of your deployment package. For more information, see [Running Tests in a Deployment](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm) in the "Metadata API Developer Guide".
+        
 # flags.source-dir.summary
 
-Path to the local source files to deploy.
+Path to the local source files to validate for deployment.
 
 # flags.source-dir.description
 
@@ -86,15 +68,15 @@ If you specify this flag, don’t specify --metadata or --manifest.
 
 # flags.wait.summary
 
-Number of minutes to wait for command to complete and display results.
+Number of minutes to wait for the command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume watching the validation, run "sf deploy metadata resume". To check the status of the validation, run "sf deploy metadata report".
 
 # flags.manifest.summary
 
-Full file path for manifest (package.xml) of components to deploy.
+Full file path for manifest (package.xml) of components to validate for deployment.
 
 # flags.manifest.description
 
@@ -102,7 +84,7 @@ All child components are included. If you specify this flag, don’t specify --m
 
 # flags.api.summary
 
-The API to use for deploying.
+The API to use for validating the deployment.
 
 # flags.tests.summary
 
@@ -110,15 +92,15 @@ Apex tests to run when --test-level is RunSpecifiedTests.
 
 # flags.verbose.summary
 
-Show verbose output of the deploy result.
+Show verbose output of the validation result.
 
 # flags.concise.summary
 
-Show concise output of the deploy result.
+Show concise output of the validation result.
 
 # flags.api-version.summary
 
-Target API version for the retrieve.
+Target API version for the validation.
 
 # flags.api-version.description
 
@@ -126,11 +108,11 @@ Use this flag to override the default API version, which is the latest version s
 
 # flags.async.summary
 
-Run the command asynchronously. This will immediately return the job ID. This way, you can continue to use the CLI.
+Run the command asynchronously.
 
 # flags.async.description
 
-To check the status of the job, use sf deploy metadata report. To resume watching the job, use sf deploy metadata resume.
+The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume watching the validation, run "sf deploy metadata resume". To check the status of the validation, run "sf deploy metadata report".
 
 # info.SuccessfulValidation
 
