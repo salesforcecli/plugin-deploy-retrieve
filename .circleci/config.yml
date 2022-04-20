@@ -52,6 +52,9 @@ workflows:
                 - lts
                 - maintenance
       - release-management/test-nut:
+          context:
+            - na40-auth-url
+            - na40-jwt
           sfdx_version: latest
           requires:
             - release-management/test-package
@@ -79,6 +82,7 @@ workflows:
           context:
             - CLI_CTC
             - AWS
+            - release
   test-ts-update:
     triggers:
       - schedule:
@@ -102,6 +106,7 @@ workflows:
               os:
                 - linux
                 - windows
+          context: na40-auth-url
   dependabot-automerge:
     triggers:
       - schedule:
