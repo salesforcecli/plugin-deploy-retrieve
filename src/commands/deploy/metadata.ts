@@ -144,8 +144,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     });
 
     const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
-    this.log(getVersionMessage(action, componentSet, api));
-    this.log(`Deploy ID: ${deploy.id}`);
+    this.info(getVersionMessage(action, componentSet, api));
+    this.info(`Deploy ID: ${deploy.id}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
@@ -162,7 +162,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) {
       formatter.display();
-      if (flags['dry-run']) this.log('Dry-run complete.');
+      if (flags['dry-run']) this.logSuccess('Dry-run complete.');
     }
 
     if (shouldRemoveFromCache(result.response.status)) {

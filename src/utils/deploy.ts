@@ -119,7 +119,7 @@ export async function poll(org: Org, id: string, wait: Duration, componentSet: C
   };
 
   const opts: PollingClient.Options = {
-    frequency: Duration.milliseconds(500),
+    frequency: Duration.milliseconds(1000),
     timeout: wait,
     poll: async (): Promise<StatusResult> => {
       const deployResult = await report();

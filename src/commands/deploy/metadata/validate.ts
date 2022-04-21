@@ -117,8 +117,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       api,
     });
 
-    this.log(getVersionMessage('Validating Deployment', componentSet, api));
-    this.log(`Deploy ID: ${deploy.id}`);
+    this.info(getVersionMessage('Validating Deployment', componentSet, api));
+    this.info(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     if (flags.async) {
@@ -138,10 +138,10 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
 
     if (result.response.status === RequestStatus.Succeeded) {
       this.log();
-      this.log(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
+      this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
 
       const suggestedCommand = `${this.config.bin} deploy metadata quick --job-id ${deploy.id}`;
-      this.log(`\nRun ${bold(suggestedCommand)} to execute this deploy.`);
+      this.logSuccess(`\nRun ${bold(suggestedCommand)} to execute this deploy.`);
     } else {
       throw messages.createError('error.FailedValidation', [deploy.id]);
     }

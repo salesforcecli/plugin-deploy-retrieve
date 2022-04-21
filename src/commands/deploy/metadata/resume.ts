@@ -71,8 +71,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const wait = flags.wait || Duration.minutes(deployOpts.wait);
     const { deploy, componentSet } = await executeDeploy({ ...deployOpts, wait, 'dry-run': false }, jobId);
 
-    this.log(getVersionMessage('Resuming Deployment', componentSet, deployOpts.api));
-    this.log(`Deploy ID: ${deploy.id}`);
+    this.info(getVersionMessage('Resuming Deployment', componentSet, deployOpts.api));
+    this.info(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus(500, wait.seconds);

@@ -26,7 +26,7 @@ import { API, AsyncDeployResultJson, DeployResultJson, RetrieveResultJson, TestL
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
 
-function info(message: string): string {
+function tableHeader(message: string): string {
   return blue(bold(message));
 }
 
@@ -171,7 +171,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       filePath: { header: 'Path' },
     };
     const title = 'Deployed Source';
-    const options = { title: info(title) };
+    const options = { title: tableHeader(title) };
     CliUx.ux.log();
 
     table(successes, columns, options);
@@ -204,7 +204,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       filePath: { header: 'Path' },
     };
 
-    const options = { title: info('Deleted Source') };
+    const options = { title: tableHeader('Deleted Source') };
     CliUx.ux.log();
 
     table(deletions, columns, options);
@@ -224,7 +224,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     }
 
     CliUx.ux.log();
-    CliUx.ux.log(info('Test Results Summary'));
+    CliUx.ux.log(tableHeader('Test Results Summary'));
     const passing = this.result.response.numberTestsCompleted ?? 0;
     const failing = this.result.response.numberTestErrors ?? 0;
     const total = this.result.response.numberTestsTotal ?? 0;
@@ -272,7 +272,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
         return a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
       });
       CliUx.ux.log();
-      CliUx.ux.log(info('Apex Code Coverage'));
+      CliUx.ux.log(tableHeader('Apex Code Coverage'));
       coverage.forEach((cov: CodeCoverage & { lineNotCovered: string }) => {
         const numLocationsNum = parseInt(cov.numLocations, 10);
         const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
@@ -325,14 +325,14 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
     }, [] as Array<{ key: string; value: unknown }>);
 
     CliUx.ux.log();
-    CliUx.ux.table(response, { key: {}, value: {} }, { title: info('Deploy Info') });
+    CliUx.ux.table(response, { key: {}, value: {} }, { title: tableHeader('Deploy Info') });
 
     const opts = Object.entries(this.flags).reduce((result, [key, value]) => {
       if (key === 'timestamp') return result;
       return result.concat({ key, value });
     }, [] as Array<{ key: string; value: unknown }>);
     CliUx.ux.log();
-    CliUx.ux.table(opts, { key: {}, value: {} }, { title: info('Deploy Options') });
+    CliUx.ux.table(opts, { key: {}, value: {} }, { title: tableHeader('Deploy Options') });
     super.display();
   }
 }
@@ -407,7 +407,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       filePath: { header: 'Path' },
     };
     const title = 'Retrieved Source';
-    const options = { title: info(title) };
+    const options = { title: tableHeader(title) };
     CliUx.ux.log();
 
     table(successes, columns, options);
@@ -421,7 +421,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
         fullPath: { header: 'Converted Location' },
       };
       const title = 'Retrieved Packages';
-      const options = { title: info(title) };
+      const options = { title: tableHeader(title) };
       CliUx.ux.log();
       table(packages, columns, options);
     }
