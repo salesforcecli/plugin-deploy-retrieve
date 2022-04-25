@@ -144,8 +144,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     });
 
     const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
-    this.info(getVersionMessage(action, componentSet, api));
-    this.info(`Deploy ID: ${deploy.id}`);
+    this.log(getVersionMessage(action, componentSet, api));
+    this.log(`Deploy ID: ${deploy.id}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
@@ -170,6 +170,14 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
 
     return formatter.getJson();
+  }
+
+  protected catch(error: SfCommand.Error): Promise<SfCommand.Error> {
+    if (error.message.includes('client has timed out')) {
+      const err = messages.createError('error.ClientTimeout');
+      return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
+    }
+    return super.catch(error);
   }
 
   private setExitCode(result: DeployResult): void {

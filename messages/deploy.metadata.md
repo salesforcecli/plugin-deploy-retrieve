@@ -148,12 +148,12 @@ Use this flag to override the default API version, which is the latest version s
 
 # flags.async.summary
 
-Run the command asynchronously. 
+Run the command asynchronously.
 
 # flags.async.description
 
 The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume the deployment, run "sf deploy metadata resume". To check the status of the deployment, run "sf deploy metadata report".
-        
+
 # save.as.default
 
 Save %s as default target-org?
@@ -170,6 +170,10 @@ The target-org found in the configuration is expired. The user terminated the de
 # error.NoTestsSpecified
 
 You must specify tests using the --tests flag if the --test-level flag is set to RunSpecifiedTests.
+
+# error.ClientTimeout
+
+The client has timed out. Use sf deploy metadata resume to resume watching this deploy.
 
 # warning.TargetOrgIsExpired
 

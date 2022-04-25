@@ -6,7 +6,7 @@
  */
 
 import { EnvironmentVariable, Messages } from '@salesforce/core';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
@@ -71,8 +71,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const wait = flags.wait || Duration.minutes(deployOpts.wait);
     const { deploy, componentSet } = await executeDeploy({ ...deployOpts, wait, 'dry-run': false }, jobId);
 
-    this.info(getVersionMessage('Resuming Deployment', componentSet, deployOpts.api));
-    this.info(`Deploy ID: ${deploy.id}`);
+    this.log(getVersionMessage('Resuming Deployment', componentSet, deployOpts.api));
+    this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus(500, wait.seconds);
@@ -90,6 +90,13 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       cache.unset(deploy.id);
       cache.unset(jobId);
       await cache.write();
+    }
+
+    if (result.response.status === RequestStatus.Succeeded) {
+      this.log();
+      this.logSuccess(messages.getMessage('info.QuickDeploySuccess', [deploy.id]));
+    } else {
+      this.log(messages.getMessage('error.QuickDeployFailure', [deploy.id, result.response.status]));
     }
 
     return formatter.getJson();

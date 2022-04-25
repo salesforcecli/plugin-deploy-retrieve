@@ -117,8 +117,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       api,
     });
 
-    this.info(getVersionMessage('Validating Deployment', componentSet, api));
-    this.info(`Deploy ID: ${deploy.id}`);
+    this.log(getVersionMessage('Validating Deployment', componentSet, api));
+    this.log(`Deploy ID: ${deploy.id}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     if (flags.async) {

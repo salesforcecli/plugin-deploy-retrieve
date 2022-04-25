@@ -71,3 +71,11 @@ Overrides your default org.
 # error.CannotQuickDeploy
 
 Job ID can't be used for quick deployment. Possible reasons include the deployment hasn't been validated or the validation expired because you ran it more than 10 days ago.
+
+# error.QuickDeployFailure
+
+Deployment %s exited with status code: %s.
+
+# info.QuickDeploySuccess
+
+Successfully deployed (%s).
