@@ -7,7 +7,7 @@
 
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import {
   buildComponentSet,
   DeployCache,
@@ -110,6 +110,13 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     }
 
     this.setExitCode(result);
+
+    if (result.response.status === RequestStatus.Succeeded) {
+      this.log();
+      this.logSuccess(messages.getMessage('info.QuickDeploySuccess', [jobId]));
+    } else {
+      this.log(messages.getMessage('error.QuickDeployFailure', [jobId, result.response.status]));
+    }
 
     return formatter.getJson();
   }
