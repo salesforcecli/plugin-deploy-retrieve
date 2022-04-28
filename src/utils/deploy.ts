@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Interfaces, Flags } from '@oclif/core';
 import { ConfigAggregator, Global, Messages, Org, PollingClient, StatusResult, TTLConfig } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { AnyJson, Nullable } from '@salesforce/ts-types';
@@ -19,7 +18,7 @@ import {
 } from '@salesforce/source-deploy-retrieve';
 import ConfigMeta, { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
-import { API, TestLevel } from './types';
+import { API, PathInfo, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
@@ -36,11 +35,13 @@ export type DeployOptions = {
   'ignore-warnings'?: boolean;
   manifest?: string;
   metadata?: string[];
+  'metadata-dir'?: PathInfo;
   'source-dir'?: string[];
   tests?: string[];
   wait?: Duration;
   verbose?: boolean;
   concise?: boolean;
+  'single-package'?: boolean;
 };
 
 export type CachedOptions = Omit<DeployOptions, 'wait'> & { wait: number };
@@ -57,6 +58,8 @@ export async function resolveApi(): Promise<API> {
 }
 
 export async function buildComponentSet(opts: Partial<DeployOptions>): Promise<ComponentSet> {
+  if (!opts['source-dir'] && !opts.manifest && !opts.metadata) return new ComponentSet();
+
   return ComponentSetBuilder.build({
     apiversion: opts['api-version'],
     sourceapiversion: await getSourceApiVersion(),
@@ -76,19 +79,34 @@ export async function executeDeploy(
   opts: Partial<DeployOptions>,
   id?: string
 ): Promise<{ deploy: MetadataApiDeploy; componentSet: ComponentSet }> {
-  const componentSet = await buildComponentSet(opts);
-  const deploy = await componentSet.deploy({
-    usernameOrConnection: opts['target-org'],
-    id,
-    apiOptions: {
-      checkOnly: opts['dry-run'] || false,
-      ignoreWarnings: opts['ignore-warnings'] || false,
-      rest: opts.api === API.REST,
-      rollbackOnError: !opts['ignore-errors'] || false,
-      runTests: opts.tests || [],
-      testLevel: opts['test-level'],
-    },
-  });
+  const apiOptions = {
+    checkOnly: opts['dry-run'] || false,
+    ignoreWarnings: opts['ignore-warnings'] || false,
+    rest: opts.api === API.REST,
+    rollbackOnError: !opts['ignore-errors'] || false,
+    runTests: opts.tests || [],
+    testLevel: opts['test-level'],
+  };
+
+  let deploy: MetadataApiDeploy;
+  let componentSet: ComponentSet;
+
+  if (opts['metadata-dir']) {
+    const key = opts['metadata-dir'].type === 'directory' ? 'mdapiPath' : 'zipPath';
+    deploy = new MetadataApiDeploy({
+      [key]: opts['metadata-dir'].path,
+      usernameOrConnection: opts['target-org'],
+      apiOptions: { ...apiOptions, singlePackage: opts['single-package'] || false },
+    });
+    await deploy.start();
+  } else {
+    componentSet = await buildComponentSet(opts);
+    deploy = await componentSet.deploy({
+      usernameOrConnection: opts['target-org'],
+      id,
+      apiOptions,
+    });
+  }
 
   await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
   return { deploy, componentSet };
@@ -137,17 +155,6 @@ export async function poll(org: Org, id: string, wait: Duration, componentSet: C
   const pollingClient = await PollingClient.create(opts);
   return pollingClient.subscribe() as unknown as Promise<DeployResult>;
 }
-
-export const testLevelFlag = (
-  opts: Partial<Interfaces.OptionFlag<TestLevel | undefined>> = {}
-): Interfaces.OptionFlag<TestLevel | undefined> => {
-  return Flags.build<TestLevel | undefined>({
-    char: 'l',
-    parse: (input: string) => Promise.resolve(input as TestLevel),
-    options: Object.values(TestLevel),
-    ...opts,
-  })();
-};
 
 export function determineExitCode(result: DeployResult, async = false): number {
   if (async) {

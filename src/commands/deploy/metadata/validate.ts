@@ -11,12 +11,15 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../../utils/types';
-import { executeDeploy, testLevelFlag, resolveApi, determineExitCode } from '../../../utils/deploy';
+import { executeDeploy, resolveApi, determineExitCode } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { ConfigVars } from '../../../configMeta';
+import { fileOrDirFlag, testLevelFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
+
+const EXACTLY_ONE_FLAGS = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 
 export default class DeployMetadataValidate extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -43,23 +46,29 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),
       summary: messages.getMessage('flags.manifest.summary'),
-      exclusive: ['metadata', 'source-dir'],
-      exactlyOne: ['manifest', 'source-dir', 'metadata'],
+      exactlyOne: EXACTLY_ONE_FLAGS,
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
-      exclusive: ['manifest', 'source-dir'],
-      exactlyOne: ['manifest', 'source-dir', 'metadata'],
+      exactlyOne: EXACTLY_ONE_FLAGS,
     }),
     'source-dir': Flags.string({
       char: 'd',
       description: messages.getMessage('flags.source-dir.description'),
       summary: messages.getMessage('flags.source-dir.summary'),
       multiple: true,
-      exclusive: ['manifest', 'metadata'],
-      exactlyOne: ['manifest', 'source-dir', 'metadata'],
+      exactlyOne: EXACTLY_ONE_FLAGS,
+    }),
+    'metadata-dir': fileOrDirFlag({
+      summary: messages.getMessage('flags.metadata-dir.summary'),
+      exactlyOne: EXACTLY_ONE_FLAGS,
+      exists: true,
+    }),
+    'single-package': Flags.boolean({
+      summary: messages.getMessage('flags.single-package.summary'),
+      dependsOn: ['metadata-dir'],
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
