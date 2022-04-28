@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { bold } from 'chalk';
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
@@ -91,7 +92,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
 
     this.log(getVersionMessage('Deploying', componentSet, api));
-    this.log(`Deploy ID: ${jobId}`);
+    this.log(`Deploy ID: ${bold(jobId)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(jobId);

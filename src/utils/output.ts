@@ -346,6 +346,7 @@ export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJs
 
   public display(): void {
     CliUx.ux.log(messages.getMessage('info.AsyncDeployQueued'));
+    CliUx.ux.log();
     CliUx.ux.log(messages.getMessage('info.AsyncDeployResume', [this.id]));
     CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus', [this.id]));
     CliUx.ux.log(messages.getMessage('info.AsyncDeployCancel', [this.id]));

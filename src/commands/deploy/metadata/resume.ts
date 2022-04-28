@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { bold } from 'chalk';
 import { EnvironmentVariable, Messages } from '@salesforce/core';
 import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
@@ -72,7 +73,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const { deploy, componentSet } = await executeDeploy({ ...deployOpts, wait, 'dry-run': false }, jobId);
 
     this.log(getVersionMessage('Resuming Deployment', componentSet, deployOpts.api));
-    this.log(`Deploy ID: ${deploy.id}`);
+    this.log(`Deploy ID: ${bold(jobId)}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus(500, wait.seconds);

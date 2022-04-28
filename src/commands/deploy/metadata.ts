@@ -4,6 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
 import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
@@ -145,7 +146,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
     this.log(getVersionMessage(action, componentSet, api));
-    this.log(`Deploy ID: ${deploy.id}`);
+    this.log(`Deploy ID: ${bold(deploy.id)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
