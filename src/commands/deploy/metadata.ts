@@ -137,7 +137,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       throw messages.createError('error.NoTestsSpecified');
     }
 
-    const api = resolveApi();
+    const api = await resolveApi();
     const { deploy, componentSet } = await executeDeploy({
       ...flags,
       'target-org': flags['target-org'].getUsername(),

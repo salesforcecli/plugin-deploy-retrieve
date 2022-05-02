@@ -1,6 +1,6 @@
 # error.invalidBooleanConfigValue
 
-The config value can only be set to true or false.
+The config value can only be set to true or false
 
 # org-metadata-rest-deploy
 

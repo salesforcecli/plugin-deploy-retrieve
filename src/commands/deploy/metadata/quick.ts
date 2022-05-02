@@ -86,7 +86,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     const deployOpts = cache.get(jobId) ?? ({} as DeployOptions);
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
-    const api = resolveApi();
+    const api = await resolveApi();
 
     await org.getConnection().deployRecentValidation({ id: jobId, rest: api === API.REST });
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });

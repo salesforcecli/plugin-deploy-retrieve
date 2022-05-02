@@ -122,7 +122,7 @@ export class MetadataDeployer extends Deployer {
   public async deploy(): Promise<void> {
     const directories = this.deployables.map((d) => d.pkg.fullPath);
     const name = this.deployables.map((p) => cyan.bold(p.getPath())).join(', ');
-    const api = resolveApi();
+    const api = await resolveApi();
     this.log(`${EOL}Deploying ${name} to ${this.username} using ${api} API`);
 
     const { deploy } = await executeDeploy({

@@ -17,7 +17,7 @@ import {
   MetadataApiDeployStatus,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
-import { ConfigVars } from '../configMeta';
+import ConfigMeta, { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
@@ -50,8 +50,9 @@ export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): 
   return true;
 }
 
-export function resolveApi(): API {
-  const restDeployConfig = ConfigAggregator.getValue(ConfigVars.ORG_METADATA_REST_DEPLOY)?.value;
+export async function resolveApi(): Promise<API> {
+  const agg = await ConfigAggregator.create({ customConfigMeta: ConfigMeta });
+  const restDeployConfig = agg.getInfo(ConfigVars.ORG_METADATA_REST_DEPLOY)?.value;
   return restDeployConfig === 'true' ? API.REST : API.SOAP;
 }
 
@@ -119,7 +120,11 @@ export async function poll(org: Org, id: string, wait: Duration, componentSet: C
   };
 
   const opts: PollingClient.Options = {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     frequency: Duration.milliseconds(1000),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     timeout: wait,
     poll: async (): Promise<StatusResult> => {
       const deployResult = await report();
@@ -172,6 +177,8 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
       isState: true,
       filename: DeployCache.getFileName(),
       stateFolder: Global.SF_STATE_FOLDER,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       ttl: Duration.days(3),
     };
   }

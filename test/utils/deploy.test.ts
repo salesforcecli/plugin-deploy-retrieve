@@ -43,13 +43,13 @@ describe('deploy utils', () => {
       sandbox.restore();
     });
 
-    it('should return SOAP by default', () => {
+    it('should return SOAP by default', async () => {
       sandbox.stub(ConfigAggregator, 'getValue').returns(null);
-      const actual = resolveApi();
+      const actual = await resolveApi();
       expect(actual).to.equal(API.SOAP);
     });
 
-    it('should return SOAP if org-metadata-rest-deploy is set to false', () => {
+    it('should return SOAP if org-metadata-rest-deploy is set to false', async () => {
       sandbox.stub(ConfigAggregator, 'getValue').returns({
         value: 'false',
         key: ConfigVars.ORG_METADATA_REST_DEPLOY,
@@ -57,11 +57,11 @@ describe('deploy utils', () => {
         isGlobal: () => false,
         isEnvVar: () => false,
       });
-      const actual = resolveApi();
+      const actual = await resolveApi();
       expect(actual).to.equal(API.SOAP);
     });
 
-    it('should return REST if org-metadata-rest-deploy is set to true', () => {
+    it('should return REST if org-metadata-rest-deploy is set to true', async () => {
       sandbox.stub(ConfigAggregator, 'getValue').returns({
         value: 'true',
         key: ConfigVars.ORG_METADATA_REST_DEPLOY,
@@ -69,7 +69,7 @@ describe('deploy utils', () => {
         isGlobal: () => false,
         isEnvVar: () => false,
       });
-      const actual = resolveApi();
+      const actual = await resolveApi();
       expect(actual).to.equal(API.REST);
     });
   });
