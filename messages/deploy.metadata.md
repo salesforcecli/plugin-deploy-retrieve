@@ -8,8 +8,6 @@ You must run this command from within a project.
 
 This command doesn't support source-tracking. The source you deploy overwrites the corresponding metadata in your org. This command doesn’t attempt to merge your source with the versions in your org.
 
-To run the command asynchronously, set --wait to 0, which immediately returns the job ID. This way, you can continue to use the CLI.
-
 To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
 # examples
@@ -94,7 +92,7 @@ Number of minutes to wait for command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume the deployment, run "sf deploy metadata resume". To check the status of the deployment, run "sf deploy metadata report".
 
 # flags.manifest.summary
 
@@ -136,6 +134,10 @@ Separate multiple test names with commas, and enclose the entire flag value in d
 
 Show verbose output of the deploy result.
 
+# flags.concise.summary
+
+Show concise output of the deploy result.
+
 # flags.api-version.summary
 
 Target API version for the deploy.
@@ -143,6 +145,14 @@ Target API version for the deploy.
 # flags.api-version.description
 
 Use this flag to override the default API version, which is the latest version supported the CLI, with the API version of your package.xml file.
+
+# flags.async.summary
+
+Run the command asynchronously.
+
+# flags.async.description
+
+The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume the deployment, run "sf deploy metadata resume". To check the status of the deployment, run "sf deploy metadata report".
 
 # save.as.default
 
@@ -160,6 +170,10 @@ The target-org found in the configuration is expired. The user terminated the de
 # error.NoTestsSpecified
 
 You must specify tests using the --tests flag if the --test-level flag is set to RunSpecifiedTests.
+
+# error.ClientTimeout
+
+The client has timed out. Use sf deploy metadata resume to resume watching this deploy.
 
 # warning.TargetOrgIsExpired
 

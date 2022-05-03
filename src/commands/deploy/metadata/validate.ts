@@ -1,32 +1,24 @@
 /*
- * Copyright (c) 2021, salesforce.com, inc.
+ * Copyright (c) 2022, salesforce.com, inc.
  * All rights reserved.
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
-import { DeployProgress } from '../../utils/progressBar';
-import { DeployResultJson, TestLevel } from '../../utils/types';
-import {
-  executeDeploy,
-  testLevelFlag,
-  resolveApi,
-  validateTests,
-  determineExitCode,
-  DeployCache,
-  shouldRemoveFromCache,
-} from '../../utils/deploy';
-import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
-import { ConfigVars } from '../../configMeta';
+import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
+import { DeployProgress } from '../../../utils/progressBar';
+import { DeployResultJson, TestLevel } from '../../../utils/types';
+import { executeDeploy, testLevelFlag, resolveApi, determineExitCode } from '../../../utils/deploy';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
+import { ConfigVars } from '../../../configMeta';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
 
-export default class DeployMetadata extends SfCommand<DeployResultJson> {
+export default class DeployMetadataValidate extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
@@ -42,39 +34,23 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     async: Flags.boolean({
       summary: messages.getMessage('flags.async.summary'),
       description: messages.getMessage('flags.async.description'),
-      exclusive: ['wait'],
     }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
       exclusive: ['verbose'],
     }),
-    'dry-run': Flags.boolean({
-      summary: messages.getMessage('flags.dry-run.summary'),
-      default: false,
-    }),
-    'ignore-errors': Flags.boolean({
-      char: 'r',
-      summary: messages.getMessage('flags.ignore-errors.summary'),
-      description: messages.getMessage('flags.ignore-errors.description'),
-      default: false,
-    }),
-    'ignore-warnings': Flags.boolean({
-      char: 'g',
-      summary: messages.getMessage('flags.ignore-warnings.summary'),
-      description: messages.getMessage('flags.ignore-warnings.description'),
-      default: false,
-    }),
     manifest: Flags.file({
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),
       summary: messages.getMessage('flags.manifest.summary'),
+      exclusive: ['metadata', 'source-dir'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
-      exists: true,
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
+      exclusive: ['manifest', 'source-dir'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     'source-dir': Flags.string({
@@ -82,6 +58,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       description: messages.getMessage('flags.source-dir.description'),
       summary: messages.getMessage('flags.source-dir.summary'),
       multiple: true,
+      exclusive: ['manifest', 'metadata'],
       exactlyOne: ['manifest', 'source-dir', 'metadata'],
     }),
     'target-org': Flags.requiredOrg({
@@ -93,10 +70,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       char: 't',
       multiple: true,
       summary: messages.getMessage('flags.tests.summary'),
-      description: messages.getMessage('flags.tests.description'),
     }),
     'test-level': testLevelFlag({
-      default: TestLevel.NoTestRun,
+      options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],
+      default: TestLevel.RunLocalTests,
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
     }),
@@ -112,7 +89,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       defaultValue: 33,
       helpValue: '<minutes>',
       min: 1,
-      exclusive: ['async'],
     }),
   };
 
@@ -132,21 +108,18 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   public async run(): Promise<DeployResultJson> {
-    const { flags } = await this.parse(DeployMetadata);
-    if (!validateTests(flags['test-level'], flags.tests)) {
-      throw messages.createError('error.NoTestsSpecified');
-    }
-
+    const { flags } = await this.parse(DeployMetadataValidate);
     const api = await resolveApi();
     const { deploy, componentSet } = await executeDeploy({
       ...flags,
+      'dry-run': true,
       'target-org': flags['target-org'].getUsername(),
       api,
     });
 
-    const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
-    this.log(getVersionMessage(action, componentSet, api));
+    this.log(getVersionMessage('Validating Deployment', componentSet, api));
     this.log(`Deploy ID: ${bold(deploy.id)}`);
+    new DeployProgress(deploy, this.jsonEnabled()).start();
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
@@ -154,31 +127,26 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return asyncFormatter.getJson();
     }
 
-    new DeployProgress(deploy, this.jsonEnabled()).start();
-
-    const result = await deploy.pollStatus({ timeout: flags.wait });
+    const result = await deploy.pollStatus(500, flags.wait.seconds);
     this.setExitCode(result);
 
     const formatter = new DeployResultFormatter(result, flags);
 
     if (!this.jsonEnabled()) {
       formatter.display();
-      if (flags['dry-run']) this.logSuccess('Dry-run complete.');
     }
 
-    if (shouldRemoveFromCache(result.response.status)) {
-      await DeployCache.unset(deploy.id);
+    if (result.response.status === RequestStatus.Succeeded) {
+      this.log();
+      this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
+
+      const suggestedCommand = `${this.config.bin} deploy metadata quick --job-id ${deploy.id}`;
+      this.log(`\nRun ${bold(suggestedCommand)} to execute this deploy.`);
+    } else {
+      throw messages.createError('error.FailedValidation', [deploy.id]);
     }
 
     return formatter.getJson();
-  }
-
-  protected catch(error: SfCommand.Error): Promise<SfCommand.Error> {
-    if (error.message.includes('client has timed out')) {
-      const err = messages.createError('error.ClientTimeout');
-      return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
-    }
-    return super.catch(error);
   }
 
   private setExitCode(result: DeployResult): void {
