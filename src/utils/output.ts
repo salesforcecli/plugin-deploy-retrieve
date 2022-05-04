@@ -433,7 +433,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   private async getPackages(): Promise<NamedPackageDir[]> {
     const packages: NamedPackageDir[] = [];
     const projectPath = await SfProject.resolveProjectPath();
-    this.packageNames.forEach((name) => {
+    this.packageNames?.forEach((name) => {
       const packagePath = path.join(projectPath, name);
       packages.push({ name, path: packagePath, fullPath: path.resolve(packagePath) });
     });
