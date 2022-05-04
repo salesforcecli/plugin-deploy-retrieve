@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.4.0...v1.4.1) (2022-05-04)
+
+### Bug Fixes
+
+- bump sf—plugins-core ([#259](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/259)) ([2197634](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/21976344ddf0150a9c998f9f82a5a35de7b1385a))
+
 ## [1.4.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.3.0...v1.4.0) (2022-05-03)
 
 ### Features
