@@ -1295,9 +1295,9 @@
     ts-retry-promise "^0.6.0"
 
 "@salesforce/core@^2.1.4", "@salesforce/core@^2.20.10", "@salesforce/core@^2.20.11", "@salesforce/core@^2.24.0", "@salesforce/core@^2.3.0", "@salesforce/core@^2.31.0", "@salesforce/core@^2.33.1", "@salesforce/core@^2.35.0", "@salesforce/core@^2.36.3":
-  version "2.36.4"
-  resolved "https://registry.npmjs.org/@salesforce/core/-/core-2.36.4.tgz#1e683bb06ca60356f7a8376d0ac022c526781587"
-  integrity sha512-h2wCbKJJbsULinbk9JgW1ZGHiuxGwjzSqRjxx5S1Zou2ikHFjNnlfUvLPexc42m3unoCbLmtwUExlXsY5l0N0g==
+  version "2.37.0"
+  resolved "https://registry.npmjs.org/@salesforce/core/-/core-2.37.0.tgz#fb7c9722bea5abb8e3de5f1b34df6674cb340433"
+  integrity sha512-A/KwZtsCQ2f75OKthWXYO2meLHfw3OVF3lSQ8WGmuoY4ovY1P93/hf4qNNJWvSDGMd7o0qmHmA5SCqa3p2iUtA==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^1.5.17"
@@ -1512,21 +1512,9 @@
   resolved "https://registry.npmjs.org/@salesforce/schemas/-/schemas-1.1.0.tgz#bbf94a11ee036f2b0ec6ba82306cd9565a6ba26b"
   integrity sha512-6D7DvE6nFxpLyyTnrOIbbAeCJw2r/EpinFAcMh6gU0gA/CGfSbwV/8uR3uHLYL2zCyCZLH8jJ4dZ3BzCMqc+Eg==
 
-"@salesforce/sf-plugins-core@^1.11.0", "@salesforce/sf-plugins-core@^1.7.2", "@salesforce/sf-plugins-core@^1.9.0":
-  version "1.12.1"
-  resolved "https://registry.npmjs.org/@salesforce/sf-plugins-core/-/sf-plugins-core-1.12.1.tgz#8952455e15cd0bbbfbffa5fc7655e291ef757e5a"
-  integrity sha512-cXT2VBeyQvYR7iqp9WD8e5UGkp+V9Ui6zYBZM4RTqsWmb6+wUMbYy5s6Fm+V7LVs+nSh4m8p74KCGnXUmIZOBw==
-  dependencies:
-    "@oclif/core" "^1.6.3"
-    "@salesforce/core" "^3.11.0"
-    "@salesforce/kit" "^1.5.34"
-    "@salesforce/ts-types" "^1.5.20"
-    chalk "^4"
-    inquirer "^8.2.0"
-
-"@salesforce/sf-plugins-core@^1.12.3":
+"@salesforce/sf-plugins-core@^1.11.0", "@salesforce/sf-plugins-core@^1.12.3", "@salesforce/sf-plugins-core@^1.7.2", "@salesforce/sf-plugins-core@^1.9.0":
   version "1.12.3"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-1.12.3.tgz#9cc230d5e2ad712993feb5ec9970fcc48f862e0f"
+  resolved "https://registry.npmjs.org/@salesforce/sf-plugins-core/-/sf-plugins-core-1.12.3.tgz#9cc230d5e2ad712993feb5ec9970fcc48f862e0f"
   integrity sha512-p2UfuKNeW6t7l+//RPjecIFwcV4lu4DoQMeruFCKinlBoQ8g2aUbNrzAX8uRzeTwGaye9eEmb3J6EAcxoU/6xg==
   dependencies:
     "@oclif/core" "^1.7.0"
@@ -1586,9 +1574,9 @@
     strip-ansi "^6.0.0"
 
 "@salesforce/source-tracking@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.npmjs.org/@salesforce/source-tracking/-/source-tracking-1.4.2.tgz#312f03dfe996b3e680be8014aa66655fb499cd6f"
-  integrity sha512-BIVLyoa5JRfEFCMTfoPBZ4S5Sz4ky1gVu7mRoebBol0PUHnyj7MG0n0UoRhNM/VcWJcoqGueO16hVaW6/BKCqw==
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/@salesforce/source-tracking/-/source-tracking-1.5.0.tgz#699c2666076d5a1b0841a7eb5fb52d39e4ee7c27"
+  integrity sha512-LLN1r0qn3eEoMsAC/C9eaJuM+pNkmTd1S904ZnssUSNU1faW+cVmU/zZ3GcngEa/Z4WqC9aA5ohWg59eOWkuGA==
   dependencies:
     "@salesforce/core" "^2.33.1"
     "@salesforce/kit" "^1.5.17"
@@ -2281,13 +2269,13 @@ array-ify@^1.0.0:
   integrity sha1-nlKHYrSpBmrRY6aWKjZEGOlibs4=
 
 array-includes@^3.1.4:
-  version "3.1.4"
-  resolved "https://registry.npmjs.org/array-includes/-/array-includes-3.1.4.tgz#f5b493162c760f3539631f005ba2bb46acb45ba9"
-  integrity sha512-ZTNSQkmWumEbiHO2GF4GmWxYVTiQyJy2XOTa15sdQSrvKn7l+180egQMqlrMOUMCyLMD7pmyQe4mMDUT6Behrw==
+  version "3.1.5"
+  resolved "https://registry.npmjs.org/array-includes/-/array-includes-3.1.5.tgz#2c320010db8d31031fd2a5f6b3bbd4b1aad31bdb"
+  integrity sha512-iSDYZMMyTPkiFasVqfuAQnWAYcvO/SeBSCGKePoEthjp4LEMTe4uLc7b025o4jAZpHhihh8xPo99TNWUWWkGDQ==
   dependencies:
     call-bind "^1.0.2"
-    define-properties "^1.1.3"
-    es-abstract "^1.19.1"
+    define-properties "^1.1.4"
+    es-abstract "^1.19.5"
     get-intrinsic "^1.1.1"
     is-string "^1.0.7"
 
@@ -2415,9 +2403,9 @@ atob@^2.1.2:
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
 aws-sdk@^2.1069.0:
-  version "2.1126.0"
-  resolved "https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.1126.0.tgz#52e42358bdcba0043b6ff6b8e17d5aaacd9a93be"
-  integrity sha512-8yeeYFXOwbJIUHIJZlrcgWGvLPi+yayKc2h/+hnNLdnp/u+LUuJqMDH/19fogAai8PANSqI7N9fGkMIBZDrThQ==
+  version "2.1127.0"
+  resolved "https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.1127.0.tgz#c5dc814bb876ea896eddcbc7891ab6493f1a5153"
+  integrity sha512-jtP0CV89m2XNfgi1SnomrK798QqLmR+340w4KOMF0vBkY9kvGzPLV9GBNcg3JPj45tML1H4hSIonYkUUFSLkYw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -4015,9 +4003,9 @@ ejs@^3.1.5, ejs@^3.1.6:
     jake "^10.8.5"
 
 electron-to-chromium@^1.4.118:
-  version "1.4.131"
-  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.131.tgz#ca42d22eac0fe545860fbc636a6f4a7190ba70a9"
-  integrity sha512-oi3YPmaP87hiHn0c4ePB67tXaF+ldGhxvZnT19tW9zX6/Ej+pLN0Afja5rQ6S+TND7I9EuwQTT8JYn1k7R7rrw==
+  version "1.4.132"
+  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.132.tgz#b64599eb018221e52e2e4129de103b03a413c55d"
+  integrity sha512-JYdZUw/1068NWN+SwXQ7w6Ue0bWYGihvSUNNQwurvcDV/SM7vSiGZ3NuFvFgoEiCs4kB8xs3cX2an3wB7d4TBw==
 
 emoji-regex@^7.0.1:
   version "7.0.3"
@@ -4786,9 +4774,9 @@ flatted@^3.1.0:
   integrity sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==
 
 follow-redirects@^1.14.0:
-  version "1.14.9"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
-  integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
+  version "1.15.0"
+  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.0.tgz#06441868281c86d0dda4ad8bdaead2d02dca89d4"
+  integrity sha512-aExlJShTV4qOUOL7yF1U5tvLCB0xQuudbf6toyYA0E/acBNw71mvjFTnLaRp50aQaYocMR0a/RMMBIHeZnGyjQ==
 
 for-in@^1.0.2:
   version "1.0.2"

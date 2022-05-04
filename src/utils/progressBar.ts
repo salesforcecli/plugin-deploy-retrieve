@@ -27,6 +27,7 @@ export class DeployProgress extends Progress {
   }
 
   public start(): void {
+    super.start(0, { status: 'Waiting' }, DeployProgress.OPTIONS);
     this.deploy.onUpdate((data) => {
       // the numCompTot. isn't computed right away, wait to start until we know how many we have
       if (data.numberComponentsTotal) {
@@ -35,7 +36,7 @@ export class DeployProgress extends Progress {
           status: mdTrasferMessages.getMessage(data.status),
         });
       } else {
-        super.start(0, { status: mdTrasferMessages.getMessage(data.status) ?? 'Waiting' }, DeployProgress.OPTIONS);
+        this.update(0, { status: mdTrasferMessages.getMessage(data.status) ?? 'Waiting' });
       }
 
       // the numTestsTot. isn't computed until validated as tests by the server, update the PB once we know
