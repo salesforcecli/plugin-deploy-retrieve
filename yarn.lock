@@ -1388,7 +1388,7 @@
     typedoc-plugin-missing-exports "0.22.6"
     typescript "^4.1.3"
 
-"@salesforce/kit@^1.2.0", "@salesforce/kit@^1.4.5", "@salesforce/kit@^1.5.0", "@salesforce/kit@^1.5.13", "@salesforce/kit@^1.5.17", "@salesforce/kit@^1.5.18", "@salesforce/kit@^1.5.32", "@salesforce/kit@^1.5.34":
+"@salesforce/kit@^1.2.0", "@salesforce/kit@^1.4.5", "@salesforce/kit@^1.5.0", "@salesforce/kit@^1.5.13", "@salesforce/kit@^1.5.17", "@salesforce/kit@^1.5.18", "@salesforce/kit@^1.5.32", "@salesforce/kit@^1.5.34", "@salesforce/kit@^1.5.41":
   version "1.5.41"
   resolved "https://registry.npmjs.org/@salesforce/kit/-/kit-1.5.41.tgz#3248d4d28fe24ed47827716cfe416c21a2a90651"
   integrity sha512-nhi7jw3LNITl7rHSnCLnEDTaq6nvolSMFBg7poniG84Q7kJPezgTEj5OKAyQ9hJoRE4u59n5M5bUFvwRoXmJzQ==
@@ -1512,7 +1512,7 @@
   resolved "https://registry.npmjs.org/@salesforce/schemas/-/schemas-1.1.0.tgz#bbf94a11ee036f2b0ec6ba82306cd9565a6ba26b"
   integrity sha512-6D7DvE6nFxpLyyTnrOIbbAeCJw2r/EpinFAcMh6gU0gA/CGfSbwV/8uR3uHLYL2zCyCZLH8jJ4dZ3BzCMqc+Eg==
 
-"@salesforce/sf-plugins-core@^1.11.0", "@salesforce/sf-plugins-core@^1.12.1", "@salesforce/sf-plugins-core@^1.7.2", "@salesforce/sf-plugins-core@^1.9.0":
+"@salesforce/sf-plugins-core@^1.11.0", "@salesforce/sf-plugins-core@^1.7.2", "@salesforce/sf-plugins-core@^1.9.0":
   version "1.12.1"
   resolved "https://registry.npmjs.org/@salesforce/sf-plugins-core/-/sf-plugins-core-1.12.1.tgz#8952455e15cd0bbbfbffa5fc7655e291ef757e5a"
   integrity sha512-cXT2VBeyQvYR7iqp9WD8e5UGkp+V9Ui6zYBZM4RTqsWmb6+wUMbYy5s6Fm+V7LVs+nSh4m8p74KCGnXUmIZOBw==
@@ -1520,6 +1520,18 @@
     "@oclif/core" "^1.6.3"
     "@salesforce/core" "^3.11.0"
     "@salesforce/kit" "^1.5.34"
+    "@salesforce/ts-types" "^1.5.20"
+    chalk "^4"
+    inquirer "^8.2.0"
+
+"@salesforce/sf-plugins-core@^1.12.3":
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-1.12.3.tgz#9cc230d5e2ad712993feb5ec9970fcc48f862e0f"
+  integrity sha512-p2UfuKNeW6t7l+//RPjecIFwcV4lu4DoQMeruFCKinlBoQ8g2aUbNrzAX8uRzeTwGaye9eEmb3J6EAcxoU/6xg==
+  dependencies:
+    "@oclif/core" "^1.7.0"
+    "@salesforce/core" "^3.15.5"
+    "@salesforce/kit" "^1.5.41"
     "@salesforce/ts-types" "^1.5.20"
     chalk "^4"
     inquirer "^8.2.0"
