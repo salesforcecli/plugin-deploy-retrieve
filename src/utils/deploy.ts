@@ -138,11 +138,7 @@ export async function poll(org: Org, id: string, wait: Duration, componentSet: C
   };
 
   const opts: PollingClient.Options = {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     frequency: Duration.milliseconds(1000),
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     timeout: wait,
     poll: async (): Promise<StatusResult> => {
       const deployResult = await report();

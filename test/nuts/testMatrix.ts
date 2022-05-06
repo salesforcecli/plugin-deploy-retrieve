@@ -32,6 +32,24 @@ const testRepos: RepoConfig[] = [
           toVerify: ['my-app/apex/my.cls*'],
         },
       ],
+      metadataDir: [
+        {
+          toDeploy: ['force-app'],
+          toVerify: ['force-app/**/*'],
+        },
+        {
+          toDeploy: ['force-app'],
+          toVerify: ['force-app/**/*'],
+        },
+        {
+          toDeploy: ['force-app', 'my-app', 'foo-bar'],
+          toVerify: ['force-app/**/*', 'my-app/**/*', 'foo-bar/**/*'],
+        },
+        {
+          toDeploy: ['force-app', 'my-app', 'foo-bar'],
+          toVerify: ['force-app/**/*', 'my-app/**/*', 'foo-bar/**/*'],
+        },
+      ],
       metadata: [
         {
           toDeploy: ['CustomObject'],
@@ -130,6 +148,7 @@ const testRepos: RepoConfig[] = [
           toVerify: ['force-app/main/default/classes/*', 'force-app/main/default/objects/Broker__c/**/*'],
         },
       ],
+      metadataDir: [{ toDeploy: ['force-app'], toVerify: ['force-app/main/default/**/*'] }],
       manifest: [
         {
           toDeploy: ['force-app'],
@@ -270,6 +289,7 @@ export type RepoConfig = {
     sourceDir: DeployTestCase[];
     manifest: DeployTestCase[];
     testLevel: { specifiedTests: string[] }; // the apex test to be executed for the RunSpecificTest flag test
+    metadataDir: DeployTestCase[];
   };
   retrieve: {
     metadata: RetrieveTestCase[];
