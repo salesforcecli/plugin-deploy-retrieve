@@ -92,20 +92,25 @@ export async function executeDeploy(
   let componentSet: ComponentSet;
 
   if (opts['metadata-dir']) {
-    const key = opts['metadata-dir'].type === 'directory' ? 'mdapiPath' : 'zipPath';
-    deploy = new MetadataApiDeploy({
-      [key]: opts['metadata-dir'].path,
-      usernameOrConnection: opts['target-org'],
-      apiOptions: { ...apiOptions, singlePackage: opts['single-package'] || false },
-    });
-    await deploy.start();
+    if (id) {
+      deploy = new MetadataApiDeploy({ id, usernameOrConnection: opts['target-org'] });
+    } else {
+      const key = opts['metadata-dir'].type === 'directory' ? 'mdapiPath' : 'zipPath';
+      deploy = new MetadataApiDeploy({
+        [key]: opts['metadata-dir'].path,
+        usernameOrConnection: opts['target-org'],
+        apiOptions: { ...apiOptions, singlePackage: opts['single-package'] || false },
+      });
+      await deploy.start();
+    }
   } else {
     componentSet = await buildComponentSet(opts);
-    deploy = await componentSet.deploy({
-      usernameOrConnection: opts['target-org'],
-      id,
-      apiOptions,
-    });
+    deploy = id
+      ? new MetadataApiDeploy({ id, usernameOrConnection: opts['target-org'] })
+      : await componentSet.deploy({
+          usernameOrConnection: opts['target-org'],
+          apiOptions,
+        });
   }
 
   await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
