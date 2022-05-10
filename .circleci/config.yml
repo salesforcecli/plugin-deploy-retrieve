@@ -51,6 +51,9 @@ workflows:
                 - latest
                 - lts
                 - maintenance
+            exclude:
+              - os: windows
+                node_version: maintenance
       - release-management/test-nut:
           context:
             - na40-auth-url
