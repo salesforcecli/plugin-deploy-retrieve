@@ -11,14 +11,7 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../utils/types';
-import {
-  executeDeploy,
-  resolveApi,
-  validateTests,
-  determineExitCode,
-  DeployCache,
-  shouldRemoveFromCache,
-} from '../../utils/deploy';
+import { executeDeploy, resolveApi, validateTests, determineExitCode, DeployCache } from '../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
 import { ConfigVars } from '../../configMeta';
 import { fileOrDirFlag, testLevelFlag } from '../../utils/flags';
@@ -177,9 +170,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       if (flags['dry-run']) this.logSuccess('Dry-run complete.');
     }
 
-    if (shouldRemoveFromCache(result.response.status)) {
-      await DeployCache.unset(deploy.id);
-    }
+    await DeployCache.update(deploy.id, { status: result.response.status });
 
     return formatter.getJson();
   }

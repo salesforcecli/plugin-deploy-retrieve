@@ -16,7 +16,6 @@ import {
   determineExitCode,
   poll,
   resolveApi,
-  shouldRemoveFromCache,
 } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
@@ -106,9 +105,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) formatter.display();
 
-    if (shouldRemoveFromCache(result.response.status)) {
-      await DeployCache.unset(jobId);
-    }
+    await DeployCache.update(jobId, { status: result.response.status });
 
     this.setExitCode(result);
 

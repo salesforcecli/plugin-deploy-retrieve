@@ -7,7 +7,7 @@
 
 import { ConfigAggregator, Global, Messages, Org, PollingClient, StatusResult, TTLConfig } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
-import { AnyJson, Nullable } from '@salesforce/ts-types';
+import { AnyJson, JsonMap, Nullable } from '@salesforce/ts-types';
 import {
   ComponentSet,
   ComponentSetBuilder,
@@ -165,15 +165,6 @@ export function determineExitCode(result: DeployResult, async = false): number {
   return DEPLOY_STATUS_CODES.get(result.response.status);
 }
 
-export function shouldRemoveFromCache(status: RequestStatus): boolean {
-  return [
-    RequestStatus.Succeeded,
-    RequestStatus.Failed,
-    RequestStatus.SucceededPartial,
-    RequestStatus.Canceled,
-  ].includes(status);
-}
-
 export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
   public static getFileName(): string {
     return 'deploy-cache.json';
@@ -185,8 +176,6 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
       isState: true,
       filename: DeployCache.getFileName(),
       stateFolder: Global.SF_STATE_FOLDER,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       ttl: Duration.days(3),
     };
   }
@@ -203,11 +192,17 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     await cache.write();
   }
 
+  public static async update(key: string, obj: JsonMap): Promise<void> {
+    const cache = await DeployCache.create();
+    cache.update(key, obj);
+    await cache.write();
+  }
+
   public resolveLatest(useMostRecent: boolean, key: Nullable<string>, throwOnNotFound = true): string {
     const jobId = useMostRecent ? this.getLatestKey() : key;
     if (!jobId && useMostRecent) throw messages.createError('error.NoRecentJobId');
 
-    if (throwOnNotFound && !this.has(jobId)) {
+    if ((throwOnNotFound && !this.has(jobId)) || !this.has(jobId.substring(0, 15))) {
       throw messages.createError('error.InvalidJobId', [jobId]);
     }
 

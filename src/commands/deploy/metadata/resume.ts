@@ -13,7 +13,7 @@ import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson } from '../../../utils/types';
-import { DeployCache, determineExitCode, executeDeploy, shouldRemoveFromCache } from '../../../utils/deploy';
+import { DeployCache, determineExitCode, executeDeploy } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
@@ -87,11 +87,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) formatter.display();
 
-    if (shouldRemoveFromCache(result.response.status)) {
-      cache.unset(deploy.id);
-      cache.unset(jobId);
-      await cache.write();
-    }
+    cache.update(deploy.id, { status: result.response.status });
+    await cache.write();
 
     return formatter.getJson();
   }
