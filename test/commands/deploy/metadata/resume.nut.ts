@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
+import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { DeployResultJson } from '../../../../src/utils/types';
 import { CachedOptions } from '../../../../src/utils/deploy';
 
@@ -52,7 +53,9 @@ describe('deploy metadata resume NUTs', () => {
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
 
       const cacheAfter = readDeployCache(testkit.projectDir);
-      expect(cacheAfter).to.not.have.property(first.result.id);
+      expect(cacheAfter).to.have.property(first.result.id);
+      expect(cacheAfter[first.result.id]).have.property('status');
+      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Succeeded);
     });
   });
 
@@ -76,7 +79,9 @@ describe('deploy metadata resume NUTs', () => {
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
 
       const cacheAfter = readDeployCache(testkit.projectDir);
-      expect(cacheAfter).to.not.have.property(first.result.id);
+      expect(cacheAfter).to.have.property(first.result.id);
+      expect(cacheAfter[first.result.id]).have.property('status');
+      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Succeeded);
     });
 
     it('should resume the provided job id (15 chars)', async () => {
@@ -98,7 +103,9 @@ describe('deploy metadata resume NUTs', () => {
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
 
       const cacheAfter = readDeployCache(testkit.projectDir);
-      expect(cacheAfter).to.not.have.property(first.result.id);
+      expect(cacheAfter).to.have.property(first.result.id);
+      expect(cacheAfter[first.result.id]).have.property('status');
+      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Succeeded);
     });
   });
 });
