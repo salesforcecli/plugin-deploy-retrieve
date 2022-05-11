@@ -66,7 +66,7 @@ describe('deploy metadata cancel NUTs', () => {
       const cacheAfter = readDeployCache(testkit.projectDir);
       expect(cacheAfter).to.have.property(first.result.id);
       expect(cacheAfter[first.result.id]).have.property('status');
-      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Succeeded);
+      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Canceled);
     });
   });
 
@@ -103,7 +103,7 @@ describe('deploy metadata cancel NUTs', () => {
       const cacheAfter = readDeployCache(testkit.projectDir);
       expect(cacheAfter).to.have.property(first.result.id);
       expect(cacheAfter[first.result.id]).have.property('status');
-      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Succeeded);
+      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Canceled);
     });
   });
 });
