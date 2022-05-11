@@ -107,7 +107,7 @@ export async function executeDeploy(
   } else {
     componentSet = await buildComponentSet(opts);
     deploy = id
-      ? new MetadataApiDeploy({ id, usernameOrConnection: opts['target-org'] })
+      ? new MetadataApiDeploy({ id, usernameOrConnection: opts['target-org'], components: componentSet })
       : await componentSet.deploy({
           usernameOrConnection: opts['target-org'],
           apiOptions,
