@@ -51,6 +51,9 @@ workflows:
                 - latest
                 - lts
                 - maintenance
+            exclude:
+              - os: windows
+                node_version: maintenance
       - release-management/test-nut:
           context:
             - na40-auth-url
@@ -65,6 +68,7 @@ workflows:
               command:
                 [
                   'yarn test:nuts:deploy:metadata:manifest',
+                  'yarn test:nuts:deploy:metadata:metadata-dir',
                   'yarn test:nuts:deploy:metadata:metadata',
                   'yarn test:nuts:deploy:metadata:source-dir',
                   'yarn test:nuts:deploy:metadata:test-level',

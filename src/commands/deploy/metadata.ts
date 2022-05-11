@@ -11,20 +11,15 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../utils/types';
-import {
-  executeDeploy,
-  testLevelFlag,
-  resolveApi,
-  validateTests,
-  determineExitCode,
-  DeployCache,
-  shouldRemoveFromCache,
-} from '../../utils/deploy';
+import { executeDeploy, resolveApi, validateTests, determineExitCode, DeployCache } from '../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
 import { ConfigVars } from '../../configMeta';
+import { fileOrDirFlag, testLevelFlag } from '../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
+
+const EXACTLY_ONE_FLAGS = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 
 export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -68,21 +63,30 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),
       summary: messages.getMessage('flags.manifest.summary'),
-      exactlyOne: ['manifest', 'source-dir', 'metadata'],
+      exactlyOne: EXACTLY_ONE_FLAGS,
       exists: true,
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
-      exactlyOne: ['manifest', 'source-dir', 'metadata'],
+      exactlyOne: EXACTLY_ONE_FLAGS,
+    }),
+    'metadata-dir': fileOrDirFlag({
+      summary: messages.getMessage('flags.metadata-dir.summary'),
+      exactlyOne: EXACTLY_ONE_FLAGS,
+      exists: true,
+    }),
+    'single-package': Flags.boolean({
+      summary: messages.getMessage('flags.single-package.summary'),
+      dependsOn: ['metadata-dir'],
     }),
     'source-dir': Flags.string({
       char: 'd',
       description: messages.getMessage('flags.source-dir.description'),
       summary: messages.getMessage('flags.source-dir.summary'),
       multiple: true,
-      exactlyOne: ['manifest', 'source-dir', 'metadata'],
+      exactlyOne: EXACTLY_ONE_FLAGS,
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -166,9 +170,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       if (flags['dry-run']) this.logSuccess('Dry-run complete.');
     }
 
-    if (shouldRemoveFromCache(result.response.status)) {
-      await DeployCache.unset(deploy.id);
-    }
+    await DeployCache.update(deploy.id, { status: result.response.status });
 
     return formatter.getJson();
   }

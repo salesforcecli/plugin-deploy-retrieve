@@ -5,10 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Interfaces, Flags } from '@oclif/core';
 import { ConfigAggregator, Global, Messages, Org, PollingClient, StatusResult, TTLConfig } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
-import { AnyJson, Nullable } from '@salesforce/ts-types';
+import { AnyJson, JsonMap, Nullable } from '@salesforce/ts-types';
 import {
   ComponentSet,
   ComponentSetBuilder,
@@ -19,7 +18,7 @@ import {
 } from '@salesforce/source-deploy-retrieve';
 import ConfigMeta, { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
-import { API, TestLevel } from './types';
+import { API, PathInfo, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
@@ -36,11 +35,14 @@ export type DeployOptions = {
   'ignore-warnings'?: boolean;
   manifest?: string;
   metadata?: string[];
+  'metadata-dir'?: PathInfo;
   'source-dir'?: string[];
   tests?: string[];
   wait?: Duration;
   verbose?: boolean;
   concise?: boolean;
+  'single-package'?: boolean;
+  status?: RequestStatus;
 };
 
 export type CachedOptions = Omit<DeployOptions, 'wait'> & { wait: number };
@@ -57,6 +59,8 @@ export async function resolveApi(): Promise<API> {
 }
 
 export async function buildComponentSet(opts: Partial<DeployOptions>): Promise<ComponentSet> {
+  if (!opts['source-dir'] && !opts.manifest && !opts.metadata) return new ComponentSet();
+
   return ComponentSetBuilder.build({
     apiversion: opts['api-version'],
     sourceapiversion: await getSourceApiVersion(),
@@ -76,19 +80,39 @@ export async function executeDeploy(
   opts: Partial<DeployOptions>,
   id?: string
 ): Promise<{ deploy: MetadataApiDeploy; componentSet: ComponentSet }> {
-  const componentSet = await buildComponentSet(opts);
-  const deploy = await componentSet.deploy({
-    usernameOrConnection: opts['target-org'],
-    id,
-    apiOptions: {
-      checkOnly: opts['dry-run'] || false,
-      ignoreWarnings: opts['ignore-warnings'] || false,
-      rest: opts.api === API.REST,
-      rollbackOnError: !opts['ignore-errors'] || false,
-      runTests: opts.tests || [],
-      testLevel: opts['test-level'],
-    },
-  });
+  const apiOptions = {
+    checkOnly: opts['dry-run'] || false,
+    ignoreWarnings: opts['ignore-warnings'] || false,
+    rest: opts.api === API.REST,
+    rollbackOnError: !opts['ignore-errors'] || false,
+    runTests: opts.tests || [],
+    testLevel: opts['test-level'],
+  };
+
+  let deploy: MetadataApiDeploy;
+  let componentSet: ComponentSet;
+
+  if (opts['metadata-dir']) {
+    if (id) {
+      deploy = new MetadataApiDeploy({ id, usernameOrConnection: opts['target-org'] });
+    } else {
+      const key = opts['metadata-dir'].type === 'directory' ? 'mdapiPath' : 'zipPath';
+      deploy = new MetadataApiDeploy({
+        [key]: opts['metadata-dir'].path,
+        usernameOrConnection: opts['target-org'],
+        apiOptions: { ...apiOptions, singlePackage: opts['single-package'] || false },
+      });
+      await deploy.start();
+    }
+  } else {
+    componentSet = await buildComponentSet(opts);
+    deploy = id
+      ? new MetadataApiDeploy({ id, usernameOrConnection: opts['target-org'], components: componentSet })
+      : await componentSet.deploy({
+          usernameOrConnection: opts['target-org'],
+          apiOptions,
+        });
+  }
 
   await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
   return { deploy, componentSet };
@@ -120,11 +144,7 @@ export async function poll(org: Org, id: string, wait: Duration, componentSet: C
   };
 
   const opts: PollingClient.Options = {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     frequency: Duration.milliseconds(1000),
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     timeout: wait,
     poll: async (): Promise<StatusResult> => {
       const deployResult = await report();
@@ -138,17 +158,6 @@ export async function poll(org: Org, id: string, wait: Duration, componentSet: C
   return pollingClient.subscribe() as unknown as Promise<DeployResult>;
 }
 
-export const testLevelFlag = (
-  opts: Partial<Interfaces.OptionFlag<TestLevel | undefined>> = {}
-): Interfaces.OptionFlag<TestLevel | undefined> => {
-  return Flags.build<TestLevel | undefined>({
-    char: 'l',
-    parse: (input: string) => Promise.resolve(input as TestLevel),
-    options: Object.values(TestLevel),
-    ...opts,
-  })();
-};
-
 export function determineExitCode(result: DeployResult, async = false): number {
   if (async) {
     return result.response.status === RequestStatus.Succeeded ? 0 : 1;
@@ -157,7 +166,7 @@ export function determineExitCode(result: DeployResult, async = false): number {
   return DEPLOY_STATUS_CODES.get(result.response.status);
 }
 
-export function shouldRemoveFromCache(status: RequestStatus): boolean {
+export function isNotResumable(status: RequestStatus): boolean {
   return [
     RequestStatus.Succeeded,
     RequestStatus.Failed,
@@ -177,8 +186,6 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
       isState: true,
       filename: DeployCache.getFileName(),
       stateFolder: Global.SF_STATE_FOLDER,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       ttl: Duration.days(3),
     };
   }
@@ -195,8 +202,14 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     await cache.write();
   }
 
+  public static async update(key: string, obj: JsonMap): Promise<void> {
+    const cache = await DeployCache.create();
+    cache.update(key, obj);
+    await cache.write();
+  }
+
   public resolveLatest(useMostRecent: boolean, key: Nullable<string>, throwOnNotFound = true): string {
-    const jobId = useMostRecent ? this.getLatestKey() : key;
+    const jobId = this.resolveLongId(useMostRecent ? this.getLatestKey() : key);
     if (!jobId && useMostRecent) throw messages.createError('error.NoRecentJobId');
 
     if (throwOnNotFound && !this.has(jobId)) {
@@ -204,5 +217,19 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     }
 
     return jobId;
+  }
+
+  public resolveLongId(jobId: string): string {
+    if (jobId.length === 18) {
+      return jobId;
+    } else if (jobId.length === 15) {
+      return this.keys().find((k) => k.substring(0, 15) === jobId);
+    } else {
+      throw messages.createError('error.InvalidJobId', [jobId]);
+    }
+  }
+
+  public get(jobId: string): TTLConfig.Entry<CachedOptions> {
+    return super.get(this.resolveLongId(jobId));
   }
 }

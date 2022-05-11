@@ -8,7 +8,7 @@
 import { Messages } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
-import { DeployCache, cancelDeploy, shouldRemoveFromCache, cancelDeployAsync } from '../../../utils/deploy';
+import { DeployCache, cancelDeploy, cancelDeployAsync } from '../../../utils/deploy';
 import { AsyncDeployCancelResultFormatter, DeployCancelResultFormatter } from '../../../utils/output';
 import { DeployResultJson } from '../../../utils/types';
 
@@ -70,11 +70,9 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
       const formatter = new DeployCancelResultFormatter(result);
       if (!this.jsonEnabled()) formatter.display();
 
-      if (shouldRemoveFromCache(result.response.status)) {
-        cache.unset(result.response.id);
-        cache.unset(jobId);
-        await cache.write();
-      }
+      cache.update(result.response.id, { status: result.response.status });
+      await cache.write();
+
       return formatter.getJson();
     }
   }

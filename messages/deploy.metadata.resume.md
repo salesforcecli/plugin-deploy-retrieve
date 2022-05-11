@@ -56,3 +56,7 @@ Show verbose output of the deploy operation result.
 # flags.concise.summary
 
 Show concise output of the deploy operation result.
+
+# error.DeployNotResumable
+
+Job ID %s is not resumable with status %s.

@@ -24,6 +24,11 @@ export enum API {
   REST = 'REST',
 }
 
+export type PathInfo = {
+  type: 'directory' | 'file';
+  path: string;
+};
+
 export type Verbosity = 'verbose' | 'concise' | 'normal';
 
 export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'status'> & {

@@ -154,6 +154,14 @@ Run the command asynchronously.
 
 The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume the deployment, run "sf deploy metadata resume". To check the status of the deployment, run "sf deploy metadata report".
 
+# flags.metadata-dir.summary
+
+Root of directory or zip file of metadata formatted files to deploy.
+
+# flags.single-package.summary
+
+Indicates that the metadata zip file points to a directory structure for a single package.
+
 # save.as.default
 
 Save %s as default target-org?

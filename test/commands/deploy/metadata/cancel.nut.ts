@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
+import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { DeployResultJson } from '../../../../src/utils/types';
 import { CachedOptions } from '../../../../src/utils/deploy';
 
@@ -63,7 +64,9 @@ describe('deploy metadata cancel NUTs', () => {
       }
 
       const cacheAfter = readDeployCache(testkit.projectDir);
-      expect(cacheAfter).to.not.have.property(first.result.id);
+      expect(cacheAfter).to.have.property(first.result.id);
+      expect(cacheAfter[first.result.id]).have.property('status');
+      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Canceled);
     });
   });
 
@@ -98,7 +101,9 @@ describe('deploy metadata cancel NUTs', () => {
       }
 
       const cacheAfter = readDeployCache(testkit.projectDir);
-      expect(cacheAfter).to.not.have.property(first.result.id);
+      expect(cacheAfter).to.have.property(first.result.id);
+      expect(cacheAfter[first.result.id]).have.property('status');
+      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Canceled);
     });
   });
 });

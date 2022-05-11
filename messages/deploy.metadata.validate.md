@@ -14,7 +14,7 @@ To validate the deployment of multiple metadata components, either set multiple 
 
 # examples
 
-- NOTE: These examples focus on validating large deployments.  See the help for "sf deploy metadata" for examples of deploying smaller sets of metadata which you can also use to validate.
+- NOTE: These examples focus on validating large deployments. See the help for "sf deploy metadata" for examples of deploying smaller sets of metadata which you can also use to validate.
 
 - Validate the deployment of all source files in a directory to the default org:
 
@@ -53,9 +53,9 @@ Valid values are:
 - RunLocalTests — All tests in your org are run, except the ones that originate from installed managed and unlocked packages. This test level is the default for production deployments that include Apex classes or triggers.
 
 - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
-  
+
 If you don’t specify a test level, the default behavior depends on the contents of your deployment package. For more information, see [Running Tests in a Deployment](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm) in the "Metadata API Developer Guide".
-        
+
 # flags.source-dir.summary
 
 Path to the local source files to validate for deployment.
@@ -113,6 +113,14 @@ Run the command asynchronously.
 # flags.async.description
 
 The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume watching the validation, run "sf deploy metadata resume". To check the status of the validation, run "sf deploy metadata report".
+
+# flags.metadata-dir.summary
+
+Root of directory or zip file of metadata formatted files to deploy.
+
+# flags.single-package.summary
+
+Indicates that the metadata zip file points to a directory structure for a single package.
 
 # info.SuccessfulValidation
 
