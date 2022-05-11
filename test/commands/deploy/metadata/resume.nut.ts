@@ -57,7 +57,7 @@ describe('deploy metadata resume NUTs', () => {
   });
 
   describe('--job-id', () => {
-    it('should resume the provided job id', async () => {
+    it('should resume the provided job id (18 chars)', async () => {
       const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
         args: '--source-dir force-app --async',
         json: true,
@@ -69,6 +69,28 @@ describe('deploy metadata resume NUTs', () => {
 
       const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:resume', {
         args: `--job-id ${first.result.id}`,
+        json: true,
+        exitCode: 0,
+      });
+
+      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+
+      const cacheAfter = readDeployCache(testkit.projectDir);
+      expect(cacheAfter).to.not.have.property(first.result.id);
+    });
+
+    it('should resume the provided job id (15 chars)', async () => {
+      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
+        args: '--source-dir force-app --async',
+        json: true,
+        exitCode: 0,
+      });
+
+      const cacheBefore = readDeployCache(testkit.projectDir);
+      expect(cacheBefore).to.have.property(first.result.id);
+
+      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:resume', {
+        args: `--job-id ${first.result.id.substring(0, 15)}`,
         json: true,
         exitCode: 0,
       });

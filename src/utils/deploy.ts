@@ -42,6 +42,7 @@ export type DeployOptions = {
   verbose?: boolean;
   concise?: boolean;
   'single-package'?: boolean;
+  status?: RequestStatus;
 };
 
 export type CachedOptions = Omit<DeployOptions, 'wait'> & { wait: number };
@@ -165,6 +166,15 @@ export function determineExitCode(result: DeployResult, async = false): number {
   return DEPLOY_STATUS_CODES.get(result.response.status);
 }
 
+export function isNotResumable(status: RequestStatus): boolean {
+  return [
+    RequestStatus.Succeeded,
+    RequestStatus.Failed,
+    RequestStatus.SucceededPartial,
+    RequestStatus.Canceled,
+  ].includes(status);
+}
+
 export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
   public static getFileName(): string {
     return 'deploy-cache.json';
@@ -199,13 +209,27 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
   }
 
   public resolveLatest(useMostRecent: boolean, key: Nullable<string>, throwOnNotFound = true): string {
-    const jobId = useMostRecent ? this.getLatestKey() : key;
+    const jobId = this.resolveLongId(useMostRecent ? this.getLatestKey() : key);
     if (!jobId && useMostRecent) throw messages.createError('error.NoRecentJobId');
 
-    if ((throwOnNotFound && !this.has(jobId)) || !this.has(jobId.substring(0, 15))) {
+    if (throwOnNotFound && !this.has(jobId)) {
       throw messages.createError('error.InvalidJobId', [jobId]);
     }
 
     return jobId;
+  }
+
+  public resolveLongId(jobId: string): string {
+    if (jobId.length === 18) {
+      return jobId;
+    } else if (jobId.length === 15) {
+      return this.keys().find((k) => k.substring(0, 15) === jobId);
+    } else {
+      throw messages.createError('error.InvalidJobId', [jobId]);
+    }
+  }
+
+  public get(jobId: string): TTLConfig.Entry<CachedOptions> {
+    return super.get(this.resolveLongId(jobId));
   }
 }
