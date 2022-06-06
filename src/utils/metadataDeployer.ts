@@ -146,6 +146,7 @@ export class MetadataDeployer extends Deployer {
   public async promptForUsername(): Promise<string> {
     const aliasOrUsername = ConfigAggregator.getValue(OrgConfigProperties.TARGET_ORG)?.value as string;
     const stateAggregator = await StateAggregator.getInstance();
+    await stateAggregator.orgs.readAll();
     const allAliases = stateAggregator.aliases.getAll();
     let targetOrgAuth: OrgAuthorization;
     // make sure the "target-org" can be used in this deploy
@@ -172,14 +173,17 @@ export class MetadataDeployer extends Deployer {
         }
       }
     }
+
     if (!aliasOrUsername || targetOrgAuth?.isExpired) {
-      const authorizations = (
+      const promises = (
         await AuthInfo.listAllAuthorizations((orgAuth) => !orgAuth.error && orgAuth.isExpired !== true)
-      ).map((orgAuth) => {
-        const org = stateAggregator.orgs.get(orgAuth.username);
-        const timestamp = org.timestamp ? new Date(org.timestamp as string) : new Date();
+      ).map(async (orgAuth) => {
+        const stat = await stateAggregator.orgs.stat(orgAuth.username);
+        const timestamp = stat ? new Date(stat.mtimeMs) : new Date();
         return { ...orgAuth, timestamp } as OrgAuthWithTimestamp;
       });
+
+      const authorizations = await Promise.all(promises);
       if (authorizations.length > 0) {
         const newestAuths = authorizations.sort(compareOrgs);
         const options = newestAuths.map((auth) => ({
