@@ -5,9 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { bold } from 'chalk';
-import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
+import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
+import { SourceConflictError } from '@salesforce/source-tracking';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../utils/types';
@@ -15,12 +16,12 @@ import { executeDeploy, resolveApi, validateTests, determineExitCode, DeployCach
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
 import { ConfigVars } from '../../configMeta';
 import { fileOrDirFlag, testLevelFlag } from '../../utils/flags';
+import { writeConflictTable } from '../../utils/conflicts';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
-const EXACTLY_ONE_FLAGS = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
-
+const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
@@ -47,6 +48,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.dry-run.summary'),
       default: false,
     }),
+    'ignore-conflicts': Flags.boolean({
+      char: 'c',
+      summary: messages.getMessage('flags.ignore-conflicts.summary'),
+      description: messages.getMessage('flags.ignore-conflicts.description'),
+      default: false,
+    }),
     'ignore-errors': Flags.boolean({
       char: 'r',
       summary: messages.getMessage('flags.ignore-errors.summary'),
@@ -63,18 +70,18 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),
       summary: messages.getMessage('flags.manifest.summary'),
-      exactlyOne: EXACTLY_ONE_FLAGS,
+      exclusive: exclusiveFlags.filter((f) => f !== 'manifest'),
       exists: true,
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
-      exactlyOne: EXACTLY_ONE_FLAGS,
+      exclusive: exclusiveFlags.filter((f) => f !== 'metadata'),
     }),
     'metadata-dir': fileOrDirFlag({
       summary: messages.getMessage('flags.metadata-dir.summary'),
-      exactlyOne: EXACTLY_ONE_FLAGS,
+      exclusive: exclusiveFlags.filter((f) => f !== 'metadata-dir'),
       exists: true,
     }),
     'single-package': Flags.boolean({
@@ -86,7 +93,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       description: messages.getMessage('flags.source-dir.description'),
       summary: messages.getMessage('flags.source-dir.summary'),
       multiple: true,
-      exactlyOne: EXACTLY_ONE_FLAGS,
+      exclusive: exclusiveFlags.filter((f) => f !== 'source-dir'),
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -142,11 +149,14 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
 
     const api = await resolveApi();
-    const { deploy, componentSet } = await executeDeploy({
-      ...flags,
-      'target-org': flags['target-org'].getUsername(),
-      api,
-    });
+    const { deploy, componentSet } = await executeDeploy(
+      {
+        ...flags,
+        'target-org': flags['target-org'].getUsername(),
+        api,
+      },
+      this.project
+    );
 
     const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
     this.log(getVersionMessage(action, componentSet, api));
@@ -175,7 +185,18 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     return formatter.getJson();
   }
 
-  protected catch(error: SfCommand.Error): Promise<SfCommand.Error> {
+  protected catch(error: Error | SfError): Promise<SfCommand.Error> {
+    if (error instanceof SourceConflictError) {
+      if (!this.jsonEnabled()) {
+        writeConflictTable(error.data);
+        // set the message and add plugin-specific actions
+        return super.catch({
+          ...error,
+          message: messages.getMessage('error.Conflicts'),
+          actions: messages.getMessages('error.Conflicts.Actions'),
+        });
+      }
+    }
     if (error.message.includes('client has timed out')) {
       const err = messages.createError('error.ClientTimeout');
       return super.catch({ ...error, name: err.name, message: err.message, code: err.code });

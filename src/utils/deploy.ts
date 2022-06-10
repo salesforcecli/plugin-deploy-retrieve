@@ -5,7 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { ConfigAggregator, Global, Messages, Org, PollingClient, StatusResult, TTLConfig } from '@salesforce/core';
+import {
+  ConfigAggregator,
+  Global,
+  Messages,
+  Org,
+  PollingClient,
+  SfProject,
+  StatusResult,
+  TTLConfig,
+} from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { AnyJson, JsonMap, Nullable } from '@salesforce/ts-types';
 import {
@@ -16,11 +25,11 @@ import {
   MetadataApiDeployStatus,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
+import { SourceTracking } from '@salesforce/source-tracking';
 import ConfigMeta, { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, PathInfo, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
-
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
 
@@ -31,6 +40,7 @@ export type DeployOptions = {
   async?: boolean;
   'api-version'?: string;
   'dry-run'?: boolean;
+  'ignore-conflicts'?: boolean;
   'ignore-errors'?: boolean;
   'ignore-warnings'?: boolean;
   manifest?: string;
@@ -58,8 +68,18 @@ export async function resolveApi(): Promise<API> {
   return restDeployConfig === 'true' ? API.REST : API.SOAP;
 }
 
-export async function buildComponentSet(opts: Partial<DeployOptions>): Promise<ComponentSet> {
-  if (!opts['source-dir'] && !opts.manifest && !opts.metadata) return new ComponentSet();
+export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: SourceTracking): Promise<ComponentSet> {
+  // if you specify nothing, you'll get the changes, like sfdx push
+  if (!opts['source-dir'] && !opts.manifest && !opts.metadata) {
+    // TODO: determine support for byPkgDir deployments
+    const cs = (await stl.localChangesAsComponentSet(false))[0] ?? new ComponentSet();
+    // stl produces a cs with api version already set.  command might have specified a version.
+    if (opts['api-version']) {
+      cs.apiVersion = opts['api-version'];
+      cs.sourceApiVersion = opts['api-version'];
+    }
+    return cs;
+  }
 
   return ComponentSetBuilder.build({
     apiversion: opts['api-version'],
@@ -78,8 +98,10 @@ export async function buildComponentSet(opts: Partial<DeployOptions>): Promise<C
 
 export async function executeDeploy(
   opts: Partial<DeployOptions>,
+  project?: SfProject,
   id?: string
 ): Promise<{ deploy: MetadataApiDeploy; componentSet: ComponentSet }> {
+  project ??= await SfProject.resolve();
   const apiOptions = {
     checkOnly: opts['dry-run'] || false,
     ignoreWarnings: opts['ignore-warnings'] || false,
@@ -92,24 +114,35 @@ export async function executeDeploy(
   let deploy: MetadataApiDeploy;
   let componentSet: ComponentSet;
 
+  const org = await Org.create({ aliasOrUsername: opts['target-org'] });
+  const usernameOrConnection = org.getConnection();
+  // instantiate source tracking
+  // stl will decide, based on the org's properties, what to do
+  const stl = await SourceTracking.create({
+    org,
+    project,
+    subscribeSDREvents: true,
+    ignoreConflicts: opts['ignore-conflicts'],
+  });
+
   if (opts['metadata-dir']) {
     if (id) {
-      deploy = new MetadataApiDeploy({ id, usernameOrConnection: opts['target-org'] });
+      deploy = new MetadataApiDeploy({ id, usernameOrConnection });
     } else {
       const key = opts['metadata-dir'].type === 'directory' ? 'mdapiPath' : 'zipPath';
       deploy = new MetadataApiDeploy({
         [key]: opts['metadata-dir'].path,
-        usernameOrConnection: opts['target-org'],
+        usernameOrConnection,
         apiOptions: { ...apiOptions, singlePackage: opts['single-package'] || false },
       });
       await deploy.start();
     }
   } else {
-    componentSet = await buildComponentSet(opts);
+    componentSet = await buildComponentSet(opts, stl);
     deploy = id
-      ? new MetadataApiDeploy({ id, usernameOrConnection: opts['target-org'], components: componentSet })
+      ? new MetadataApiDeploy({ id, usernameOrConnection, components: componentSet })
       : await componentSet.deploy({
-          usernameOrConnection: opts['target-org'],
+          usernameOrConnection,
           apiOptions,
         });
   }

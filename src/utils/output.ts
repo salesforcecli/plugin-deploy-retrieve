@@ -316,7 +316,7 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
     const response = Object.entries(this.result.response).reduce((result, [key, value]) => {
       if (['number', 'boolean', 'string'].includes(typeof value)) {
         if (key === 'status') {
-          return result.concat({ key, value: colorStatus(value) });
+          return result.concat({ key, value: colorStatus(value as RequestStatus) });
         } else {
           return result.concat({ key, value: value as string | number | boolean });
         }

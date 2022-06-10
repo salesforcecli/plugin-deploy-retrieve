@@ -6,11 +6,15 @@ Retrieve metadata in source format from an org to your local project.
 
 You must run this command from within a project.
 
-This command doesn't support source-tracking. The source you retrieve overwrites the corresponding source files in your local project. This command doesn’t attempt to merge the source from your org with your local source files.
+This command uses source-tracking if support on the org, unless you set the org to not track source when it was created.
 
 To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
 # examples
+
+- Retrieve remote changes
+
+  <%= config.bin %> <%= command.id %>
 
 - Retrieve the source files in a directory:
 
@@ -54,6 +58,14 @@ Target API version for the retrieve.
 # flags.api-version.description
 
 Use this flag to override the default API version, which is the latest version supported the CLI, with the API version in your package.xml file.
+
+# flags.ignore-conflicts.summary
+
+If the org uses source tracking, retrieve and save to the local filesystem even if the local files have been changed.
+
+# flags.ignore-conflicts.description
+
+This has no effect on orgs that don't use source tracking.
 
 # flags.manifest.summary
 
@@ -106,3 +118,13 @@ Sending request to org (metadata API version %s)
 # spinner.polling
 
 Waiting for the org to respond
+
+# error.Conflicts
+
+The changes that would be retrieved will overwrite
+
+# error.Conflicts.Actions
+
+- Re-run the command with --ignore-conflicts if you want to overwrite the remote changes
+
+- Retrieve the changes with --ignore-conflicts if you want to overwrite the local changes

@@ -10,13 +10,15 @@ import { RetrieveResult, ComponentSetBuilder } from '@salesforce/source-deploy-r
 
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
+import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { RetrieveResultFormatter } from '../../utils/output';
 import { getPackageDirs } from '../../utils/project';
 import { RetrieveResultJson } from '../../utils/types';
+import { writeConflictTable } from '../../utils/conflicts';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
-const mdTrasferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
+const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
 export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly summary = messages.getMessage('summary');
@@ -30,6 +32,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
       description: messages.getMessage('flags.api-version.description'),
+    }),
+    'ignore-conflicts': Flags.boolean({
+      char: 'c',
+      summary: messages.getMessage('flags.ignore-conflicts.summary'),
+      description: messages.getMessage('flags.ignore-conflicts.description'),
+      default: false,
     }),
     manifest: Flags.file({
       char: 'x',
@@ -86,20 +94,32 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
     this.spinner.start(messages.getMessage('spinner.start'));
-    const componentSet = await ComponentSetBuilder.build({
-      apiversion: flags['api-version'],
-      sourcepath: flags['source-dir'],
-      packagenames: flags['package-name'],
-      manifest: flags.manifest && {
-        manifestPath: flags.manifest,
-        directoryPaths: await getPackageDirs(),
-      },
-      metadata: flags.metadata && {
-        metadataEntries: flags.metadata,
-        directoryPaths: await getPackageDirs(),
-      },
+    const stl = await SourceTracking.create({
+      org: flags['target-org'],
+      project: this.project,
+      subscribeSDREvents: true,
+      ignoreConflicts: flags['ignore-conflicts'],
     });
-
+    const isPull = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
+    const componentSet = isPull
+      ? await stl.maybeApplyRemoteDeletesToLocal()
+      : await ComponentSetBuilder.build({
+          apiversion: flags['api-version'],
+          sourcepath: flags['source-dir'],
+          packagenames: flags['package-name'],
+          manifest: flags.manifest && {
+            manifestPath: flags.manifest,
+            directoryPaths: await getPackageDirs(),
+          },
+          metadata: flags.metadata && {
+            metadataEntries: flags.metadata,
+            directoryPaths: await getPackageDirs(),
+          },
+        });
+    // stl sets version based on config/files--if the command overrides it, we need to update
+    if (isPull && flags['api-version']) {
+      componentSet.apiVersion = flags['api-version'];
+    }
     this.spinner.status = messages.getMessage('spinner.sending', [
       componentSet.sourceApiVersion || componentSet.apiVersion,
     ]);
@@ -114,13 +134,13 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     this.spinner.status = messages.getMessage('spinner.polling');
 
     retrieve.onUpdate((data) => {
-      this.spinner.status = mdTrasferMessages.getMessage(data.status);
+      this.spinner.status = mdTransferMessages.getMessage(data.status);
     });
 
     // any thing else should stop the progress bar
-    retrieve.onFinish((data) => this.spinner.stop(mdTrasferMessages.getMessage(data.response.status)));
+    retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
 
-    retrieve.onCancel((data) => this.spinner.stop(mdTrasferMessages.getMessage(data.status)));
+    retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data.status)));
 
     retrieve.onError((error: Error) => {
       this.spinner.stop(error.name);
@@ -145,5 +165,20 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     }
 
     return formatter.getJson();
+  }
+
+  protected catch(error: Error | SfError): Promise<SfCommand.Error> {
+    if (error instanceof SourceConflictError) {
+      if (!this.jsonEnabled()) {
+        writeConflictTable(error.data);
+        // set the message and add plugin-specific actions
+        return super.catch({
+          ...error,
+          message: messages.getMessage('error.Conflicts'),
+          actions: messages.getMessages('error.Conflicts.Actions'),
+        });
+      }
+    }
+    return super.catch(error);
   }
 }

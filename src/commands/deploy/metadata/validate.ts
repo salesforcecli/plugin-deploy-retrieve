@@ -119,12 +119,15 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadataValidate);
     const api = await resolveApi();
-    const { deploy, componentSet } = await executeDeploy({
-      ...flags,
-      'dry-run': true,
-      'target-org': flags['target-org'].getUsername(),
-      api,
-    });
+    const { deploy, componentSet } = await executeDeploy(
+      {
+        ...flags,
+        'dry-run': true,
+        'target-org': flags['target-org'].getUsername(),
+        api,
+      },
+      this.project
+    );
 
     this.log(getVersionMessage('Validating Deployment', componentSet, api));
     this.log(`Deploy ID: ${bold(deploy.id)}`);
