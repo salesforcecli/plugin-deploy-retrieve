@@ -11,6 +11,7 @@ import {
   Messages,
   Org,
   PollingClient,
+  SfError,
   SfProject,
   StatusResult,
   TTLConfig,
@@ -31,7 +32,11 @@ import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, PathInfo, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
+const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache', [
+  'error.NoRecentJobId',
+  'error.InvalidJobId',
+]);
+const trackingMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'tracking', ['error.noChanges']);
 
 export type DeployOptions = {
   api: API;
@@ -71,8 +76,13 @@ export async function resolveApi(): Promise<API> {
 export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: SourceTracking): Promise<ComponentSet> {
   // if you specify nothing, you'll get the changes, like sfdx push
   if (!opts['source-dir'] && !opts.manifest && !opts.metadata) {
-    // TODO: determine support for byPkgDir deployments
-    const cs = (await stl.localChangesAsComponentSet(false))[0] ?? new ComponentSet();
+    /** localChangesAsComponentSet returned an array to support multiple sequential deploys.
+     * `sf` does not support this so we force one ComponentSet
+     */
+    const [cs] = await stl.localChangesAsComponentSet(false);
+    if (!cs) {
+      throw new SfError(trackingMessages.getMessage('error.noChanges'));
+    }
     // stl produces a cs with api version already set.  command might have specified a version.
     if (opts['api-version']) {
       cs.apiVersion = opts['api-version'];
@@ -243,10 +253,10 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
 
   public resolveLatest(useMostRecent: boolean, key: Nullable<string>, throwOnNotFound = true): string {
     const jobId = this.resolveLongId(useMostRecent ? this.getLatestKey() : key);
-    if (!jobId && useMostRecent) throw messages.createError('error.NoRecentJobId');
+    if (!jobId && useMostRecent) throw cacheMessages.createError('error.NoRecentJobId');
 
     if (throwOnNotFound && !this.has(jobId)) {
-      throw messages.createError('error.InvalidJobId', [jobId]);
+      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
     }
 
     return jobId;
@@ -258,7 +268,7 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     } else if (jobId.length === 15) {
       return this.keys().find((k) => k.substring(0, 15) === jobId);
     } else {
-      throw messages.createError('error.InvalidJobId', [jobId]);
+      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
     }
   }
 
