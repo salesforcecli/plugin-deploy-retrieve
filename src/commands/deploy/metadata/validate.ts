@@ -42,6 +42,12 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       summary: messages.getMessage('flags.concise.summary'),
       exclusive: ['verbose'],
     }),
+    'ignore-conflicts': Flags.boolean({
+      char: 'c',
+      summary: messages.getMessage('flags.ignore-conflicts.summary'),
+      description: messages.getMessage('flags.ignore-conflicts.description'),
+      default: false,
+    }),
     manifest: Flags.file({
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),

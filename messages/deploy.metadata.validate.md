@@ -74,6 +74,14 @@ Number of minutes to wait for the command to complete and display results.
 
 If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume watching the validation, run "sf deploy metadata resume". To check the status of the validation, run "sf deploy metadata report".
 
+# flags.ignore-conflicts.summary
+
+For orgs that use source tracking, deploy even if it will overwrite changes in the org.
+
+# flags.ignore-conflicts.description
+
+This has no effect on orgs that don't use source tracking.
+
 # flags.manifest.summary
 
 Full file path for manifest (package.xml) of components to validate for deployment.
