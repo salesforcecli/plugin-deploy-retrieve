@@ -6,7 +6,7 @@ Deploy metadata in source format to an org from your local project.
 
 You must run this command from within a project.
 
-This command uses source-tracking if support on the org, unless you set the org to not track source when it was created.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
 To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
@@ -112,11 +112,11 @@ Validate deploy and run Apex tests but don’t save to the org.
 
 # flags.ignore-conflicts.summary
 
-For orgs that use source tracking, deploy even if it will overwrite changes in the org.
+Ignore conflicts and deploy local files, even if they overwrite changes in the org.
 
 # flags.ignore-conflicts.description
 
-This has no effect on orgs that don't use source tracking.
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs. 
 
 # flags.ignore-errors.summary
 
@@ -201,10 +201,10 @@ The target-org, "%s", is expired. Do you want to pick another org?
 
 # error.Conflicts
 
-There are changes on the server that conflict with what you're trying to deploy
+There are changes in the org that conflict with the local changes you're trying to deploy.
 
 # error.Conflicts.Actions
 
-- Re-run the command with --ignore-conflicts if you want to overwrite the remote changes
+- To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
-- Retrieve the changes with --ignore-conflicts if you want to overwrite the local changes
+- To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.

@@ -6,13 +6,13 @@ Retrieve metadata in source format from an org to your local project.
 
 You must run this command from within a project.
 
-This command uses source-tracking if support on the org, unless you set the org to not track source when it was created.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
 To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
 # examples
 
-- Retrieve remote changes
+- Retrieve remote changes:
 
   <%= config.bin %> <%= command.id %>
 
@@ -61,11 +61,11 @@ Use this flag to override the default API version, which is the latest version s
 
 # flags.ignore-conflicts.summary
 
-If the org uses source tracking, retrieve and save to the local filesystem even if the local files have been changed.
+Ignore conflicts and retrieve and save files to your local filesystem, even if they overwrite your local changes.
 
 # flags.ignore-conflicts.description
 
-This has no effect on orgs that don't use source tracking.
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs. 
 
 # flags.manifest.summary
 
@@ -121,10 +121,10 @@ Waiting for the org to respond
 
 # error.Conflicts
 
-The changes that would be retrieved will overwrite
+There are changes in your local files that conflict with the org changes you're trying to retrieve.
 
 # error.Conflicts.Actions
 
-- Re-run the command with --ignore-conflicts if you want to overwrite the remote changes
+- To overwrite the local changes, rerun this command with the --ignore-conflicts flag.
 
-- Retrieve the changes with --ignore-conflicts if you want to overwrite the local changes
+- To overwrite the remote changes, run the "sf deploy metadata" command with the --ignore-conflicts flag.
