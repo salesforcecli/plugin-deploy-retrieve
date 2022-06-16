@@ -207,4 +207,4 @@ There are changes in the org that conflict with the local changes you're trying 
 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
-- Retrieve the changes with --ignore-conflicts if you want to overwrite the local changes
+- To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.
