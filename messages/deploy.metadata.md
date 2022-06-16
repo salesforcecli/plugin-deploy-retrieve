@@ -205,6 +205,6 @@ There are changes in the org that conflict with the local changes you're trying 
 
 # error.Conflicts.Actions
 
-- Re-run the command with --ignore-conflicts if you want to overwrite the remote changes
+- To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
 - Retrieve the changes with --ignore-conflicts if you want to overwrite the local changes
