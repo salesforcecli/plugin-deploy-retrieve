@@ -65,7 +65,7 @@ Ignore conflicts and retrieve and save files to your local filesystem, even if t
 
 # flags.ignore-conflicts.description
 
-This has no effect on orgs that don't use source tracking.
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs. 
 
 # flags.manifest.summary
 
