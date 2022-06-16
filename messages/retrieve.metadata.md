@@ -61,7 +61,7 @@ Use this flag to override the default API version, which is the latest version s
 
 # flags.ignore-conflicts.summary
 
-If the org uses source tracking, retrieve and save to the local filesystem even if the local files have been changed.
+Ignore conflicts and retrieve and save files to your local filesystem, even if they overwrite your local changes.
 
 # flags.ignore-conflicts.description
 
