@@ -6,7 +6,7 @@ Deploy metadata in source format to an org from your local project.
 
 You must run this command from within a project.
 
-This command uses source-tracking if support on the org, unless you set the org to not track source when it was created.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
 To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
