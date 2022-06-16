@@ -127,4 +127,4 @@ There are changes in your local files that conflict with the org changes you're 
 
 - Re-run the command with --ignore-conflicts if you want to overwrite the remote changes
 
-- Retrieve the changes with --ignore-conflicts if you want to overwrite the local changes
+- To overwrite the remote changes, run the "sf deploy metadata" command with the --ignore-conflicts flag.
