@@ -201,7 +201,7 @@ The target-org, "%s", is expired. Do you want to pick another org?
 
 # error.Conflicts
 
-There are changes on the server that conflict with what you're trying to deploy
+There are changes in the org that conflict with the local changes you're trying to deploy.
 
 # error.Conflicts.Actions
 
