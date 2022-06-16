@@ -112,7 +112,7 @@ Validate deploy and run Apex tests but don’t save to the org.
 
 # flags.ignore-conflicts.summary
 
-For orgs that use source tracking, deploy even if it will overwrite changes in the org.
+Ignore conflicts and deploy local files, even if they overwrite changes in the org.
 
 # flags.ignore-conflicts.description
 
