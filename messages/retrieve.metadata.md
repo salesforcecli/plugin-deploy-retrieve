@@ -125,6 +125,6 @@ There are changes in your local files that conflict with the org changes you're 
 
 # error.Conflicts.Actions
 
-- Re-run the command with --ignore-conflicts if you want to overwrite the remote changes
+- To overwrite the local changes, rerun this command with the --ignore-conflicts flag.
 
 - To overwrite the remote changes, run the "sf deploy metadata" command with the --ignore-conflicts flag.
