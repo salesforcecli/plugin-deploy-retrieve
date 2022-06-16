@@ -121,7 +121,7 @@ Waiting for the org to respond
 
 # error.Conflicts
 
-The changes that would be retrieved will overwrite
+There are changes in your local files that conflict with the org changes you're trying to retrieve.
 
 # error.Conflicts.Actions
 
