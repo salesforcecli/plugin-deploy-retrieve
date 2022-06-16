@@ -12,7 +12,7 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 # examples
 
-- Retrieve remote changes
+- Retrieve remote changes:
 
   <%= config.bin %> <%= command.id %>
 
