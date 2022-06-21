@@ -13,6 +13,7 @@ import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { eBikesDeployResultCount } from './constants';
 
 const filterIgnored = (r: StatusResult): boolean => r.ignored !== true;
 
@@ -52,7 +53,9 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(resp.jsonOutput?.status, JSON.stringify(resp)).to.equal(0);
       const files = resp.jsonOutput.result.files;
       expect(files).to.be.an.instanceof(Array);
-      expect(files, JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))).to.have.lengthOf(232);
+      expect(files, JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))).to.have.lengthOf(
+        eBikesDeployResultCount
+      );
       expect(
         files.every((f) => f.state !== ComponentStatus.Failed),
         JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))

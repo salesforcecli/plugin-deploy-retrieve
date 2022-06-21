@@ -18,6 +18,7 @@ import { AuthInfo, Connection } from '@salesforce/core';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { eBikesDeployResultCount } from './constants';
 
 let session: TestSession;
 let conn: Connection;
@@ -49,7 +50,7 @@ describe('remote changes', () => {
       const pushResult = execCmd<DeployResultJson>('deploy metadata --json', { cli: 'sf' });
       expect(pushResult.jsonOutput?.status, JSON.stringify(pushResult)).equals(0);
       const pushedSource = pushResult.jsonOutput.result.files;
-      expect(pushedSource, JSON.stringify(pushedSource)).to.have.lengthOf(234);
+      expect(pushedSource, JSON.stringify(pushedSource)).to.have.lengthOf(eBikesDeployResultCount);
       expect(
         pushedSource.every((r) => r.state !== ComponentStatus.Failed),
         JSON.stringify(pushedSource.filter((r) => r.state === ComponentStatus.Failed))
