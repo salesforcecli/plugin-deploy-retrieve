@@ -61,7 +61,6 @@
       "api-version",
       "async",
       "concise",
-      "ignore-conflicts",
       "json",
       "manifest",
       "metadata",
