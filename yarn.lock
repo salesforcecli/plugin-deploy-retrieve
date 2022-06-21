@@ -1370,7 +1370,7 @@
     mkdirp "1.0.4"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.18.2":
+"@salesforce/core@^3.18.2", "@salesforce/core@^3.21.1":
   version "3.21.1"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.21.1.tgz#3e51454d6e5f5fbf523e0372378210b8cf85f60f"
   integrity sha512-TdOhTeXrfUhRsqqwQKQsA410uBvHsRQiD66wtC0lmUGHRBNxUYEmK6+zbMvVLyPLo6Db4GOPuZ/3DV839fIVBg==
@@ -1677,6 +1677,23 @@
     archiver "^5.3.0"
     fast-xml-parser "^3.17.4"
     got "^11.8.2"
+    graceful-fs "^4.2.8"
+    ignore "^5.1.8"
+    mime "2.6.0"
+    unzipper "0.10.11"
+    xmldom-sfdx-encoding "^0.1.29"
+
+"@salesforce/source-deploy-retrieve@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-6.1.0.tgz#4cea1206b9f179ff217cf283657d3d231610c673"
+  integrity sha512-r6XRsznFshjbl9luRRHG8da2QtKSGM6dvW8IpFPReA4PzdyLVlkEVp89jLFK5UmnbqKGfA8QPd31Ajh38DlSWg==
+  dependencies:
+    "@salesforce/core" "^3.21.1"
+    "@salesforce/kit" "^1.5.41"
+    "@salesforce/ts-types" "^1.5.20"
+    archiver "^5.3.0"
+    fast-xml-parser "^3.17.4"
+    got "^11.8.5"
     graceful-fs "^4.2.8"
     ignore "^5.1.8"
     mime "2.6.0"
@@ -4307,15 +4324,25 @@ eslint-config-salesforce-license@^0.1.6:
   resolved "https://registry.npmjs.org/eslint-config-salesforce-license/-/eslint-config-salesforce-license-0.1.6.tgz#75b475cf90f92e1dcb4340124466288915fed3f8"
   integrity sha512-PH1nkm6MaouON4Ac4fgJh29oQiHlpU/G2xS45FAYeAWkh1up88j1UpjXt2ISNniQVvU4uqfVAOOaEb5X5hDqYw==
 
-eslint-config-salesforce-typescript@^0.2.7, eslint-config-salesforce-typescript@^0.2.8:
+eslint-config-salesforce-typescript@^0.2.7:
   version "0.2.8"
   resolved "https://registry.npmjs.org/eslint-config-salesforce-typescript/-/eslint-config-salesforce-typescript-0.2.8.tgz#73cbc0e87a30118407d455feabf154fd251f7002"
   integrity sha512-CDPcYWIfEVJFbcNG6IdhKW3whp0MujjuM4uRFESQ1Eq4cO8bMbZrwbLypUWxdMgZz7Ua3luMHmIKgkmR4k9FSg==
+
+eslint-config-salesforce-typescript@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-salesforce-typescript/-/eslint-config-salesforce-typescript-1.0.0.tgz#7bc7aa49779cfb395ad8dcfc6481c54d4a68b35d"
+  integrity sha512-VkR0iydimCiAs/4v0Ialne2ry3UZh4rjfur1kaJBUJKKTXH+jGBmLEZKlZnoKGsw6OMKLVcMdoK0N8nshY2zcg==
 
 eslint-config-salesforce@^0.1.6:
   version "0.1.6"
   resolved "https://registry.npmjs.org/eslint-config-salesforce/-/eslint-config-salesforce-0.1.6.tgz#47d7846d340df99db25962978e414e03404e5c2a"
   integrity sha512-QloeQzIka5Ruj6RfkfqeNPZoaR7wkz34AU/RABVdn/XBd23lk/l0/I/Hx3Rzx0G4dft/DBaHBL1JYllT0cWE1A==
+
+eslint-config-salesforce@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-salesforce/-/eslint-config-salesforce-1.0.1.tgz#947c15d5247a28c7bb9564e9427e2fd112b97b8a"
+  integrity sha512-36iRnrB+jC//I71Cuid7BDvPotHH9XiTbA96c7HUeuniyxqFk2G0Xdwsyf54AEknqFqzdnqBIU/IDL38ozgy4Q==
 
 eslint-import-resolver-node@^0.3.6:
   version "0.3.6"
@@ -5559,6 +5586,23 @@ got@^11.8.2, got@^11.8.3:
   version "11.8.3"
   resolved "https://registry.npmjs.org/got/-/got-11.8.3.tgz#f496c8fdda5d729a90b4905d2b07dbd148170770"
   integrity sha512-7gtQ5KiPh1RtGS9/Jbv1ofDpBFuq42gyfEib+ejaRBJuj/3tQFeR5+gw57e4ipaU8c/rCjvX6fkQz2lyDlGAOg==
+  dependencies:
+    "@sindresorhus/is" "^4.0.0"
+    "@szmarczak/http-timer" "^4.0.5"
+    "@types/cacheable-request" "^6.0.1"
+    "@types/responselike" "^1.0.0"
+    cacheable-lookup "^5.0.3"
+    cacheable-request "^7.0.2"
+    decompress-response "^6.0.0"
+    http2-wrapper "^1.0.0-beta.5.2"
+    lowercase-keys "^2.0.0"
+    p-cancelable "^2.0.0"
+    responselike "^2.0.0"
+
+got@^11.8.5:
+  version "11.8.5"
+  resolved "https://registry.yarnpkg.com/got/-/got-11.8.5.tgz#ce77d045136de56e8f024bebb82ea349bc730046"
+  integrity sha512-o0Je4NvQObAuZPHLFoRSkdG2lTgtcynqymzg2Vupdx6PorhaT5MCbIyXG6d4D94kk8ZG57QeosgdiqfJWhEhlQ==
   dependencies:
     "@sindresorhus/is" "^4.0.0"
     "@szmarczak/http-timer" "^4.0.5"
