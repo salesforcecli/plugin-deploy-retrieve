@@ -6,7 +6,6 @@
  */
 import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
@@ -171,8 +170,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
-    this.setExitCode(result);
-
+    process.exitCode = determineExitCode(result);
     const formatter = new DeployResultFormatter(result, flags);
 
     if (!this.jsonEnabled()) {
@@ -202,9 +200,5 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
     }
     return super.catch(error);
-  }
-
-  private setExitCode(result: DeployResult): void {
-    process.exitCode = determineExitCode(result);
   }
 }

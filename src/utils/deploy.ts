@@ -266,7 +266,7 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     if (jobId.length === 18) {
       return jobId;
     } else if (jobId.length === 15) {
-      return this.keys().find((k) => k.substring(0, 15) === jobId);
+      return this.keys().find((k) => k.startsWith(jobId));
     } else {
       throw cacheMessages.createError('error.InvalidJobId', [jobId]);
     }

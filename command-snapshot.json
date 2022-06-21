@@ -1,120 +1,95 @@
 [
-    {
-        "command": "deploy",
-        "plugin": "@salesforce/plugin-deploy-retrieve",
-        "flags": [
-            "interactive"
-        ],
-        "alias": []
-    },
-    {
-        "command": "deploy:metadata",
-        "plugin": "@salesforce/plugin-deploy-retrieve",
-        "flags": [
-            "api-version",
-            "async",
-            "concise",
-            "dry-run",
-            "ignore-errors",
-            "ignore-warnings",
-            "json",
-            "manifest",
-            "metadata",
-            "metadata-dir",
-            "single-package",
-            "source-dir",
-            "target-org",
-            "test-level",
-            "tests",
-            "verbose",
-            "wait"
-        ],
-        "alias": []
-    },
-    {
-        "command": "deploy:metadata:cancel",
-        "plugin": "@salesforce/plugin-deploy-retrieve",
-        "flags": [
-            "async",
-            "job-id",
-            "json",
-            "use-most-recent",
-            "wait"
-        ],
-        "alias": []
-    },
-    {
-        "command": "deploy:metadata:quick",
-        "plugin": "@salesforce/plugin-deploy-retrieve",
-        "flags": [
-            "async",
-            "concise",
-            "job-id",
-            "json",
-            "target-org",
-            "use-most-recent",
-            "verbose",
-            "wait"
-        ],
-        "alias": []
-    },
-    {
-        "command": "deploy:metadata:report",
-        "plugin": "@salesforce/plugin-deploy-retrieve",
-        "flags": [
-            "job-id",
-            "json",
-            "use-most-recent"
-        ],
-        "alias": []
-    },
-    {
-        "command": "deploy:metadata:resume",
-        "plugin": "@salesforce/plugin-deploy-retrieve",
-        "flags": [
-            "concise",
-            "job-id",
-            "json",
-            "use-most-recent",
-            "verbose",
-            "wait"
-        ],
-        "alias": []
-    },
-    {
-        "command": "deploy:metadata:validate",
-        "plugin": "@salesforce/plugin-deploy-retrieve",
-        "flags": [
-            "api-version",
-            "async",
-            "concise",
-            "json",
-            "manifest",
-            "metadata",
-            "metadata-dir",
-            "single-package",
-            "source-dir",
-            "target-org",
-            "test-level",
-            "tests",
-            "verbose",
-            "wait"
-        ],
-        "alias": []
-    },
-    {
-        "command": "retrieve:metadata",
-        "plugin": "@salesforce/plugin-deploy-retrieve",
-        "flags": [
-            "api-version",
-            "json",
-            "manifest",
-            "metadata",
-            "package-name",
-            "source-dir",
-            "target-org",
-            "wait"
-        ],
-        "alias": []
-    }
+  {
+    "command": "deploy",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["interactive"],
+    "alias": []
+  },
+  {
+    "command": "deploy:metadata",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "async",
+      "concise",
+      "dry-run",
+      "ignore-conflicts",
+      "ignore-errors",
+      "ignore-warnings",
+      "json",
+      "manifest",
+      "metadata",
+      "metadata-dir",
+      "single-package",
+      "source-dir",
+      "target-org",
+      "test-level",
+      "tests",
+      "verbose",
+      "wait"
+    ],
+    "alias": []
+  },
+  {
+    "command": "deploy:metadata:cancel",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["async", "job-id", "json", "use-most-recent", "wait"],
+    "alias": []
+  },
+  {
+    "command": "deploy:metadata:quick",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["async", "concise", "job-id", "json", "target-org", "use-most-recent", "verbose", "wait"],
+    "alias": []
+  },
+  {
+    "command": "deploy:metadata:report",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["job-id", "json", "use-most-recent"],
+    "alias": []
+  },
+  {
+    "command": "deploy:metadata:resume",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["concise", "job-id", "json", "use-most-recent", "verbose", "wait"],
+    "alias": []
+  },
+  {
+    "command": "deploy:metadata:validate",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "async",
+      "concise",
+      "ignore-conflicts",
+      "json",
+      "manifest",
+      "metadata",
+      "metadata-dir",
+      "single-package",
+      "source-dir",
+      "target-org",
+      "test-level",
+      "tests",
+      "verbose",
+      "wait"
+    ],
+    "alias": []
+  },
+  {
+    "command": "retrieve:metadata",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "ignore-conflicts",
+      "json",
+      "manifest",
+      "metadata",
+      "package-name",
+      "source-dir",
+      "target-org",
+      "wait"
+    ],
+    "alias": []
+  }
 ]

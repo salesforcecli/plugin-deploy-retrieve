@@ -4,6 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+/* eslint-disable class-methods-use-this */
 
 import { EOL } from 'os';
 import { Flags, Hook } from '@oclif/core';
@@ -66,6 +67,8 @@ export default class Deploy extends SfCommand<void> {
       const deployOptions: Record<string, Deployer.Options> = {};
       for (const deployer of deployers) {
         const opts = options[deployer.getName()] ?? {};
+        // setup must be done sequentially?
+        // eslint-disable-next-line no-await-in-loop
         deployOptions[deployer.getName()] = await deployer.setup(flags, opts);
       }
 
@@ -80,6 +83,8 @@ export default class Deploy extends SfCommand<void> {
       }
 
       for (const deployer of deployers) {
+        // deployments must be done sequentially?
+        // eslint-disable-next-line no-await-in-loop
         await deployer.deploy();
       }
     }
@@ -128,7 +133,7 @@ export default class Deploy extends SfCommand<void> {
   }
 
   public async selectDeployers(deployers: Deployer[]): Promise<Deployer[]> {
-    const deployables: Deployable[] = deployers.reduce((x, y) => x.concat(y.deployables), [] as Deployable[]);
+    const deployables: Deployable[] = deployers.reduce<Deployable[]>((x, y) => x.concat(y.deployables), []);
     const columns = { name: 'APP OR PACKAGE', type: 'TYPE', path: 'PATH' };
     const options = deployables.map((deployable) => ({
       name: deployable.getName(),

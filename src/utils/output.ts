@@ -313,24 +313,27 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
   public display(): void {
     CliUx.ux.log(`${this.result.response.id}... ${this.result.response.status}`);
 
-    const response = Object.entries(this.result.response).reduce((result, [key, value]) => {
-      if (['number', 'boolean', 'string'].includes(typeof value)) {
-        if (key === 'status') {
-          return result.concat({ key, value: colorStatus(value as RequestStatus) });
-        } else {
-          return result.concat({ key, value: value as string | number | boolean });
+    const response = Object.entries(this.result.response).reduce<Array<{ key: string; value: unknown }>>(
+      (result, [key, value]) => {
+        if (['number', 'boolean', 'string'].includes(typeof value)) {
+          if (key === 'status') {
+            return result.concat({ key, value: colorStatus(value as RequestStatus) });
+          } else {
+            return result.concat({ key, value: value as string | number | boolean });
+          }
         }
-      }
-      return result;
-    }, [] as Array<{ key: string; value: unknown }>);
+        return result;
+      },
+      []
+    );
 
     CliUx.ux.log();
     CliUx.ux.table(response, { key: {}, value: {} }, { title: tableHeader('Deploy Info') });
 
-    const opts = Object.entries(this.flags).reduce((result, [key, value]) => {
+    const opts = Object.entries(this.flags).reduce<Array<{ key: string; value: unknown }>>((result, [key, value]) => {
       if (key === 'timestamp') return result;
       return result.concat({ key, value });
-    }, [] as Array<{ key: string; value: unknown }>);
+    }, []);
     CliUx.ux.log();
     CliUx.ux.table(opts, { key: {}, value: {} }, { title: tableHeader('Deploy Options') });
     super.display();

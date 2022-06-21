@@ -6,7 +6,7 @@
  */
 import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
-import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
@@ -146,8 +146,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     }
 
     const result = await deploy.pollStatus(500, flags.wait.seconds);
-    this.setExitCode(result);
-
+    process.exitCode = determineExitCode(result);
     const formatter = new DeployResultFormatter(result, flags);
 
     if (!this.jsonEnabled()) {
@@ -165,9 +164,5 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     }
 
     return formatter.getJson();
-  }
-
-  private setExitCode(result: DeployResult): void {
-    process.exitCode = determineExitCode(result);
   }
 }
