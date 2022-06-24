@@ -61,6 +61,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
         JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))
       ).to.equal(true);
     });
+
     it('sees no local changes (all were committed from push), but profile updated in remote', () => {
       const localResult = execCmd<StatusResult[]>('force:source:status --json --local', {
         ensureExitCode: 0,

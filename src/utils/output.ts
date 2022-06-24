@@ -60,6 +60,7 @@ export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
   const relative = fileResponses.map((file) => {
     return file.filePath ? { ...file, filePath: path.relative(process.cwd(), file.filePath) } : file;
   });
+
   return relative;
 }
 /**

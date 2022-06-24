@@ -11,7 +11,6 @@ import {
   Messages,
   Org,
   PollingClient,
-  SfError,
   SfProject,
   StatusResult,
   TTLConfig,
@@ -36,7 +35,6 @@ const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache
   'error.NoRecentJobId',
   'error.InvalidJobId',
 ]);
-const trackingMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'tracking', ['error.noChanges']);
 
 export type DeployOptions = {
   api: API;
@@ -74,15 +72,13 @@ export async function resolveApi(): Promise<API> {
 }
 
 export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: SourceTracking): Promise<ComponentSet> {
-  // if you specify nothing, you'll get the changes, like sfdx push
-  if (!opts['source-dir'] && !opts.manifest && !opts.metadata) {
+  // if you specify nothing, you'll get the changes, like sfdx push, as long as there's an stl
+  if (!opts['source-dir'] && !opts.manifest && !opts.metadata && stl) {
     /** localChangesAsComponentSet returned an array to support multiple sequential deploys.
      * `sf` does not support this so we force one ComponentSet
+     * that second `false` is going to ignore forceignore (so we can tell the user which files were ignored)
      */
-    const [cs] = await stl.localChangesAsComponentSet(false);
-    if (!cs) {
-      throw new SfError(trackingMessages.getMessage('error.noChanges'));
-    }
+    const cs = (await stl.localChangesAsComponentSet(false, false))?.[0] ?? new ComponentSet();
     // stl produces a cs with api version already set.  command might have specified a version.
     if (opts['api-version']) {
       cs.apiVersion = opts['api-version'];

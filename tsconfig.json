@@ -6,7 +6,8 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@salesforce/kit": ["node_modules/@salesforce/kit"]
+      "@salesforce/kit": ["node_modules/@salesforce/kit"],
+      "@salesforce/core": ["node_modules/@salesforce/core"]
     }
   },
   "include": ["./src/**/*.ts"]
