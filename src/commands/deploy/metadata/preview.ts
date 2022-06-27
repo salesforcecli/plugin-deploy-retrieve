@@ -10,7 +10,7 @@ import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
 import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
 import { buildComponentSet } from '../../../utils/deploy';
-import { calculateDeployOperation, PreviewFile, PreviewResult, printDeployTables } from '../../../utils/previewOutput';
+import { PreviewResult, printDeployTables, compileResults } from '../../../utils/previewOutput';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.preview');
@@ -62,40 +62,29 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
   public async run(): Promise<PreviewResult> {
     const { flags } = await this.parse(DeployMetadataPreview);
 
-    const needsTracking = !flags['ignore-conflicts'] && (flags.manifest || flags.metadata || flags['source-dir']);
     // we'll need STL both to check conflicts and to get the list of local changes if no flags are provided
-    const stl = needsTracking
-      ? await SourceTracking.create({
+    const canSkipTracking =
+      flags['ignore-conflicts'] && [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
+
+    const stl = canSkipTracking
+      ? undefined
+      : await SourceTracking.create({
           org: flags['target-org'],
           project: this.project,
-          subscribeSDREvents: true,
-          ignoreConflicts: flags['ignore-conflicts'],
-        })
-      : undefined;
+        });
 
     const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
-    // build componentSet
     const componentSet = await buildComponentSet({ ...flags, 'target-org': flags['target-org'].getUsername() }, stl);
-    // get conflicts
-    const conflictFiles = flags['ignore-conflicts']
-      ? new Set()
+    const filesWithConflicts = flags['ignore-conflicts']
+      ? new Set<string>()
       : new Set((await stl.getConflicts()).flatMap((conflict) => conflict.filenames.map((f) => path.resolve(f))));
 
-    const filesToDeploy = componentSet.getSourceComponents().map(
-      (c): PreviewFile => ({
-        type: c.type.name,
-        name: c.fullName,
-        path: c.xml, // source component uses absolute path
-        projectRelativePath: path.relative(process.cwd(), c.xml), // for cleaner output
-        conflict: [c.xml, c.content].some((v) => v && conflictFiles.has(v)),
-        ignored: [c.xml, c.content].some((v) => v && forceIgnore.denies(v)),
-        operation: calculateDeployOperation(c.getDestructiveChangesType()),
-      })
-    );
-
-    const output = {
-      files: [...filesToDeploy],
-    };
+    const output: PreviewResult = compileResults({
+      componentSet,
+      projectPath: this.project.getPath(),
+      filesWithConflicts,
+      forceIgnore,
+    });
 
     if (this.jsonEnabled) {
       printDeployTables(output);
