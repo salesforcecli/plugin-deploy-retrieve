@@ -100,8 +100,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       subscribeSDREvents: true,
       ignoreConflicts: flags['ignore-conflicts'],
     });
-    const isPull = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
-    const componentSet = isPull
+    const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
+    const componentSet = isChanges
       ? await stl.maybeApplyRemoteDeletesToLocal()
       : await ComponentSetBuilder.build({
           apiversion: flags['api-version'],
@@ -117,7 +117,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           },
         });
     // stl sets version based on config/files--if the command overrides it, we need to update
-    if (isPull && flags['api-version']) {
+    if (isChanges && flags['api-version']) {
       componentSet.apiVersion = flags['api-version'];
     }
     this.spinner.status = messages.getMessage('spinner.sending', [

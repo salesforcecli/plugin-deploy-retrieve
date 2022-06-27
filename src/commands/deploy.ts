@@ -67,7 +67,7 @@ export default class Deploy extends SfCommand<void> {
       const deployOptions: Record<string, Deployer.Options> = {};
       for (const deployer of deployers) {
         const opts = options[deployer.getName()] ?? {};
-        // setup must be done sequentially?
+        // setup must be done sequentially
         // eslint-disable-next-line no-await-in-loop
         deployOptions[deployer.getName()] = await deployer.setup(flags, opts);
       }
