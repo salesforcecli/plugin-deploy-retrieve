@@ -182,7 +182,3 @@ You must specify tests using the --tests flag if the --test-level flag is set to
 # error.ClientTimeout
 
 The client has timed out. Use sf deploy metadata resume to resume watching this deploy.
-
-# warning.TargetOrgIsExpired
-
-The target-org, "%s", is expired. Do you want to pick another org?
