@@ -116,7 +116,7 @@ Ignore conflicts and deploy local files, even if they overwrite changes in the o
 
 # flags.ignore-conflicts.description
 
-This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs. 
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs.
 
 # flags.ignore-errors.summary
 
