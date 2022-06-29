@@ -1608,6 +1608,18 @@
     isomorphic-git "1.17.0"
     ts-retry-promise "^0.6.0"
 
+"@salesforce/source-tracking@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.npmjs.org/@salesforce/source-tracking/-/source-tracking-2.2.0.tgz#3e6857c5b5b7f6c0412ca8f7a0e4d1836e13b28e"
+  integrity sha512-hoQgKSY3/tdjAxlgOVevTAEKAzlAgNZhYcllpsjbfrIBMhStLAeMnkUAWCgasP/4cj1IKLxLRb/5bLPA9C6e2Q==
+  dependencies:
+    "@salesforce/core" "^3.22.1"
+    "@salesforce/kit" "^1.5.42"
+    "@salesforce/source-deploy-retrieve" "^6.1.0"
+    graceful-fs "^4.2.9"
+    isomorphic-git "1.17.0"
+    ts-retry-promise "^0.6.0"
+
 "@salesforce/templates@^52.0.0":
   version "52.7.0"
   resolved "https://registry.npmjs.org/@salesforce/templates/-/templates-52.7.0.tgz#d02674c4fe83e86e0a78fb6b82b7bfea8ee9b251"
