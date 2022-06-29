@@ -1354,7 +1354,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.11.0", "@salesforce/core@^3.18.2", "@salesforce/core@^3.19.0", "@salesforce/core@^3.19.2", "@salesforce/core@^3.20.1", "@salesforce/core@^3.21.1", "@salesforce/core@^3.21.5", "@salesforce/core@^3.22.1", "@salesforce/core@^3.8.0":
+"@salesforce/core@^3.11.0", "@salesforce/core@^3.18.2", "@salesforce/core@^3.19.2", "@salesforce/core@^3.20.1", "@salesforce/core@^3.21.1", "@salesforce/core@^3.21.5", "@salesforce/core@^3.22.1", "@salesforce/core@^3.8.0":
   version "3.22.1"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.22.1.tgz#479dc84d84b803f8e0d1b9ce4558c6d1fda1daaa"
   integrity sha512-cPlauksBXMst0brZjiuzK7We5MB0S11/dh8T+0yYABivFjAkBYWn/90VaziD3gSrJwZsboNUKPmi9mSp5siYpA==
@@ -1508,22 +1508,22 @@
     open "8.4.0"
     tslib "^2"
 
-"@salesforce/plugin-source@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.0.1.tgz#e10c6291673012e975c6bb31f84fee9a854bca68"
-  integrity sha512-xIGoBOJZxoBimfBKj3PnFlRSt1N5RtHn7pkreasLvzCoQKXZmD5P3Kce5TtbS4xYqwt95c4GpD3GpOOo6M+h6Q==
+"@salesforce/plugin-source@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.0.3.tgz#10386583781fb737da97c336b3d0ccb255c53c8c"
+  integrity sha512-vuHKyyuYxQ8gjwXBsWYSZSUH7qEJjyNqXfjp/SLBUqvz6iT3J+te5kJPA8O1dbkqs9JPlhO/2giL8HX0yMhcGA==
   dependencies:
     "@oclif/core" "^1.9.0"
     "@oclif/plugin-help" "^3.3.1"
     "@salesforce/apex-node" "^0.13.0"
     "@salesforce/command" "^5.1.2"
-    "@salesforce/core" "^3.20.1"
+    "@salesforce/core" "^3.21.5"
     "@salesforce/kit" "^1.5.41"
-    "@salesforce/source-deploy-retrieve" "^6.0.4"
-    "@salesforce/source-tracking" "^2.0.0"
+    "@salesforce/source-deploy-retrieve" "^6.1.0"
+    "@salesforce/source-tracking" "^2.1.2"
     chalk "^4.1.2"
     got "^11.8.3"
-    jsforce "2.0.0-beta.10"
+    jsforce "2.0.0-beta.14"
     open "^8.4.0"
     proxy-agent "^5.0.0"
     proxy-from-env "^1.1.0"
@@ -1562,7 +1562,7 @@
     chalk "^4"
     inquirer "^8.2.0"
 
-"@salesforce/source-deploy-retrieve@^6.0.1", "@salesforce/source-deploy-retrieve@^6.0.4", "@salesforce/source-deploy-retrieve@^6.1.0":
+"@salesforce/source-deploy-retrieve@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-6.1.0.tgz#4cea1206b9f179ff217cf283657d3d231610c673"
   integrity sha512-r6XRsznFshjbl9luRRHG8da2QtKSGM6dvW8IpFPReA4PzdyLVlkEVp89jLFK5UmnbqKGfA8QPd31Ajh38DlSWg==
@@ -1596,7 +1596,7 @@
     sinon "^10.0.0"
     strip-ansi "^7.0.1"
 
-"@salesforce/source-tracking@^2.0.0", "@salesforce/source-tracking@^2.2.0":
+"@salesforce/source-tracking@^2.1.2", "@salesforce/source-tracking@^2.2.0":
   version "2.2.0"
   resolved "https://registry.npmjs.org/@salesforce/source-tracking/-/source-tracking-2.2.0.tgz#3e6857c5b5b7f6c0412ca8f7a0e4d1836e13b28e"
   integrity sha512-hoQgKSY3/tdjAxlgOVevTAEKAzlAgNZhYcllpsjbfrIBMhStLAeMnkUAWCgasP/4cj1IKLxLRb/5bLPA9C6e2Q==
@@ -6545,32 +6545,6 @@ jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.npmjs.org/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
   integrity sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==
-
-jsforce@2.0.0-beta.10:
-  version "2.0.0-beta.10"
-  resolved "https://registry.npmjs.org/jsforce/-/jsforce-2.0.0-beta.10.tgz#c33fee5dd01c96d121235cffb8fee1458a35423e"
-  integrity sha512-AFigJHQocj8t36Eu+9XffoKoC2FO4/uMDMg08TfTXgvIp53lzvnQJoQrhEnwnKReof4tO2d+7j+d1QyiOa2yGg==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@babel/runtime-corejs3" "^7.12.5"
-    "@types/node" "^12.19.9"
-    abort-controller "^3.0.0"
-    base64url "^3.0.1"
-    commander "^4.0.1"
-    core-js "^3.6.4"
-    csv-parse "^4.8.2"
-    csv-stringify "^5.3.4"
-    faye "^1.4.0"
-    form-data "^4.0.0"
-    fs-extra "^8.1.0"
-    https-proxy-agent "^5.0.0"
-    inquirer "^7.0.0"
-    multistream "^3.1.0"
-    node-fetch "^2.6.1"
-    open "^7.0.0"
-    regenerator-runtime "^0.13.3"
-    strip-ansi "^6.0.0"
-    xml2js "^0.4.22"
 
 jsforce@2.0.0-beta.14:
   version "2.0.0-beta.14"
