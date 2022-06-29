@@ -12,7 +12,7 @@ No files are ignored because of .forceignore
 
 # ignored.header
 
-Ignored [%s] These files will not deploy because ignored by .forceignore
+Ignored [%s] These files will not %s because ignored by .forceignore
 
 # deploy.header
 
@@ -21,6 +21,14 @@ Will Deploy [%s]
 # deploy.none
 
 No files will deploy
+
+# retrieve.header
+
+Will Retrieve [%s]
+
+# retrieve.none
+
+No files will retrieve
 
 # delete.header
 

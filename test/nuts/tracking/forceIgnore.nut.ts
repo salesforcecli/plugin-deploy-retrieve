@@ -19,6 +19,7 @@ import { AuthInfo, Connection, Messages } from '@salesforce/core';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { PreviewResult } from '../../../src/utils/previewOutput';
 
 let session: TestSession;
 // leave this in posix path mode since it's used in forceignore
@@ -81,6 +82,21 @@ describe('forceignore changes', () => {
         ignored: true,
         conflict: false,
         actualState: 'Add',
+      });
+    });
+
+    it('sf shows the file in status as ignored', () => {
+      const output = execCmd<PreviewResult>('deploy metadata preview --json', {
+        ensureExitCode: 0,
+        cli: 'sf',
+      }).jsonOutput.result;
+      expect(output.ignored, JSON.stringify(output)).to.deep.include({
+        name: 'IgnoreTest',
+        type: 'ApexClass',
+        projectRelativePath: path.join(classdir, 'IgnoreTest.cls'),
+        path: path.resolve(path.join(classdir, 'IgnoreTest.cls')),
+        ignored: true,
+        conflict: false,
       });
     });
 

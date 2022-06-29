@@ -8,15 +8,12 @@ import { Messages } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
 import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
-import { buildComponentSet } from '../../../utils/deploy';
 import { PreviewResult, printDeployTables, compileResults, getConflictFiles } from '../../../utils/previewOutput';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.preview');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata.preview');
 
-const exclusiveFlags = ['manifest', 'source-dir', 'metadata'];
-
-export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
+export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
@@ -30,26 +27,6 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       description: messages.getMessage('flags.ignore-conflicts.description'),
       default: false,
     }),
-    manifest: Flags.file({
-      char: 'x',
-      description: messages.getMessage('flags.manifest.description'),
-      summary: messages.getMessage('flags.manifest.summary'),
-      exclusive: exclusiveFlags.filter((f) => f !== 'manifest'),
-      exists: true,
-    }),
-    metadata: Flags.string({
-      char: 'm',
-      summary: messages.getMessage('flags.metadata.summary'),
-      multiple: true,
-      exclusive: exclusiveFlags.filter((f) => f !== 'metadata'),
-    }),
-    'source-dir': Flags.string({
-      char: 'd',
-      description: messages.getMessage('flags.source-dir.description'),
-      summary: messages.getMessage('flags.source-dir.summary'),
-      multiple: true,
-      exclusive: exclusiveFlags.filter((f) => f !== 'source-dir'),
-    }),
     'target-org': Flags.requiredOrg({
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
@@ -59,13 +36,9 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
 
   // eslint-disable-next-line @typescript-eslint/require-await, class-methods-use-this
   public async run(): Promise<PreviewResult> {
-    const { flags } = await this.parse(DeployMetadataPreview);
+    const { flags } = await this.parse(RetrieveMetadataPreview);
 
-    // we'll need STL both to check conflicts and to get the list of local changes if no flags are provided
-    const canSkipTracking =
-      flags['ignore-conflicts'] && [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
-
-    const stl = canSkipTracking
+    const stl = flags['ignore-conflicts']
       ? undefined
       : await SourceTracking.create({
           org: flags['target-org'],
@@ -75,7 +48,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
     const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
 
     const [componentSet, filesWithConflicts] = await Promise.all([
-      buildComponentSet({ ...flags, 'target-org': flags['target-org'].getUsername() }, stl),
+      stl.remoteNonDeletesAsComponentSet(),
       getConflictFiles(stl, flags['ignore-conflicts']),
     ]);
 
@@ -84,11 +57,11 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       projectPath: this.project.getPath(),
       filesWithConflicts,
       forceIgnore,
-      baseOperation: 'deploy',
+      baseOperation: 'retrieve',
     });
 
     if (!this.jsonEnabled()) {
-      printDeployTables(output, 'deploy');
+      printDeployTables(output, 'retrieve');
     }
     return output;
   }
