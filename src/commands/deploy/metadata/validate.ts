@@ -6,7 +6,7 @@
  */
 import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
-import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
@@ -119,12 +119,16 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadataValidate);
     const api = await resolveApi();
-    const { deploy, componentSet } = await executeDeploy({
-      ...flags,
-      'dry-run': true,
-      'target-org': flags['target-org'].getUsername(),
-      api,
-    });
+    const { deploy, componentSet } = await executeDeploy(
+      {
+        ...flags,
+        'ignore-conflicts': true,
+        'dry-run': true,
+        'target-org': flags['target-org'].getUsername(),
+        api,
+      },
+      this.project
+    );
 
     this.log(getVersionMessage('Validating Deployment', componentSet, api));
     this.log(`Deploy ID: ${bold(deploy.id)}`);
@@ -137,8 +141,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     }
 
     const result = await deploy.pollStatus(500, flags.wait.seconds);
-    this.setExitCode(result);
-
+    process.exitCode = determineExitCode(result);
     const formatter = new DeployResultFormatter(result, flags);
 
     if (!this.jsonEnabled()) {
@@ -156,9 +159,5 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     }
 
     return formatter.getJson();
-  }
-
-  private setExitCode(result: DeployResult): void {
-    process.exitCode = determineExitCode(result);
   }
 }

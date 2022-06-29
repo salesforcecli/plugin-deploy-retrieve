@@ -4,6 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+/* eslint-disable class-methods-use-this */
+
 import { expect } from 'chai';
 import { Hook } from '@oclif/core';
 import { Deployer } from '@salesforce/sf-plugins-core';

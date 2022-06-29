@@ -6,11 +6,15 @@ Retrieve metadata in source format from an org to your local project.
 
 You must run this command from within a project.
 
-This command doesn't support source-tracking. The source you retrieve overwrites the corresponding source files in your local project. This command doesn’t attempt to merge the source from your org with your local source files.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
 To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
 # examples
+
+- Retrieve remote changes:
+
+  <%= config.bin %> <%= command.id %>
 
 - Retrieve the source files in a directory:
 
@@ -54,6 +58,14 @@ Target API version for the retrieve.
 # flags.api-version.description
 
 Use this flag to override the default API version, which is the latest version supported the CLI, with the API version in your package.xml file.
+
+# flags.ignore-conflicts.summary
+
+Ignore conflicts and retrieve and save files to your local filesystem, even if they overwrite your local changes.
+
+# flags.ignore-conflicts.description
+
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs. 
 
 # flags.manifest.summary
 
@@ -106,3 +118,13 @@ Sending request to org (metadata API version %s)
 # spinner.polling
 
 Waiting for the org to respond
+
+# error.Conflicts
+
+There are changes in your local files that conflict with the org changes you're trying to retrieve.
+
+# error.Conflicts.Actions
+
+- To overwrite the local changes, rerun this command with the --ignore-conflicts flag.
+
+- To overwrite the remote changes, run the "sf deploy metadata" command with the --ignore-conflicts flag.

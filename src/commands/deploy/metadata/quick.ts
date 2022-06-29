@@ -8,7 +8,7 @@
 import { bold } from 'chalk';
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import {
   buildComponentSet,
   DeployCache,
@@ -107,8 +107,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     await DeployCache.update(jobId, { status: result.response.status });
 
-    this.setExitCode(result);
-
+    process.exitCode = determineExitCode(result);
     if (result.response.status === RequestStatus.Succeeded) {
       this.log();
       this.logSuccess(messages.getMessage('info.QuickDeploySuccess', [jobId]));
@@ -125,9 +124,5 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
     }
     return super.catch(error);
-  }
-
-  private setExitCode(result: DeployResult): void {
-    process.exitCode = determineExitCode(result);
   }
 }

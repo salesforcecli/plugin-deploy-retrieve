@@ -6,11 +6,15 @@ Deploy metadata in source format to an org from your local project.
 
 You must run this command from within a project.
 
-This command doesn't support source-tracking. The source you deploy overwrites the corresponding metadata in your org. This command doesn’t attempt to merge your source with the versions in your org.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
 To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
 # examples
+
+- Deploy local changes not in the org:
+
+      <%= config.bin %> <%= command.id %>
 
 - Deploy the source files in a directory:
 
@@ -106,6 +110,14 @@ All child components are included. If you specify this flag, don’t specify --m
 
 Validate deploy and run Apex tests but don’t save to the org.
 
+# flags.ignore-conflicts.summary
+
+Ignore conflicts and deploy local files, even if they overwrite changes in the org.
+
+# flags.ignore-conflicts.description
+
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs.
+
 # flags.ignore-errors.summary
 
 Ignore any errors and don’t roll back deployment.
@@ -182,3 +194,13 @@ You must specify tests using the --tests flag if the --test-level flag is set to
 # error.ClientTimeout
 
 The client has timed out. Use sf deploy metadata resume to resume watching this deploy.
+
+# error.Conflicts
+
+There are changes in the org that conflict with the local changes you're trying to deploy.
+
+# error.Conflicts.Actions
+
+- To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
+
+- To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.

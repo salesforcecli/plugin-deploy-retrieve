@@ -25,7 +25,9 @@ context('deploy metadata --metadata NUTs [name: %REPO_NAME%]', () => {
     // some deploys reference other metadata not included in the deploy, if it's not already in the org it will fail
     const args = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
     await testkit.deploy({ args });
-    await testkit.assignPermissionSet({ args: '--permsetname dreamhouse' });
+    if (REPO.gitUrl.includes('dreamhouse')) {
+      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse' });
+    }
   });
 
   after(async () => {
@@ -50,7 +52,7 @@ context('deploy metadata --metadata NUTs [name: %REPO_NAME%]', () => {
 
     it('should throw an error if the metadata is not valid', async () => {
       const deploy = await testkit.deploy({ args: '--metadata DOES_NOT_EXIST', exitCode: 1 });
-      testkit.expect.errorToHaveName(deploy, 'SfdxError');
+      testkit.expect.errorToHaveName(deploy, 'SfError');
     });
 
     it('should not deploy metadata outside of a package directory', async () => {

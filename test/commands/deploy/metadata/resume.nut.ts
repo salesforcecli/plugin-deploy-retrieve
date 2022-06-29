@@ -62,7 +62,7 @@ describe('deploy metadata resume NUTs', () => {
   describe('--job-id', () => {
     it('should resume the provided job id (18 chars)', async () => {
       const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
-        args: '--source-dir force-app --async',
+        args: '--source-dir force-app --async --ignore-conflicts',
         json: true,
         exitCode: 0,
       });
@@ -86,7 +86,7 @@ describe('deploy metadata resume NUTs', () => {
 
     it('should resume the provided job id (15 chars)', async () => {
       const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
-        args: '--source-dir force-app --async',
+        args: '--source-dir force-app --async --ignore-conflicts',
         json: true,
         exitCode: 0,
       });

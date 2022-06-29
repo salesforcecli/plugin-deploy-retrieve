@@ -7,7 +7,6 @@
 
 import { bold } from 'chalk';
 import { EnvironmentVariable, Messages } from '@salesforce/core';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
@@ -75,14 +74,19 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     }
 
     const wait = flags.wait || Duration.minutes(deployOpts.wait);
-    const { deploy, componentSet } = await executeDeploy({ ...deployOpts, wait, 'dry-run': false }, jobId);
+    const { deploy, componentSet } = await executeDeploy(
+      // there will always be conflicts on a resume if anything deployed--the changes on the server are not synced to local
+      { ...deployOpts, wait, 'dry-run': false, 'ignore-conflicts': true },
+      this.project,
+      jobId
+    );
 
     this.log(getVersionMessage('Resuming Deployment', componentSet, deployOpts.api));
     this.log(`Deploy ID: ${bold(jobId)}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus(500, wait.seconds);
-    this.setExitCode(result);
+    process.exitCode = determineExitCode(result);
 
     const formatter = new DeployResultFormatter(result, {
       ...flags,
@@ -96,9 +100,5 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     await cache.write();
 
     return formatter.getJson();
-  }
-
-  private setExitCode(result: DeployResult): void {
-    process.exitCode = determineExitCode(result);
   }
 }

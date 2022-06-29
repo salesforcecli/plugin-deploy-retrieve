@@ -45,7 +45,7 @@ describe('deploy metadata report NUTs', () => {
   describe('--job-id', () => {
     it('should report the provided job id', async () => {
       const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
-        args: '--source-dir force-app --async',
+        args: '--source-dir force-app --async --ignore-conflicts',
         json: true,
         exitCode: 0,
       });
