@@ -50,13 +50,14 @@ export interface PreviewFile extends Record<string, unknown> {
 }
 
 export interface PreviewResult {
-  files: PreviewFile[];
   ignored: PreviewFile[];
   conflicts: PreviewFile[];
   toDeploy: PreviewFile[];
   toDelete: PreviewFile[];
   toRetrieve: PreviewFile[];
 }
+
+const ensureAbsolutePath = (f: string): string => (path.isAbsolute(f) ? f : path.resolve(f));
 
 // borrowed from STL populateFilesPaths.
 // TODO: this goes in SDR maybe?
@@ -72,8 +73,8 @@ const resolvePaths = (filenames: string[]): Array<Pick<PreviewFile, 'type' | 'na
         return undefined;
       }
     })
-    .filter((sc) => 'name' in sc && 'type' in sc)
-    .map((sc) => ({ name: sc.fullName, type: sc.type.name, path: sc.xml }));
+    .filter((sc) => sc && 'fullName' in sc && 'type' in sc)
+    .map((sc) => ({ name: sc.fullName, type: sc.type.name, path: ensureAbsolutePath(sc.xml) }));
 };
 
 const calculateDeployOperation = (destructiveChangesType?: DestructiveChangesType): PreviewFile['operation'] => {
@@ -164,7 +165,6 @@ export const compileResults = ({
   );
 
   return {
-    files: actionableFiles,
     ignored: ignoredSourceComponents.concat(actionableFiles.filter((f) => f.ignored)),
     toDeploy: getWillDeploy(actionableFiles),
     toRetrieve: getWillRetrieve(actionableFiles),
@@ -215,12 +215,12 @@ const printConflictsTable = (files: PreviewFile[], baseOperation: BaseOperation)
   }
 };
 
-const printIgnoredTable = (files: PreviewFile[]): void => {
+const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
   CliUx.ux.log();
   if (files.length === 0) {
     CliUx.ux.log(dim(messages.getMessage('ignored.none')));
   } else {
-    CliUx.ux.log(dim(messages.getMessage('ignored.header', [files.length])));
+    CliUx.ux.log(dim(messages.getMessage('ignored.header', [files.length, baseOperation])));
     CliUx.ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };
@@ -233,7 +233,7 @@ export const printDeployTables = (result: PreviewResult, baseOperation: BaseOper
   } else if (baseOperation === 'retrieve') {
     printRetrieveTable(result.toRetrieve);
   }
-  printIgnoredTable(result.ignored);
+  printIgnoredTable(result.ignored, baseOperation);
 };
 
 export const getConflictFiles = async (stl?: SourceTracking, ignore = false): Promise<Set<string>> => {

@@ -29,7 +29,9 @@ let conn: Connection;
 
 Messages.importMessagesDirectory(__dirname);
 
-const trackingMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'tracking', ['error.noChanges']);
+const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
+  'error.nothingToDeploy',
+]);
 
 describe('forceignore changes', () => {
   before(async () => {
@@ -57,7 +59,7 @@ describe('forceignore changes', () => {
 
   describe('local', () => {
     it('will not push a file that was created, then ignored', async () => {
-      // setup a forceIgnore with some file
+      // setup a forceIgnore with some file.  forceignore uses posix style paths
       const newForceIgnore = originalForceIgnore + '\n' + `${classdir}/IgnoreTest.cls`;
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
       // nothing should push -- in sf that's an error
@@ -65,7 +67,7 @@ describe('forceignore changes', () => {
         ensureExitCode: 1,
         cli: 'sf',
       }).jsonOutput;
-      expect(output.message).to.equal(trackingMessages.getMessage('error.noChanges'));
+      expect(output.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
     });
 
     it('shows the file in status as ignored', () => {
@@ -93,8 +95,8 @@ describe('forceignore changes', () => {
       expect(output.ignored, JSON.stringify(output)).to.deep.include({
         name: 'IgnoreTest',
         type: 'ApexClass',
-        projectRelativePath: path.join(classdir, 'IgnoreTest.cls'),
-        path: path.resolve(path.join(classdir, 'IgnoreTest.cls')),
+        projectRelativePath: path.join(classdir, 'IgnoreTest.cls-meta.xml'),
+        path: path.resolve(path.join(classdir, 'IgnoreTest.cls-meta.xml')),
         ignored: true,
         conflict: false,
       });
@@ -116,7 +118,7 @@ describe('forceignore changes', () => {
         ensureExitCode: 1,
         cli: 'sf',
       }).jsonOutput;
-      expect(output.message).to.equal(trackingMessages.getMessage('error.noChanges'));
+      expect(output.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
     });
 
     it('will push files that are now un-ignored', async () => {
@@ -138,7 +140,7 @@ describe('forceignore changes', () => {
   });
 
   describe('remote', () => {
-    it('adds on the server', async () => {
+    before('adds on the server and sets ignore', async () => {
       const createResult = await conn.tooling.create('ApexClass', {
         Name: 'CreatedClass',
         Body: 'public class CreatedClass {}',
@@ -147,22 +149,34 @@ describe('forceignore changes', () => {
       if (!Array.isArray(createResult) && createResult.success) {
         expect(createResult.id).to.be.a('string');
       }
-    });
-
-    it('will not pull a remote file added to the ignore AFTER it is being tracked', async () => {
       // add that type to the forceignore
       await fs.promises.writeFile(
         path.join(session.project.dir, '.forceignore'),
         originalForceIgnore + '\n' + classdir
       );
+    });
 
+    it('source:status recognizes change', () => {
       // gets file into source tracking
       const statusOutput = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
         cli: 'sfdx',
       }).jsonOutput.result;
       expect(statusOutput.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
+    });
 
+    it('metadata preview recognizes change and marks it ignored', () => {
+      // gets file into source tracking
+      const response = execCmd<PreviewResult>('retrieve metadata preview --json', {
+        ensureExitCode: 0,
+        cli: 'sf',
+      }).jsonOutput.result;
+      expect(
+        response.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true)
+      ).to.equal(true);
+    });
+
+    it('sf will not retrieve a remote file added to the ignore AFTER it is being tracked', () => {
       // pull doesn't retrieve that change
       const pullOutput = execCmd<RetrieveResultJson>('retrieve:metadata --json', {
         ensureExitCode: 0,

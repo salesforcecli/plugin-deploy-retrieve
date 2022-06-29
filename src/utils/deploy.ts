@@ -11,6 +11,7 @@ import {
   Messages,
   Org,
   PollingClient,
+  SfError,
   SfProject,
   StatusResult,
   TTLConfig,
@@ -34,6 +35,11 @@ Messages.importMessagesDirectory(__dirname);
 const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache', [
   'error.NoRecentJobId',
   'error.InvalidJobId',
+]);
+
+const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
+  'error.nothingToDeploy',
+  'error.nothingToDeploy.Actions',
 ]);
 
 export type DeployOptions = {
@@ -122,7 +128,7 @@ export async function executeDeploy(
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   const usernameOrConnection = org.getConnection();
   // instantiate source tracking
-  // stl will decide, based on the org's properties, what to do
+  // stl will decide, based on the org's properties, what needs to be done
   const stl = await SourceTracking.create({
     org,
     project,
@@ -144,6 +150,13 @@ export async function executeDeploy(
     }
   } else {
     componentSet = await buildComponentSet(opts, stl);
+    if (componentSet.size === 0) {
+      throw new SfError(
+        deployMessages.getMessage('error.nothingToDeploy'),
+        'NothingToDeploy',
+        deployMessages.getMessages('error.nothingToDeploy.Actions')
+      );
+    }
     deploy = id
       ? new MetadataApiDeploy({ id, usernameOrConnection, components: componentSet })
       : await componentSet.deploy({

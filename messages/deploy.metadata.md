@@ -116,7 +116,7 @@ Ignore conflicts and deploy local files, even if they overwrite changes in the o
 
 # flags.ignore-conflicts.description
 
-This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs. 
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs.
 
 # flags.ignore-errors.summary
 
@@ -208,3 +208,11 @@ There are changes in the org that conflict with the local changes you're trying 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
 - To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.
+
+# error.nothingToDeploy
+
+No local changes to deploy.
+
+# error.nothingToDeploy.Actions
+
+- To see conflicts and ignored files, run "sf deploy metadata preview" with any manifest, directory, or metadata flags
