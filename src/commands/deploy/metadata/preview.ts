@@ -9,7 +9,7 @@ import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
 import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
 import { buildComponentSet } from '../../../utils/deploy';
-import { PreviewResult, printDeployTables, compileResults, getConflictFiles } from '../../../utils/previewOutput';
+import { PreviewResult, printTables, compileResults, getConflictFiles } from '../../../utils/previewOutput';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.preview');
@@ -60,17 +60,16 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
   // eslint-disable-next-line @typescript-eslint/require-await, class-methods-use-this
   public async run(): Promise<PreviewResult> {
     const { flags } = await this.parse(DeployMetadataPreview);
+    const deploySpecified = [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
 
     // we'll need STL both to check conflicts and to get the list of local changes if no flags are provided
-    const canSkipTracking =
-      flags['ignore-conflicts'] && [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
-
-    const stl = canSkipTracking
-      ? undefined
-      : await SourceTracking.create({
-          org: flags['target-org'],
-          project: this.project,
-        });
+    const stl =
+      flags['ignore-conflicts'] && deploySpecified
+        ? undefined
+        : await SourceTracking.create({
+            org: flags['target-org'],
+            project: this.project,
+          });
 
     const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
 
@@ -88,7 +87,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
     });
 
     if (!this.jsonEnabled()) {
-      printDeployTables(output, 'deploy');
+      printTables(output, 'deploy');
     }
     return output;
   }

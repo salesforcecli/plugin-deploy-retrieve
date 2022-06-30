@@ -8,7 +8,7 @@ import { Messages } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
 import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
-import { PreviewResult, printDeployTables, compileResults, getConflictFiles } from '../../../utils/previewOutput';
+import { PreviewResult, printTables, compileResults, getConflictFiles } from '../../../utils/previewOutput';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata.preview');
@@ -61,7 +61,7 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
     });
 
     if (!this.jsonEnabled()) {
-      printDeployTables(output, 'retrieve');
+      printTables(output, 'retrieve');
     }
     return output;
   }

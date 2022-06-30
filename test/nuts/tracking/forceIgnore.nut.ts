@@ -60,7 +60,7 @@ describe('forceignore changes', () => {
   describe('local', () => {
     it('will not push a file that was created, then ignored', async () => {
       // setup a forceIgnore with some file.  forceignore uses posix style paths
-      const newForceIgnore = originalForceIgnore + '\n' + `${classdir}/IgnoreTest.cls`;
+      const newForceIgnore = originalForceIgnore + '\n' + `${classdir}/IgnoreTest.cls*`;
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
       // nothing should push -- in sf that's an error
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {
@@ -105,7 +105,7 @@ describe('forceignore changes', () => {
     it('will ignore a class in the ignore file before it was created', async () => {
       // setup a forceIgnore with some file
       const newForceIgnore =
-        originalForceIgnore + '\n' + `${classdir}/UnIgnoreTest.cls` + '\n' + `${classdir}/IgnoreTest.cls`;
+        originalForceIgnore + '\n' + `${classdir}/UnIgnoreTest.cls` + '\n' + `${classdir}/IgnoreTest.cls*`;
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
 
       // add a file in the local source
@@ -152,7 +152,7 @@ describe('forceignore changes', () => {
       // add that type to the forceignore
       await fs.promises.writeFile(
         path.join(session.project.dir, '.forceignore'),
-        originalForceIgnore + '\n' + classdir
+        originalForceIgnore + '\n' + '**/classes'
       );
     });
 
@@ -172,7 +172,8 @@ describe('forceignore changes', () => {
         cli: 'sf',
       }).jsonOutput.result;
       expect(
-        response.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true)
+        response.ignored.some((c) => c.name === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true),
+        JSON.stringify(response)
       ).to.equal(true);
     });
 

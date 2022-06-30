@@ -53,9 +53,8 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
-      expect(response.files).to.be.an.instanceof(Array);
+      expect(response.toDeploy).to.be.an.instanceof(Array);
       // the fields should be populated
-      expect(response.files.every((row) => row.type && row.name)).to.equal(true);
       expect(response.toDeploy.every((row) => row.type && row.name)).to.equal(true);
       expect(response.conflicts).to.be.an.instanceof(Array).with.length(0);
     });
@@ -190,6 +189,16 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       }).jsonOutput.result;
       expect(
         result.filter((r) => r.fullName === 'TestOrderController'),
+        JSON.stringify(result)
+      ).to.have.length(0);
+    });
+    it('sf does not see any change in remote status', () => {
+      const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
+        ensureExitCode: 0,
+        cli: 'sfdx',
+      }).jsonOutput.result;
+      expect(
+        result.toRetrieve.filter((r) => r.name === 'TestOrderController'),
         JSON.stringify(result)
       ).to.have.length(0);
     });

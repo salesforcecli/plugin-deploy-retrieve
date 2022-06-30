@@ -64,7 +64,7 @@ const ensureAbsolutePath = (f: string): string => (path.isAbsolute(f) ? f : path
 const resolvePaths = (filenames: string[]): Array<Pick<PreviewFile, 'type' | 'name' | 'path'>> => {
   // component set generated from the filenames on all local changes
   const resolver = new MetadataResolver(undefined, VirtualTreeContainer.fromFilePaths(filenames), false);
-  return filenames
+  const sourceComponents = filenames
     .flatMap((filename) => {
       try {
         return resolver.getComponentsFromPath(filename);
@@ -75,6 +75,8 @@ const resolvePaths = (filenames: string[]): Array<Pick<PreviewFile, 'type' | 'na
     })
     .filter((sc) => sc && 'fullName' in sc && 'type' in sc)
     .map((sc) => ({ name: sc.fullName, type: sc.type.name, path: ensureAbsolutePath(sc.xml) }));
+  // dedupe by xml path
+  return Array.from(new Map(sourceComponents.map((sc) => [sc.path, sc])).values());
 };
 
 const calculateDeployOperation = (destructiveChangesType?: DestructiveChangesType): PreviewFile['operation'] => {
@@ -225,7 +227,7 @@ const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): 
   }
 };
 
-export const printDeployTables = (result: PreviewResult, baseOperation: BaseOperation): void => {
+export const printTables = (result: PreviewResult, baseOperation: BaseOperation): void => {
   printConflictsTable(result.conflicts, baseOperation);
   if (baseOperation === 'deploy') {
     printDeleteTable(result.toDelete);
