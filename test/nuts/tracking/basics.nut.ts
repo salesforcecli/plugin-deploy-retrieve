@@ -55,7 +55,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       }).jsonOutput?.result;
       expect(response.toDeploy).to.be.an.instanceof(Array);
       // the fields should be populated
-      expect(response.toDeploy.every((row) => row.type && row.name)).to.equal(true);
+      expect(response.toDeploy.every((row) => row.type && row.fullName)).to.equal(true);
       expect(response.conflicts).to.be.an.instanceof(Array).with.length(0);
     });
     it('pushes the initial metadata to the org', () => {
@@ -198,7 +198,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
         cli: 'sfdx',
       }).jsonOutput.result;
       expect(
-        result.toRetrieve.filter((r) => r.name === 'TestOrderController'),
+        result.toRetrieve.filter((r) => r.fullName === 'TestOrderController'),
         JSON.stringify(result)
       ).to.have.length(0);
     });

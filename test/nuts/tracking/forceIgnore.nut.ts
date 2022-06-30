@@ -172,7 +172,7 @@ describe('forceignore changes', () => {
         cli: 'sf',
       }).jsonOutput.result;
       expect(
-        response.ignored.some((c) => c.name === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true),
+        response.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true),
         JSON.stringify(response)
       ).to.equal(true);
     });

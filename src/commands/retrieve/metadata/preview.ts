@@ -47,9 +47,10 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
 
     const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
 
-    const [componentSet, filesWithConflicts] = await Promise.all([
+    const [componentSet, filesWithConflicts, remoteDeletes] = await Promise.all([
       stl.remoteNonDeletesAsComponentSet(),
       getConflictFiles(stl, flags['ignore-conflicts']),
+      stl.getChanges({ origin: 'remote', state: 'delete', format: 'SourceComponent' }),
     ]);
 
     const output: PreviewResult = compileResults({
@@ -58,6 +59,7 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
       filesWithConflicts,
       forceIgnore,
       baseOperation: 'retrieve',
+      remoteDeletes,
     });
 
     if (!this.jsonEnabled()) {
