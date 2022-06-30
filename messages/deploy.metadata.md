@@ -195,9 +195,13 @@ You must specify tests using the --tests flag if the --test-level flag is set to
 
 The client has timed out. Use sf deploy metadata resume to resume watching this deploy.
 
-# warning.TargetOrgIsExpired
+# error.Conflicts
 
-The target-org, "%s", is expired. Do you want to pick another org?
+There are changes in the org that conflict with the local changes you're trying to deploy.
+
+# error.Conflicts.Actions
+
+- To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
 # error.Conflicts
 

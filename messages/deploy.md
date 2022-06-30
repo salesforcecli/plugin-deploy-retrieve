@@ -40,3 +40,7 @@ One or more initialization steps failed.
 # error.initialization.title
 
 Initialization Failures. The following table describes each failure:
+
+# warning.TargetOrgIsExpired
+
+The target-org, "%s", is expired. Do you want to pick another org?

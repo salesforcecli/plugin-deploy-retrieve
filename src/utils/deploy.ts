@@ -191,7 +191,7 @@ export async function poll(org: Org, id: string, wait: Duration, componentSet: C
   const report = async (): Promise<DeployResult> => {
     const res = await org.getConnection().metadata.checkDeployStatus(id, true);
     const deployStatus = res as unknown as MetadataApiDeployStatus;
-    return new DeployResult(deployStatus as unknown as MetadataApiDeployStatus, componentSet);
+    return new DeployResult(deployStatus, componentSet);
   };
 
   const opts: PollingClient.Options = {

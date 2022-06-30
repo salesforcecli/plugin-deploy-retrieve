@@ -71,7 +71,6 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
         JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))
       ).to.equal(true);
     });
-
     it('sees no local changes (all were committed from push), but profile updated in remote', () => {
       const localResult = execCmd<StatusResult[]>('force:source:status --json --local', {
         ensureExitCode: 0,
@@ -91,14 +90,14 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
-
       expect(response.toDeploy).to.be.an.instanceof(Array).with.lengthOf(0);
-
-      // const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
-      //   ensureExitCode: 0,
-      //   cli: 'sfdx',
-      // }).jsonOutput.result;
-      // expect(remoteResult.some((item) => item.type === 'Profile')).to.equal(true);
+    });
+    it('sf sees no remote changes (all were committed from push) except Profile', () => {
+      const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
+        ensureExitCode: 0,
+        cli: 'sfdx',
+      }).jsonOutput.result;
+      expect(remoteResult.some((item) => item.type === 'Profile')).to.equal(true);
     });
 
     it('can pull the remote profile', () => {

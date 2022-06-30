@@ -115,7 +115,7 @@ EXAMPLES
     $ sf deploy --interactive
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.4.2/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.5.1/src/commands/deploy.ts)_
 
 ## `sf deploy metadata`
 
@@ -123,12 +123,13 @@ Deploy metadata in source format to an org from your local project.
 
 ```
 USAGE
-  $ sf deploy metadata [--json] [-a <value>] [--async | -w <value>] [--concise | --verbose] [--dry-run] [-r] [-g] [-x
-    <value>] [-m <value>] [--single-package --metadata-dir <value>] [-d <value>] [-o <value>] [-t <value>] [-l
-    NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg]
+  $ sf deploy metadata [--json] [-a <value>] [--async | -w <value>] [--concise | --verbose] [--dry-run] [-c] [-r]
+    [-g] [-x <value> | -d <value> | -m <value> | --metadata-dir <value>] [--single-package ] [-o <value>] [-t <value>]
+    [-l NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg]
 
 FLAGS
   -a, --api-version=<value>    Target API version for the deploy.
+  -c, --ignore-conflicts       Ignore conflicts and deploy local files, even if they overwrite changes in the org.
   -d, --source-dir=<value>...  Path to the local source files to deploy.
   -g, --ignore-warnings        Ignore warnings and allow a deployment to complete successfully.
   -l, --test-level=<option>    [default: NoTestRun] Deployment Apex testing level.
@@ -156,14 +157,19 @@ DESCRIPTION
 
   You must run this command from within a project.
 
-  This command doesn't support source-tracking. The source you deploy overwrites the corresponding metadata in your org.
-  This command doesn’t attempt to merge your source with the versions in your org.
+  If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production
+  org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox
+  org to disable source tracking.
 
   To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with
   multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax
   applies to --manifest and --source-dir.
 
 EXAMPLES
+  Deploy local changes not in the org:
+
+    $ sf deploy metadata
+
   Deploy the source files in a directory:
 
     $ sf deploy metadata  --source-dir path/to/source
@@ -203,6 +209,11 @@ FLAG DESCRIPTIONS
 
     Use this flag to override the default API version, which is the latest version supported the CLI, with the API
     version of your package.xml file.
+
+  -c, --ignore-conflicts  Ignore conflicts and deploy local files, even if they overwrite changes in the org.
+
+    This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as
+    production orgs.
 
   -d, --source-dir=<value>...  Path to the local source files to deploy.
 
@@ -645,11 +656,13 @@ Retrieve metadata in source format from an org to your local project.
 
 ```
 USAGE
-  $ sf retrieve metadata [--json] [-a <value>] [-x <value> | -m <value> | -d <value>] [-n <value>] [-o <value>] [-w
-    <value>]
+  $ sf retrieve metadata [--json] [-a <value>] [-c] [-x <value> | -m <value> | -d <value>] [-n <value>] [-o <value>]
+    [-w <value>]
 
 FLAGS
   -a, --api-version=<value>      Target API version for the retrieve.
+  -c, --ignore-conflicts         Ignore conflicts and retrieve and save files to your local filesystem, even if they
+                                 overwrite your local changes.
   -d, --source-dir=<value>...    File paths for source to retrieve from the org.
   -m, --metadata=<value>...      Metadata component names to retrieve.
   -n, --package-name=<value>...  Package names to retrieve.
@@ -666,14 +679,19 @@ DESCRIPTION
 
   You must run this command from within a project.
 
-  This command doesn't support source-tracking. The source you retrieve overwrites the corresponding source files in
-  your local project. This command doesn’t attempt to merge the source from your org with your local source files.
+  If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production
+  org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox
+  org to disable source tracking.
 
   To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag
   with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same
   syntax applies to --manifest and --source-dir.
 
 EXAMPLES
+  Retrieve remote changes:
+
+    $ sf retrieve metadata
+
   Retrieve the source files in a directory:
 
     $ sf retrieve metadata --source-dir path/to/source
@@ -714,6 +732,13 @@ FLAG DESCRIPTIONS
 
     Use this flag to override the default API version, which is the latest version supported the CLI, with the API
     version in your package.xml file.
+
+  -c, --ignore-conflicts
+
+    Ignore conflicts and retrieve and save files to your local filesystem, even if they overwrite your local changes.
+
+    This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as
+    production orgs.
 
   -d, --source-dir=<value>...  File paths for source to retrieve from the org.
 
