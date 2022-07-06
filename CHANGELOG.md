@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.5.2...v1.5.3) (2022-07-05)
+
+### Bug Fixes
+
+- ebikes nuts fix ([3e57421](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3e57421f5fcc2de1380aca0c1f4807c64537e2f4))
+
 ### [1.5.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.5.1...v1.5.2) (2022-06-29)
 
 ### [1.5.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.5.0...v1.5.1) (2022-06-28)
