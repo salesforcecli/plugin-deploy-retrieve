@@ -101,21 +101,24 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       ignoreConflicts: flags['ignore-conflicts'],
     });
     const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
-    const componentSet = isChanges
+    const { componentSet, fileResponsesFromDelete } = isChanges
       ? await stl.maybeApplyRemoteDeletesToLocal()
-      : await ComponentSetBuilder.build({
-          apiversion: flags['api-version'],
-          sourcepath: flags['source-dir'],
-          packagenames: flags['package-name'],
-          manifest: flags.manifest && {
-            manifestPath: flags.manifest,
-            directoryPaths: await getPackageDirs(),
-          },
-          metadata: flags.metadata && {
-            metadataEntries: flags.metadata,
-            directoryPaths: await getPackageDirs(),
-          },
-        });
+      : {
+          componentSet: await ComponentSetBuilder.build({
+            apiversion: flags['api-version'],
+            sourcepath: flags['source-dir'],
+            packagenames: flags['package-name'],
+            manifest: flags.manifest && {
+              manifestPath: flags.manifest,
+              directoryPaths: await getPackageDirs(),
+            },
+            metadata: flags.metadata && {
+              metadataEntries: flags.metadata,
+              directoryPaths: await getPackageDirs(),
+            },
+          }),
+          fileResponsesFromDelete: [],
+        };
     // stl sets version based on config/files--if the command overrides it, we need to update
     if (isChanges && flags['api-version']) {
       componentSet.apiVersion = flags['api-version'];
@@ -151,7 +154,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
     this.spinner.stop();
 
-    const formatter = new RetrieveResultFormatter(result, flags['package-name']);
+    const formatter = new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
 
     if (!this.jsonEnabled()) {
       if (result.response.status === 'Succeeded') {

@@ -172,7 +172,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(response.toDelete).deep.equals([
         {
           type: 'ApexClass',
-          name: 'TestOrderController',
+          fullName: 'TestOrderController',
           projectRelativePath: path.normalize('force-app/main/default/classes/TestOrderController.cls-meta.xml'),
           path: path.normalize(path.resolve('force-app/main/default/classes/TestOrderController.cls-meta.xml')),
           conflict: false,
