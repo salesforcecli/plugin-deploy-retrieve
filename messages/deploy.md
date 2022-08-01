@@ -44,3 +44,35 @@ Initialization Failures. The following table describes each failure:
 # warning.TargetOrgIsExpired
 
 The target-org, "%s", is expired. Do you want to pick another org?
+
+# AnalyzingProject
+
+Analyzing project
+
+# UsingOptionsFromFile
+
+Using options found in %s.
+
+# FoundNothingToDeploy
+
+Found nothing in the project to deploy.
+
+# NothingSelectedToDeploy
+
+Nothing was selected to deploy.
+
+# DeployOptionsSavedToFile
+
+Your deploy options have been saved to %s.
+
+# DeployOptionsIncludedInGitIgnore
+
+We added %s to the .gitignore for you.
+
+# DeployersHaveNonZeroExitCode
+
+One or more of the selected deployers exited with a non-zero exit code.
+
+# DeployerExitCode
+
+Deployer "%s" exited with code %d.
