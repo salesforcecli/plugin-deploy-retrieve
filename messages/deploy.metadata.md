@@ -219,4 +219,4 @@ No local changes to deploy.
 
 # error.nothingToDeploy.Actions
 
-- To see conflicts and ignored files, run "sf deploy metadata preview" with any manifest, directory, or metadata flags
+- To see conflicts and ignored files, run "sf deploy metadata preview" with any manifest, directory, or metadata flag.

@@ -4,15 +4,15 @@ No conflicts found.
 
 # conflicts.header
 
-Conflicts [%s] Run the command with --ignore-conflicts to override
+Conflicts [%s]. Run the command with --ignore-conflicts to override.
 
 # ignored.none
 
-No files are ignored because of .forceignore
+No files were ignored. Update your .forceignore file if you want to ignore certain files.
 
 # ignored.header
 
-Ignored [%s] These files will not %s because ignored by .forceignore
+Ignored [%s].  These files won't %s because they're ignored by .forceignore.
 
 # deploy.header
 
