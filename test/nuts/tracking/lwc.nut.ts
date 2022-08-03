@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
+import { PreviewResult } from 'src/utils/previewOutput';
 import { DeployResultJson } from '../../../src/utils/types';
 
 let session: TestSession;
@@ -36,12 +37,12 @@ describe('lwc', () => {
     await session?.clean();
   });
 
-  it('pushes the repo to get source tracking started', () => {
+  it.only('pushes the repo to get source tracking started', () => {
     const resp = execCmd<DeployResultJson>('deploy metadata --json', { cli: 'sf' });
     expect(resp.jsonOutput?.status, JSON.stringify(resp)).equals(0);
   });
 
-  it('sees lwc css changes in local status', async () => {
+  it.only('sfdx sees lwc css changes in local status', async () => {
     await fs.promises.writeFile(
       cssPathAbsolute,
       (await fs.promises.readFile(cssPathAbsolute, 'utf-8')).replace('absolute', 'relative')
@@ -53,6 +54,20 @@ describe('lwc', () => {
     expect(result.find((r) => r.filePath === cssPathRelative)).to.have.property('actualState', 'Changed');
   });
 
+  it.only('sf sees lwc css changes in local status', () => {
+    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+      ensureExitCode: 0,
+      cli: 'sf',
+    }).jsonOutput.result;
+    // subcomponent (css file deletion) deleted turns into a Deploy of the parent component without the deleted file
+    // this is a slightly different behavior than sfdx, but makes more sense
+    expect(result.toDeploy, JSON.stringify(result)).to.have.lengthOf(1);
+    expect(result.toDeploy.find((r) => r.fullName === 'heroDetails', JSON.stringify(result))).to.have.property(
+      'operation',
+      'deploy'
+    );
+  });
+
   it('pushes lwc css change', () => {
     const result = execCmd<DeployResultJson>('deploy metadata --json', {
       ensureExitCode: 0,
@@ -62,7 +77,7 @@ describe('lwc', () => {
     expect(result.filter((r) => r.fullName === 'heroDetails')).to.have.length(4);
   });
 
-  it('sees no local changes', () => {
+  it('sfdx sees no local changes', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
       cli: 'sfdx',
@@ -70,6 +85,15 @@ describe('lwc', () => {
       .jsonOutput.result.filter((r) => r.origin === 'Local')
       .filter(filterIgnored);
     expect(result).to.have.length(0);
+  });
+
+  it('sf sees no local changes', () => {
+    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+      ensureExitCode: 0,
+      cli: 'sf',
+    }).jsonOutput.result;
+    expect(result.toDeploy).to.have.length(0);
+    expect(result.toRetrieve).to.have.length(0);
   });
 
   it("deleting an lwc sub-component should show the sub-component as 'Deleted'", async () => {
@@ -116,6 +140,15 @@ describe('lwc', () => {
     expect(result).to.have.length(0);
   });
 
+  it('sf sees no local changes', () => {
+    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+      ensureExitCode: 0,
+      cli: 'sf',
+    }).jsonOutput.result;
+    expect(result.toDeploy).to.have.length(0);
+    expect(result.toRetrieve).to.have.length(0);
+  });
+
   it('deletes entire component locally', async () => {
     const dependentLWCPath = path.join(session.project.dir, 'force-app', 'main', 'default', 'lwc', 'hero', 'hero.html');
     // remove the component
@@ -160,6 +193,14 @@ describe('lwc', () => {
       .jsonOutput.result.filter((r) => r.origin === 'Local')
       .filter(filterIgnored);
     expect(result).to.have.length(0);
+  });
+  it('sf sees no local changes', () => {
+    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+      ensureExitCode: 0,
+      cli: 'sf',
+    }).jsonOutput.result;
+    expect(result.toDeploy).to.have.length(0);
+    expect(result.toRetrieve).to.have.length(0);
   });
 
   it('detects remote subcomponent conflicts');

@@ -60,6 +60,7 @@ export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
   const relative = fileResponses.map((file) => {
     return file.filePath ? { ...file, filePath: path.relative(process.cwd(), file.filePath) } : file;
   });
+
   return relative;
 }
 /**
@@ -388,7 +389,12 @@ export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployRe
 
 export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   private files: FileResponse[];
-  public constructor(private result: RetrieveResult, private packageNames: string[]) {
+  public constructor(
+    private result: RetrieveResult,
+    private packageNames: string[],
+    // TODO: handle deleteResponses
+    private deleteResponses: FileResponse[] = []
+  ) {
     this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
   }
 

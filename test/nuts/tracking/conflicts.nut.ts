@@ -17,6 +17,7 @@ import { AuthInfo, Connection } from '@salesforce/core';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { PreviewResult } from '../../../src/utils/previewOutput';
 import { eBikesDeployResultCount } from './constants';
 
 let session: TestSession;
@@ -114,6 +115,24 @@ describe('conflict detection and resolution', () => {
         conflict: true,
         origin: 'Remote',
         actualState: 'Changed',
+      },
+    ]);
+  });
+
+  it('sf can see the conflict in status', () => {
+    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+      ensureExitCode: 0,
+    }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
+    // json is not sorted.  This relies on the implementation of getConflicts()
+    expect(result).to.deep.equal([
+      {
+        type: 'CustomApplication',
+        name: 'EBikes',
+        path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+        projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+        ignored: false,
+        conflict: true,
+        operation: 'deploy',
       },
     ]);
   });

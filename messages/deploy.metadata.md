@@ -203,4 +203,20 @@ There are changes in the org that conflict with the local changes you're trying 
 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
+# error.Conflicts
+
+There are changes in the org that conflict with the local changes you're trying to deploy.
+
+# error.Conflicts.Actions
+
+- To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
+
 - To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.
+
+# error.nothingToDeploy
+
+No local changes to deploy.
+
+# error.nothingToDeploy.Actions
+
+- To see conflicts and ignored files, run "sf deploy metadata preview" with any manifest, directory, or metadata flag.

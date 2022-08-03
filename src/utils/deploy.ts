@@ -36,7 +36,11 @@ const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache
   'error.NoRecentJobId',
   'error.InvalidJobId',
 ]);
-const trackingMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'tracking', ['error.noChanges']);
+
+const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
+  'error.nothingToDeploy',
+  'error.nothingToDeploy.Actions',
+]);
 
 export type DeployOptions = {
   api: API;
@@ -74,15 +78,12 @@ export async function resolveApi(): Promise<API> {
 }
 
 export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: SourceTracking): Promise<ComponentSet> {
-  // if you specify nothing, you'll get the changes, like sfdx push
-  if (!opts['source-dir'] && !opts.manifest && !opts.metadata) {
+  // if you specify nothing, you'll get the changes, like sfdx push, as long as there's an stl
+  if (!opts['source-dir'] && !opts.manifest && !opts.metadata && stl) {
     /** localChangesAsComponentSet returned an array to support multiple sequential deploys.
-     * `sf` does not support this so we force one ComponentSet
+     * `sf` chooses not to support this so we force one ComponentSet
      */
-    const [cs] = await stl.localChangesAsComponentSet(false);
-    if (!cs) {
-      throw new SfError(trackingMessages.getMessage('error.noChanges'));
-    }
+    const cs = (await stl.localChangesAsComponentSet(false))?.[0] ?? new ComponentSet();
     // stl produces a cs with api version already set.  command might have specified a version.
     if (opts['api-version']) {
       cs.apiVersion = opts['api-version'];
@@ -127,7 +128,7 @@ export async function executeDeploy(
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   const usernameOrConnection = org.getConnection();
   // instantiate source tracking
-  // stl will decide, based on the org's properties, what to do
+  // stl will decide, based on the org's properties, what needs to be done
   const stl = await SourceTracking.create({
     org,
     project,
@@ -149,6 +150,13 @@ export async function executeDeploy(
     }
   } else {
     componentSet = await buildComponentSet(opts, stl);
+    if (componentSet.size === 0) {
+      throw new SfError(
+        deployMessages.getMessage('error.nothingToDeploy'),
+        'NothingToDeploy',
+        deployMessages.getMessages('error.nothingToDeploy.Actions')
+      );
+    }
     deploy = id
       ? new MetadataApiDeploy({ id, usernameOrConnection, components: componentSet })
       : await componentSet.deploy({
