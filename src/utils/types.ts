@@ -38,4 +38,9 @@ export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'stat
 
 export type DeployResultJson = (MetadataApiDeployStatus & { files: FileResponse[] }) | AsyncDeployResultJson;
 
-export type RetrieveResultJson = MetadataApiRetrieveStatus & { files: FileResponse[] };
+export type MetadataRetrieveResultJson = Omit<MetadataApiRetrieveStatus, 'zipFile'> & {
+  zipFilePath: string;
+  files: FileResponse[];
+};
+
+export type RetrieveResultJson = (MetadataApiRetrieveStatus & { files: FileResponse[] }) | MetadataRetrieveResultJson;

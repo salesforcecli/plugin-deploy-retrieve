@@ -2,7 +2,7 @@
   {
     "command": "deploy",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["interactive"],
+    "flags": ["interactive", "json"],
     "alias": []
   },
   {
@@ -85,9 +85,13 @@
       "manifest",
       "metadata",
       "package-name",
+      "single-package",
       "source-dir",
+      "target-metadata-dir",
       "target-org",
-      "wait"
+      "unzip",
+      "wait",
+      "zip-file-name"
     ],
     "alias": []
   }

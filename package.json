@@ -5,10 +5,10 @@
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
-    "@oclif/core": "^1.9.0",
-    "@salesforce/core": "^3.22.1",
+    "@oclif/core": "^1.13.1",
+    "@salesforce/core": "^3.25.1",
     "@salesforce/kit": "^1.5.41",
-    "@salesforce/sf-plugins-core": "^1.13.0",
+    "@salesforce/sf-plugins-core": "^1.13.1",
     "@salesforce/source-deploy-retrieve": "^6.1.0",
     "@salesforce/source-tracking": "^2.2.0",
     "chalk": "^4.1.2",
@@ -62,8 +62,8 @@
     "typescript": "^4.6.2"
   },
   "resolutions": {
-    "@oclif/core": "^1.6.4",
-    "@salesforce/sf-plugins-core": "^1.11.0"
+    "@oclif/core": "^1.13.1",
+    "@salesforce/sf-plugins-core": "^1.13.1"
   },
   "config": {
     "commitizen": {

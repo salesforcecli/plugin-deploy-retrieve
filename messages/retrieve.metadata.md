@@ -65,7 +65,7 @@ Ignore conflicts and retrieve and save files to your local filesystem, even if t
 
 # flags.ignore-conflicts.description
 
-This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs. 
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs.
 
 # flags.manifest.summary
 
@@ -107,6 +107,26 @@ Number of minutes to wait for the command to complete and display results to the
 
 If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 
+# flags.metadata-dir.summary
+
+Root of directory or zip file of metadata formatted files to retrieve.
+
+# flags.single-package.summary
+
+Indicates that the zip file points to a directory structure for a single package.
+
+# flags.target-metadata-dir.summary
+
+Directory root for the retrieved files.
+
+# flags.unzip.summary
+
+Extract all files from the retrieved zip file.
+
+# flags.zip-file-name.summary
+
+File name to use for the retrieved zip file.
+
 # spinner.start
 
 Preparing retrieve request
@@ -128,3 +148,11 @@ There are changes in your local files that conflict with the org changes you're 
 - To overwrite the local changes, rerun this command with the --ignore-conflicts flag.
 
 - To overwrite the remote changes, run the "sf deploy metadata" command with the --ignore-conflicts flag.
+
+# info.WroteZipFile
+
+Wrote retrieve zip file to %s.
+
+# info.ExtractedZipFile
+
+Extracted %s to $s.
