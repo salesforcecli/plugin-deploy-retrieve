@@ -1337,7 +1337,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.18.2", "@salesforce/core@^3.19.2", "@salesforce/core@^3.19.4", "@salesforce/core@^3.20.1", "@salesforce/core@^3.21.1", "@salesforce/core@^3.21.5", "@salesforce/core@^3.22.1", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.8.0":
+"@salesforce/core@^3.18.2", "@salesforce/core@^3.19.2", "@salesforce/core@^3.19.4", "@salesforce/core@^3.20.1", "@salesforce/core@^3.21.1", "@salesforce/core@^3.21.5", "@salesforce/core@^3.22.1", "@salesforce/core@^3.23.1", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.8.0":
   version "3.25.1"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.25.1.tgz#e2590436138aaed42167528059fe2e4a7d1afa23"
   integrity sha512-sE7noNc2k/TKMHh+CQRdiElrOhcv89KMWFzfnReS2NCo+Z2Y+y4yzwgg3m6HM+qoPZPWWRuNpElcPrbQyCJb7w==
@@ -1580,11 +1580,11 @@
     strip-ansi "^7.0.1"
 
 "@salesforce/source-tracking@^2.1.2", "@salesforce/source-tracking@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.npmjs.org/@salesforce/source-tracking/-/source-tracking-2.2.0.tgz#3e6857c5b5b7f6c0412ca8f7a0e4d1836e13b28e"
-  integrity sha512-hoQgKSY3/tdjAxlgOVevTAEKAzlAgNZhYcllpsjbfrIBMhStLAeMnkUAWCgasP/4cj1IKLxLRb/5bLPA9C6e2Q==
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-2.2.1.tgz#a0c24d1bae486a5abfb96e21f0a9b931fad0d5a6"
+  integrity sha512-j03jwHgaI6YJDVaxxgRvSVmFg9b/gvRrAvVGVV4+cM6qcbLB+A0yKa1J6Tmf22gZ3/MFcksd42L3ol3D92A4Ww==
   dependencies:
-    "@salesforce/core" "^3.22.1"
+    "@salesforce/core" "^3.23.1"
     "@salesforce/kit" "^1.5.42"
     "@salesforce/source-deploy-retrieve" "^6.1.0"
     graceful-fs "^4.2.9"
