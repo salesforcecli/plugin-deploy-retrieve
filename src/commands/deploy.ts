@@ -13,6 +13,7 @@ import { writeJson, pathExists, writeFile, readFile } from 'fs-extra';
 import { Env, parseJsonMap } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter, SfCommand, SfHook } from '@salesforce/sf-plugins-core';
 import { exec } from 'shelljs';
+import { DeployerResult } from '@salesforce/sf-plugins-core/lib/deployer';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -82,19 +83,21 @@ export default class Deploy extends SfCommand<void> {
         }
       }
 
-      const deployResults: Array<[Deployer, void | number]> = [];
+      const deployResults: Array<[Deployer, void | DeployerResult]> = [];
       for (const deployer of deployers) {
         // deployments must be done sequentially?
         // eslint-disable-next-line no-await-in-loop
         deployResults.push([deployer, await deployer.deploy()]);
       }
-      if (deployResults.some(([, result]) => !!result && result !== 0)) {
+      if (deployResults.some(([, result]) => !!result && result.exitCode !== 0)) {
         process.exitCode = 1;
         this.warn(messages.getMessage('DeployersHaveNonZeroExitCode'));
         deployResults
-          .filter(([, result]) => !!result && result !== 0)
+          .filter(([, result]) => !!result && result.exitCode !== 0)
           .forEach(([deployer, result]) => {
-            this.log(messages.getMessage('DeployerExitCode', [deployer.getName(), result as number]));
+            this.log(
+              messages.getMessage('DeployerExitCode', [deployer.getName(), result ? result.exitCode : 'unknown'])
+            );
           });
       }
     }

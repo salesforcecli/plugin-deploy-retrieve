@@ -76,3 +76,7 @@ One or more of the selected deployers exited with a non-zero exit code.
 # DeployerExitCode
 
 Deployer "%s" exited with code %d.
+
+# save.as.default
+
+Save username %s as default?

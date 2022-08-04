@@ -18,7 +18,7 @@ import {
   OrgAuthorization,
   OrgConfigProperties,
 } from '@salesforce/core';
-import { Deployable, Deployer, generateTableChoices } from '@salesforce/sf-plugins-core';
+import { Deployable, Deployer, DeployerResult, generateTableChoices } from '@salesforce/sf-plugins-core';
 
 import { DeployResultFormatter } from './output';
 import { TestLevel } from './types';
@@ -120,7 +120,7 @@ export class MetadataDeployer extends Deployer {
     };
   }
 
-  public async deploy(): Promise<number> {
+  public async deploy<R extends DeployerResult>(): Promise<void | R> {
     const directories = this.deployables.map((d) => d.pkg.fullPath);
     const name = this.deployables.map((p) => cyan.bold(p.getPath())).join(', ');
     const api = await resolveApi();
@@ -143,7 +143,10 @@ export class MetadataDeployer extends Deployer {
       concise: false,
     });
     formatter.display();
-    return determineExitCode(result);
+    const deployerResult: DeployerResult = {
+      exitCode: determineExitCode(result),
+    };
+    return deployerResult as R;
   }
 
   public async promptForUsername(): Promise<string> {
