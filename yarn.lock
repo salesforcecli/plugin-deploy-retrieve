@@ -1359,7 +1359,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.11.0", "@salesforce/core@^3.18.2", "@salesforce/core@^3.20.1", "@salesforce/core@^3.21.5", "@salesforce/core@^3.22.0", "@salesforce/core@^3.22.1", "@salesforce/core@^3.23.1", "@salesforce/core@^3.25.0", "@salesforce/core@^3.8.0":
+"@salesforce/core@^3.11.0", "@salesforce/core@^3.19.4", "@salesforce/core@^3.20.1", "@salesforce/core@^3.21.5", "@salesforce/core@^3.22.0", "@salesforce/core@^3.22.1", "@salesforce/core@^3.23.1", "@salesforce/core@^3.25.0", "@salesforce/core@^3.8.0":
   version "3.26.0"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.26.0.tgz#8bbbdf22882c4245f4acc18dc077030743c1005b"
   integrity sha512-Ki1c4trNaUA+zvPe29ocaccNPN3mjesq5R/IJYOS/v+IvcjI9Iuf/9ECOE5pgZiLlbUsK0ZqBXu7hYMKiHgTSQ==
@@ -1532,14 +1532,14 @@
     proxy-from-env "^1.1.0"
     tslib "^2"
 
-"@salesforce/plugin-user@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-user/-/plugin-user-2.0.2.tgz#6f2726deb65043aed4f1f6b9f4fbcaef18b46d0c"
-  integrity sha512-QeNmXnOpCOwW8mClkB4S8+NytC1MfQw+NeioU/aaGmCIRHCCeGOGwjWQ64pq78oh9cjKbR+LHxdIgwStx8iaXw==
+"@salesforce/plugin-user@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-user/-/plugin-user-2.1.0.tgz#90616ffb85d771acd45a8977f1dccd483ae92d02"
+  integrity sha512-xlA160c+rcZxQr+vvnOO/mlnR+FdsMfK5Z5XBsOtVAk92dVgCkwYBzhs/bamMPcFtiQtoFIfL5zOe0qjb6+FNQ==
   dependencies:
     "@oclif/core" "^1.7.0"
     "@salesforce/command" "^5.1.2"
-    "@salesforce/core" "^3.18.2"
+    "@salesforce/core" "^3.19.4"
     "@salesforce/kit" "^1.5.38"
     tslib "^2"
 
