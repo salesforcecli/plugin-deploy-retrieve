@@ -391,11 +391,10 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   private files: FileResponse[];
   public constructor(
     private result: RetrieveResult,
-    private packageNames: string[],
-    // TODO: handle deleteResponses
-    private deleteResponses: FileResponse[] = []
+    private packageNames: string[] = [],
+    deleteResponses: FileResponse[] = []
   ) {
-    this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
+    this.files = sortFileResponses(asRelativePaths((this.result.getFileResponses() ?? []).concat(deleteResponses)));
   }
 
   public getJson(): RetrieveResultJson {
@@ -440,12 +439,10 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   }
 
   private async getPackages(): Promise<NamedPackageDir[]> {
-    const packages: NamedPackageDir[] = [];
     const projectPath = await SfProject.resolveProjectPath();
-    this.packageNames?.forEach((name) => {
+    return this.packageNames.map((name) => {
       const packagePath = path.join(projectPath, name);
-      packages.push({ name, path: packagePath, fullPath: path.resolve(packagePath) });
+      return { name, path: packagePath, fullPath: path.resolve(packagePath) };
     });
-    return packages;
   }
 }

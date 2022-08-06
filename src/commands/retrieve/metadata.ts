@@ -101,10 +101,10 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       ignoreConflicts: flags['ignore-conflicts'],
     });
     const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
-    const { componentSet, fileResponsesFromDelete } = isChanges
-      ? await stl.maybeApplyRemoteDeletesToLocal()
+    const { componentSetFromNonDeletes, fileResponsesFromDelete } = isChanges
+      ? await stl.maybeApplyRemoteDeletesToLocal(true)
       : {
-          componentSet: await ComponentSetBuilder.build({
+          componentSetFromNonDeletes: await ComponentSetBuilder.build({
             apiversion: flags['api-version'],
             sourcepath: flags['source-dir'],
             packagenames: flags['package-name'],
@@ -121,13 +121,13 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         };
     // stl sets version based on config/files--if the command overrides it, we need to update
     if (isChanges && flags['api-version']) {
-      componentSet.apiVersion = flags['api-version'];
+      componentSetFromNonDeletes.apiVersion = flags['api-version'];
     }
     this.spinner.status = messages.getMessage('spinner.sending', [
-      componentSet.sourceApiVersion || componentSet.apiVersion,
+      componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
     ]);
 
-    const retrieve = await componentSet.retrieve({
+    const retrieve = await componentSetFromNonDeletes.retrieve({
       usernameOrConnection: flags['target-org'].getUsername(),
       merge: true,
       output: this.project.getDefaultPackage().fullPath,
