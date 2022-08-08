@@ -119,33 +119,51 @@ function resolveZipFileName(zipFileName?: string): string {
   return zipFileName || 'unpackaged.zip';
 }
 
-export const testLevelFlag = (
-  opts: Partial<Interfaces.OptionFlag<TestLevel | undefined>> = {}
-): Interfaces.OptionFlag<TestLevel | undefined> => {
+export function testLevelFlag(
+  opts: Partial<Interfaces.OptionFlag<TestLevel>> & ({ required: true } | { default: TestLevel })
+): Interfaces.OptionFlag<TestLevel>;
+export function testLevelFlag(
+  opts: Partial<Interfaces.OptionFlag<TestLevel>>
+): Interfaces.OptionFlag<TestLevel | undefined>;
+export function testLevelFlag(
+  opts: Partial<Interfaces.OptionFlag<TestLevel>> = {}
+): Interfaces.OptionFlag<TestLevel> | Interfaces.OptionFlag<TestLevel | undefined> {
   return Flags.build<TestLevel | undefined>({
     char: 'l',
     parse: (input: string) => Promise.resolve(input as TestLevel),
     options: Object.values(TestLevel),
     ...opts,
   })();
-};
+}
 
 /**
  * Flag value could either be a file path or a directory path.
  */
-export const fileOrDirFlag = (opts: FileOrDirOpts): Interfaces.OptionFlag<PathInfo | undefined> => {
+export function fileOrDirFlag(
+  opts: FileOrDirOpts & ({ required: true } | { default: PathInfo })
+): Interfaces.OptionFlag<PathInfo>;
+export function fileOrDirFlag(opts: FileOrDirOpts): Interfaces.OptionFlag<PathInfo | undefined>;
+export function fileOrDirFlag(
+  opts: FileOrDirOpts
+): Interfaces.OptionFlag<PathInfo> | Interfaces.OptionFlag<PathInfo | undefined> {
   return Flags.build<PathInfo | undefined>({
     parse: async (input: string) => parsePathInfo(input, opts),
     ...opts,
   })();
-};
+}
 
 /**
  * Flag value is the name of a zip file that defaults to 'unpackaged.zip'.
  */
-export const zipFileFlag = (opts: ZipFileOpts): Interfaces.OptionFlag<string | undefined> => {
+export function zipFileFlag(
+  opts: ZipFileOpts & ({ required: true } | { default: string })
+): Interfaces.OptionFlag<string>;
+export function zipFileFlag(opts: ZipFileOpts): Interfaces.OptionFlag<string | undefined>;
+export function zipFileFlag(
+  opts: ZipFileOpts
+): Interfaces.OptionFlag<string> | Interfaces.OptionFlag<string | undefined> {
   return Flags.build<string | undefined>({
     parse: async (input: string) => Promise.resolve(resolveZipFileName(input)),
     ...opts,
   })();
-};
+}
