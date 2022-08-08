@@ -63,10 +63,7 @@ function ensureFlagPath(options: EnsureFsFlagOptions): string {
   const { flagName, path, type, throwOnENOENT } = options;
 
   const trimmedPath = path?.trim();
-  let resolvedPath: string;
-  if (trimmedPath?.length) {
-    resolvedPath = resolve(trimmedPath);
-  }
+  const resolvedPath = trimmedPath?.length ? resolve(trimmedPath) : null;
 
   try {
     const stats = fs.statSync(resolvedPath);

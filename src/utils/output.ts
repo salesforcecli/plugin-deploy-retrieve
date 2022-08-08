@@ -470,7 +470,7 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
     private result: RetrieveResult,
     private opts: { 'target-metadata-dir': string; 'zip-file-name': string; unzip: boolean }
   ) {
-    this.zipFilePath = path.join(opts['target-metadata-dir'], opts['zip-file-name'] ?? 'unpackaged.zip');
+    this.zipFilePath = path.join(opts['target-metadata-dir'], opts['zip-file-name']);
     this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
   }
 
