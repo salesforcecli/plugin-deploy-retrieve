@@ -120,10 +120,10 @@ function resolveZipFileName(zipFileName?: string): string {
 }
 
 export function testLevelFlag(
-  opts: Partial<Interfaces.OptionFlag<TestLevel>> & ({ required: true } | { default: TestLevel })
+  opts: Partial<Interfaces.OptionFlag<TestLevel>> & ({ required: true } | { default: Interfaces.Default<TestLevel> })
 ): Interfaces.OptionFlag<TestLevel>;
 export function testLevelFlag(
-  opts: Partial<Interfaces.OptionFlag<TestLevel>>
+  opts?: Partial<Interfaces.OptionFlag<TestLevel>>
 ): Interfaces.OptionFlag<TestLevel | undefined>;
 export function testLevelFlag(
   opts: Partial<Interfaces.OptionFlag<TestLevel>> = {}
@@ -140,9 +140,9 @@ export function testLevelFlag(
  * Flag value could either be a file path or a directory path.
  */
 export function fileOrDirFlag(
-  opts: FileOrDirOpts & ({ required: true } | { default: PathInfo })
+  opts: FileOrDirOpts & ({ required: true } | { default: Interfaces.Default<PathInfo> })
 ): Interfaces.OptionFlag<PathInfo>;
-export function fileOrDirFlag(opts: FileOrDirOpts): Interfaces.OptionFlag<PathInfo | undefined>;
+export function fileOrDirFlag(opts?: FileOrDirOpts): Interfaces.OptionFlag<PathInfo | undefined>;
 export function fileOrDirFlag(
   opts: FileOrDirOpts
 ): Interfaces.OptionFlag<PathInfo> | Interfaces.OptionFlag<PathInfo | undefined> {
@@ -156,9 +156,9 @@ export function fileOrDirFlag(
  * Flag value is the name of a zip file that defaults to 'unpackaged.zip'.
  */
 export function zipFileFlag(
-  opts: ZipFileOpts & ({ required: true } | { default: string })
+  opts: ZipFileOpts & ({ required: true } | { default: Interfaces.Default<string> })
 ): Interfaces.OptionFlag<string>;
-export function zipFileFlag(opts: ZipFileOpts): Interfaces.OptionFlag<string | undefined>;
+export function zipFileFlag(opts?: ZipFileOpts): Interfaces.OptionFlag<string | undefined>;
 export function zipFileFlag(
   opts: ZipFileOpts
 ): Interfaces.OptionFlag<string> | Interfaces.OptionFlag<string | undefined> {
