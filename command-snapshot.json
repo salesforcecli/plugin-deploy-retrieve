@@ -2,7 +2,7 @@
   {
     "command": "deploy",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["interactive", "json"],
+    "flags": ["interactive"],
     "alias": []
   },
   {
