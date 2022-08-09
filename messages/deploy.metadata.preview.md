@@ -1,10 +1,12 @@
 # summary
 
-Preview a deployment to see what will deploy, including any conflicts and ignored files
+Preview a deployment to see what will deploy to the org, the potential conflicts, and the ignored files.
 
 # description
 
 You must run this command from within a project.
+
+The command outputs a table that describes what will happen if you run the "sf deploy metadata" command. The table lists the metadata components that will be deployed and deleted. The table also lists the current conflicts between files in your local project and components in the org. The table also lists the files that won't be deployed because they're included in your .forceignore file.
 
 If your org allows source tracking, then this command considers conflicts between the org and local. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
@@ -12,35 +14,19 @@ To preview the deployment of multiple metadata components, either set multiple -
 
 # examples
 
-- Preview deployment of local changes to org
+- NOTE: The commands to preview a deployment and actually deploy it use similar flags. We provide a few preview examples here, but see the help for "sf deploy metadata" for more examples that you can adapt for previewing.
 
-      <%= config.bin %> <%= command.id %>
+- Preview the deployment of source files in a directory, such as force-app:
 
-- Preview deployment of source files in a directory:
+      <%= config.bin %> <%= command.id %>  --source-dir force-app
 
-      <%= config.bin %> <%= command.id %>  --source-dir path/to/source
-
-- Preview deployment of a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
-
-      <%= config.bin %> <%= command.id %> --source-dir path/to/apex/classes/MyClass.cls path/to/source/objects
-      <%= config.bin %> <%= command.id %> --source-dir path/to/apex/classes/MyClass.cls --source-dir path/to/source/objects
-
-- Preview deployment of all Apex classes:
+- Preview the deployment of all Apex classes:
 
       <%= config.bin %> <%= command.id %> --metadata ApexClass
 
 - Preview deployment of a specific Apex class:
 
       <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass
-
-- Preview deployment of all custom objects and Apex classes (both examples are equivalent):
-
-      <%= config.bin %> <%= command.id %> --metadata CustomObject ApexClass
-      <%= config.bin %> <%= command.id %> --metadata CustomObject --metadata ApexClass
-
-- Preview deployment of all Apex classes and a profile that has a space in its name:
-
-      <%= config.bin %> <%= command.id %> --metadata ApexClass --metadata "Profile:My Profile"
 
 - Preview deployment of all components listed in a manifest:
 
@@ -56,11 +42,11 @@ Overrides your default org.
 
 # flags.metadata.summary
 
-Metadata component names to deploy.
+Metadata component names to preview.
 
 # flags.source-dir.summary
 
-Path to the local source files to deploy.
+Path to the local source files to preview.
 
 # flags.source-dir.description
 
@@ -70,7 +56,7 @@ If you specify this flag, don’t specify --metadata or --manifest.
 
 # flags.manifest.summary
 
-Full file path for manifest (package.xml) of components to deploy.
+Full file path for manifest (package.xml) of components to preview.
 
 # flags.manifest.description
 
@@ -90,7 +76,7 @@ Omit ignored files
 
 # flags.api-version.summary
 
-Target API version for the deploy.
+Target API version for the preview.
 
 # flags.api-version.description
 
@@ -98,7 +84,7 @@ Use this flag to override the default API version, which is the latest version s
 
 # error.Conflicts
 
-There are changes in the org that conflict with the local changes you're trying to deploy.
+There are changes in the org that conflict with the local changes you're trying to preview.
 
 # error.Conflicts.Actions
 
