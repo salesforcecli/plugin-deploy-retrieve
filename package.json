@@ -117,7 +117,12 @@
         }
       },
       "retrieve": {
-        "description": "Commands to retrieve artifacts from an environment."
+        "description": "Commands to retrieve artifacts from an environment.",
+        "subtopics": {
+          "metadata": {
+            "description": "Commands to retrieve metadata from a Salesforce org."
+          }
+        }
       }
     }
   },
