@@ -25,13 +25,13 @@ export default class Deploy extends SfCommand<void> {
   public static description = messages.getMessage('description');
   public static examples = messages.getMessages('examples');
 
+  public static enableJsonFlag = false;
+
   public static flags = {
     interactive: Flags.boolean({
       summary: messages.getMessage('flags.interactive.summary'),
     }),
   };
-
-  public static enableJsonFlag = false;
 
   public async run(): Promise<void> {
     process.setMaxListeners(new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000);
