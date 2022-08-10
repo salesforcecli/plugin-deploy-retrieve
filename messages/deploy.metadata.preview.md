@@ -6,9 +6,9 @@ Preview a deployment to see what will deploy to the org, the potential conflicts
 
 You must run this command from within a project.
 
-The command outputs a table that describes what will happen if you run the "sf deploy metadata" command. The table lists the metadata components that will be deployed and deleted. The table also lists the current conflicts between files in your local project and components in the org. The table also lists the files that won't be deployed because they're included in your .forceignore file.
+The command outputs a table that describes what will happen if you run the "sf deploy metadata" command. The table lists the metadata components that will be deployed and deleted. The table also lists the current conflicts between files in your local project and components in the org. Finally, the table lists the files that won't be deployed because they're included in your .forceignore file.
 
-If your org allows source tracking, then this command considers conflicts between the org and local. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
+If your org allows source tracking, then this command considers conflicts between the org and local. Some orgs, such as production orgs, never allow source tracking. Use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
 To preview the deployment of multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
@@ -72,7 +72,7 @@ This flag applies only to orgs that allow source tracking. It has no effect on o
 
 # flags.concise.summary
 
-Omit ignored files
+Omit ignored files.
 
 # flags.api-version.summary
 
@@ -80,7 +80,7 @@ Target API version for the preview.
 
 # flags.api-version.description
 
-Use this flag to override the default API version, which is the latest version supported the CLI, with the API version of your package.xml file.
+Use this flag to override the default API version with the API version of your package.xml file. The default API version is the latest version supported by the CLI.
 
 # error.Conflicts
 
