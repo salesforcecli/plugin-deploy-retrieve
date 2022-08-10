@@ -156,7 +156,7 @@ Target API version for the deploy.
 
 # flags.api-version.description
 
-Use this flag to override the default API version, which is the latest version supported the CLI, with the API version of your package.xml file.
+Use this flag to override the default API version with the API version of your package.xml file. The default API version is the latest version supported by the CLI.
 
 # flags.async.summary
 
