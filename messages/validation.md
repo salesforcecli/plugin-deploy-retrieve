@@ -1,15 +1,13 @@
 # error.InvalidFlagPath
 
-The %s command parameter specifies an invalid path: %s\n%s
+Invalid path specified: %s
+
+%s
 
 # error.ExpectedDirectory
 
 Expected a directory but found a file.
 
-# error.ExpectedFile
+# error.ExpectedFileOrDirToExist
 
-Expected a file but found a directory.
-
-# error.PathNotFound
-
-No such file or directory.
+Expected a file or directory to exist.

@@ -155,4 +155,4 @@ Wrote retrieve zip file to %s.
 
 # info.ExtractedZipFile
 
-Extracted %s to $s.
+Extracted %s to %s.

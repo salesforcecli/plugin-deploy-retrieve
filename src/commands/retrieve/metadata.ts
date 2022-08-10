@@ -152,10 +152,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       format,
     };
 
+    const zipFileName = flags['zip-file-name'] ?? 'unpackaged.zip';
+
     if (format === 'metadata') {
       retrieveOpts.singlePackage = flags['single-package'];
       retrieveOpts.unzip = flags.unzip;
-      retrieveOpts.zipFileName = flags['zip-file-name'];
+      retrieveOpts.zipFileName = zipFileName;
       retrieveOpts.output = flags['target-metadata-dir'];
     }
 
@@ -184,7 +186,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const formatter =
       format === 'source'
         ? new RetrieveResultFormatter(result, flags['package-name'])
-        : new MetadataRetrieveResultFormatter(result, flags);
+        : new MetadataRetrieveResultFormatter(result, { ...flags, 'zip-file-name': zipFileName });
 
     if (!this.jsonEnabled()) {
       if (result.response.status === 'Succeeded') {
