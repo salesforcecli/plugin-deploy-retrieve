@@ -12,12 +12,13 @@ If your org allows source tracking, then this command considers conflicts betwee
 
 # examples
 
-- Preview the retrieve:
+- Preview the retrieve of all changes from the org:
 
   <%= config.bin %> <%= command.id %>
 
-- Preview the retrieve of all changes from the org and overwrite any local conflicts:
-      <%= config.bin %> <%= command.id %> --ignore-conflicts
+- Preview the retrieve when ignoring any conflicts:
+
+  <%= config.bin %> <%= command.id %> --ignore-conflicts
 
 # flags.target-org.summary
 
