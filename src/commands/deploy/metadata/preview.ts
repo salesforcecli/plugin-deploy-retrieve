@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, salesforce.com, inc.
+ * Copyright (c) 2022, salesforce.com, inc.
  * All rights reserved.
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
@@ -57,7 +57,6 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
     }),
   };
 
-  // eslint-disable-next-line @typescript-eslint/require-await, class-methods-use-this
   public async run(): Promise<PreviewResult> {
     const { flags } = await this.parse(DeployMetadataPreview);
     const deploySpecified = [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
@@ -78,7 +77,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       getConflictFiles(stl, flags['ignore-conflicts']),
     ]);
 
-    const output: PreviewResult = compileResults({
+    const output = compileResults({
       componentSet,
       projectPath: this.project.getPath(),
       filesWithConflicts,
