@@ -15,7 +15,6 @@ import {
   ForceIgnore,
   MetadataResolver,
   VirtualTreeContainer,
-  MetadataComponent,
   MetadataType,
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
@@ -142,7 +141,7 @@ export const compileResults = ({
 
   const actionableFiles = componentSet
     .toArray()
-    .map((c): SourceComponent | MetadataComponent => sourceBackedComponents.get(makeKey(c)) ?? c)
+    .map((c) => sourceBackedComponents.get(makeKey(c)) ?? c)
     .map(
       (c): PreviewFile =>
         'xml' in c
