@@ -15,7 +15,6 @@ import {
   ForceIgnore,
   MetadataResolver,
   VirtualTreeContainer,
-  MetadataComponent,
   MetadataType,
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
@@ -142,28 +141,29 @@ export const compileResults = ({
 
   const actionableFiles = componentSet
     .toArray()
-    .map((c): SourceComponent | MetadataComponent => sourceBackedComponents.get(makeKey(c)) ?? c)
-    .map(
-      (c): PreviewFile =>
-        'xml' in c
-          ? // source backed components exist locally
-            {
-              ...sourceComponentToPreviewFile(c),
-              operation:
-                baseOperation === 'deploy' ? calculateDeployOperation(c.getDestructiveChangesType()) : baseOperation,
-            }
-          : // only name/type information for remote-only components that have not been retrieved
-            {
-              type: c.type.name,
-              fullName: c.fullName,
-              // if it doesn't exist locally, it can't be a conflict
-              conflict: false,
-              operation: baseOperation,
-              // we have to calculate the "potential filename" to know if a remote retrieve would be ignored
-              ignored: filePathsFromMetadataComponent(c).some((p) => forceIgnore.denies(p)),
-            }
-    )
-    // remote deletes are not in the componentSet
+    .map((cmp): PreviewFile => {
+      const maybeSourceBackedComponent = sourceBackedComponents.get(makeKey(cmp)) ?? cmp;
+      if ('xml' in maybeSourceBackedComponent) {
+        // source backed components exist locally
+        return {
+          ...sourceComponentToPreviewFile(maybeSourceBackedComponent),
+          operation:
+            baseOperation === 'deploy'
+              ? calculateDeployOperation(maybeSourceBackedComponent.getDestructiveChangesType())
+              : baseOperation,
+        };
+      } else {
+        return {
+          type: maybeSourceBackedComponent.type.name,
+          fullName: maybeSourceBackedComponent.fullName,
+          // if it doesn't exist locally, it can't be a conflict
+          conflict: false,
+          operation: baseOperation,
+          // we have to calculate the "potential filename" to know if a remote retrieve would be ignored
+          ignored: filePathsFromMetadataComponent(maybeSourceBackedComponent).some((p) => forceIgnore.denies(p)),
+        };
+      }
+    })
     .concat(
       (remoteDeletes ?? []).map(
         (c): PreviewFile => ({
