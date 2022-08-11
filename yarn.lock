@@ -1337,30 +1337,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.19.2", "@salesforce/core@^3.19.4", "@salesforce/core@^3.20.1", "@salesforce/core@^3.21.5", "@salesforce/core@^3.22.1", "@salesforce/core@^3.23.1", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.8.0":
-  version "3.25.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.25.1.tgz#e2590436138aaed42167528059fe2e4a7d1afa23"
-  integrity sha512-sE7noNc2k/TKMHh+CQRdiElrOhcv89KMWFzfnReS2NCo+Z2Y+y4yzwgg3m6HM+qoPZPWWRuNpElcPrbQyCJb7w==
-  dependencies:
-    "@salesforce/bunyan" "^2.0.0"
-    "@salesforce/kit" "^1.5.41"
-    "@salesforce/schemas" "^1.1.0"
-    "@salesforce/ts-types" "^1.5.20"
-    "@types/graceful-fs" "^4.1.5"
-    "@types/semver" "^7.3.9"
-    ajv "^8.11.0"
-    archiver "^5.3.0"
-    change-case "^4.1.2"
-    debug "^3.2.7"
-    faye "^1.4.0"
-    form-data "^4.0.0"
-    graceful-fs "^4.2.9"
-    js2xmlparser "^4.0.1"
-    jsforce "^2.0.0-beta.16"
-    jsonwebtoken "8.5.1"
-    ts-retry-promise "^0.6.0"
-
-"@salesforce/core@^3.22.0", "@salesforce/core@^3.26.1":
+"@salesforce/core@^3.19.2", "@salesforce/core@^3.19.4", "@salesforce/core@^3.20.1", "@salesforce/core@^3.21.5", "@salesforce/core@^3.22.0", "@salesforce/core@^3.22.1", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.26.1", "@salesforce/core@^3.8.0":
   version "3.26.1"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.26.1.tgz#8d65c6b12085494106a2c7d2545902fa1ff95522"
   integrity sha512-B2mhsiiAu9hkLAwkDu+Y5ArAtRJIx2oeqP8ofupLlSH4tohzcUmfKgCDZEk9iLC1sc5kmD1S/4DlS1QZhnNs8A==
@@ -1566,26 +1543,7 @@
     chalk "^4"
     inquirer "^8.2.0"
 
-"@salesforce/source-deploy-retrieve@^6.1.0", "@salesforce/source-deploy-retrieve@^6.2.6":
-  version "6.2.6"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-6.2.6.tgz#cee185098f76c3b65f1cb83407114e9c98953f3e"
-  integrity sha512-mAbAdYQdKF1ff2FQZlQ2vyUoQYrTLBI6ax7QsqEkVXTUHAKn3zhj3Dp6EECxIEoJaG5M47dwPpG7vH7CpZqJJg==
-  dependencies:
-    "@salesforce/core" "^3.21.1"
-    "@salesforce/kit" "^1.5.41"
-    "@salesforce/ts-types" "^1.5.20"
-    archiver "^5.3.0"
-    fast-xml-parser "^3.17.4"
-    got "^11.8.5"
-    graceful-fs "^4.2.8"
-    ignore "^5.1.8"
-    mime "2.6.0"
-    proxy-agent "^5.0.0"
-    proxy-from-env "^1.1.0"
-    unzipper "0.10.11"
-    xmldom-sfdx-encoding "^0.1.29"
-
-"@salesforce/source-deploy-retrieve@^6.2.7", "@salesforce/source-deploy-retrieve@^6.2.9":
+"@salesforce/source-deploy-retrieve@^6.1.0", "@salesforce/source-deploy-retrieve@^6.2.6", "@salesforce/source-deploy-retrieve@^6.2.7", "@salesforce/source-deploy-retrieve@^6.2.9":
   version "6.2.9"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-6.2.9.tgz#99eff9e1f2f44ff43206c4db6dc399c7f61fc720"
   integrity sha512-UY143K4i/MThabkuD8fhnYlMu2VRpFSTu9hgkNCUfwxTQyunUOgjOl4ALSymKOKCcseTuEuEQpH2kU0ehwAN7A==
@@ -1621,19 +1579,7 @@
     sinon "^10.0.0"
     strip-ansi "^7.0.1"
 
-"@salesforce/source-tracking@^2.1.2":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-2.2.1.tgz#a0c24d1bae486a5abfb96e21f0a9b931fad0d5a6"
-  integrity sha512-j03jwHgaI6YJDVaxxgRvSVmFg9b/gvRrAvVGVV4+cM6qcbLB+A0yKa1J6Tmf22gZ3/MFcksd42L3ol3D92A4Ww==
-  dependencies:
-    "@salesforce/core" "^3.23.1"
-    "@salesforce/kit" "^1.5.42"
-    "@salesforce/source-deploy-retrieve" "^6.1.0"
-    graceful-fs "^4.2.9"
-    isomorphic-git "1.17.0"
-    ts-retry-promise "^0.6.0"
-
-"@salesforce/source-tracking@^2.2.2":
+"@salesforce/source-tracking@^2.1.2", "@salesforce/source-tracking@^2.2.2":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-2.2.2.tgz#403933865128d2b0e21b76ba219a61400b48ce97"
   integrity sha512-1Znfjh8MPqfll/zRKD3kQxPzSWklDg1dIPkOqyOBwdh5X4LZvgvMY9oyF7m86u9taeASVG965swUM2TJiYMVsQ==
@@ -2098,12 +2044,7 @@ acorn@^7.4.0:
   resolved "https://registry.npmjs.org/acorn/-/acorn-7.4.1.tgz#feaed255973d2e77555b83dbc08851a6c63520fa"
   integrity sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==
 
-acorn@^8.4.1, acorn@^8.7.0:
-  version "8.7.1"
-  resolved "https://registry.npmjs.org/acorn/-/acorn-8.7.1.tgz#0197122c843d1bf6d0a5e83220a788f278f63c30"
-  integrity sha512-Xx54uLJQZ19lKygFXOWsscKUbsBZW0CPykPhVQdhIeIwrbPmJzqeASDInc8nKBnp/JT6igTs82qPXz069H8I/A==
-
-acorn@^8.8.0:
+acorn@^8.4.1, acorn@^8.7.0, acorn@^8.8.0:
   version "8.8.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.0.tgz#88c0187620435c7f6015803f5539dae05a9dbea8"
   integrity sha512-QOxyigPVrpZ2GXT+PFyZTl6TtOFc5egxHIP9IlQ+RbupQuX4RkT/Bee4/kQuC02Xkzg84JcT7oLYtDIQxp+v7w==
@@ -6613,33 +6554,7 @@ jsforce@^1.11.0:
     request "^2.72.0"
     xml2js "^0.4.16"
 
-jsforce@^2.0.0-beta.16:
-  version "2.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-2.0.0-beta.16.tgz#3e5bdbe660d3be2be80fa144456380345011584b"
-  integrity sha512-oeeOYiRI/1nkUT7YK3irIhyc+J12Ti2sKkGELmeJkPRvcbR2txIenVsV9zW+Q/Ie2uUulhl3pWXk38IyqySSpA==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@babel/runtime-corejs3" "^7.12.5"
-    "@types/node" "^12.19.9"
-    abort-controller "^3.0.0"
-    base64url "^3.0.1"
-    commander "^4.0.1"
-    core-js "^3.6.4"
-    csv-parse "^4.8.2"
-    csv-stringify "^5.3.4"
-    faye "^1.4.0"
-    form-data "^4.0.0"
-    fs-extra "^8.1.0"
-    https-proxy-agent "^5.0.0"
-    inquirer "^7.0.0"
-    multistream "^3.1.0"
-    node-fetch "^2.6.1"
-    open "^7.0.0"
-    regenerator-runtime "^0.13.3"
-    strip-ansi "^6.0.0"
-    xml2js "^0.4.22"
-
-jsforce@beta:
+jsforce@^2.0.0-beta.16, jsforce@beta:
   version "2.0.0-beta.18"
   resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-2.0.0-beta.18.tgz#2791a2e6ec15d4d8b41f0782e23b833f5dbe5678"
   integrity sha512-9IKv3M/U/FCdL6G8WlFqWiBTvLx1TRmGW+JhcSWHZb0YlMLHiGNVymvLyPsvRfO9sNP6VR3A5AIntqD+UsDKkQ==
