@@ -57,9 +57,9 @@ function colorStatus(status: RequestStatus): string {
 const check = StandardColors.success('✓');
 
 export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
-  const relative = fileResponses.map((file) => {
-    return file.filePath ? { ...file, filePath: path.relative(process.cwd(), file.filePath) } : file;
-  });
+  const relative = fileResponses.map((file) =>
+    file.filePath ? { ...file, filePath: path.relative(process.cwd(), file.filePath) } : file
+  );
   return relative;
 }
 /**
@@ -268,9 +268,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private displayVerboseTestCoverage(): void {
     const codeCoverage = toArray(this.result.response.details.runTestResult?.codeCoverage);
     if (codeCoverage.length) {
-      const coverage = codeCoverage.sort((a, b) => {
-        return a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
-      });
+      const coverage = codeCoverage.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1));
       CliUx.ux.log();
       CliUx.ux.log(tableHeader('Apex Code Coverage'));
       coverage.forEach((cov: CodeCoverage & { lineNotCovered: string }) => {

@@ -21,6 +21,10 @@ export const DEPLOY_STATUS_CODES = new Map<RequestStatus, number>([
   [RequestStatus.Canceling, 69],
 ]);
 
-export const DEPLOY_STATUS_CODES_DESCRIPTIONS = [...DEPLOY_STATUS_CODES.entries()].reduce((result, [status, code]) => {
-  return { ...result, [`${status} (${code})`]: messages.getMessage(`errorCode.deploy.${status}`) };
-}, {});
+export const DEPLOY_STATUS_CODES_DESCRIPTIONS = [...DEPLOY_STATUS_CODES.entries()].reduce(
+  (result, [status, code]) => ({
+    ...result,
+    [`${status} (${code})`]: messages.getMessage(`errorCode.deploy.${status}`),
+  }),
+  {}
+);
