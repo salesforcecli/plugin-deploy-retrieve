@@ -13,6 +13,7 @@ import { writeJson, pathExists, writeFile, readFile } from 'fs-extra';
 import { Env, parseJsonMap } from '@salesforce/kit';
 import { Deployable, Deployer, generateTableChoices, Prompter, SfCommand, SfHook } from '@salesforce/sf-plugins-core';
 import { exec } from 'shelljs';
+import { DeployerResult } from '@salesforce/sf-plugins-core/lib/deployer';
 
 Messages.importMessagesDirectory(__dirname);
 
@@ -24,13 +25,13 @@ export default class Deploy extends SfCommand<void> {
   public static summary = messages.getMessage('summary');
   public static description = messages.getMessage('description');
   public static examples = messages.getMessages('examples');
-  public static enableJsonFlag = false;
 
   public static flags = {
     interactive: Flags.boolean({
       summary: messages.getMessage('flags.interactive.summary'),
     }),
   };
+  public static enableJsonFlag = false;
 
   public async run(): Promise<void> {
     process.setMaxListeners(new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000);
@@ -39,10 +40,10 @@ export default class Deploy extends SfCommand<void> {
     flags.interactive = await this.isInteractive(flags.interactive);
     const options = await this.readOptions();
 
-    this.log('Analyzing project');
+    this.log(messages.getMessage('AnalyzingProject'));
 
     if (!flags.interactive) {
-      this.log(`Using options found in ${DEPLOY_OPTIONS_FILE}`);
+      this.log(messages.getMessage('UsingOptionsFromFile', [DEPLOY_OPTIONS_FILE]));
     }
 
     const hookResults = await SfHook.run(this.config, 'sf:deploy', options);
@@ -52,7 +53,7 @@ export default class Deploy extends SfCommand<void> {
     let deployers = hookResults.successes.flatMap((s) => s.result);
 
     if (deployers.length === 0) {
-      this.log('Found nothing in the project to deploy');
+      this.log(messages.getMessage('FoundNothingToDeploy'));
     } else {
       if (flags.interactive) {
         deployers = await this.selectDeployers(deployers);
@@ -61,7 +62,7 @@ export default class Deploy extends SfCommand<void> {
       }
 
       if (deployers.length === 0) {
-        this.log('Nothing was selected to deploy.');
+        this.log(messages.getMessage('NothingSelectedToDeploy'));
       }
 
       const deployOptions: Record<string, Deployer.Options> = {};
@@ -75,17 +76,29 @@ export default class Deploy extends SfCommand<void> {
       if (flags.interactive && (await this.askToSave())) {
         await writeJson(DEPLOY_OPTIONS_FILE, deployOptions);
         this.log();
-        this.log(`Your deploy options have been saved to ${DEPLOY_OPTIONS_FILE}`);
+        this.log(messages.getMessage('DeployOptionsSavedToFile', [DEPLOY_OPTIONS_FILE]));
         if (await this.shouldCommit()) {
           await this.commit();
-          this.log(`We added ${DEPLOY_OPTIONS_FILE} to the .gitignore for you.`);
+          this.log(messages.getMessage('DeployOptionsIncludedInGitIgnore', [DEPLOY_OPTIONS_FILE]));
         }
       }
 
+      const deployResults: Array<[Deployer, void | DeployerResult]> = [];
       for (const deployer of deployers) {
         // deployments must be done sequentially?
         // eslint-disable-next-line no-await-in-loop
-        await deployer.deploy();
+        deployResults.push([deployer, await deployer.deploy()]);
+      }
+      if (deployResults.some(([, result]) => !!result && result.exitCode !== 0)) {
+        process.exitCode = 1;
+        this.warn(messages.getMessage('DeployersHaveNonZeroExitCode'));
+        deployResults
+          .filter(([, result]) => !!result && result.exitCode !== 0)
+          .forEach(([deployer, result]) => {
+            this.log(
+              messages.getMessage('DeployerExitCode', [deployer.getName(), result ? result.exitCode : 'unknown'])
+            );
+          });
       }
     }
   }
