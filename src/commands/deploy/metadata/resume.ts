@@ -47,6 +47,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.verbose.summary'),
       exclusive: ['concise'],
     }),
+    // we want this flag to be undefined since it's exclusive of async
+    // eslint-disable-next-line sf-plugin/flag-min-max-default
     wait: Flags.duration({
       char: 'w',
       summary: messages.getMessage('flags.wait.summary'),

@@ -41,6 +41,8 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.use-most-recent.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
+    // we want this flag to be undefined since it's exclusive of async
+    // eslint-disable-next-line sf-plugin/flag-min-max-default
     wait: Flags.duration({
       char: 'w',
       summary: messages.getMessage('flags.wait.summary'),
