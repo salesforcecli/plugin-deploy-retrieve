@@ -51,6 +51,14 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
   <%= config.bin %> <%= command.id %> --package-name Package1 "PackageName With Spaces" Package3
   <%= config.bin %> <%= command.id %> --package-name Package1 --package-name "PackageName With Spaces" --package-name Package3
 
+- Retrieve using Metadata API
+
+  <%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output
+
+- Retrieve using Metadata API and automatically unzip the contents
+
+  <%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output --unzip
+
 # flags.api-version.summary
 
 Target API version for the retrieve.

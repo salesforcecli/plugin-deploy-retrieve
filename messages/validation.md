@@ -1,8 +1,6 @@
 # error.InvalidFlagPath
 
-Invalid path specified: %s
-
-%s
+Invalid path specified: %s. %s
 
 # error.ExpectedDirectory
 

@@ -72,6 +72,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     'target-metadata-dir': ensuredDirFlag({
       char: 't',
       summary: messages.getMessage('flags.target-metadata-dir.summary'),
+      relationships: [
+        {
+          type: 'some',
+          flags: ['manifest', 'metadata', 'source-dir', 'package-name'],
+        },
+      ],
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -111,6 +117,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
+
     this.spinner.start(messages.getMessage('spinner.start'));
     const stl = await SourceTracking.create({
       org: flags['target-org'],
