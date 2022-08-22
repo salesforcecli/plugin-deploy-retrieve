@@ -119,22 +119,78 @@ describe('conflict detection and resolution', () => {
     ]);
   });
 
-  it('sf can see the conflict in status', () => {
-    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
-      ensureExitCode: 0,
-    }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
-    // json is not sorted.  This relies on the implementation of getConflicts()
-    expect(result).to.deep.equal([
-      {
-        type: 'CustomApplication',
-        name: 'EBikes',
-        path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
-        projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
-        ignored: false,
-        conflict: true,
-        operation: 'deploy',
-      },
-    ]);
+  describe('preview with and without ignore-conflicts', () => {
+    it('sf can see the conflict in status (deploy)', () => {
+      const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+        ensureExitCode: 0,
+      }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
+      // json is not sorted.  This relies on the implementation of getConflicts()
+      expect(result).to.deep.equal([
+        {
+          type: 'CustomApplication',
+          name: 'EBikes',
+          path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+          projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+          ignored: false,
+          conflict: true,
+          operation: 'deploy',
+        },
+      ]);
+    });
+
+    it('sf can see the conflict in status (retrieve)', () => {
+      const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
+        ensureExitCode: 0,
+      }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
+      // json is not sorted.  This relies on the implementation of getConflicts()
+      expect(result).to.deep.equal([
+        {
+          type: 'CustomApplication',
+          name: 'EBikes',
+          path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+          projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+          ignored: false,
+          conflict: true,
+          operation: 'deploy',
+        },
+      ]);
+    });
+
+    it('sf can see the conflict in status (deploy) ignoring conflicts', () => {
+      const result = execCmd<PreviewResult>('deploy metadata preview --json -c', {
+        ensureExitCode: 0,
+      }).jsonOutput.result.toDeploy.filter((app) => app.type === 'CustomApplication');
+      // json is not sorted.  This relies on the implementation of getConflicts()
+      expect(result).to.deep.equal([
+        {
+          type: 'CustomApplication',
+          name: 'EBikes',
+          path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+          projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+          ignored: false,
+          conflict: true,
+          operation: 'deploy',
+        },
+      ]);
+    });
+
+    it('sf can see the conflict in status (retrieve) ignoring conflicts', () => {
+      const result = execCmd<PreviewResult>('retrieve metadata preview --json -c', {
+        ensureExitCode: 0,
+      }).jsonOutput.result.toRetrieve.filter((app) => app.type === 'CustomApplication');
+      // json is not sorted.  This relies on the implementation of getConflicts()
+      expect(result).to.deep.equal([
+        {
+          type: 'CustomApplication',
+          name: 'EBikes',
+          path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+          projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+          ignored: false,
+          conflict: true,
+          operation: 'deploy',
+        },
+      ]);
+    });
   });
 
   it('gets conflict error on push', () => {
