@@ -37,12 +37,11 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
   public async run(): Promise<PreviewResult> {
     const { flags } = await this.parse(RetrieveMetadataPreview);
 
-    const stl = flags['ignore-conflicts']
-      ? undefined
-      : await SourceTracking.create({
-          org: flags['target-org'],
-          project: this.project,
-        });
+    const stl = await SourceTracking.create({
+      org: flags['target-org'],
+      project: this.project,
+      ignoreConflicts: flags['ignore-conflicts'],
+    });
 
     const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
 
