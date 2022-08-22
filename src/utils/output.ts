@@ -163,7 +163,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private displaySuccesses(): void {
     const successes = this.relativeFiles.filter((f) => f.state !== 'Failed');
 
-    if (!successes.length) return;
+    if (!successes.length || this.result.response.status === RequestStatus.Failed) return;
 
     const columns = {
       state: { header: 'State' },
