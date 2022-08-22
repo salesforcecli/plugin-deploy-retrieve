@@ -41,7 +41,8 @@ describe('conflict detection and resolution', () => {
     const pushResult = execCmd<DeployResultJson>('deploy metadata --json', { cli: 'sf' });
     expect(pushResult.jsonOutput?.status, JSON.stringify(pushResult)).equals(0);
     const pushedSource = pushResult.jsonOutput.result.files;
-    expect(pushedSource, JSON.stringify(pushedSource)).to.have.lengthOf(eBikesDeployResultCount);
+    expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.greaterThan(eBikesDeployResultCount - 5);
+    expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.lessThan(eBikesDeployResultCount + 5);
     expect(
       pushedSource.every((r) => r.state !== ComponentStatus.Failed),
       JSON.stringify(pushedSource.filter((r) => r.state === ComponentStatus.Failed))
@@ -119,78 +120,76 @@ describe('conflict detection and resolution', () => {
     ]);
   });
 
-  describe('preview with and without ignore-conflicts', () => {
-    it('sf can see the conflict in status (deploy)', () => {
-      const result = execCmd<PreviewResult>('deploy metadata preview --json', {
-        ensureExitCode: 0,
-      }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
-      // json is not sorted.  This relies on the implementation of getConflicts()
-      expect(result).to.deep.equal([
-        {
-          type: 'CustomApplication',
-          name: 'EBikes',
-          path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
-          projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
-          ignored: false,
-          conflict: true,
-          operation: 'deploy',
-        },
-      ]);
-    });
+  it('sf can see the conflict in status (deploy)', () => {
+    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+      ensureExitCode: 0,
+    }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
+    // json is not sorted.  This relies on the implementation of getConflicts()
+    expect(result).to.deep.equal([
+      {
+        type: 'CustomApplication',
+        fullName: 'EBikes',
+        path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+        projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+        ignored: false,
+        conflict: true,
+        operation: 'deploy',
+      },
+    ]);
+  });
 
-    it('sf can see the conflict in status (retrieve)', () => {
-      const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
-        ensureExitCode: 0,
-      }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
-      // json is not sorted.  This relies on the implementation of getConflicts()
-      expect(result).to.deep.equal([
-        {
-          type: 'CustomApplication',
-          name: 'EBikes',
-          path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
-          projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
-          ignored: false,
-          conflict: true,
-          operation: 'deploy',
-        },
-      ]);
-    });
+  it('sf can see the conflict in status (retrieve)', () => {
+    const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
+      ensureExitCode: 0,
+    }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
+    // json is not sorted.  This relies on the implementation of getConflicts()
+    expect(result).to.deep.equal([
+      {
+        type: 'CustomApplication',
+        fullName: 'EBikes',
+        path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+        projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+        ignored: false,
+        conflict: true,
+        operation: 'retrieve',
+      },
+    ]);
+  });
 
-    it('sf can see the conflict in status (deploy) ignoring conflicts', () => {
-      const result = execCmd<PreviewResult>('deploy metadata preview --json -c', {
-        ensureExitCode: 0,
-      }).jsonOutput.result.toDeploy.filter((app) => app.type === 'CustomApplication');
-      // json is not sorted.  This relies on the implementation of getConflicts()
-      expect(result).to.deep.equal([
-        {
-          type: 'CustomApplication',
-          name: 'EBikes',
-          path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
-          projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
-          ignored: false,
-          conflict: true,
-          operation: 'deploy',
-        },
-      ]);
-    });
+  it('sf can see the conflict in status (deploy) ignoring conflicts', () => {
+    const result = execCmd<PreviewResult>('deploy metadata preview --json -c', {
+      ensureExitCode: 0,
+    }).jsonOutput.result.toDeploy.filter((app) => app.type === 'CustomApplication');
+    // json is not sorted.  This relies on the implementation of getConflicts()
+    expect(result).to.deep.equal([
+      {
+        type: 'CustomApplication',
+        fullName: 'EBikes',
+        path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+        projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+        ignored: false,
+        conflict: false,
+        operation: 'deploy',
+      },
+    ]);
+  });
 
-    it('sf can see the conflict in status (retrieve) ignoring conflicts', () => {
-      const result = execCmd<PreviewResult>('retrieve metadata preview --json -c', {
-        ensureExitCode: 0,
-      }).jsonOutput.result.toRetrieve.filter((app) => app.type === 'CustomApplication');
-      // json is not sorted.  This relies on the implementation of getConflicts()
-      expect(result).to.deep.equal([
-        {
-          type: 'CustomApplication',
-          name: 'EBikes',
-          path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
-          projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
-          ignored: false,
-          conflict: true,
-          operation: 'deploy',
-        },
-      ]);
-    });
+  it('sf can see the conflict in status (retrieve) ignoring conflicts', () => {
+    const result = execCmd<PreviewResult>('retrieve metadata preview --json -c', {
+      ensureExitCode: 0,
+    }).jsonOutput.result.toRetrieve.filter((app) => app.type === 'CustomApplication');
+    // json is not sorted.  This relies on the implementation of getConflicts()
+    expect(result).to.deep.equal([
+      {
+        type: 'CustomApplication',
+        fullName: 'EBikes',
+        path: path.resolve(path.normalize('force-app/main/default/applications/EBikes.app-meta.xml')),
+        projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
+        ignored: false,
+        conflict: false,
+        operation: 'retrieve',
+      },
+    ]);
   });
 
   it('gets conflict error on push', () => {
