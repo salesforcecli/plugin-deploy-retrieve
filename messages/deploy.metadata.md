@@ -156,7 +156,7 @@ Target API version for the deploy.
 
 # flags.api-version.description
 
-Use this flag to override the default API version, which is the latest version supported the CLI, with the API version of your package.xml file.
+Use this flag to override the default API version with the API version of your package.xml file. The default API version is the latest version supported by the CLI.
 
 # flags.async.summary
 
@@ -204,3 +204,11 @@ There are changes in the org that conflict with the local changes you're trying 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
 - To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.
+
+# error.nothingToDeploy
+
+No local changes to deploy.
+
+# error.nothingToDeploy.Actions
+
+- To see conflicts and ignored files, run "sf deploy metadata preview" with any of the manifest, directory, or metadata flags.
