@@ -126,27 +126,30 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       ignoreConflicts: flags['ignore-conflicts'],
     });
     const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
-    const componentSet = isChanges
-      ? await stl.maybeApplyRemoteDeletesToLocal()
-      : await ComponentSetBuilder.build({
-          apiversion: flags['api-version'],
-          sourcepath: flags['source-dir'],
-          packagenames: flags['package-name'],
-          manifest: flags.manifest && {
-            manifestPath: flags.manifest,
-            directoryPaths: await getPackageDirs(),
-          },
-          metadata: flags.metadata && {
-            metadataEntries: flags.metadata,
-            directoryPaths: await getPackageDirs(),
-          },
-        });
+    const { componentSetFromNonDeletes, fileResponsesFromDelete } = isChanges
+      ? await stl.maybeApplyRemoteDeletesToLocal(true)
+      : {
+          componentSetFromNonDeletes: await ComponentSetBuilder.build({
+            apiversion: flags['api-version'],
+            sourcepath: flags['source-dir'],
+            packagenames: flags['package-name'],
+            manifest: flags.manifest && {
+              manifestPath: flags.manifest,
+              directoryPaths: await getPackageDirs(),
+            },
+            metadata: flags.metadata && {
+              metadataEntries: flags.metadata,
+              directoryPaths: await getPackageDirs(),
+            },
+          }),
+          fileResponsesFromDelete: [],
+        };
     // stl sets version based on config/files--if the command overrides it, we need to update
     if (isChanges && flags['api-version']) {
-      componentSet.apiVersion = flags['api-version'];
+      componentSetFromNonDeletes.apiVersion = flags['api-version'];
     }
     this.spinner.status = messages.getMessage('spinner.sending', [
-      componentSet.sourceApiVersion || componentSet.apiVersion,
+      componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
     ]);
 
     const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
@@ -168,7 +171,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       retrieveOpts.output = flags['target-metadata-dir'];
     }
 
-    const retrieve = await componentSet.retrieve(retrieveOpts);
+    const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
 
     this.spinner.status = messages.getMessage('spinner.polling');
 
@@ -192,7 +195,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     const formatter =
       format === 'source'
-        ? new RetrieveResultFormatter(result, flags['package-name'])
+        ? new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete)
         : new MetadataRetrieveResultFormatter(result, { ...flags, 'zip-file-name': zipFileName });
 
     if (!this.jsonEnabled()) {

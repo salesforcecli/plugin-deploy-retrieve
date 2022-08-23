@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.5.4...v1.5.5) (2022-08-23)
+
+### [1.5.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.5.3...v1.5.4) (2022-08-15)
+
+### Bug Fixes
+
+- display deploy errors after deploy complete ([9d82f6f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9d82f6f2e93552b1ca71a377c69edf3206267219))
+- properly report failed metadata deploys ([c3a5610](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c3a5610d523fdaa78865968c5f5610bf18c9086d))
+- report on deployers that fail ([8d2dcfa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8d2dcfa6c800c14f0e6a8dbe6000928e0b99f71c))
+
 ### [1.5.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/v1.5.2...v1.5.3) (2022-07-05)
 
 ### Bug Fixes
