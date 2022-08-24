@@ -61,6 +61,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     'single-package': Flags.boolean({
       summary: messages.getMessage('flags.single-package.summary'),
       dependsOn: ['target-metadata-dir'],
+      exclusive: ['ignore-conflicts'],
     }),
     'source-dir': Flags.string({
       char: 'd',
@@ -78,6 +79,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           flags: ['manifest', 'metadata', 'source-dir', 'package-name'],
         },
       ],
+      exclusive: ['ignore-conflicts'],
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -95,10 +97,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       char: 'z',
       summary: messages.getMessage('flags.unzip.summary'),
       dependsOn: ['target-metadata-dir'],
+      exclusive: ['ignore-conflicts'],
     }),
     'zip-file-name': zipFileFlag({
       summary: messages.getMessage('flags.zip-file-name.summary'),
       dependsOn: ['target-metadata-dir'],
+      exclusive: ['ignore-conflicts'],
     }),
   };
 
