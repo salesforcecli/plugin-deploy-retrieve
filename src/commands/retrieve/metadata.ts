@@ -5,6 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { rm } from 'fs/promises';
+import { join, resolve } from 'path';
+
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { RetrieveResult, ComponentSetBuilder, RetrieveSetOptions } from '@salesforce/source-deploy-retrieve';
 
@@ -210,6 +213,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           getString(result.response, 'errorMessage', result.response.status),
           getString(result.response, 'errorStatusCode', 'unknown')
         );
+      }
+    }
+
+    if (format === 'metadata' && flags.unzip) {
+      try {
+        await rm(resolve(join(flags['target-metadata-dir'], zipFileName)), { recursive: true });
+      } catch (e) {
+        // do nothing
       }
     }
 
