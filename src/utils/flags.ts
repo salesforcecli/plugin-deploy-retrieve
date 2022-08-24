@@ -6,7 +6,7 @@
  */
 import * as fs from 'fs';
 import { resolve, extname } from 'path';
-import { Interfaces, Flags } from '@oclif/core';
+import { Flags } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { PathInfo, TestLevel } from './types';
 
@@ -17,15 +17,7 @@ const messages = Messages.load('@salesforce/plugin-deploy-retrieve', 'validation
   'error.ExpectedFileOrDirToExist',
 ]);
 
-type FileOrDirOpts = {
-  exists?: boolean;
-} & Partial<Interfaces.OptionFlag<PathInfo | undefined>>;
-
-type ZipFileOpts = Partial<Interfaces.OptionFlag<string | undefined>>;
-
-type EnsuredDirOpts = Partial<Interfaces.OptionFlag<string | undefined>>;
-
-const parsePathInfo = async (input: string, opts: FileOrDirOpts): Promise<PathInfo> => {
+const parsePathInfo = async (input: string, opts: { exists?: boolean }): Promise<PathInfo> => {
   if (opts.exists && !fs.existsSync(input)) {
     throw messages.createError('error.InvalidFlagPath', [input, messages.getMessage('error.ExpectedFileOrDirToExist')]);
   }
@@ -78,62 +70,26 @@ function resolveZipFileName(zipFileName?: string): string {
 /**
  * Flag value is a directory path that may or may not exist. If it doesn't exist, then it will be created.
  */
-export function ensuredDirFlag(opts: EnsuredDirOpts): Interfaces.OptionFlag<string>;
-export function ensuredDirFlag(opts?: EnsuredDirOpts): Interfaces.OptionFlag<string | undefined>;
-export function ensuredDirFlag(
-  opts: EnsuredDirOpts = {}
-): Interfaces.OptionFlag<string> | Interfaces.OptionFlag<string | undefined> {
-  return Flags.build<string | undefined>({
-    parse: async (input: string) => ensureDirectoryPath(input),
-    ...opts,
-  })();
-}
+export const ensuredDirFlag = Flags.custom<string>({
+  parse: async (input) => ensureDirectoryPath(input),
+});
 
-export function testLevelFlag(
-  opts: Partial<Interfaces.OptionFlag<TestLevel>> & ({ required: true } | { default: Interfaces.Default<TestLevel> })
-): Interfaces.OptionFlag<TestLevel>;
-export function testLevelFlag(
-  opts?: Partial<Interfaces.OptionFlag<TestLevel>>
-): Interfaces.OptionFlag<TestLevel | undefined>;
-export function testLevelFlag(
-  opts: Partial<Interfaces.OptionFlag<TestLevel>> = {}
-): Interfaces.OptionFlag<TestLevel> | Interfaces.OptionFlag<TestLevel | undefined> {
-  return Flags.build<TestLevel | undefined>({
-    char: 'l',
-    parse: (input: string) => Promise.resolve(input as TestLevel),
-    options: Object.values(TestLevel),
-    ...opts,
-  })();
-}
+export const testLevelFlag = Flags.custom<TestLevel>({
+  char: 'l',
+  parse: (input) => Promise.resolve(input as TestLevel),
+  options: Object.values(TestLevel),
+});
 
 /**
  * Flag value could either be a file path or a directory path.
  */
-export function fileOrDirFlag(
-  opts: FileOrDirOpts & ({ required: true } | { default: Interfaces.Default<PathInfo> })
-): Interfaces.OptionFlag<PathInfo>;
-export function fileOrDirFlag(opts?: FileOrDirOpts): Interfaces.OptionFlag<PathInfo | undefined>;
-export function fileOrDirFlag(
-  opts: FileOrDirOpts = {}
-): Interfaces.OptionFlag<PathInfo> | Interfaces.OptionFlag<PathInfo | undefined> {
-  return Flags.build<PathInfo | undefined>({
-    parse: async (input: string) => parsePathInfo(input, opts),
-    ...opts,
-  })();
-}
+export const fileOrDirFlag = Flags.custom<PathInfo, { exists?: boolean }>({
+  parse: async (input, _, opts) => parsePathInfo(input, opts),
+});
 
 /**
  * Flag value is the name of a zip file that defaults to 'unpackaged.zip'.
  */
-export function zipFileFlag(
-  opts: ZipFileOpts & ({ required: true } | { default: Interfaces.Default<string> })
-): Interfaces.OptionFlag<string>;
-export function zipFileFlag(opts?: ZipFileOpts): Interfaces.OptionFlag<string | undefined>;
-export function zipFileFlag(
-  opts: ZipFileOpts
-): Interfaces.OptionFlag<string> | Interfaces.OptionFlag<string | undefined> {
-  return Flags.build<string | undefined>({
-    parse: async (input: string) => Promise.resolve(resolveZipFileName(input)),
-    ...opts,
-  })();
-}
+export const zipFileFlag = Flags.custom<string>({
+  parse: async (input) => Promise.resolve(resolveZipFileName(input)),
+});
