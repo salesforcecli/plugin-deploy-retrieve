@@ -117,7 +117,7 @@ EXAMPLES
     $ sf deploy --interactive
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.5.4/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.5.5/src/commands/deploy.ts)_
 
 ## `sf deploy metadata`
 
@@ -732,20 +732,24 @@ Retrieve metadata in source format from an org to your local project.
 
 ```
 USAGE
-  $ sf retrieve metadata [--json] [-a <value>] [-c] [-x <value> | -m <value> | -d <value>] [-n <value>] [-o <value>]
-    [-w <value>]
+  $ sf retrieve metadata [--json] [-a <value>] [-c] [-x <value> | -m <value> | -d <value>] [-n <value>]
+    [--single-package -t <value>] [-o <value>] [-w <value>] [-z ] [--zip-file-name <value> ]
 
 FLAGS
-  -a, --api-version=<value>      Target API version for the retrieve.
-  -c, --ignore-conflicts         Ignore conflicts and retrieve and save files to your local filesystem, even if they
-                                 overwrite your local changes.
-  -d, --source-dir=<value>...    File paths for source to retrieve from the org.
-  -m, --metadata=<value>...      Metadata component names to retrieve.
-  -n, --package-name=<value>...  Package names to retrieve.
-  -o, --target-org=<value>       Login username or alias for the target org.
-  -w, --wait=<value>             Number of minutes to wait for the command to complete and display results to the
-                                 terminal window.
-  -x, --manifest=<value>         File path for the manifest (package.xml) that specifies the components to retrieve.
+  -a, --api-version=<value>          Target API version for the retrieve.
+  -c, --ignore-conflicts             Ignore conflicts and retrieve and save files to your local filesystem, even if they
+                                     overwrite your local changes.
+  -d, --source-dir=<value>...        File paths for source to retrieve from the org.
+  -m, --metadata=<value>...          Metadata component names to retrieve.
+  -n, --package-name=<value>...      Package names to retrieve.
+  -o, --target-org=<value>           Login username or alias for the target org.
+  -t, --target-metadata-dir=<value>  Directory root for the retrieved files.
+  -w, --wait=<value>                 Number of minutes to wait for the command to complete and display results to the
+                                     terminal window.
+  -x, --manifest=<value>             File path for the manifest (package.xml) that specifies the components to retrieve.
+  -z, --unzip                        Extract all files from the retrieved zip file.
+  --single-package                   Indicates that the zip file points to a directory structure for a single package.
+  --zip-file-name=<value>            File name to use for the retrieved zip file.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -802,6 +806,14 @@ EXAMPLES
 
     $ sf retrieve metadata --package-name Package1 "PackageName With Spaces" Package3
     $ sf retrieve metadata --package-name Package1 --package-name "PackageName With Spaces" --package-name Package3
+
+  Retrieve using Metadata API
+
+    $ sf retrieve metadata --source-dir force-app --target-metadata-dir output
+
+  Retrieve using Metadata API and automatically unzip the contents
+
+    $ sf retrieve metadata --source-dir force-app --target-metadata-dir output --unzip
 
 FLAG DESCRIPTIONS
   -a, --api-version=<value>  Target API version for the retrieve.
