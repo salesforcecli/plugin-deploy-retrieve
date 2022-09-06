@@ -126,11 +126,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
 
     this.spinner.start(messages.getMessage('spinner.start'));
+    const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const stl = await SourceTracking.create({
       org: flags['target-org'],
       project: this.project,
       subscribeSDREvents: true,
-      ignoreConflicts: flags['ignore-conflicts'],
+      ignoreConflicts: format === 'metadata' || flags['ignore-conflicts'],
     });
     const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
     const { componentSetFromNonDeletes, fileResponsesFromDelete } = isChanges
@@ -158,8 +159,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     this.spinner.status = messages.getMessage('spinner.sending', [
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
     ]);
-
-    const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
 
     const retrieveOpts: RetrieveSetOptions = {
       usernameOrConnection: flags['target-org'].getUsername(),
