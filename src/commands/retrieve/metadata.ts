@@ -5,13 +5,17 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { rm } from 'fs/promises';
+import { join, resolve } from 'path';
+
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { RetrieveResult, ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
+import { RetrieveResult, ComponentSetBuilder, RetrieveSetOptions } from '@salesforce/source-deploy-retrieve';
 
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
-import { RetrieveResultFormatter } from '../../utils/output';
+import { ensuredDirFlag, zipFileFlag } from '../../utils/flags';
+import { MetadataRetrieveResultFormatter, RetrieveResultFormatter } from '../../utils/output';
 import { getPackageDirs } from '../../utils/project';
 import { RetrieveResultJson } from '../../utils/types';
 import { writeConflictTable } from '../../utils/conflicts';
@@ -57,12 +61,28 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       summary: messages.getMessage('flags.package-name.summary'),
       multiple: true,
     }),
+    'single-package': Flags.boolean({
+      summary: messages.getMessage('flags.single-package.summary'),
+      dependsOn: ['target-metadata-dir'],
+      exclusive: ['ignore-conflicts'],
+    }),
     'source-dir': Flags.string({
       char: 'd',
       summary: messages.getMessage('flags.source-dir.summary'),
       description: messages.getMessage('flags.source-dir.description'),
       multiple: true,
       exclusive: ['manifest', 'metadata'],
+    }),
+    'target-metadata-dir': ensuredDirFlag({
+      char: 't',
+      summary: messages.getMessage('flags.target-metadata-dir.summary'),
+      relationships: [
+        {
+          type: 'some',
+          flags: ['manifest', 'metadata', 'source-dir', 'package-name'],
+        },
+      ],
+      exclusive: ['ignore-conflicts'],
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -75,6 +95,17 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       unit: 'minutes',
       summary: messages.getMessage('flags.wait.summary'),
       description: messages.getMessage('flags.wait.description'),
+    }),
+    unzip: Flags.boolean({
+      char: 'z',
+      summary: messages.getMessage('flags.unzip.summary'),
+      dependsOn: ['target-metadata-dir'],
+      exclusive: ['ignore-conflicts'],
+    }),
+    'zip-file-name': zipFileFlag({
+      summary: messages.getMessage('flags.zip-file-name.summary'),
+      dependsOn: ['target-metadata-dir'],
+      exclusive: ['ignore-conflicts'],
     }),
   };
 
@@ -93,12 +124,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
+
     this.spinner.start(messages.getMessage('spinner.start'));
+    const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const stl = await SourceTracking.create({
       org: flags['target-org'],
       project: this.project,
       subscribeSDREvents: true,
-      ignoreConflicts: flags['ignore-conflicts'],
+      ignoreConflicts: format === 'metadata' || flags['ignore-conflicts'],
     });
     const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
     const { componentSetFromNonDeletes, fileResponsesFromDelete } = isChanges
@@ -127,12 +160,24 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
     ]);
 
-    const retrieve = await componentSetFromNonDeletes.retrieve({
+    const retrieveOpts: RetrieveSetOptions = {
       usernameOrConnection: flags['target-org'].getUsername(),
       merge: true,
       output: this.project.getDefaultPackage().fullPath,
       packageOptions: flags['package-name'],
-    });
+      format,
+    };
+
+    const zipFileName = flags['zip-file-name'] ?? 'unpackaged.zip';
+
+    if (format === 'metadata') {
+      retrieveOpts.singlePackage = flags['single-package'];
+      retrieveOpts.unzip = flags.unzip;
+      retrieveOpts.zipFileName = zipFileName;
+      retrieveOpts.output = flags['target-metadata-dir'];
+    }
+
+    const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
 
     this.spinner.status = messages.getMessage('spinner.polling');
 
@@ -154,7 +199,10 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
     this.spinner.stop();
 
-    const formatter = new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
+    const formatter =
+      format === 'source'
+        ? new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete)
+        : new MetadataRetrieveResultFormatter(result, { ...flags, 'zip-file-name': zipFileName });
 
     if (!this.jsonEnabled()) {
       if (result.response.status === 'Succeeded') {
@@ -164,6 +212,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           getString(result.response, 'errorMessage', result.response.status),
           getString(result.response, 'errorStatusCode', 'unknown')
         );
+      }
+    }
+
+    if (format === 'metadata' && flags.unzip) {
+      try {
+        await rm(resolve(join(flags['target-metadata-dir'], zipFileName)), { recursive: true });
+      } catch (e) {
+        // do nothing
       }
     }
 

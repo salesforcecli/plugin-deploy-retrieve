@@ -51,7 +51,7 @@ context('deploy metadata --metadata-dir NUTs [name: %REPO_NAME%]', () => {
 
     it('should throw an error if the directory does not exist', async () => {
       const deploy = await testkit.deploy({ args: '--metadata-dir DOES_NOT_EXIST', exitCode: 1 });
-      testkit.expect.errorToHaveName(deploy, 'Error');
+      testkit.expect.errorToHaveName(deploy, 'InvalidFlagPathError');
     });
   });
 });
