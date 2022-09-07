@@ -1,10 +1,12 @@
 # summary
 
-Deploy metadata in source format to an org from your local project.
+Deploy metadata to an org from your local project.
 
 # description
 
 You must run this command from within a project.
+
+Metadata components are deployed in source format by default. Deploy them in metadata format by specifying the --metadata-dir flag, which specifies the root directory or ZIP file that contains the metadata formatted files you want to deploy.
 
 If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
