@@ -1,10 +1,12 @@
 # summary
 
-Retrieve metadata in source format from an org to your local project.
+Retrieve metadata from an org to your local project.
 
 # description
 
 You must run this command from within a project.
+
+Metadata components are retrieved in source format by default. Retrieve them in metadata format by specifying the --target-metadata-dir flag, which retrieves the components into a ZIP file in the specified directory.
 
 If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
@@ -51,11 +53,11 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
   <%= config.bin %> <%= command.id %> --package-name Package1 "PackageName With Spaces" Package3
   <%= config.bin %> <%= command.id %> --package-name Package1 --package-name "PackageName With Spaces" --package-name Package3
 
-- Retrieve using Metadata API
+- Retrieve the metadata components listed in the force-app directory, but retrieve them in metadata format into a ZIP file in the "output" directory:
 
   <%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output
 
-- Retrieve using Metadata API and automatically unzip the contents
+-  Retrieve in metadata format and automatically extract the contents into the "output" directory:
 
   <%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output --unzip
 
@@ -125,7 +127,7 @@ Indicates that the zip file points to a directory structure for a single package
 
 # flags.target-metadata-dir.summary
 
-Directory root for the retrieved files.
+Directory that will contain the retrieved metadata format files or ZIP.
 
 # flags.unzip.summary
 
