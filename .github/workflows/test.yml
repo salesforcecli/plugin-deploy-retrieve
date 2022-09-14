@@ -21,6 +21,7 @@ jobs:
           - 'yarn test:nuts:deploy:metadata:source-dir'
           - 'yarn test:nuts:deploy:metadata:test-level'
           - 'yarn test:nuts:static'
+          - 'yarn test:nuts:tracking'
       fail-fast: false
     with:
       os: ${{ matrix.os }}
