@@ -89,4 +89,28 @@ describe('retrieve metadata NUTs', () => {
       ]);
     });
   });
+
+  describe('mdapi format', () => {
+    it('should retrieve force-app into a specified directory', async () => {
+      await testkit.retrieve({ args: '--source-dir force-app --target-metadata-dir metadata-dir' });
+      await testkit.expect.directoryToHaveSomeFiles('metadata-dir');
+      await testkit.expect.filesToBeRetrieved(['force-app/**/*'], ['force-app/test/**/*']);
+    });
+
+    it('should retrieve force-app into a specified directory with specified zip file name', async () => {
+      await testkit.retrieve({
+        args: '--source-dir force-app --target-metadata-dir metadata-dir --zip-file-name my-zip',
+      });
+      await testkit.expect.filesToBeRetrieved(['force-app/**/*'], ['force-app/test/**/*']);
+      await testkit.expect.fileToExist(path.join('metadata-dir', 'my-zip.zip'));
+    });
+
+    it('should retrieve force-app into a specified directory and unzip', async () => {
+      await testkit.retrieve({
+        args: '--source-dir force-app --target-metadata-dir metadata-dir --unzip',
+      });
+      await testkit.expect.filesToBeRetrieved(['force-app/**/*'], ['force-app/test/**/*']);
+      await testkit.expect.fileToExist(path.join('metadata-dir', 'unpackaged', 'unpackaged', 'package.xml'));
+    });
+  });
 });

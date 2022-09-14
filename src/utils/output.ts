@@ -22,10 +22,29 @@ import {
 import { Messages, NamedPackageDir, SfProject } from '@salesforce/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
-import { API, AsyncDeployResultJson, DeployResultJson, RetrieveResultJson, TestLevel, Verbosity } from './types';
+import {
+  API,
+  AsyncDeployResultJson,
+  DeployResultJson,
+  MetadataRetrieveResultJson,
+  RetrieveResultJson,
+  TestLevel,
+  Verbosity,
+} from './types';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
+const deployAsyncMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.async', [
+  'info.AsyncDeployResume',
+  'info.AsyncDeployStatus',
+  'info.AsyncDeployCancel',
+  'info.AsyncDeployQueued',
+  'info.AsyncDeployCancelQueued',
+]);
+
+const retrieveMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata', [
+  'info.WroteZipFile',
+  'info.ExtractedZipFile',
+]);
 
 function tableHeader(message: string): string {
   return blue(bold(message));
@@ -58,9 +77,10 @@ function colorStatus(status: RequestStatus): string {
 const check = StandardColors.success('✓');
 
 export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
-  const relative = fileResponses.map((file) =>
-    file.filePath ? { ...file, filePath: path.relative(process.cwd(), file.filePath) } : file
-  );
+  const relative = fileResponses.map((file) => {
+    return file.filePath ? { ...file, filePath: path.relative(process.cwd(), file.filePath) } : file;
+  });
+
   return relative;
 }
 /**
@@ -340,11 +360,11 @@ export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJs
   }
 
   public display(): void {
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployQueued'));
+    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployQueued'));
     CliUx.ux.log();
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployResume', [this.id]));
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus', [this.id]));
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployCancel', [this.id]));
+    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.id]));
+    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.id]));
+    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancel', [this.id]));
   }
 }
 
@@ -372,16 +392,20 @@ export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployRe
   }
 
   public display(): void {
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployCancelQueued'));
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployResume', [this.id]));
-    CliUx.ux.log(messages.getMessage('info.AsyncDeployStatus', [this.id]));
+    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancelQueued'));
+    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.id]));
+    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.id]));
   }
 }
 
 export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   private files: FileResponse[];
-  public constructor(private result: RetrieveResult, private packageNames: string[]) {
-    this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
+  public constructor(
+    private result: RetrieveResult,
+    private packageNames: string[] = [],
+    deleteResponses: FileResponse[] = []
+  ) {
+    this.files = sortFileResponses(asRelativePaths((this.result.getFileResponses() ?? []).concat(deleteResponses)));
   }
 
   public getJson(): RetrieveResultJson {
@@ -426,12 +450,36 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   }
 
   private async getPackages(): Promise<NamedPackageDir[]> {
-    const packages: NamedPackageDir[] = [];
     const projectPath = await SfProject.resolveProjectPath();
-    this.packageNames?.forEach((name) => {
+    return this.packageNames.map((name) => {
       const packagePath = path.join(projectPath, name);
-      packages.push({ name, path: packagePath, fullPath: path.resolve(packagePath) });
+      return { name, path: packagePath, fullPath: path.resolve(packagePath) };
     });
-    return packages;
+  }
+}
+
+export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrieveResultJson> {
+  private zipFilePath: string;
+  private files: FileResponse[];
+  public constructor(
+    private result: RetrieveResult,
+    private opts: { 'target-metadata-dir': string; 'zip-file-name': string; unzip: boolean }
+  ) {
+    this.zipFilePath = path.join(opts['target-metadata-dir'], opts['zip-file-name']);
+    this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
+  }
+
+  public getJson(): MetadataRetrieveResultJson {
+    delete this.result.response.zipFile;
+    return { ...this.result.response, zipFilePath: this.zipFilePath, files: this.files };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async display(): Promise<void> {
+    CliUx.ux.log(retrieveMessages.getMessage('info.WroteZipFile', [this.zipFilePath]));
+    if (this.opts.unzip) {
+      const extractPath = path.join(this.opts['target-metadata-dir'], path.parse(this.opts['zip-file-name']).name);
+      CliUx.ux.log(retrieveMessages.getMessage('info.ExtractedZipFile', [this.zipFilePath, extractPath]));
+    }
   }
 }

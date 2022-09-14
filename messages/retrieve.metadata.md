@@ -1,10 +1,12 @@
 # summary
 
-Retrieve metadata in source format from an org to your local project.
+Retrieve metadata from an org to your local project.
 
 # description
 
 You must run this command from within a project.
+
+Metadata components are retrieved in source format by default. Retrieve them in metadata format by specifying the --target-metadata-dir flag, which retrieves the components into a ZIP file in the specified directory.
 
 If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
@@ -51,6 +53,14 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
   <%= config.bin %> <%= command.id %> --package-name Package1 "PackageName With Spaces" Package3
   <%= config.bin %> <%= command.id %> --package-name Package1 --package-name "PackageName With Spaces" --package-name Package3
 
+- Retrieve the metadata components listed in the force-app directory, but retrieve them in metadata format into a ZIP file in the "output" directory:
+
+  <%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output
+
+- Retrieve in metadata format and automatically extract the contents into the "output" directory:
+
+<%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output --unzip
+
 # flags.api-version.summary
 
 Target API version for the retrieve.
@@ -65,7 +75,7 @@ Ignore conflicts and retrieve and save files to your local filesystem, even if t
 
 # flags.ignore-conflicts.description
 
-This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs. 
+This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as production orgs.
 
 # flags.manifest.summary
 
@@ -107,6 +117,26 @@ Number of minutes to wait for the command to complete and display results to the
 
 If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 
+# flags.metadata-dir.summary
+
+Root of directory or zip file of metadata formatted files to retrieve.
+
+# flags.single-package.summary
+
+Indicates that the zip file points to a directory structure for a single package.
+
+# flags.target-metadata-dir.summary
+
+Directory that will contain the retrieved metadata format files or ZIP.
+
+# flags.unzip.summary
+
+Extract all files from the retrieved zip file.
+
+# flags.zip-file-name.summary
+
+File name to use for the retrieved zip file.
+
 # spinner.start
 
 Preparing retrieve request
@@ -128,3 +158,11 @@ There are changes in your local files that conflict with the org changes you're 
 - To overwrite the local changes, rerun this command with the --ignore-conflicts flag.
 
 - To overwrite the remote changes, run the "sf deploy metadata" command with the --ignore-conflicts flag.
+
+# info.WroteZipFile
+
+Wrote retrieve zip file to %s.
+
+# info.ExtractedZipFile
+
+Extracted %s to %s.

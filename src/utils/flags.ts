@@ -5,23 +5,21 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'fs';
-import { Interfaces, Flags } from '@oclif/core';
+import { resolve, extname } from 'path';
+import { Flags } from '@oclif/core';
+import { Messages } from '@salesforce/core';
 import { PathInfo, TestLevel } from './types';
 
-export const testLevelFlag = (
-  opts: Partial<Interfaces.OptionFlag<TestLevel | undefined>> = {}
-): Interfaces.OptionFlag<TestLevel | undefined> => {
-  return Flags.build<TestLevel | undefined>({
-    char: 'l',
-    parse: (input: string) => Promise.resolve(input as TestLevel),
-    options: Object.values(TestLevel),
-    ...opts,
-  })();
-};
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.load('@salesforce/plugin-deploy-retrieve', 'validation', [
+  'error.InvalidFlagPath',
+  'error.ExpectedDirectory',
+  'error.ExpectedFileOrDirToExist',
+]);
 
-const parsePathInfo = async (input: string, exists: boolean): Promise<PathInfo> => {
-  if (exists && !fs.existsSync(input)) {
-    throw new Error(`No file or directory found at ${input}`);
+const parsePathInfo = async (input: string, opts: { exists?: boolean }): Promise<PathInfo> => {
+  if (opts.exists && !fs.existsSync(input)) {
+    throw messages.createError('error.InvalidFlagPath', [input, messages.getMessage('error.ExpectedFileOrDirToExist')]);
   }
 
   const stat = await fs.promises.stat(input);
@@ -33,11 +31,65 @@ const parsePathInfo = async (input: string, exists: boolean): Promise<PathInfo> 
   return { type: 'file', path: input };
 };
 
-export const fileOrDirFlag = (
-  opts: { exists?: boolean } & Partial<Interfaces.OptionFlag<PathInfo | undefined>> = {}
-): Interfaces.OptionFlag<PathInfo | undefined> => {
-  return Flags.build<PathInfo | undefined>({
-    parse: async (input: string) => parsePathInfo(input, opts.exists),
-    ...opts,
-  })();
-};
+interface FsError extends Error {
+  code: string;
+}
+
+/**
+ * Ensures that the specified directory exists. If it does not, it is created.
+ */
+async function ensureDirectoryPath(path: string): Promise<string> {
+  const trimmedPath = path?.trim();
+  const resolvedPath = trimmedPath?.length ? resolve(trimmedPath) : null;
+
+  try {
+    const stats = await fs.promises.stat(resolvedPath);
+    const isDir = stats.isDirectory();
+    if (!isDir) {
+      throw messages.createError('error.InvalidFlagPath', [path, messages.getMessage('error.ExpectedDirectory')]);
+    }
+  } catch (error: unknown) {
+    const err = error as FsError;
+    if (err.code !== 'ENOENT') {
+      throw err;
+    } else {
+      await fs.promises.mkdir(resolvedPath, { recursive: true });
+    }
+  }
+  return resolvedPath;
+}
+
+function resolveZipFileName(zipFileName?: string): string {
+  // If no file extension was provided append, '.zip'
+  if (zipFileName && !extname(zipFileName)) {
+    zipFileName += '.zip';
+  }
+  return zipFileName || 'unpackaged.zip';
+}
+
+/**
+ * Flag value is a directory path that may or may not exist. If it doesn't exist, then it will be created.
+ */
+export const ensuredDirFlag = Flags.custom<string>({
+  parse: async (input) => ensureDirectoryPath(input),
+});
+
+export const testLevelFlag = Flags.custom<TestLevel>({
+  char: 'l',
+  parse: (input) => Promise.resolve(input as TestLevel),
+  options: Object.values(TestLevel),
+});
+
+/**
+ * Flag value could either be a file path or a directory path.
+ */
+export const fileOrDirFlag = Flags.custom<PathInfo, { exists?: boolean }>({
+  parse: async (input, _, opts) => parsePathInfo(input, opts),
+});
+
+/**
+ * Flag value is the name of a zip file that defaults to 'unpackaged.zip'.
+ */
+export const zipFileFlag = Flags.custom<string>({
+  parse: async (input) => Promise.resolve(resolveZipFileName(input)),
+});

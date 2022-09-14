@@ -1,10 +1,12 @@
 # summary
 
-Deploy metadata in source format to an org from your local project.
+Deploy metadata to an org from your local project.
 
 # description
 
 You must run this command from within a project.
+
+Metadata components are deployed in source format by default. Deploy them in metadata format by specifying the --metadata-dir flag, which specifies the root directory or ZIP file that contains the metadata formatted files you want to deploy.
 
 If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
@@ -156,7 +158,7 @@ Target API version for the deploy.
 
 # flags.api-version.description
 
-Use this flag to override the default API version, which is the latest version supported the CLI, with the API version of your package.xml file.
+Use this flag to override the default API version with the API version of your package.xml file. The default API version is the latest version supported by the CLI.
 
 # flags.async.summary
 
@@ -204,3 +206,11 @@ There are changes in the org that conflict with the local changes you're trying 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
 - To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.
+
+# error.nothingToDeploy
+
+No local changes to deploy.
+
+# error.nothingToDeploy.Actions
+
+- To see conflicts and ignored files, run "sf deploy metadata preview" with any of the manifest, directory, or metadata flags.

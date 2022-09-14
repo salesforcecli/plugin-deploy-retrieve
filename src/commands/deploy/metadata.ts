@@ -21,6 +21,7 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
+
 export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');

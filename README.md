@@ -67,11 +67,13 @@ sf plugins
 - [`sf deploy`](#sf-deploy)
 - [`sf deploy metadata`](#sf-deploy-metadata)
 - [`sf deploy metadata cancel`](#sf-deploy-metadata-cancel)
+- [`sf deploy metadata preview`](#sf-deploy-metadata-preview)
 - [`sf deploy metadata quick`](#sf-deploy-metadata-quick)
 - [`sf deploy metadata report`](#sf-deploy-metadata-report)
 - [`sf deploy metadata resume`](#sf-deploy-metadata-resume)
 - [`sf deploy metadata validate`](#sf-deploy-metadata-validate)
 - [`sf retrieve metadata`](#sf-retrieve-metadata)
+- [`sf retrieve metadata preview`](#sf-retrieve-metadata-preview)
 
 ## `sf deploy`
 
@@ -115,11 +117,11 @@ EXAMPLES
     $ sf deploy --interactive
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.5.3/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/v1.6.0/src/commands/deploy.ts)_
 
 ## `sf deploy metadata`
 
-Deploy metadata in source format to an org from your local project.
+Deploy metadata to an org from your local project.
 
 ```
 USAGE
@@ -138,8 +140,7 @@ FLAGS
   -o, --target-org=<value>     Login username or alias for the target org.
   -r, --ignore-errors          Ignore any errors and don’t roll back deployment.
   -t, --tests=<value>...       Apex tests to run when --test-level is RunSpecifiedTests.
-  -w, --wait=<minutes>         [default: 33 minutes] Number of minutes to wait for command to complete and display
-                               results.
+  -w, --wait=<minutes>         Number of minutes to wait for command to complete and display results.
   -x, --manifest=<value>       Full file path for manifest (package.xml) of components to deploy.
   --async                      Run the command asynchronously.
   --concise                    Show concise output of the deploy result.
@@ -153,9 +154,13 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Deploy metadata in source format to an org from your local project.
+  Deploy metadata to an org from your local project.
 
   You must run this command from within a project.
+
+  Metadata components are deployed in source format by default. Deploy them in metadata format by specifying the
+  --metadata-dir flag, which specifies the root directory or ZIP file that contains the metadata formatted files you
+  want to deploy.
 
   If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production
   org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox
@@ -207,8 +212,8 @@ EXAMPLES
 FLAG DESCRIPTIONS
   -a, --api-version=<value>  Target API version for the deploy.
 
-    Use this flag to override the default API version, which is the latest version supported the CLI, with the API
-    version of your package.xml file.
+    Use this flag to override the default API version with the API version of your package.xml file. The default API
+    version is the latest version supported by the CLI.
 
   -c, --ignore-conflicts  Ignore conflicts and deploy local files, even if they overwrite changes in the org.
 
@@ -346,6 +351,83 @@ FLAG DESCRIPTIONS
     deploy metadata report".
 ```
 
+## `sf deploy metadata preview`
+
+Preview a deployment to see what will deploy to the org, the potential conflicts, and the ignored files.
+
+```
+USAGE
+  $ sf deploy metadata preview [--json] [-c] [-x <value> | -d <value> | -m <value>] [-o <value>]
+
+FLAGS
+  -c, --ignore-conflicts       Ignore conflicts and deploy local files, even if they overwrite changes in the org.
+  -d, --source-dir=<value>...  Path to the local source files to preview.
+  -m, --metadata=<value>...    Metadata component names to preview.
+  -o, --target-org=<value>     Login username or alias for the target org.
+  -x, --manifest=<value>       Full file path for manifest (package.xml) of components to preview.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Preview a deployment to see what will deploy to the org, the potential conflicts, and the ignored files.
+
+  You must run this command from within a project.
+
+  The command outputs a table that describes what will happen if you run the "sf deploy metadata" command. The table
+  lists the metadata components that will be deployed and deleted. The table also lists the current conflicts between
+  files in your local project and components in the org. Finally, the table lists the files that won't be deployed
+  because they're included in your .forceignore file.
+
+  If your org allows source tracking, then this command considers conflicts between the org and local. Some orgs, such
+  as production orgs, never allow source tracking. Use the "--no-track-source" flag when you create a scratch or sandbox
+  org to disable source tracking.
+
+  To preview the deployment of multiple metadata components, either set multiple --metadata <name> flags or a single
+  --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double
+  quotes. The same syntax applies to --manifest and --source-dir.
+
+EXAMPLES
+  NOTE: The commands to preview a deployment and actually deploy it use similar flags. We provide a few preview examples here, but see the help for "sf deploy metadata" for more examples that you can adapt for previewing.
+
+  Preview the deployment of source files in a directory, such as force-app:
+
+    $ sf deploy metadata preview  --source-dir force-app
+
+  Preview the deployment of all Apex classes:
+
+    $ sf deploy metadata preview --metadata ApexClass
+
+  Preview deployment of a specific Apex class:
+
+    $ sf deploy metadata preview --metadata ApexClass:MyApexClass
+
+  Preview deployment of all components listed in a manifest:
+
+    $ sf deploy metadata preview --manifest path/to/package.xml
+
+FLAG DESCRIPTIONS
+  -c, --ignore-conflicts  Ignore conflicts and deploy local files, even if they overwrite changes in the org.
+
+    This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as
+    production orgs.
+
+  -d, --source-dir=<value>...  Path to the local source files to preview.
+
+    The supplied path can be to a single file (in which case the operation is applied to only one file) or to a folder
+    (in which case the operation is applied to all metadata types in the directory and its subdirectories).
+
+    If you specify this flag, don’t specify --metadata or --manifest.
+
+  -o, --target-org=<value>  Login username or alias for the target org.
+
+    Overrides your default org.
+
+  -x, --manifest=<value>  Full file path for manifest (package.xml) of components to preview.
+
+    All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
+```
+
 ## `sf deploy metadata quick`
 
 Quickly deploy a validated deployment to an org.
@@ -358,8 +440,7 @@ FLAGS
   -i, --job-id=<value>      Job ID of the deployment you want to quick deploy.
   -o, --target-org=<value>  Login username or alias for the target org.
   -r, --use-most-recent     Use the job ID of the most recently validated deployment.
-  -w, --wait=<minutes>      [default: 33 minutes] Number of minutes to wait for the command to complete and display
-                            results.
+  -w, --wait=<minutes>      Number of minutes to wait for the command to complete and display results.
   --async                   Run the command asynchronously.
   --concise                 Show concise output of the deploy result.
   --verbose                 Show verbose output of the deploy result.
@@ -548,8 +629,7 @@ FLAGS
   -m, --metadata=<value>...    Metadata component names to validate for deployment.
   -o, --target-org=<value>     Login username or alias for the target org.
   -t, --tests=<value>...       Apex tests to run when --test-level is RunSpecifiedTests.
-  -w, --wait=<minutes>         [default: 33 minutes] Number of minutes to wait for the command to complete and display
-                               results.
+  -w, --wait=<minutes>         Number of minutes to wait for the command to complete and display results.
   -x, --manifest=<value>       Full file path for manifest (package.xml) of components to validate for deployment.
   --async                      Run the command asynchronously.
   --concise                    Show concise output of the validation result.
@@ -600,8 +680,8 @@ EXAMPLES
 FLAG DESCRIPTIONS
   -a, --api-version=<value>  Target API version for the validation.
 
-    Use this flag to override the default API version, which is the latest version supported the CLI, with the API
-    version in your package.xml file.
+    Use this flag to override the default API version with the API version of your package.xml file. The default API
+    version is the latest version supported by the CLI.
 
   -d, --source-dir=<value>...  Path to the local source files to validate for deployment.
 
@@ -652,32 +732,39 @@ FLAG DESCRIPTIONS
 
 ## `sf retrieve metadata`
 
-Retrieve metadata in source format from an org to your local project.
+Retrieve metadata from an org to your local project.
 
 ```
 USAGE
-  $ sf retrieve metadata [--json] [-a <value>] [-c] [-x <value> | -m <value> | -d <value>] [-n <value>] [-o <value>]
-    [-w <value>]
+  $ sf retrieve metadata [--json] [-a <value>] [-c] [-x <value> | -m <value> | -d <value>] [-n <value>]
+    [--single-package -t <value>] [-o <value>] [-w <value>] [-z ] [--zip-file-name <value> ]
 
 FLAGS
-  -a, --api-version=<value>      Target API version for the retrieve.
-  -c, --ignore-conflicts         Ignore conflicts and retrieve and save files to your local filesystem, even if they
-                                 overwrite your local changes.
-  -d, --source-dir=<value>...    File paths for source to retrieve from the org.
-  -m, --metadata=<value>...      Metadata component names to retrieve.
-  -n, --package-name=<value>...  Package names to retrieve.
-  -o, --target-org=<value>       Login username or alias for the target org.
-  -w, --wait=<value>             [default: 33 minutes] Number of minutes to wait for the command to complete and display
-                                 results to the terminal window.
-  -x, --manifest=<value>         File path for the manifest (package.xml) that specifies the components to retrieve.
+  -a, --api-version=<value>          Target API version for the retrieve.
+  -c, --ignore-conflicts             Ignore conflicts and retrieve and save files to your local filesystem, even if they
+                                     overwrite your local changes.
+  -d, --source-dir=<value>...        File paths for source to retrieve from the org.
+  -m, --metadata=<value>...          Metadata component names to retrieve.
+  -n, --package-name=<value>...      Package names to retrieve.
+  -o, --target-org=<value>           Login username or alias for the target org.
+  -t, --target-metadata-dir=<value>  Directory that will contain the retrieved metadata format files or ZIP.
+  -w, --wait=<value>                 Number of minutes to wait for the command to complete and display results to the
+                                     terminal window.
+  -x, --manifest=<value>             File path for the manifest (package.xml) that specifies the components to retrieve.
+  -z, --unzip                        Extract all files from the retrieved zip file.
+  --single-package                   Indicates that the zip file points to a directory structure for a single package.
+  --zip-file-name=<value>            File name to use for the retrieved zip file.
 
 GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Retrieve metadata in source format from an org to your local project.
+  Retrieve metadata from an org to your local project.
 
   You must run this command from within a project.
+
+  Metadata components are retrieved in source format by default. Retrieve them in metadata format by specifying the
+  --target-metadata-dir flag, which retrieves the components into a ZIP file in the specified directory.
 
   If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production
   org, never allow source tracking. You can also use the "--no-track-source" flag when you create a scratch or sandbox
@@ -727,6 +814,15 @@ EXAMPLES
     $ sf retrieve metadata --package-name Package1 "PackageName With Spaces" Package3
     $ sf retrieve metadata --package-name Package1 --package-name "PackageName With Spaces" --package-name Package3
 
+  Retrieve the metadata components listed in the force-app directory, but retrieve them in metadata format into a ZIP
+  file in the "output" directory:
+
+    $ sf retrieve metadata --source-dir force-app --target-metadata-dir output
+
+  Retrieve in metadata format and automatically extract the contents into the "output" directory:
+
+    $ sf retrieve metadata --source-dir force-app --target-metadata-dir output --unzip
+
 FLAG DESCRIPTIONS
   -a, --api-version=<value>  Target API version for the retrieve.
 
@@ -756,6 +852,58 @@ FLAG DESCRIPTIONS
   -x, --manifest=<value>  File path for the manifest (package.xml) that specifies the components to retrieve.
 
     If you specify this parameter, don’t specify --metadata or --source-dir.
+```
+
+## `sf retrieve metadata preview`
+
+Preview a retrieval to see what will be retrieved from the org, the potential conflicts, and the ignored files.
+
+```
+USAGE
+  $ sf retrieve metadata preview [--json] [-c] [-o <value>]
+
+FLAGS
+  -c, --ignore-conflicts    Ignore conflicts and preview the retrieve of remote components, even if they will overwrite
+                            local changes.
+  -o, --target-org=<value>  Login username or alias for the target org.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Preview a retrieval to see what will be retrieved from the org, the potential conflicts, and the ignored files.
+
+  You must run this command from within a project.
+
+  The command outputs a table that describes what will happen if you run the "sf retrieve metadata" command. The table
+  lists the metadata components that will be retrieved and deleted. The table also lists the current conflicts between
+  files in your local project and components in the org. Finally, the table lists the files that won't be retrieved
+  because they're included in your .forceignore file.
+
+  If your org allows source tracking, then this command considers conflicts between the org and local. Some orgs, such
+  as production orgs, never allow source tracking. Use the "--no-track-source" flag when you create a scratch or sandbox
+  org to disable source tracking.
+
+EXAMPLES
+  Preview the retrieve of all changes from the org:
+
+    $ sf retrieve metadata preview
+
+  Preview the retrieve when ignoring any conflicts:
+
+    $ sf retrieve metadata preview --ignore-conflicts
+
+FLAG DESCRIPTIONS
+  -c, --ignore-conflicts
+
+    Ignore conflicts and preview the retrieve of remote components, even if they will overwrite local changes.
+
+    This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as
+    production orgs.
+
+  -o, --target-org=<value>  Login username or alias for the target org.
+
+    Overrides your default org.
 ```
 
 <!-- commandsstop -->

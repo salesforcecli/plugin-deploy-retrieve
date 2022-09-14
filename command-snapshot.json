@@ -37,6 +37,12 @@
     "alias": []
   },
   {
+    "command": "deploy:metadata:preview",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["ignore-conflicts", "json", "manifest", "metadata", "source-dir", "target-org"],
+    "alias": []
+  },
+  {
     "command": "deploy:metadata:quick",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["async", "concise", "job-id", "json", "target-org", "use-most-recent", "verbose", "wait"],
@@ -85,10 +91,20 @@
       "manifest",
       "metadata",
       "package-name",
+      "single-package",
       "source-dir",
+      "target-metadata-dir",
       "target-org",
-      "wait"
+      "unzip",
+      "wait",
+      "zip-file-name"
     ],
+    "alias": []
+  },
+  {
+    "command": "retrieve:metadata:preview",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["ignore-conflicts", "json", "target-org"],
     "alias": []
   }
 ]
