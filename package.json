@@ -102,7 +102,7 @@
       "@salesforce/plugin-functions",
       "@salesforce/plugin-source",
       "@salesforce/plugin-user",
-      "salesforcedx-templates"
+      "@salesforce/plugin-templates"
     ],
     "topics": {
       "deploy": {
