@@ -52,7 +52,8 @@ describe('remote changes', () => {
       const pushResult = execCmd<DeployResultJson>('deploy metadata --json', { cli: 'sf' });
       expect(pushResult.jsonOutput?.status, JSON.stringify(pushResult)).equals(0);
       const pushedSource = pushResult.jsonOutput.result.files;
-      expect(pushedSource, JSON.stringify(pushedSource)).to.have.lengthOf(eBikesDeployResultCount);
+      expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.greaterThan(eBikesDeployResultCount - 5);
+      expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.lessThan(eBikesDeployResultCount + 5);
       expect(
         pushedSource.every((r) => r.state !== ComponentStatus.Failed),
         JSON.stringify(pushedSource.filter((r) => r.state === ComponentStatus.Failed))

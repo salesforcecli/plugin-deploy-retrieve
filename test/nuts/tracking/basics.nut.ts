@@ -63,8 +63,11 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(resp.jsonOutput?.status, JSON.stringify(resp)).to.equal(0);
       const files = resp.jsonOutput.result.files;
       expect(files).to.be.an.instanceof(Array);
-      expect(files, JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))).to.have.lengthOf(
-        eBikesDeployResultCount
+      expect(files, JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))).to.have.length.greaterThan(
+        eBikesDeployResultCount - 5
+      );
+      expect(files, JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))).to.have.length.lessThan(
+        eBikesDeployResultCount + 5
       );
       expect(
         files.every((f) => f.state !== ComponentStatus.Failed),
