@@ -93,7 +93,7 @@ describe('forceignore changes', () => {
         cli: 'sf',
       }).jsonOutput.result;
       expect(output.ignored, JSON.stringify(output)).to.deep.include({
-        name: 'IgnoreTest',
+        fullName: 'IgnoreTest',
         type: 'ApexClass',
         projectRelativePath: path.join(classdir, 'IgnoreTest.cls-meta.xml'),
         path: path.resolve(path.join(classdir, 'IgnoreTest.cls-meta.xml')),
