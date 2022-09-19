@@ -37,12 +37,12 @@ describe('lwc', () => {
     await session?.clean();
   });
 
-  it.only('pushes the repo to get source tracking started', () => {
+  it('pushes the repo to get source tracking started', () => {
     const resp = execCmd<DeployResultJson>('deploy metadata --json', { cli: 'sf' });
     expect(resp.jsonOutput?.status, JSON.stringify(resp)).equals(0);
   });
 
-  it.only('sfdx sees lwc css changes in local status', async () => {
+  it('sfdx sees lwc css changes in local status', async () => {
     await fs.promises.writeFile(
       cssPathAbsolute,
       (await fs.promises.readFile(cssPathAbsolute, 'utf-8')).replace('absolute', 'relative')
@@ -54,7 +54,7 @@ describe('lwc', () => {
     expect(result.find((r) => r.filePath === cssPathRelative)).to.have.property('actualState', 'Changed');
   });
 
-  it.only('sf sees lwc css changes in local status', () => {
+  it('sf sees lwc css changes in local status', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json', {
       ensureExitCode: 0,
       cli: 'sf',

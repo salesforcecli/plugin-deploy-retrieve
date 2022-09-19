@@ -21,6 +21,7 @@ import {
 } from '@salesforce/source-deploy-retrieve';
 import { Messages, NamedPackageDir, SfProject } from '@salesforce/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
+import { ensureArray } from '@salesforce/kit';
 import {
   API,
   AsyncDeployResultJson,
@@ -104,13 +105,6 @@ export function sortTestResults(results: Failures[] | Successes[] = []): Failure
     }
     return a.methodName.localeCompare(b.methodName);
   });
-}
-
-export function toArray<T>(entryOrArray: T | T[] | undefined): T[] {
-  if (entryOrArray) {
-    return Array.isArray(entryOrArray) ? entryOrArray : [entryOrArray];
-  }
-  return [];
 }
 
 export function getVersionMessage(action: string, componentSet: ComponentSet, api: API): string {
@@ -256,7 +250,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   }
 
   private displayVerboseTestSuccesses(): void {
-    const successes = toArray(this.result.response.details.runTestResult?.successes);
+    const successes = ensureArray(this.result.response.details.runTestResult?.successes);
     if (successes.length > 0) {
       const testSuccesses = sortTestResults(successes) as Successes[];
       CliUx.ux.log();
@@ -270,7 +264,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
 
   private displayVerboseTestFailures(): void {
     if (!this.result.response.numberTestErrors) return;
-    const failures = toArray(this.result.response.details.runTestResult?.failures);
+    const failures = ensureArray(this.result.response.details.runTestResult?.failures);
     const failureCount = this.result.response.details.runTestResult?.numFailures;
     const testFailures = sortTestResults(failures) as Failures[];
     CliUx.ux.log();
@@ -286,11 +280,9 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   }
 
   private displayVerboseTestCoverage(): void {
-    const codeCoverage = toArray(this.result.response.details.runTestResult?.codeCoverage);
+    const codeCoverage = ensureArray(this.result.response.details.runTestResult?.codeCoverage);
     if (codeCoverage.length) {
-      const coverage = codeCoverage.sort((a, b) => {
-        return a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
-      });
+      const coverage = codeCoverage.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1));
       CliUx.ux.log();
       CliUx.ux.log(tableHeader('Apex Code Coverage'));
       coverage.forEach((cov: CodeCoverage & { lineNotCovered: string }) => {
@@ -310,7 +302,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
         if (!cov.locationsNotCovered) {
           cov.lineNotCovered = '';
         }
-        const locations = toArray(cov.locationsNotCovered);
+        const locations = ensureArray(cov.locationsNotCovered);
         cov.lineNotCovered = locations.map((location) => location.line).join(',');
       });
 

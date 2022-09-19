@@ -57,15 +57,7 @@
               "description": "`base64` encoded string"
             }
           },
-          "required": [
-            "done",
-            "fileProperties",
-            "files",
-            "id",
-            "status",
-            "success",
-            "zipFile"
-          ]
+          "required": ["done", "fileProperties", "files", "id", "status", "success", "zipFile"]
         },
         {
           "$ref": "#/definitions/MetadataRetrieveResultJson"
@@ -88,19 +80,10 @@
             },
             "state": {
               "type": "string",
-              "enum": [
-                "Created",
-                "Changed",
-                "Unchanged",
-                "Deleted"
-              ]
+              "enum": ["Created", "Changed", "Unchanged", "Deleted"]
             }
           },
-          "required": [
-            "fullName",
-            "state",
-            "type"
-          ],
+          "required": ["fullName", "state", "type"],
           "additionalProperties": false
         },
         {
@@ -130,19 +113,10 @@
             },
             "problemType": {
               "type": "string",
-              "enum": [
-                "Warning",
-                "Error"
-              ]
+              "enum": ["Warning", "Error"]
             }
           },
-          "required": [
-            "error",
-            "fullName",
-            "problemType",
-            "state",
-            "type"
-          ],
+          "required": ["error", "fullName", "problemType", "state", "type"],
           "additionalProperties": false
         }
       ]
@@ -213,15 +187,7 @@
     },
     "RequestStatus": {
       "type": "string",
-      "enum": [
-        "Pending",
-        "InProgress",
-        "Succeeded",
-        "SucceededPartial",
-        "Failed",
-        "Canceling",
-        "Canceled"
-      ]
+      "enum": ["Pending", "InProgress", "Succeeded", "SucceededPartial", "Failed", "Canceling", "Canceled"]
     },
     "RetrieveMessage": {
       "type": "object",
@@ -233,10 +199,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "fileName",
-        "problem"
-      ],
+      "required": ["fileName", "problem"],
       "additionalProperties": false
     },
     "MetadataRetrieveResultJson": {
@@ -291,15 +254,7 @@
           ]
         }
       },
-      "required": [
-        "done",
-        "fileProperties",
-        "files",
-        "id",
-        "status",
-        "success",
-        "zipFilePath"
-      ]
+      "required": ["done", "fileProperties", "files", "id", "status", "success", "zipFilePath"]
     }
   }
 }
