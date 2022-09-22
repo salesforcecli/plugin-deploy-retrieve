@@ -191,9 +191,10 @@ export default class Deploy extends SfCommand<void> {
         errorMessage: { header: 'Error Message' },
       };
 
-      const failureData = hookResults.failures.map((failure) => {
-        return { errorName: failure.error.name, errorMessage: failure.error.message };
-      });
+      const failureData = hookResults.failures.map((failure) => ({
+        errorName: failure.error.name,
+        errorMessage: failure.error.message,
+      }));
       this.styledHeader(messages.getMessage('error.initialization.title'));
       this.table(failureData, columns);
       const err = messages.createError('error.initialization');

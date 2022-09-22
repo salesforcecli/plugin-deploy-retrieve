@@ -257,8 +257,7 @@ export const printTables = (result: PreviewResult, baseOperation: BaseOperation)
   printIgnoredTable(result.ignored, baseOperation);
 };
 
-export const getConflictFiles = async (stl?: SourceTracking, ignore = false): Promise<Set<string>> => {
-  return !stl || ignore
+export const getConflictFiles = async (stl?: SourceTracking, ignore = false): Promise<Set<string>> =>
+  !stl || ignore
     ? new Set<string>()
     : new Set((await stl.getConflicts()).flatMap((conflict) => conflict.filenames.map((f) => path.resolve(f))));
-};
