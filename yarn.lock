@@ -1227,25 +1227,10 @@
     mv "~2"
     safe-json-stringify "~1"
 
-"@salesforce/cli-plugins-testkit@^2.3.14":
+"@salesforce/cli-plugins-testkit@^2.3.14", "@salesforce/cli-plugins-testkit@^2.4.0":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-2.4.1.tgz#9266f97df875e609ab93f3895bde9cb859c69445"
   integrity sha512-GmlwbPlOadLhOKRSx6D9aJ4HMSYwNGtC+tLgUyggd7A/f3/qw66Ih5B/HlTasswqsgoIAG+hbAOA6DlTiswfDQ==
-  dependencies:
-    "@salesforce/core" "^3.30.2"
-    "@salesforce/kit" "^1.5.42"
-    "@salesforce/ts-types" "^1.5.21"
-    "@types/shelljs" "^0.8.11"
-    archiver "^5.2.0"
-    debug "^4.3.1"
-    shelljs "^0.8.4"
-    strip-ansi "6.0.1"
-    ts-retry-promise "^0.7.0"
-
-"@salesforce/cli-plugins-testkit@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-2.4.0.tgz#dcf62c5f62591ea331d046348516849e03f4f73e"
-  integrity sha512-RlK5HxwGOfHd+mNYtE5kz5DHrS/VLfnMrQn7r2/Ppdtv4vOVY4VHPp6SH/ox9zS/8DII3RL7DTDJFOcOxlor7A==
   dependencies:
     "@salesforce/core" "^3.30.2"
     "@salesforce/kit" "^1.5.42"
@@ -1310,30 +1295,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.19.4", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.26.1", "@salesforce/core@^3.26.2", "@salesforce/core@^3.30.2", "@salesforce/core@^3.8.0":
-  version "3.30.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.30.2.tgz#fe7bd430e98b358003cf8892a753aaee88e3fd7f"
-  integrity sha512-MSDCbml/HOF8ZIMnYBQLnilXRTxOLnE8EJdCnO9XjIwMG8x9mVvn7EQEMxAS4G+e5oqXfpMtgxEN1fFJY/dbcA==
-  dependencies:
-    "@salesforce/bunyan" "^2.0.0"
-    "@salesforce/kit" "^1.5.41"
-    "@salesforce/schemas" "^1.1.0"
-    "@salesforce/ts-types" "^1.5.20"
-    "@types/graceful-fs" "^4.1.5"
-    "@types/semver" "^7.3.9"
-    ajv "^8.11.0"
-    archiver "^5.3.0"
-    change-case "^4.1.2"
-    debug "^3.2.7"
-    faye "^1.4.0"
-    form-data "^4.0.0"
-    graceful-fs "^4.2.9"
-    js2xmlparser "^4.0.1"
-    jsforce beta
-    jsonwebtoken "8.5.1"
-    ts-retry-promise "^0.6.0"
-
-"@salesforce/core@^3.26.3":
+"@salesforce/core@^3.19.4", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.26.1", "@salesforce/core@^3.26.2", "@salesforce/core@^3.26.3", "@salesforce/core@^3.30.2", "@salesforce/core@^3.8.0":
   version "3.30.3"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.30.3.tgz#068c85cd1c6e11e88e4e737dcb828e312006ca0d"
   integrity sha512-djB9N5knl/Hkl/JUwvMw8r5MhFrr+Koaxevxd1nR4WN3kyRiKYXZqFrMtekWONNfD3B/5eXndNG3gpgxhXyF8A==
@@ -1563,26 +1525,7 @@
     chalk "^4"
     inquirer "^8.2.0"
 
-"@salesforce/source-deploy-retrieve@^6.2.6", "@salesforce/source-deploy-retrieve@^6.2.7", "@salesforce/source-deploy-retrieve@^6.2.9":
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-6.3.1.tgz#4ca3e6db51f7c889489e12787dd52676673897b7"
-  integrity sha512-f0oBqBJ/R57cf5CqO7/LclGL3+fEfk2zlWbzhh3wDdgTP6M24rE0Nwc5TQKXZZr150l6ScjcnhYdLbTrkYxJvA==
-  dependencies:
-    "@salesforce/core" "^3.26.1"
-    "@salesforce/kit" "^1.5.45"
-    "@salesforce/ts-types" "^1.5.20"
-    "@xmldom/xmldom" "^0.8.2"
-    archiver "^5.3.1"
-    fast-xml-parser "^3.21.1"
-    got "^11.8.5"
-    graceful-fs "^4.2.10"
-    ignore "^5.2.0"
-    mime "2.6.0"
-    proxy-agent "^5.0.0"
-    proxy-from-env "^1.1.0"
-    unzipper "0.10.11"
-
-"@salesforce/source-deploy-retrieve@^6.8.0":
+"@salesforce/source-deploy-retrieve@^6.2.6", "@salesforce/source-deploy-retrieve@^6.2.7", "@salesforce/source-deploy-retrieve@^6.2.9", "@salesforce/source-deploy-retrieve@^6.8.0":
   version "6.8.1"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-6.8.1.tgz#ba0084af91275a17199df688e28899d801f2c7c2"
   integrity sha512-lonMQj91Ojp7wMXxZ2xG7R2mNHO7vFnak9ypjxSqNx98usq+yWuiG83lp1eHdmuVRfPHAyEc3mGuOkYm7/O0Ug==
