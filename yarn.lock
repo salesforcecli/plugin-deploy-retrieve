@@ -881,7 +881,7 @@
     is-wsl "^2.1.1"
     tslib "^2.3.1"
 
-"@oclif/core@^1.0.8", "@oclif/core@^1.12.0", "@oclif/core@^1.14.1", "@oclif/core@^1.15.0", "@oclif/core@^1.16.0", "@oclif/core@^1.16.4", "@oclif/core@^1.2.1", "@oclif/core@^1.3.4", "@oclif/core@^1.3.6", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.6.4", "@oclif/core@^1.9.5", "@oclif/core@^1.9.9":
+"@oclif/core@^1.0.8", "@oclif/core@^1.12.0", "@oclif/core@^1.14.1", "@oclif/core@^1.15.0", "@oclif/core@^1.16.0", "@oclif/core@^1.16.1", "@oclif/core@^1.16.4", "@oclif/core@^1.2.1", "@oclif/core@^1.3.4", "@oclif/core@^1.3.6", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.6.4", "@oclif/core@^1.9.5", "@oclif/core@^1.9.9":
   version "1.16.4"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.16.4.tgz#fafa338ada0624d7f1adac036302b05a37cd96d0"
   integrity sha512-l+xHtVMteJWeTZZ+f2yLyNjf69X0mhAH8GILXnmoAGAemXbc1DVstvloxOouarvm9xyHHhquzO1Qg5l6xa1VIw==
@@ -7168,12 +7168,12 @@ object.values@^1.1.5:
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
 
-oclif@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/oclif/-/oclif-3.1.2.tgz#9a26384f1a2a2201ee51281a5376acc4c84dfdf5"
-  integrity sha512-zxKiCOWKLlFGCwPbajxyC1HLSudwTjgSujOf5oR4dsxHkNIRCvJ9VAQWCPG4BW+p/+n0G9E2OnEM8Y25nfJwuw==
+oclif@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/oclif/-/oclif-3.2.2.tgz#cf2199b8243c8c6bfd350d799eb2e37536517526"
+  integrity sha512-0H239NO9WR/QdmOnYJSbBGJkrW/VoQ3q5/kvdZgOJ71rRSNbcBQxK/7CSldpMpa6gxHoMBckWDNaxCaEzEqXuQ==
   dependencies:
-    "@oclif/core" "^1.9.9"
+    "@oclif/core" "^1.16.1"
     "@oclif/plugin-help" "^5.1.12"
     "@oclif/plugin-not-found" "^2.3.1"
     "@oclif/plugin-warn-if-update-available" "^2.0.4"
