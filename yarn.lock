@@ -804,7 +804,7 @@
     is-wsl "^2.1.1"
     tslib "^2.3.1"
 
-"@oclif/core@^1.0.8", "@oclif/core@^1.12.0", "@oclif/core@^1.14.1", "@oclif/core@^1.15.0", "@oclif/core@^1.16.0", "@oclif/core@^1.16.1", "@oclif/core@^1.16.4", "@oclif/core@^1.2.1", "@oclif/core@^1.3.4", "@oclif/core@^1.3.6", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.6.4", "@oclif/core@^1.9.5", "@oclif/core@^1.9.9":
+"@oclif/core@^1.12.0", "@oclif/core@^1.14.1", "@oclif/core@^1.15.0", "@oclif/core@^1.16.0", "@oclif/core@^1.16.4", "@oclif/core@^1.2.1", "@oclif/core@^1.3.4", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.6.4", "@oclif/core@^1.9.5", "@oclif/core@^1.9.9":
   version "1.16.4"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.16.4.tgz#fafa338ada0624d7f1adac036302b05a37cd96d0"
   integrity sha512-l+xHtVMteJWeTZZ+f2yLyNjf69X0mhAH8GILXnmoAGAemXbc1DVstvloxOouarvm9xyHHhquzO1Qg5l6xa1VIw==
@@ -969,12 +969,12 @@
     widest-line "^3.1.0"
     wrap-ansi "^6.2.0"
 
-"@oclif/plugin-help@^5.1.11", "@oclif/plugin-help@^5.1.12":
-  version "5.1.12"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-help/-/plugin-help-5.1.12.tgz#24a18631eb9b22cb55e1a3b8e4f6039fd42727e6"
-  integrity sha512-HvH/RubJxqCinP0vUWQLTOboT+SfjfL8h40s+PymkWaldIcXlpoRaJX50vz+SjZIs7uewZwEk8fzLqpF/BWXlg==
+"@oclif/plugin-help@^5.1.11", "@oclif/plugin-help@^5.1.14":
+  version "5.1.14"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-help/-/plugin-help-5.1.14.tgz#641e6f2c7effb4a21573d50c649af662a919bcf9"
+  integrity sha512-jhpD0a2bEp3YW93sQcUM3b15DH+svQqC9pMXNp1m1VyAPoskdaELgt5P/5SjmNuFwqws8scxpbYKlr2/lvvkGQ==
   dependencies:
-    "@oclif/core" "^1.3.6"
+    "@oclif/core" "^1.16.4"
 
 "@oclif/plugin-not-found@^2.3.1":
   version "2.3.1"
@@ -986,12 +986,12 @@
     fast-levenshtein "^3.0.0"
     lodash "^4.17.21"
 
-"@oclif/plugin-warn-if-update-available@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-warn-if-update-available/-/plugin-warn-if-update-available-2.0.4.tgz#3d509ca2394cccf65e6622be812d7be4065a60aa"
-  integrity sha512-9dprC1CWPjesg0Vf/rDSQH2tzJXhP1ow84cb2My1kj6e6ESulPKpctiCFSZ1WaCQFfq+crKhzlNoP/vRaXNUAg==
+"@oclif/plugin-warn-if-update-available@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-warn-if-update-available/-/plugin-warn-if-update-available-2.0.6.tgz#fed51d198ba5d621a05690f4639ef988c65245e0"
+  integrity sha512-9PSerV/jz3Mq5P8+bfLhr4UrTNOLmhUo8tGsv/CzJ0c/QffjYONZ8pCNsrVDO+wWzzuYHedXPZjDpOCmMcTTag==
   dependencies:
-    "@oclif/core" "^1.0.8"
+    "@oclif/core" "^1.16.4"
     chalk "^4.1.0"
     debug "^4.1.0"
     fs-extra "^9.0.1"
@@ -3135,13 +3135,13 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
 
-concurrently@^7.0.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/concurrently/-/concurrently-7.3.0.tgz#eb45cdbc8df43da195f619aba218a980cae49184"
-  integrity sha512-IiDwm+8DOcFEInca494A8V402tNTQlJaYq78RF2rijOrKEk/AOHTxhN4U1cp7GYKYX5Q6Ymh1dLTBlzIMN0ikA==
+concurrently@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/concurrently/-/concurrently-7.4.0.tgz#bb0e344964bc172673577c420db21e963f2f7368"
+  integrity sha512-M6AfrueDt/GEna/Vg9BqQ+93yuvzkSKmoTixnwEJkH0LlcGrRC2eCmjeG1tLLHIYfpYJABokqSGyMcXjm96AFA==
   dependencies:
     chalk "^4.1.0"
-    date-fns "^2.16.1"
+    date-fns "^2.29.1"
     lodash "^4.17.21"
     rxjs "^7.0.0"
     shell-quote "^1.7.3"
@@ -3332,10 +3332,15 @@ data-uri-to-buffer@^4.0.0:
   resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-4.0.0.tgz#b5db46aea50f6176428ac05b73be39a57701a64b"
   integrity sha512-Vr3mLBA8qWmcuschSLAOogKgQ/Jwxulv3RNE4FXnYWRGujzrRWQI4m12fQqRkwX06C0KanhLr4hK+GydchZsaA==
 
-date-fns@^2.16.1, date-fns@^2.28.0:
+date-fns@^2.28.0:
   version "2.29.2"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.2.tgz#0d4b3d0f3dff0f920820a070920f0d9662c51931"
   integrity sha512-0VNbwmWJDS/G3ySwFSJA3ayhbURMTJLtwM2DTxf9CWondCnh6DTNlO9JgRSq6ibf4eD0lfMJNBxUdEAHHix+bA==
+
+date-fns@^2.29.1:
+  version "2.29.3"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.3.tgz#27402d2fc67eb442b511b70bbdf98e6411cd68a8"
+  integrity sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==
 
 dateformat@^4.5.0:
   version "4.6.3"
@@ -6970,17 +6975,17 @@ object.values@^1.1.5:
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
 
-oclif@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/oclif/-/oclif-3.2.2.tgz#cf2199b8243c8c6bfd350d799eb2e37536517526"
-  integrity sha512-0H239NO9WR/QdmOnYJSbBGJkrW/VoQ3q5/kvdZgOJ71rRSNbcBQxK/7CSldpMpa6gxHoMBckWDNaxCaEzEqXuQ==
+oclif@^3.2.10:
+  version "3.2.10"
+  resolved "https://registry.yarnpkg.com/oclif/-/oclif-3.2.10.tgz#8e3d8f068bbab3f326e466facd00f5ecd0ec16cf"
+  integrity sha512-hnvgVu71zB+MMXtbp22qisEgEA6vDEDBZqKH89W8UjiZbNCF7Iv4eAfpWFIs/5aTv8GCCSacQa3w6iXte15lKA==
   dependencies:
-    "@oclif/core" "^1.16.1"
-    "@oclif/plugin-help" "^5.1.12"
+    "@oclif/core" "^1.16.4"
+    "@oclif/plugin-help" "^5.1.14"
     "@oclif/plugin-not-found" "^2.3.1"
-    "@oclif/plugin-warn-if-update-available" "^2.0.4"
+    "@oclif/plugin-warn-if-update-available" "^2.0.6"
     aws-sdk "^2.1116.0"
-    concurrently "^7.0.0"
+    concurrently "^7.4.0"
     debug "^4.3.3"
     find-yarn-workspace-root "^2.0.0"
     fs-extra "^8.1"
@@ -6990,7 +6995,7 @@ oclif@^3.2.2:
     qqjs "^0.3.11"
     semver "^7.3.5"
     tslib "^2.3.1"
-    yeoman-environment "^3.9.1"
+    yeoman-environment "^3.11.1"
     yeoman-generator "^5.6.1"
     yosay "^2.0.2"
 
@@ -9505,7 +9510,49 @@ yargs@^17.0.0, yargs@^17.3.1:
     y18n "^5.0.5"
     yargs-parser "^21.0.0"
 
-yeoman-environment@^3.9.1, yeoman-environment@~3.10.0:
+yeoman-environment@^3.11.1, yeoman-environment@^3.9.1:
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-3.11.1.tgz#7379489f0925a9e8cb619c0333629ba1ff8d4bbd"
+  integrity sha512-WxPntJFhdJiBtkaJOmkv/v5siWVJvLX2GB26TXMPaIgxHGhreKUwACI2jzjnsFcHv1F8Uayp668NZsz8ygalvg==
+  dependencies:
+    "@npmcli/arborist" "^4.0.4"
+    are-we-there-yet "^2.0.0"
+    arrify "^2.0.1"
+    binaryextensions "^4.15.0"
+    chalk "^4.1.0"
+    cli-table "^0.3.1"
+    commander "7.1.0"
+    dateformat "^4.5.0"
+    debug "^4.1.1"
+    diff "^5.0.0"
+    error "^10.4.0"
+    escape-string-regexp "^4.0.0"
+    execa "^5.0.0"
+    find-up "^5.0.0"
+    globby "^11.0.1"
+    grouped-queue "^2.0.0"
+    inquirer "^8.0.0"
+    is-scoped "^2.1.0"
+    isbinaryfile "^4.0.10"
+    lodash "^4.17.10"
+    log-symbols "^4.0.0"
+    mem-fs "^1.2.0 || ^2.0.0"
+    mem-fs-editor "^8.1.2 || ^9.0.0"
+    minimatch "^3.0.4"
+    npmlog "^5.0.1"
+    p-queue "^6.6.2"
+    p-transform "^1.3.0"
+    pacote "^12.0.2"
+    preferred-pm "^3.0.3"
+    pretty-bytes "^5.3.0"
+    semver "^7.1.3"
+    slash "^3.0.0"
+    strip-ansi "^6.0.0"
+    text-table "^0.2.0"
+    textextensions "^5.12.0"
+    untildify "^4.0.0"
+
+yeoman-environment@~3.10.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/yeoman-environment/-/yeoman-environment-3.10.0.tgz#d8c56571b68d16b4af8abfb950f83acc503eed77"
   integrity sha512-sYtSxBK9daq21QjoskJTHKLQ1xEsRPURkmFV/aM8HS8ZlQVzwx57Rz1zCs8EGPhK4vqsmTE8H92Gp1jg1fT3EA==
