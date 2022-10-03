@@ -39,6 +39,7 @@ describe('forceignore changes', () => {
       project: {
         name: 'forceIgnoreTest',
       },
+      devhubAuthStrategy: 'AUTO',
       scratchOrgs: [{
         executable: 'sf',
         duration: 1,
