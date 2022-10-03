@@ -14,7 +14,6 @@ context('deploy metadata CustomLabels NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
-      executable: path.join(process.cwd(), 'bin', 'dev'),
       nut: __filename,
     });
   });

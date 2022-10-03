@@ -19,7 +19,6 @@ context('deploy metadata --source-dir NUTs [name: %REPO_NAME%]', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: REPO.gitUrl,
-      executable: path.join(process.cwd(), 'bin', 'dev'),
       nut: __filename,
     });
   });

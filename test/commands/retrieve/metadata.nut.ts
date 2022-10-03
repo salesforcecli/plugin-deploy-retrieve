@@ -17,7 +17,6 @@ describe('retrieve metadata NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
-      executable: path.join(process.cwd(), 'bin', 'dev'),
       nut: __filename,
     });
     await testkit.addTestFiles();

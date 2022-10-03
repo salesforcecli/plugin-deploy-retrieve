@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 
 describe('deploy metadata NUTs', () => {
@@ -14,7 +13,6 @@ describe('deploy metadata NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
-      executable: path.join(process.cwd(), 'bin', 'dev'),
       nut: __filename,
     });
   });

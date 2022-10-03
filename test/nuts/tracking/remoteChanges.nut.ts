@@ -33,11 +33,16 @@ describe('remote changes', () => {
       project: {
         gitClone: 'https://github.com/trailheadapps/ebikes-lwc',
       },
-      setupCommands: [`sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`],
+      scratchOrgs: [{
+        executable: 'sf',
+        duration: 1,
+        setDefault: true,
+        config: path.join('config', 'project-scratch-def.json'),
+      }]
     });
     conn = await Connection.create({
       authInfo: await AuthInfo.create({
-        username: (session.setup[0] as { result: { username: string } }).result?.username,
+        username: session.orgs.get('default').username,
       }),
     });
   });
@@ -49,7 +54,7 @@ describe('remote changes', () => {
 
   describe('remote changes: delete', () => {
     it('pushes to initiate the remote', () => {
-      const pushResult = execCmd<DeployResultJson>('deploy metadata --json', { cli: 'sf' });
+      const pushResult = execCmd<DeployResultJson>('deploy metadata --json');
       expect(pushResult.jsonOutput?.status, JSON.stringify(pushResult)).equals(0);
       const pushedSource = pushResult.jsonOutput.result.files;
       expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.greaterThan(eBikesDeployResultCount - 5);
@@ -63,7 +68,6 @@ describe('remote changes', () => {
     it('sees no local changes (all were committed from deploy)', () => {
       const localResult = execCmd<StatusResult[]>('force:source:status --json --local', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(localResult.filter(filterIgnored)).to.deep.equal([]);
     });
@@ -71,7 +75,6 @@ describe('remote changes', () => {
     it('sf sees no local changes (all were committed from deploy)', () => {
       const localResult = execCmd<PreviewResult>('deploy metadata preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput.result;
       expect(localResult.toDeploy).to.deep.equal([]);
       expect(localResult.toDelete).to.deep.equal([]);
@@ -104,7 +107,6 @@ describe('remote changes', () => {
     it('sfdx can see the delete in status', () => {
       const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       // it shows up as one class on the server, but 2 files when pulled
       expect(
@@ -115,7 +117,6 @@ describe('remote changes', () => {
     it('sf can see the delete in status', () => {
       const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput.result;
       // it shows up as one class on the server, but 2 files when pulled
       expect(result.toDelete, JSON.stringify(result)).to.have.length(1);
@@ -123,19 +124,17 @@ describe('remote changes', () => {
     it('sfdx does not see any change in local status', () => {
       const result = execCmd<StatusResult[]>('force:source:status --json --local', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(result.filter(filterIgnored)).to.deep.equal([]);
     });
     it('sf does not see any change in local status', () => {
       const result = execCmd<PreviewResult>('deploy metadata preview --json', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(result.toDeploy).to.deep.equal([]);
     });
     it('can pull the delete', () => {
-      const result = execCmd<RetrieveResultJson>('retrieve:metadata --json', { ensureExitCode: 0, cli: 'sf' })
+      const result = execCmd<RetrieveResultJson>('retrieve:metadata --json', { ensureExitCode: 0 })
         .jsonOutput.result;
       // the 2 files for the apexClass, and possibly one for the Profile (depending on whether it got created in time)
       expect(result.files.filter(noAudience), JSON.stringify(result)).to.have.length.greaterThanOrEqual(2);
@@ -157,27 +156,23 @@ describe('remote changes', () => {
     it('sees correct local and remote status', () => {
       const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(remoteResult.filter((r) => r.state.includes('Remote Deleted'))).to.deep.equal([]);
 
       const localStatus = execCmd<StatusResult[]>('force:source:status --json --local', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(localStatus.filter(filterIgnored)).to.deep.equal([]);
     });
     it('sf sees correct local status', () => {
       const result = execCmd<PreviewResult>('deploy metadata preview --json', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(result.toDeploy).to.deep.equal([]);
     });
     it('sf sees correct remote status', () => {
       const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       // Audience created as a side effect of experiences
       expect(result.toRetrieve.filter(noAudience)).to.deep.equal([]);
@@ -199,7 +194,6 @@ describe('remote changes', () => {
     it('can see the add in status', () => {
       const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(
         result.some((r) => r.fullName === className),
@@ -209,7 +203,6 @@ describe('remote changes', () => {
     it('sf can see the add in status', () => {
       const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput.result;
       expect(
         result.toRetrieve.some((r) => r.fullName === className),
@@ -217,7 +210,7 @@ describe('remote changes', () => {
       ).to.equal(true);
     });
     it('can pull the add', () => {
-      const result = execCmd<RetrieveResultJson>('retrieve:metadata --json', { ensureExitCode: 0, cli: 'sf' })
+      const result = execCmd<RetrieveResultJson>('retrieve:metadata --json', { ensureExitCode: 0 })
         .jsonOutput.result;
       // SDR marks all retrieves as 'Changed' even if it creates new local files.  This is different from toolbelt, which marked those as 'Created'
       result.files
@@ -228,7 +221,6 @@ describe('remote changes', () => {
       it('sfdx sees correct remote status', () => {
         const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
           ensureExitCode: 0,
-          cli: 'sfdx',
         }).jsonOutput.result;
         expect(
           remoteResult.filter((r) => r.fullName === className),
@@ -238,14 +230,12 @@ describe('remote changes', () => {
       it('sfdx sees correct local status', () => {
         const localStatus = execCmd<StatusResult[]>('force:source:status --json --local', {
           ensureExitCode: 0,
-          cli: 'sfdx',
         }).jsonOutput.result;
         expect(localStatus.filter(filterIgnored)).to.deep.equal([]);
       });
       it('sf sees correct remote status', () => {
         const result = execCmd<PreviewResult>('retrieve metadata preview  --json', {
           ensureExitCode: 0,
-          cli: 'sf',
         }).jsonOutput.result;
         expect(
           result.toRetrieve.filter((r) => r.fullName === className),
@@ -255,7 +245,6 @@ describe('remote changes', () => {
       it('sf sees correct local status', () => {
         const result = execCmd<PreviewResult>('deploy metadata preview --json', {
           ensureExitCode: 0,
-          cli: 'sf',
         }).jsonOutput.result;
         expect(result.toDeploy).to.deep.equal([]);
         expect(result.toDelete).to.deep.equal([]);

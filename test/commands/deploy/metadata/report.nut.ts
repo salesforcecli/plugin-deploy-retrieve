@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { DeployResultJson } from '../../../../src/utils/types';
 
@@ -15,7 +14,6 @@ describe('deploy metadata report NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
-      executable: path.join(process.cwd(), 'bin', 'dev'),
       nut: __filename,
     });
   });

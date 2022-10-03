@@ -25,7 +25,12 @@ describe('lwc', () => {
       project: {
         gitClone: 'https://github.com/trailheadapps/ebikes-lwc',
       },
-      setupCommands: [`sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`],
+      scratchOrgs: [{
+        executable: 'sf',
+        duration: 1,
+        setDefault: true,
+        config: path.join('config', 'project-scratch-def.json'),
+      }]
     });
 
     cssPathRelative = path.join('force-app', 'main', 'default', 'lwc', 'heroDetails', 'heroDetails.css');
@@ -38,7 +43,7 @@ describe('lwc', () => {
   });
 
   it('pushes the repo to get source tracking started', () => {
-    const resp = execCmd<DeployResultJson>('deploy metadata --json', { cli: 'sf' });
+    const resp = execCmd<DeployResultJson>('deploy metadata --json');
     expect(resp.jsonOutput?.status, JSON.stringify(resp)).equals(0);
   });
 
@@ -49,7 +54,6 @@ describe('lwc', () => {
     );
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
-      cli: 'sfdx',
     }).jsonOutput.result;
     expect(result.find((r) => r.filePath === cssPathRelative)).to.have.property('actualState', 'Changed');
   });
@@ -57,7 +61,6 @@ describe('lwc', () => {
   it('sf sees lwc css changes in local status', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     }).jsonOutput.result;
     // subcomponent (css file deletion) deleted turns into a Deploy of the parent component without the deleted file
     // this is a slightly different behavior than sfdx, but makes more sense
@@ -71,7 +74,6 @@ describe('lwc', () => {
   it('pushes lwc css change', () => {
     const result = execCmd<DeployResultJson>('deploy metadata --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     }).jsonOutput.result.files;
     // we get a result for each bundle member, even though only one changed
     expect(result.filter((r) => r.fullName === 'heroDetails')).to.have.length(4);
@@ -80,7 +82,6 @@ describe('lwc', () => {
   it('sfdx sees no local changes', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
-      cli: 'sfdx',
     })
       .jsonOutput.result.filter((r) => r.origin === 'Local')
       .filter(filterIgnored);
@@ -90,7 +91,6 @@ describe('lwc', () => {
   it('sf sees no local changes', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     }).jsonOutput.result;
     expect(result.toDeploy).to.have.length(0);
     expect(result.toRetrieve).to.have.length(0);
@@ -100,7 +100,6 @@ describe('lwc', () => {
     await fs.promises.rm(cssPathAbsolute);
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
-      cli: 'sfdx',
     })
       .jsonOutput.result.filter(filterIgnored)
       .find((r) => r.filePath === cssPathRelative);
@@ -119,7 +118,6 @@ describe('lwc', () => {
   it('pushes lwc subcomponent delete', () => {
     const result = execCmd<DeployResultJson>('deploy metadata --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     }).jsonOutput.result.files;
     const bundleMembers = result.filter((r) => r.fullName === 'heroDetails');
     // TODO: these were previously corrected to show the deleted subcomponent.
@@ -133,7 +131,6 @@ describe('lwc', () => {
   it('sees no local changes', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
-      cli: 'sfdx',
     })
       .jsonOutput.result.filter((r) => r.origin === 'Local')
       .filter(filterIgnored);
@@ -143,7 +140,6 @@ describe('lwc', () => {
   it('sf sees no local changes', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     }).jsonOutput.result;
     expect(result.toDeploy).to.have.length(0);
     expect(result.toRetrieve).to.have.length(0);
@@ -164,7 +160,6 @@ describe('lwc', () => {
     );
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
-      cli: 'sfdx',
     }).jsonOutput.result.filter((r) => r.origin === 'Local');
     expect(result.filter(filterIgnored)).to.have.length(4);
     expect(result.filter(filterIgnored).filter((r) => r.actualState === 'Deleted')).to.have.length(3);
@@ -174,7 +169,6 @@ describe('lwc', () => {
   it('push deletes the LWC remotely', () => {
     const result = execCmd<DeployResultJson>('deploy metadata --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     }).jsonOutput.result.files;
     // there'll also be changes for the changed Hero component html, but we've already tested changing a bundle member
     const bundleMembers = result.filter((r) => r.fullName === 'heroDetails');
@@ -188,7 +182,6 @@ describe('lwc', () => {
   it('sees no local changes', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
-      cli: 'sfdx',
     })
       .jsonOutput.result.filter((r) => r.origin === 'Local')
       .filter(filterIgnored);
@@ -197,7 +190,6 @@ describe('lwc', () => {
   it('sf sees no local changes', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     }).jsonOutput.result;
     expect(result.toDeploy).to.have.length(0);
     expect(result.toRetrieve).to.have.length(0);
