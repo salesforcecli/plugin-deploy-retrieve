@@ -37,17 +37,22 @@ describe('forceignore changes', () => {
   before(async () => {
     session = await TestSession.create({
       project: {
-        name: 'forceIngoreTest',
+        name: 'forceIgnoreTest',
       },
-      setupCommands: [
-        `sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`,
-        `sfdx force:apex:class:create -n IgnoreTest --outputdir ${classdir}`,
-      ],
+      devhubAuthStrategy: 'AUTO',
+      scratchOrgs: [{
+        executable: 'sf',
+        duration: 1,
+        setDefault: true,
+        config: path.join('config', 'project-scratch-def.json'),
+      }]
     });
+
+    execCmd(`force:apex:class:create -n IgnoreTest --outputdir ${classdir}`, {cli: 'sfdx', ensureExitCode: 0})
     originalForceIgnore = await fs.promises.readFile(path.join(session.project.dir, '.forceignore'), 'utf8');
     conn = await Connection.create({
       authInfo: await AuthInfo.create({
-        username: (session.setup[0] as { result: { username: string } }).result?.username,
+        username: session.orgs.get('default').username,
       }),
     });
   });
@@ -65,7 +70,6 @@ describe('forceignore changes', () => {
       // nothing should push -- in sf that's an error
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {
         ensureExitCode: 1,
-        cli: 'sf',
       }).jsonOutput;
       expect(output.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
     });
@@ -73,7 +77,6 @@ describe('forceignore changes', () => {
     it('shows the file in status as ignored', () => {
       const output = execCmd<StatusResult>('force:source:status --json', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(output, JSON.stringify(output)).to.deep.include({
         state: 'Local Add',
@@ -90,7 +93,6 @@ describe('forceignore changes', () => {
     it('sf shows the file in status as ignored', () => {
       const output = execCmd<PreviewResult>('deploy metadata preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput.result;
       expect(output.ignored, JSON.stringify(output)).to.deep.include({
         fullName: 'IgnoreTest',
@@ -116,7 +118,6 @@ describe('forceignore changes', () => {
       // another error when there's nothing to push
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {
         ensureExitCode: 1,
-        cli: 'sf',
       }).jsonOutput;
       expect(output.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
     });
@@ -160,7 +161,6 @@ describe('forceignore changes', () => {
       // gets file into source tracking
       const statusOutput = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
-        cli: 'sfdx',
       }).jsonOutput.result;
       expect(statusOutput.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
     });
@@ -169,7 +169,6 @@ describe('forceignore changes', () => {
       // gets file into source tracking
       const response = execCmd<PreviewResult>('retrieve metadata preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput.result;
       expect(
         response.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true),

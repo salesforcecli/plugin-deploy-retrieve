@@ -41,3 +41,6 @@ node_modules
 .idea
 
 oclif.manifest.json
+
+# ignore generated nut tests
+test/nuts/generated/

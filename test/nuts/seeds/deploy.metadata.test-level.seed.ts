@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { TEST_REPOS_MAP } from '../testMatrix';
 
@@ -18,7 +17,6 @@ context('deploy metadata --test-level NUTs [name: %REPO_NAME%]', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: REPO.gitUrl,
-      executable: path.join(process.cwd(), 'bin', 'dev'),
       nut: __filename,
     });
 

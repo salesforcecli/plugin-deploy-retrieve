@@ -27,7 +27,13 @@ describe('conflict detection and resolution', () => {
       project: {
         gitClone: 'https://github.com/trailheadapps/ebikes-lwc',
       },
-      setupCommands: [`sfdx force:org:create -d 1 -s -f ${path.join('config', 'project-scratch-def.json')}`],
+      devhubAuthStrategy: 'AUTO',
+      scratchOrgs: [{
+        executable: 'sf',
+        duration: 1,
+        setDefault: true,
+        config: path.join('config', 'project-scratch-def.json'),
+      }]
     });
   });
 
@@ -37,8 +43,7 @@ describe('conflict detection and resolution', () => {
   });
 
   it('pushes to initiate the remote', () => {
-    // This would go in setupCommands but we want it to use the bin/dev version
-    const pushResult = execCmd<DeployResultJson>('deploy metadata --json', { cli: 'sf' });
+    const pushResult = execCmd<DeployResultJson>('deploy metadata --json');
     expect(pushResult.jsonOutput?.status, JSON.stringify(pushResult)).equals(0);
     const pushedSource = pushResult.jsonOutput.result.files;
     expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.greaterThan(eBikesDeployResultCount - 5);
@@ -52,7 +57,7 @@ describe('conflict detection and resolution', () => {
   it('edits a remote file', async () => {
     const conn = await Connection.create({
       authInfo: await AuthInfo.create({
-        username: (session.setup[0] as { result: { username: string } }).result?.username,
+        username: session.orgs.get('default').username,
       }),
     });
     const app = await conn.singleRecordQuery<{ Id: string; Metadata: any }>(
@@ -70,7 +75,6 @@ describe('conflict detection and resolution', () => {
     });
     const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
       ensureExitCode: 0,
-      cli: 'sfdx',
     }).jsonOutput.result;
     expect(
       result.filter((r) => r.type === 'CustomApplication'),
@@ -193,12 +197,12 @@ describe('conflict detection and resolution', () => {
   });
 
   it('gets conflict error on push', () => {
-    execCmd<DeployResultJson>('deploy metadata --json', { ensureExitCode: 1, cli: 'sf' });
+    execCmd<DeployResultJson>('deploy metadata --json', { ensureExitCode: 1 });
   });
   it('gets conflict error on pull', () => {
-    execCmd<RetrieveResultJson>('retrieve metadata --json', { ensureExitCode: 1, cli: 'sf' });
+    execCmd<RetrieveResultJson>('retrieve metadata --json', { ensureExitCode: 1 });
   });
   it('can push with forceoverwrite', () => {
-    execCmd<DeployResultJson>('deploy metadata --ignore-conflicts --json', { ensureExitCode: 0, cli: 'sf' });
+    execCmd<DeployResultJson>('deploy metadata --ignore-conflicts --json', { ensureExitCode: 0 });
   });
 });
