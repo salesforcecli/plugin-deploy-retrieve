@@ -1484,14 +1484,14 @@
     sinon "^10.0.0"
     strip-ansi "^7.0.1"
 
-"@salesforce/source-tracking@^2.2.2", "@salesforce/source-tracking@^2.2.3":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-2.2.4.tgz#c752c92af84819c0b8868853dbb616b74cc67e55"
-  integrity sha512-nPj2AFfHczs5crbWR35nJvoui37Y2IKqlTcAnyOWHF4nI2bthT20Qf8lUfcF6WjU8W6nV91BfsWijjtBzMU0iA==
+"@salesforce/source-tracking@^2.2.3", "@salesforce/source-tracking@^2.2.7":
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-2.2.7.tgz#a2236d1f95cb394b282bc4d0867ea9534749fa7b"
+  integrity sha512-d284KtIi/R9RNTFxva8xY2cnnSQG4SN4DR5a7QHYGHoepJeqSgnLZpYd04zw8GHMOGPqnRlrNNxeAUDHaItj+g==
   dependencies:
-    "@salesforce/core" "^3.26.2"
+    "@salesforce/core" "^3.30.9"
     "@salesforce/kit" "^1.6.1"
-    "@salesforce/source-deploy-retrieve" "^6.8.1"
+    "@salesforce/source-deploy-retrieve" "^6.8.2"
     graceful-fs "^4.2.9"
     isomorphic-git "1.17.0"
     ts-retry-promise "^0.7.0"
