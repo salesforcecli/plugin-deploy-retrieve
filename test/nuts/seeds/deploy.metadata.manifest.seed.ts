@@ -45,7 +45,7 @@ context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
         const paths = testCase.toDeploy.map((t) => path.normalize(t)).join(',');
         // This is using the force:source:convert command from plugin-source. Once we have an
         // sf equivalent, we should switch it to use that.
-        await testkit.convert({ args: `--sourcepath ${paths} --outputdir out` });
+        await testkit.convert({ args: `--sourcepath ${paths} --outputdir out`, cli: 'sfdx' });
         const packageXml = path.join('out', 'package.xml');
 
         const deploy = await testkit.deploy<DeployResultJson>({ args: `--manifest ${packageXml}` });
