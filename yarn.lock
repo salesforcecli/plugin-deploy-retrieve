@@ -804,7 +804,7 @@
     is-wsl "^2.1.1"
     tslib "^2.3.1"
 
-"@oclif/core@^1.12.0", "@oclif/core@^1.14.1", "@oclif/core@^1.15.0", "@oclif/core@^1.16.0", "@oclif/core@^1.16.4", "@oclif/core@^1.16.5", "@oclif/core@^1.3.4", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.6.4", "@oclif/core@^1.9.5", "@oclif/core@^1.9.9":
+"@oclif/core@^1.12.0", "@oclif/core@^1.14.1", "@oclif/core@^1.16.0", "@oclif/core@^1.16.4", "@oclif/core@^1.16.5", "@oclif/core@^1.3.4", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.6.4", "@oclif/core@^1.9.5", "@oclif/core@^1.9.9":
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.18.0.tgz#93c790c663c6b24a609d1ea44362f5438cb19d73"
   integrity sha512-12SWbbDbMrhBmEuN9cOQkbN+sFUKlSTw+NlCPVVIg3uEhnmkXgx2wZJtCN4c+IBMJjC27L9lDneeoe70yQuiVg==
@@ -1218,7 +1218,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.19.4", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.26.1", "@salesforce/core@^3.26.2", "@salesforce/core@^3.30.2", "@salesforce/core@^3.30.8", "@salesforce/core@^3.30.9", "@salesforce/core@^3.8.0":
+"@salesforce/core@^3.19.4", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.26.1", "@salesforce/core@^3.26.2", "@salesforce/core@^3.30.2", "@salesforce/core@^3.30.8", "@salesforce/core@^3.30.9", "@salesforce/core@^3.8.0":
   version "3.30.9"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.30.9.tgz#a2a577db60f1276d08b81e185d49161a75b54d76"
   integrity sha512-dZFr2QS0joxl/FgdR+ZYhIVTEsJ7t+u02eaZCXLOqug/rzBq9xFoGPQaBboXx4CSf7k71Ox/Ty0sMSZNzkXb0A==
@@ -1424,29 +1424,17 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.1.3.tgz#fce83f55c7557d47b9c814d5d02978ad734300b3"
   integrity sha512-XWohlOT2oQDqAJH00OXS3f2MGjkwZ6pr4emnnkHSQbg7UdGW0rvGpEnRKqBbDUfZ4K5YKSo9Gj216ZtaP3JLXg==
 
-"@salesforce/sf-plugins-core@1.14.0":
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-1.14.0.tgz#8c1a34be849ee80feca9bb35b4f9b96604f6e513"
-  integrity sha512-zPAQmfrPGiZsx5sLPCnAUTqHIJMfShu1RI05OqiheInXLXkcPZWab3XiXudjW3cL/URAsVdocDfS8QN1UVVS9g==
+"@salesforce/sf-plugins-core@1.15.1", "@salesforce/sf-plugins-core@^1.13.0", "@salesforce/sf-plugins-core@^1.7.2", "@salesforce/sf-plugins-core@^1.9.0":
+  version "1.15.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-1.15.1.tgz#99b9e857eb3c3feddf76981264be276c960253f4"
+  integrity sha512-gxmMUe9v+Q8wEKrIJ2FEW+Llu5qKbOQfM9RraGW90Lh3yduexJdqsHgcv0B6HhNSN/LQtSPptnQZgJoUmpblXw==
   dependencies:
-    "@oclif/core" "^1.15.0"
-    "@salesforce/core" "^3.25.0"
+    "@oclif/core" "^1.16.4"
+    "@salesforce/core" "^3.30.9"
     "@salesforce/kit" "^1.5.44"
     "@salesforce/ts-types" "^1.5.20"
     chalk "^4"
-    inquirer "^8.2.0"
-
-"@salesforce/sf-plugins-core@^1.13.0", "@salesforce/sf-plugins-core@^1.7.2", "@salesforce/sf-plugins-core@^1.9.0":
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-1.14.1.tgz#d2cd21ecc1017d6f61b2389a4efb0e2acde17d2d"
-  integrity sha512-1Ri4k8vl6aS6QVvSkGsOPxBMm0w2rDhtzAwlEJzyt6Yi5cKSK+j3fDItEgvtXcIzwkHaXd0Z6fPCIJL5iEKStQ==
-  dependencies:
-    "@oclif/core" "^1.15.0"
-    "@salesforce/core" "^3.25.0"
-    "@salesforce/kit" "^1.5.44"
-    "@salesforce/ts-types" "^1.5.20"
-    chalk "^4"
-    inquirer "^8.2.0"
+    inquirer "^8.2.3"
 
 "@salesforce/source-deploy-retrieve@^6.8.1", "@salesforce/source-deploy-retrieve@^6.8.2":
   version "6.8.2"
@@ -5154,7 +5142,7 @@ inquirer@^7.0.0:
     strip-ansi "^6.0.0"
     through "^2.3.6"
 
-inquirer@^8.0.0, inquirer@^8.2.0:
+inquirer@^8.0.0, inquirer@^8.2.3:
   version "8.2.4"
   resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-8.2.4.tgz#ddbfe86ca2f67649a67daa6f1051c128f684f0b4"
   integrity sha512-nn4F01dxU8VeKfq192IjLsxu0/OmMZ4Lg3xKAns148rCaXP6ntAoEkVYZThWjwON8AlzdZZi6oqnhNbxUG9hVg==
