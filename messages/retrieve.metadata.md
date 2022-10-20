@@ -59,7 +59,7 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 - Retrieve in metadata format and automatically extract the contents into the "output" directory:
 
-<%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output --unzip
+  <%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output --unzip
 
 # flags.api-version.summary
 
