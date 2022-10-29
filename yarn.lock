@@ -1217,7 +1217,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.19.4", "@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.26.2", "@salesforce/core@^3.30.2", "@salesforce/core@^3.30.8", "@salesforce/core@^3.30.9", "@salesforce/core@^3.31.16", "@salesforce/core@^3.31.17", "@salesforce/core@^3.31.9", "@salesforce/core@^3.8.0":
+"@salesforce/core@^3.23.3", "@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.26.2", "@salesforce/core@^3.30.2", "@salesforce/core@^3.30.8", "@salesforce/core@^3.30.9", "@salesforce/core@^3.31.16", "@salesforce/core@^3.31.17", "@salesforce/core@^3.31.9", "@salesforce/core@^3.8.0":
   version "3.31.17"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.31.17.tgz#83ab3c9c4730223943ceef4798aaa901fec7981e"
   integrity sha512-rn3AYyePp3m1+IH+KVi+DWwMPcAPDYFiUxyJLh+Jr2hNj9i79eQBcUix6wunK3HaVz0N6Tm5FGIpjqfEVsU0cA==
@@ -1321,10 +1321,10 @@
     chalk "^4.1.1"
     tslib "^2"
 
-"@salesforce/plugin-functions@^1.14.1":
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.14.1.tgz#55167213ef9c1422a451993e966b16edfe423a3d"
-  integrity sha512-Y9zk7myRB24PBqry0nvqXbpFY45Iv3cFJgDJVxp7UoLwlGI/t9dAXcNW5yHRlPe96w5pW9Lh1oDzoowpvqYZrA==
+"@salesforce/plugin-functions@^1.14.3":
+  version "1.14.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.14.3.tgz#21bf5f2cbb56cb46132b0f8772e6f32050b25526"
+  integrity sha512-SOn8NPGwJCr20V3NbuNIvqCeqj7AxJVaiO2ZPa6OzXHQwA5LtO6KkCrqAx7oVO5PYo2YKfLqVUwYiAeTHhnn5Q==
   dependencies:
     "@heroku-cli/color" "^1.1.14"
     "@heroku-cli/schema" "^1.0.25"
@@ -1333,7 +1333,7 @@
     "@heroku/project-descriptor" "0.0.6"
     "@hk/functions-core" "npm:@heroku/functions-core@0.4.1"
     "@oclif/core" "^1.6.0"
-    "@salesforce/core" "^3.19.4"
+    "@salesforce/core" "^3.31.16"
     "@salesforce/plugin-org" "^1.11.2"
     "@salesforce/sf-plugins-core" "^1.7.2"
     "@salesforce/ts-sinon" "^1.3.21"
