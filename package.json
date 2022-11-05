@@ -29,7 +29,7 @@
     "@salesforce/plugin-user": "^2.1.7",
     "@salesforce/prettier-config": "^0.0.2",
     "@salesforce/source-testkit": "^2.0.15",
-    "@salesforce/ts-sinon": "1.4.0",
+    "@salesforce/ts-sinon": "1.4.1",
     "@salesforce/ts-types": "^1.5.20",
     "@types/archiver": "^5.3.1",
     "@types/fs-extra": "^9.0.13",
