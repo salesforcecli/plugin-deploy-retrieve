@@ -25,7 +25,7 @@ context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
     const args = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
     await testkit.deploy({ args });
     if (REPO.gitUrl.includes('dreamhouse')) {
-      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse' });
+      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse', cli: 'sfdx' });
     }
   });
 
@@ -57,7 +57,7 @@ context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
     it('should throw an error if the package.xml is not valid', async () => {
       const deploy = await testkit.deploy({ args: '--manifest DOES_NOT_EXIST.xml', exitCode: 1 });
       testkit.expect.errorToHaveName(deploy, 'Error');
-      testkit.expect.errorToHaveMessage(deploy, 'No file found at DOES_NOT_EXIST.xml')
+      testkit.expect.errorToHaveMessage(deploy, 'No file found at DOES_NOT_EXIST.xml');
     });
   });
 });
