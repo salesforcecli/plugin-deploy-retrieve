@@ -7,11 +7,19 @@
 /* eslint-disable class-methods-use-this */
 
 import { EOL } from 'os';
-import { Flags, Hook } from '@oclif/core';
+import { Hook } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { writeJson, pathExists, writeFile, readFile } from 'fs-extra';
 import { Env, parseJsonMap } from '@salesforce/kit';
-import { Deployable, Deployer, generateTableChoices, Prompter, SfCommand, SfHook } from '@salesforce/sf-plugins-core';
+import {
+  Deployable,
+  Deployer,
+  generateTableChoices,
+  Prompter,
+  SfCommand,
+  SfHook,
+  Flags,
+} from '@salesforce/sf-plugins-core';
 import { exec } from 'shelljs';
 import { DeployerResult } from '@salesforce/sf-plugins-core/lib/deployer';
 
