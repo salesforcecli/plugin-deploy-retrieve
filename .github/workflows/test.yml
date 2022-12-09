@@ -20,7 +20,16 @@ jobs:
     secrets: inherit
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-20-8core, windows-2022-16core]
+        command:
+          - 'yarn test:nuts:deploy:metadata:manifest'
+          - 'yarn test:nuts:deploy:metadata:metadata-dir'
+          - 'yarn test:nuts:deploy:metadata:metadata'
+          - 'yarn test:nuts:deploy:metadata:source-dir'
+          - 'yarn test:nuts:deploy:metadata:test-level'
+          - 'yarn test:nuts:static'
+          - 'yarn test:nuts:tracking'
       fail-fast: false
     with:
       os: ${{ matrix.os }}
+      command: ${{ matrix.command }}
