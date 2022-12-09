@@ -32,3 +32,4 @@ jobs:
       fail-fast: false
     with:
       os: ${{ matrix.os }}
+      command: ${{ matrix.command }}
