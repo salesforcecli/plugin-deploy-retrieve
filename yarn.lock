@@ -925,10 +925,10 @@
     is-wsl "^2.1.1"
     tslib "^2.3.1"
 
-"@oclif/core@^1.12.0", "@oclif/core@^1.16.0", "@oclif/core@^1.16.4", "@oclif/core@^1.20.3", "@oclif/core@^1.20.4", "@oclif/core@^1.21.0", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.9.9":
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.21.0.tgz#d91b2f40a4f446279ab6335c619fc1716fc23ab6"
-  integrity sha512-B/AKYfHcNRAbb6Xz2kj0FlH9gWEi8aFS4iEr7EzguP3E2DpDk4wcf7eOMOfJYEmhuVd9sOpVWSnI2yP+FL/3Sg==
+"@oclif/core@^1.12.0", "@oclif/core@^1.16.0", "@oclif/core@^1.16.4", "@oclif/core@^1.20.3", "@oclif/core@^1.20.4", "@oclif/core@^1.21.0", "@oclif/core@^1.22.0", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.9.9":
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.22.0.tgz#dfdd76db6435cc1be2de7bbe25c23302332b9297"
+  integrity sha512-Bvyi6uFbmpkFl9XUATsGMlqEDGfqMKWL0Mu5VQTuPg7/NIyfygYkaburn11uGkOp0a8yG6fPpyVBfGmztjNPGA==
   dependencies:
     "@oclif/linewrap" "^1.0.0"
     "@oclif/screen" "^3.0.3"
@@ -1430,12 +1430,12 @@
     sha256-file "^1.0.0"
     uuid "^8.3.2"
 
-"@salesforce/plugin-source@^2.3.8":
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.3.8.tgz#2b132c998b76fef4497002f95dead315326f7d93"
-  integrity sha512-ALFBA/SfckVPBc/TD7NW/vEOG2bkjpaTiPSUwHTuZSOOOMTyuTTlDatAiZ8D/WEBE6W8gf6fUSnOs8LA92WHJw==
+"@salesforce/plugin-source@^2.3.9":
+  version "2.3.9"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.3.9.tgz#5038015681a398ee34fe809917065cc4ae332e5d"
+  integrity sha512-mdBGdJGGkqtN64kHTRZutwDamsQAhlLSWjn9ickUt1D8bSSg7thIEKwZXVCIufTAhfBm2FphH1DPe/WZ1ZtM5w==
   dependencies:
-    "@oclif/core" "^1.20.4"
+    "@oclif/core" "^1.22.0"
     "@oclif/plugin-help" "^3.3.1"
     "@salesforce/apex-node" "^1.4.0"
     "@salesforce/command" "^5.2.27"
