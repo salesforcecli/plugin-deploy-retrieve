@@ -30,19 +30,19 @@ const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'de
 export const DEPLOY_OPTIONS_FILE = 'deploy-options.json';
 
 export default class Deploy extends SfCommand<void> {
-  public static summary = messages.getMessage('summary');
-  public static description = messages.getMessage('description');
-  public static examples = messages.getMessages('examples');
+  public static readonly summary = messages.getMessage('summary');
+  public static readonly description = messages.getMessage('description');
+  public static readonly examples = messages.getMessages('examples');
   public static enableJsonFlag = false;
 
-  public static flags = {
+  public static readonly flags = {
     interactive: Flags.boolean({
       summary: messages.getMessage('flags.interactive.summary'),
     }),
   };
 
   public async run(): Promise<void> {
-    process.setMaxListeners(new Env().getNumber('SF_MAX_EVENT_LISTENERS') || 1000);
+    process.setMaxListeners(new Env().getNumber('SF_MAX_EVENT_LISTENERS') ?? 1000);
     const { flags } = await this.parse(Deploy);
 
     flags.interactive = await this.isInteractive(flags.interactive);
@@ -176,7 +176,7 @@ export default class Deploy extends SfCommand<void> {
     for (const deployable of responses.deployables) {
       const parent = deployable.getParent();
       if (chosenDeployers.has(parent)) {
-        const existing = chosenDeployers.get(parent) || [];
+        const existing = chosenDeployers.get(parent) ?? [];
         chosenDeployers.set(parent, [...existing, deployable]);
       } else {
         chosenDeployers.set(parent, [deployable]);

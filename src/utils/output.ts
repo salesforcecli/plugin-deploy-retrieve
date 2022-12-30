@@ -18,6 +18,7 @@ import {
   Successes,
   ComponentSet,
   CodeCoverage,
+  FileResponseSuccess,
 } from '@salesforce/source-deploy-retrieve';
 import { Messages, NamedPackageDir, SfProject } from '@salesforce/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
@@ -26,6 +27,8 @@ import {
   API,
   AsyncDeployResultJson,
   DeployResultJson,
+  isSdrFailure,
+  isSdrSuccess,
   MetadataRetrieveResultJson,
   RetrieveResultJson,
   TestLevel,
@@ -56,16 +59,6 @@ function error(message: string): string {
 
 function success(message: string): string {
   return StandardColors.success(bold(message));
-}
-
-function table(
-  responses: FileResponse[] | CodeCoverage[] | Array<Record<string, unknown>>,
-  columns: Record<string, unknown>,
-  options?: Record<string, unknown>
-): void {
-  // Interfaces cannot be casted to Record<string, unknown> so we have to cast to unknown first
-  // See https://github.com/microsoft/TypeScript/issues/15300
-  CliUx.ux.table(responses as unknown as Array<Record<string, unknown>>, columns, options ?? {});
 }
 
 function colorStatus(status: RequestStatus): string {
@@ -107,7 +100,7 @@ export function sortTestResults(results: Failures[] | Successes[] = []): Failure
   });
 }
 
-export function getVersionMessage(action: string, componentSet: ComponentSet, api: API): string {
+export function getVersionMessage(action: string, componentSet: ComponentSet | undefined, api: API): string {
   // commands pass in the.componentSet, which may not exist in some tests or mdapi deploys
   if (!componentSet) {
     return `*** ${action} with ${api} ***`;
@@ -145,7 +138,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   ) {
     this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
     this.relativeFiles = asRelativePaths(this.absoluteFiles);
-    this.testLevel = this.flags['test-level'] || TestLevel.NoTestRun;
+    this.testLevel = this.flags['test-level'] ?? TestLevel.NoTestRun;
     this.verbosity = this.determineVerbosity();
   }
 
@@ -188,13 +181,17 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     const options = { title: tableHeader(title) };
     CliUx.ux.log();
 
-    table(successes, columns, options);
+    CliUx.ux.table(
+      successes.map((s) => ({ filePath: s.filePath, fullName: s.fullName, type: s.type, state: s.state })),
+      columns,
+      options
+    );
   }
 
   private displayFailures(): void {
     if (this.result.response.status === RequestStatus.Succeeded) return;
 
-    const failures = this.relativeFiles.filter((f) => f.state === 'Failed');
+    const failures = this.relativeFiles.filter(isSdrFailure);
     if (!failures.length) return;
 
     const columns = {
@@ -204,11 +201,15 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     };
     const options = { title: error(`Component Failures [${failures.length}]`) };
     CliUx.ux.log();
-    table(failures, columns, options);
+    CliUx.ux.table(
+      failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.error })),
+      columns,
+      options
+    );
   }
 
   private displayDeletes(): void {
-    const deletions = this.relativeFiles.filter((f) => f.state === 'Deleted');
+    const deletions = this.relativeFiles.filter(isSdrSuccess).filter((f) => f.state === 'Deleted');
 
     if (!deletions.length) return;
 
@@ -221,7 +222,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     const options = { title: tableHeader('Deleted Source') };
     CliUx.ux.log();
 
-    table(deletions, columns, options);
+    CliUx.ux.table(getFileResponseSuccessProps(deletions), columns, options);
   }
 
   private displayTestResults(): void {
@@ -242,7 +243,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     const passing = this.result.response.numberTestsCompleted ?? 0;
     const failing = this.result.response.numberTestErrors ?? 0;
     const total = this.result.response.numberTestsTotal ?? 0;
-    const time = this.result.response.details.runTestResult.totalTime ?? 0;
+    const time = this.result.response.details.runTestResult?.totalTime ?? 0;
     CliUx.ux.log(`Passing: ${passing}`);
     CliUx.ux.log(`Failing: ${failing}`);
     CliUx.ux.log(`Total: ${total}`);
@@ -285,32 +286,15 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       const coverage = codeCoverage.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1));
       CliUx.ux.log();
       CliUx.ux.log(tableHeader('Apex Code Coverage'));
-      coverage.forEach((cov: CodeCoverage & { lineNotCovered: string }) => {
-        const numLocationsNum = parseInt(cov.numLocations, 10);
-        const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
-        const color = numLocationsNotCovered > 0 ? StandardColors.error : StandardColors.success;
 
-        let pctCovered = 100;
-        const coverageDecimal: number = parseFloat(
-          ((numLocationsNum - numLocationsNotCovered) / numLocationsNum).toFixed(2)
-        );
-        if (numLocationsNum > 0) {
-          pctCovered = coverageDecimal * 100;
+      CliUx.ux.table(
+        coverage.map((c) => coverageOutput(c)),
+        {
+          name: { header: 'Name' },
+          numLocations: { header: '% Covered' },
+          lineNotCovered: { header: 'Uncovered Lines' },
         }
-        cov.numLocations = color(`${pctCovered}%`);
-
-        if (!cov.locationsNotCovered) {
-          cov.lineNotCovered = '';
-        }
-        const locations = ensureArray(cov.locationsNotCovered);
-        cov.lineNotCovered = locations.map((location) => location.line).join(',');
-      });
-
-      table(coverage, {
-        name: { header: 'Name' },
-        numLocations: { header: '% Covered' },
-        lineNotCovered: { header: 'Uncovered Lines' },
-      });
+      );
     }
   }
 
@@ -418,7 +402,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   }
 
   private displaySuccesses(): void {
-    const successes = this.files.filter((f) => f.state !== 'Failed');
+    const successes = this.files.filter(isSdrSuccess);
 
     if (!successes.length) return;
 
@@ -432,7 +416,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
     const options = { title: tableHeader(title) };
     CliUx.ux.log();
 
-    table(successes, columns, options);
+    CliUx.ux.table(getFileResponseSuccessProps(successes), columns, options);
   }
 
   private async displayPackages(): Promise<void> {
@@ -445,7 +429,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       const title = 'Retrieved Packages';
       const options = { title: tableHeader(title) };
       CliUx.ux.log();
-      table(packages, columns, options);
+      CliUx.ux.table(packages, columns, options);
     }
   }
 
@@ -470,8 +454,9 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
   }
 
   public getJson(): MetadataRetrieveResultJson {
-    delete this.result.response.zipFile;
-    return { ...this.result.response, zipFilePath: this.zipFilePath, files: this.files };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { zipFile, ...responseWithoutZipFile } = this.result.response;
+    return { ...responseWithoutZipFile, zipFilePath: this.zipFilePath, files: this.files };
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -483,3 +468,37 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
     }
   }
 }
+
+const getFileResponseSuccessProps = (
+  successes: FileResponseSuccess[]
+): Array<Pick<FileResponseSuccess, 'filePath' | 'fullName' | 'state' | 'type'>> =>
+  successes.map((s) => ({ filePath: s.filePath, fullName: s.fullName, type: s.type, state: s.state }));
+
+const coverageOutput = (
+  cov: CodeCoverage
+): Pick<CodeCoverage, 'name' | 'numLocations'> & { lineNotCovered: string } => {
+  const numLocationsNum = parseInt(cov.numLocations, 10);
+  const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
+  const color = numLocationsNotCovered > 0 ? StandardColors.error : StandardColors.success;
+
+  let pctCovered = 100;
+  const coverageDecimal: number = parseFloat(((numLocationsNum - numLocationsNotCovered) / numLocationsNum).toFixed(2));
+  if (numLocationsNum > 0) {
+    pctCovered = coverageDecimal * 100;
+  }
+  // cov.numLocations = color(`${pctCovered}%`);
+  const base = {
+    name: cov.name,
+    numLocations: color(`${pctCovered}%`),
+  };
+
+  if (!cov.locationsNotCovered) {
+    return { ...base, lineNotCovered: '' };
+  }
+  const locations = ensureArray(cov.locationsNotCovered);
+
+  return {
+    ...base,
+    lineNotCovered: locations.map((location) => location.line).join(','),
+  };
+};

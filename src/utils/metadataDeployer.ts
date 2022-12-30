@@ -87,7 +87,7 @@ export class MetadataDeployer extends Deployer {
   public static NAME = 'Salesforce Apps';
 
   public declare deployables: DeployablePackage[];
-  private testLevel = TestLevel.NoTestRun;
+  private testLevel: TestLevel = TestLevel.NoTestRun;
   private username!: string;
 
   public constructor(private packages: NamedPackageDir[]) {
@@ -109,8 +109,8 @@ export class MetadataDeployer extends Deployer {
         const selected = this.deployables.filter((d) => directories.includes(d.getPath()));
         this.selectDeployables(selected);
       }
-      this.testLevel = options.testLevel || (await this.promptForTestLevel());
-      this.username = options.username || (await this.promptForUsername());
+      this.testLevel = options.testLevel ?? (await this.promptForTestLevel());
+      this.username = options.username ?? (await this.promptForUsername());
     }
 
     return {
@@ -154,12 +154,12 @@ export class MetadataDeployer extends Deployer {
     const stateAggregator = await StateAggregator.getInstance();
     await stateAggregator.orgs.readAll();
     const allAliases = stateAggregator.aliases.getAll();
-    let targetOrgAuth: OrgAuthorization;
+    let targetOrgAuth: OrgAuthorization | undefined;
     // make sure the "target-org" can be used in this deploy
     if (aliasOrUsername) {
       targetOrgAuth = (
         await AuthInfo.listAllAuthorizations(
-          (a) => a.username === aliasOrUsername || a.aliases.some((alias) => alias === aliasOrUsername)
+          (a) => (a.username === aliasOrUsername || a.aliases?.some((alias) => alias === aliasOrUsername)) ?? false
         )
       ).find((a) => a);
       if (targetOrgAuth) {
@@ -228,10 +228,11 @@ export class MetadataDeployer extends Deployer {
         throw messages.createError('errors.NoOrgsToSelect');
       }
     }
+    throw new Error('Unexpected: You should not have arrived here.');
   }
 
   public async promptForTestLevel(): Promise<TestLevel> {
-    const { testLevel } = await this.prompt<{ testLevel: string }>([
+    const { testLevel } = await this.prompt<{ testLevel: TestLevel }>([
       {
         name: 'testLevel',
         message: 'Select the test level you would like to run:',
@@ -249,6 +250,6 @@ export class MetadataDeployer extends Deployer {
         ],
       },
     ]);
-    return testLevel as TestLevel;
+    return testLevel;
   }
 }

@@ -28,7 +28,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
 
-  public static flags = {
+  public static readonly flags = {
     'api-version': Flags.orgApiVersion({
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
@@ -74,6 +74,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
       summary: messages.getMessage('flags.target-org.summary'),
+      required: true,
     }),
     tests: Flags.string({
       char: 't',
@@ -140,7 +141,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       return asyncFormatter.getJson();
     }
 
-    const result = await deploy.pollStatus(500, flags.wait.seconds);
+    const result = await deploy.pollStatus(500, flags.wait?.seconds);
     process.exitCode = determineExitCode(result);
     const formatter = new DeployResultFormatter(result, flags);
 

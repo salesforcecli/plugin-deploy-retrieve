@@ -6,15 +6,15 @@
  */
 
 import { SfProject } from '@salesforce/core';
-import { Nullable } from '@salesforce/ts-types';
+import { Optional } from '@salesforce/ts-types';
 
 export async function getPackageDirs(): Promise<string[]> {
   const project = await SfProject.resolve();
   return project.getUniquePackageDirectories().map((pDir) => pDir.fullPath);
 }
 
-export async function getSourceApiVersion(): Promise<Nullable<string>> {
+export async function getSourceApiVersion(): Promise<Optional<string>> {
   const project = await SfProject.resolve();
   const projectConfig = await project.resolveProjectConfig();
-  return projectConfig.sourceApiVersion as Nullable<string>;
+  return projectConfig.sourceApiVersion as Optional<string>;
 }

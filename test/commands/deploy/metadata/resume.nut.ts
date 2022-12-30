@@ -7,6 +7,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { strict as assert } from 'node:assert';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
@@ -39,6 +40,8 @@ describe('deploy metadata resume NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(first);
+      assert(first.result.id);
 
       const cacheBefore = readDeployCache(testkit.projectDir);
       expect(cacheBefore).to.have.property(first.result.id);
@@ -48,10 +51,11 @@ describe('deploy metadata resume NUTs', () => {
         json: true,
         exitCode: 0,
       });
-
+      assert(deploy);
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
 
       const cacheAfter = readDeployCache(testkit.projectDir);
+
       expect(cacheAfter).to.have.property(first.result.id);
       expect(cacheAfter[first.result.id]).have.property('status');
       expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Succeeded);
@@ -65,6 +69,8 @@ describe('deploy metadata resume NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(first);
+      assert(first.result.id);
 
       const cacheBefore = readDeployCache(testkit.projectDir);
       expect(cacheBefore).to.have.property(first.result.id);
@@ -74,9 +80,9 @@ describe('deploy metadata resume NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(deploy);
 
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
-
       const cacheAfter = readDeployCache(testkit.projectDir);
       expect(cacheAfter).to.have.property(first.result.id);
       expect(cacheAfter[first.result.id]).have.property('status');
@@ -89,6 +95,8 @@ describe('deploy metadata resume NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(first);
+      assert(first.result.id);
 
       const cacheBefore = readDeployCache(testkit.projectDir);
       expect(cacheBefore).to.have.property(first.result.id);
@@ -98,6 +106,7 @@ describe('deploy metadata resume NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(deploy);
 
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
 

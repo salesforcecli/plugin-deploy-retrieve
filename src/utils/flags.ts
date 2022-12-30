@@ -39,8 +39,8 @@ interface FsError extends Error {
  * Ensures that the specified directory exists. If it does not, it is created.
  */
 async function ensureDirectoryPath(path: string): Promise<string> {
-  const trimmedPath = path?.trim();
-  const resolvedPath = trimmedPath?.length ? resolve(trimmedPath) : null;
+  const trimmedPath = path.trim();
+  const resolvedPath = trimmedPath?.length ? resolve(trimmedPath) : '';
 
   try {
     const stats = await fs.promises.stat(resolvedPath);
@@ -64,7 +64,7 @@ function resolveZipFileName(zipFileName?: string): string {
   if (zipFileName && !extname(zipFileName)) {
     zipFileName += '.zip';
   }
-  return zipFileName || 'unpackaged.zip';
+  return zipFileName ?? 'unpackaged.zip';
 }
 
 /**

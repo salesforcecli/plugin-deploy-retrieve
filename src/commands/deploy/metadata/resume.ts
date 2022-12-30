@@ -12,7 +12,8 @@ import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson } from '../../../utils/types';
-import { DeployCache, determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy';
+import { determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy';
+import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 
 Messages.importMessagesDirectory(__dirname);
@@ -25,7 +26,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
 
-  public static flags = {
+  public static readonly flags = {
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
       exclusive: ['verbose'],
@@ -73,7 +74,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       throw messages.createError('error.DeployNotResumable', [jobId, deployOpts.status]);
     }
 
-    const wait = flags.wait || Duration.minutes(deployOpts.wait);
+    const wait = flags.wait ?? Duration.minutes(deployOpts.wait);
     const { deploy, componentSet } = await executeDeploy(
       // there will always be conflicts on a resume if anything deployed--the changes on the server are not synced to local
       { ...deployOpts, wait, 'dry-run': false, 'ignore-conflicts': true },

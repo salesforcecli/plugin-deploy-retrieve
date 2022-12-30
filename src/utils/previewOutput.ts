@@ -21,6 +21,7 @@ import {
 import { filePathsFromMetadataComponent } from '@salesforce/source-deploy-retrieve/lib/src/utils/filePathGenerator';
 
 import { SourceTracking } from '@salesforce/source-tracking';
+import { isSourceComponent } from './types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.load('@salesforce/plugin-deploy-retrieve', 'previewMessages', [
@@ -74,7 +75,7 @@ const resolvePaths = (filenames: string[]): Array<Pick<PreviewFile, 'type' | 'fu
         return undefined;
       }
     })
-    .filter((sc) => sc && 'fullName' in sc && 'type' in sc)
+    .filter(isSourceComponent)
     .map((sc) => ({ fullName: sc.fullName, type: sc.type.name, path: ensureAbsolutePath(sc.xml) }));
   // dedupe by xml path
   return Array.from(new Map(sourceComponents.map((sc) => [sc.path, sc])).values());
@@ -102,7 +103,7 @@ const getWillRetrieve = (files: PreviewFile[]): PreviewFile[] =>
   files.filter((f) => willGo(f) && f.operation === 'retrieve');
 
 const getWillDelete = (files: PreviewFile[]): PreviewFile[] =>
-  files.filter((f) => willGo(f) && ['deletePre', 'deletePost'].includes(f.operation));
+  files.filter((f) => willGo(f) && f.operation && ['deletePre', 'deletePost'].includes(f.operation));
 
 // relative paths are easier on tables
 const columns = { type: {}, fullName: {}, projectRelativePath: { header: 'Path' } };
@@ -133,10 +134,16 @@ export const compileResults = ({
     type: c.type.name,
     fullName: c.fullName,
     conflict: [c.xml, c.content].some((v) => v && filesWithConflicts.has(v)),
-    ignored: [c.xml, c.content].some((v) => v && forceIgnore.denies(v)),
-    path: path.isAbsolute(c.xml) ? c.xml : path.resolve(c.xml), // SDR/SourceComponent uses absolute path
-    projectRelativePath: path.relative(projectPath, c.xml), // for cleaner output
     // There should not be anything in forceignore returned by the componentSet
+    ignored: [c.xml, c.content].some((v) => v && forceIgnore.denies(v)),
+    // properties to return if we have an xml path
+    ...(c.xml
+      ? {
+          path: path.isAbsolute(c.xml) ? c.xml : path.resolve(c.xml),
+          // for cleaner output
+          projectRelativePath: path.relative(projectPath, c.xml),
+        }
+      : {}),
   });
 
   const actionableFiles = componentSet
@@ -179,7 +186,7 @@ export const compileResults = ({
   const ignoredSourceComponents = resolvePaths([...(componentSet.forceIgnoredPaths ?? [])]).map(
     (resolved): PreviewFile => ({
       ...resolved,
-      projectRelativePath: path.relative(projectPath, resolved.path),
+      ...(resolved.path ? { projectRelativePath: path.relative(projectPath, resolved.path) } : {}),
       conflict: false,
       ignored: true,
     })
@@ -260,4 +267,4 @@ export const printTables = (result: PreviewResult, baseOperation: BaseOperation)
 export const getConflictFiles = async (stl?: SourceTracking, ignore = false): Promise<Set<string>> =>
   !stl || ignore
     ? new Set<string>()
-    : new Set((await stl.getConflicts()).flatMap((conflict) => conflict.filenames.map((f) => path.resolve(f))));
+    : new Set((await stl.getConflicts()).flatMap((conflict) => (conflict.filenames ?? []).map((f) => path.resolve(f))));
