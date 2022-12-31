@@ -6,10 +6,12 @@
  */
 
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { assert } from 'chai';
 import { TEST_REPOS_MAP } from '../testMatrix';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
+assert(REPO);
 
 context('deploy metadata --test-level NUTs [name: %REPO_NAME%]', () => {
   let testkit: SourceTestkit;

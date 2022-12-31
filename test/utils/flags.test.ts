@@ -14,6 +14,7 @@ import { testLevelFlag, fileOrDirFlag, ensuredDirFlag, zipFileFlag } from '../..
 import { TestLevel } from '../../src/utils/types';
 
 const STAT = {
+  // 'BigIntStats': atimeNs, mtimeNs, ctimeNs, birthtimeNs
   isDirectory: () => false,
   isFile(): boolean {
     throw new Error('Function not implemented.');
@@ -33,24 +34,28 @@ const STAT = {
   isSocket(): boolean {
     throw new Error('Function not implemented.');
   },
-  dev: 0,
-  ino: 0,
-  mode: 0,
-  nlink: 0,
-  uid: 0,
-  gid: 0,
-  rdev: 0,
-  size: 0,
-  blksize: 0,
-  blocks: 0,
-  atimeMs: 0,
-  mtimeMs: 0,
-  ctimeMs: 0,
-  birthtimeMs: 0,
-  atime: undefined,
-  mtime: undefined,
-  ctime: undefined,
-  birthtime: undefined,
+  dev: BigInt(0),
+  ino: BigInt(0),
+  mode: BigInt(0),
+  nlink: BigInt(0),
+  uid: BigInt(0),
+  gid: BigInt(0),
+  rdev: BigInt(0),
+  size: BigInt(0),
+  blksize: BigInt(0),
+  blocks: BigInt(0),
+  atimeMs: BigInt(0),
+  mtimeMs: BigInt(0),
+  ctimeMs: BigInt(0),
+  birthtimeMs: BigInt(0),
+  atime: new Date(),
+  mtime: new Date(),
+  ctime: new Date(),
+  birthtime: new Date(),
+  atimeNs: BigInt(0),
+  mtimeNs: BigInt(0),
+  ctimeNs: BigInt(0),
+  birthtimeNs: BigInt(0),
 };
 
 describe('testLevelFlag', () => {
@@ -69,6 +74,7 @@ describe('testLevelFlag', () => {
       assert.fail('This should have failed');
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      assert(err instanceof Error);
       expect(err.message).to.include('Expected --testLevel=FooBar to be one of');
     }
   });
@@ -113,7 +119,7 @@ describe('fileOrDirFlag', () => {
       });
       assert.fail('This should have failed');
     } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      assert(err instanceof Error);
       expect(err.name).to.equal('InvalidFlagPathError');
     }
   });
@@ -162,7 +168,7 @@ describe('ensuredDirFlag', () => {
       });
       assert.fail('This should have failed');
     } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      assert(err instanceof Error);
       expect(err.name).to.equal('InvalidFlagPathError');
     }
   });

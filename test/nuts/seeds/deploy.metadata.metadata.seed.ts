@@ -6,6 +6,7 @@
  */
 
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { assert } from 'chai';
 import { TEST_REPOS_MAP } from '../testMatrix';
 import { DeployResultJson } from '../../../src/utils/types';
 
@@ -14,7 +15,7 @@ const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
 
 context('deploy metadata --metadata NUTs [name: %REPO_NAME%]', () => {
   let testkit: SourceTestkit;
-
+  assert(REPO);
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: REPO.gitUrl,
@@ -43,13 +44,14 @@ context('deploy metadata --metadata NUTs [name: %REPO_NAME%]', () => {
       it(`should deploy ${testCase.toDeploy.join(', ')}`, async () => {
         const args = testCase.toDeploy.map((t) => `--metadata ${t}`).join(' ');
         const deploy = await testkit.deploy<DeployResultJson>({ args });
-
+        assert(deploy);
         await testkit.expect.filesToBeDeployedViaResult(testCase.toVerify, testCase.toIgnore, deploy.result.files);
       });
     }
 
     it('should throw an error if the metadata is not valid', async () => {
       const deploy = await testkit.deploy({ args: '--metadata DOES_NOT_EXIST', exitCode: 1 });
+      assert(deploy);
       testkit.expect.errorToHaveName(deploy, 'SfError');
     });
 
