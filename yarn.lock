@@ -925,7 +925,7 @@
     is-wsl "^2.1.1"
     tslib "^2.3.1"
 
-"@oclif/core@^1.12.0", "@oclif/core@^1.16.0", "@oclif/core@^1.16.4", "@oclif/core@^1.20.3", "@oclif/core@^1.20.4", "@oclif/core@^1.21.0", "@oclif/core@^1.22.0", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.9.9":
+"@oclif/core@^1.12.0", "@oclif/core@^1.16.0", "@oclif/core@^1.20.3", "@oclif/core@^1.20.4", "@oclif/core@^1.21.0", "@oclif/core@^1.22.0", "@oclif/core@^1.6.0", "@oclif/core@^1.6.3", "@oclif/core@^1.9.9":
   version "1.22.0"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.22.0.tgz#dfdd76db6435cc1be2de7bbe25c23302332b9297"
   integrity sha512-Bvyi6uFbmpkFl9XUATsGMlqEDGfqMKWL0Mu5VQTuPg7/NIyfygYkaburn11uGkOp0a8yG6fPpyVBfGmztjNPGA==
@@ -1106,13 +1106,13 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-3.0.3.tgz#e679ad10535e31d333f809f7a71335cc9aef1e55"
   integrity sha512-KX8gMYA9ujBPOd1HFsV9e0iEx7Uoj8AG/3YsW4TtWQTg4lJvr82qNm7o/cFQfYRIt+jw7Ew/4oL4A22zOT+IRA==
 
-"@oclif/test@^2.2.13":
-  version "2.2.15"
-  resolved "https://registry.yarnpkg.com/@oclif/test/-/test-2.2.15.tgz#9f5a4477eb6f32ea361cae781c7f28ce5697d1e1"
-  integrity sha512-IItdu34/nIn46qYg2PxeAA7fgW+y3KTUM+UCEaRvaFxEfQiHG173ohFJu7HPVsMfAS+RuTQfmAd/c0xKVQLGUQ==
+"@oclif/test@^2.2.16":
+  version "2.2.17"
+  resolved "https://registry.yarnpkg.com/@oclif/test/-/test-2.2.17.tgz#82a1cec2321552e3bcc2cbc30546bbceaacdde6d"
+  integrity sha512-biReDlW5a6YkiJoMPa4tQYWQ8sXkBBMD94P7/NgqAL06wE62x4cyK8V55hcbV10QPe82IUl0w3Zx09zYsoLUyQ==
   dependencies:
-    "@oclif/core" "^1.21.0"
-    fancy-test "^2.0.9"
+    "@oclif/core" "^1.22.0"
+    fancy-test "^2.0.10"
 
 "@octokit/auth-token@^2.4.4":
   version "2.5.0"
@@ -1257,14 +1257,14 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.7.0"
 
-"@salesforce/command@^5.2.1", "@salesforce/command@^5.2.27", "@salesforce/command@^5.2.8":
-  version "5.2.30"
-  resolved "https://registry.yarnpkg.com/@salesforce/command/-/command-5.2.30.tgz#e52926a426571a70d8a82db424043cf7db90d17a"
-  integrity sha512-jSNQnJvvbBQjfst6nyvQ2l0582zyKUZJntNTbmuXZ/xvq6U+d1Dmes9D6VqFQByov3lw05fKqdFewAqbjgmaoQ==
+"@salesforce/command@^5.2.1", "@salesforce/command@^5.2.27", "@salesforce/command@^5.2.28":
+  version "5.2.35"
+  resolved "https://registry.yarnpkg.com/@salesforce/command/-/command-5.2.35.tgz#2f0e721c49aee0db4531b291722c8ebab5b68598"
+  integrity sha512-OMy4kASYFyIOrenJ2r0o9PvRECv+OwlAa45lf0Ip4M5UwvRQvQPay+AqVdvd4olPlqgyrHAEw4wTe5lMHK6cxA==
   dependencies:
-    "@oclif/core" "^1.20.4"
-    "@oclif/test" "^2.2.13"
-    "@salesforce/core" "^3.32.9"
+    "@oclif/core" "^1.22.0"
+    "@oclif/test" "^2.2.16"
+    "@salesforce/core" "^3.32.12"
     "@salesforce/kit" "^1.8.0"
     "@salesforce/ts-types" "^1.7.1"
     chalk "^2.4.2"
@@ -1293,7 +1293,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.30.8", "@salesforce/core@^3.31.16", "@salesforce/core@^3.31.17", "@salesforce/core@^3.31.18", "@salesforce/core@^3.32.11", "@salesforce/core@^3.32.2", "@salesforce/core@^3.32.6", "@salesforce/core@^3.32.8", "@salesforce/core@^3.32.9", "@salesforce/core@^3.8.0":
+"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.31.16", "@salesforce/core@^3.31.17", "@salesforce/core@^3.31.18", "@salesforce/core@^3.32.11", "@salesforce/core@^3.32.12", "@salesforce/core@^3.32.2", "@salesforce/core@^3.32.6", "@salesforce/core@^3.32.8", "@salesforce/core@^3.8.0":
   version "3.32.12"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.32.12.tgz#853cc5b6a5f95d4896b2d34a40a6042ef9aa6d2c"
   integrity sha512-27rqSiQWul7b/OkJs19FYDv2M/S4oI4efiGv+6sR7UWv7D7CG1P+0XpgLS3d9xRYF30h98n6VQr4W2a+BWFRvA==
@@ -1360,7 +1360,7 @@
     typedoc-plugin-missing-exports "0.23.0"
     typescript "^4.1.3"
 
-"@salesforce/kit@^1.5.17", "@salesforce/kit@^1.6.1", "@salesforce/kit@^1.7.0", "@salesforce/kit@^1.7.1", "@salesforce/kit@^1.8.0":
+"@salesforce/kit@^1.5.17", "@salesforce/kit@^1.7.0", "@salesforce/kit@^1.7.1", "@salesforce/kit@^1.8.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-1.8.0.tgz#d5b8d83d5b0b866cb76840dc7a18e115589d86a0"
   integrity sha512-Pr9CWAIzVYKZRWvM76lyhEtF3CPmVdIfgbqRD7KT/YZdbLstX3KHYBxCyx3TyWZr5qROv96n+jRIBiIFI9LGGw==
@@ -1464,15 +1464,15 @@
     yeoman-environment "^3.9.1"
     yeoman-generator "^5.6.1"
 
-"@salesforce/plugin-user@^2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-user/-/plugin-user-2.1.7.tgz#4d551925809e5095759d26e485917133100434f6"
-  integrity sha512-6ZI0eH+oyRlyXJlqRzBJHFvsFIjuwHyxxPOCRazmeLYfMHIvSZmkXKS+1Ih8JlSARRJ3SETJRKHWD6LSOOOobg==
+"@salesforce/plugin-user@^2.1.23":
+  version "2.1.23"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-user/-/plugin-user-2.1.23.tgz#6457421c1e6a36ae7198bb2a84ac038caf04670e"
+  integrity sha512-5moJsxKSRDvpili3C0vQxx7nT4sp1N91JWspV5T++SYKVJI7Qtkx/sFYZBd9bXwg6d6mU7SYG/FkDXO6Eg7yrg==
   dependencies:
-    "@oclif/core" "^1.16.4"
-    "@salesforce/command" "^5.2.8"
-    "@salesforce/core" "^3.30.8"
-    "@salesforce/kit" "^1.6.1"
+    "@oclif/core" "^1.22.0"
+    "@salesforce/command" "^5.2.28"
+    "@salesforce/core" "^3.32.6"
+    "@salesforce/kit" "^1.7.1"
     tslib "^2"
 
 "@salesforce/prettier-config@^0.0.2":
@@ -4273,10 +4273,10 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.1.tgz#8d172c064867f235c0c84a596806d279bf4bcc07"
   integrity sha512-Wrk35e8ydCKDj/ArClo1VrPVmN8zph5V4AtHwIuHhvMXsKf73UT3BOD+azBIW+3wOJ4FhEH7zyaJCFvChjYvMA==
 
-fancy-test@^2.0.9:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/fancy-test/-/fancy-test-2.0.9.tgz#c3145c8024802404baf1dfcc19711198ee74a012"
-  integrity sha512-sQ/tAoUiEcNkwg454GCCGWZaERQ48AV6WJZDJzRLwBI4k5M0OrzWME98Cqv3Vribnbe9rJlVb5hOcQmyZjrOBg==
+fancy-test@^2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/fancy-test/-/fancy-test-2.0.10.tgz#4c96b34cb15ad49693634fd1df9a28bb2086253f"
+  integrity sha512-gt2C/1DrFLyXNEkPHpltol0osCFEj5c3TFs3gu4EhIbnKEU9AW+lK0pWf1wRXhKs/FtcijnfODaO90d1HlTulQ==
   dependencies:
     "@types/chai" "*"
     "@types/lodash" "*"
