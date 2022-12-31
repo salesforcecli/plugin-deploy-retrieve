@@ -40,19 +40,21 @@ describe('forceignore changes', () => {
         name: 'forceIgnoreTest',
       },
       devhubAuthStrategy: 'AUTO',
-      scratchOrgs: [{
-        executable: 'sf',
-        duration: 1,
-        setDefault: true,
-        config: path.join('config', 'project-scratch-def.json'),
-      }]
+      scratchOrgs: [
+        {
+          executable: 'sf',
+          duration: 1,
+          setDefault: true,
+          config: path.join('config', 'project-scratch-def.json'),
+        },
+      ],
     });
 
-    execCmd(`force:apex:class:create -n IgnoreTest --outputdir ${classdir}`, {cli: 'sfdx', ensureExitCode: 0})
+    execCmd(`force:apex:class:create -n IgnoreTest --outputdir ${classdir}`, { cli: 'sfdx', ensureExitCode: 0 });
     originalForceIgnore = await fs.promises.readFile(path.join(session.project.dir, '.forceignore'), 'utf8');
     conn = await Connection.create({
       authInfo: await AuthInfo.create({
-        username: session.orgs.get('default').username,
+        username: session.orgs.get('default')?.username,
       }),
     });
   });
@@ -71,13 +73,13 @@ describe('forceignore changes', () => {
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {
         ensureExitCode: 1,
       }).jsonOutput;
-      expect(output.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
+      expect(output?.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
     });
 
     it('shows the file in status as ignored', () => {
       const output = execCmd<StatusResult>('force:source:status --json', {
         ensureExitCode: 0,
-      }).jsonOutput.result;
+      }).jsonOutput?.result;
       expect(output, JSON.stringify(output)).to.deep.include({
         state: 'Local Add',
         fullName: 'IgnoreTest',
@@ -93,8 +95,8 @@ describe('forceignore changes', () => {
     it('sf shows the file in status as ignored', () => {
       const output = execCmd<PreviewResult>('deploy metadata preview --json', {
         ensureExitCode: 0,
-      }).jsonOutput.result;
-      expect(output.ignored, JSON.stringify(output)).to.deep.include({
+      }).jsonOutput?.result;
+      expect(output?.ignored, JSON.stringify(output)).to.deep.include({
         fullName: 'IgnoreTest',
         type: 'ApexClass',
         projectRelativePath: path.join(classdir, 'IgnoreTest.cls-meta.xml'),
@@ -119,7 +121,7 @@ describe('forceignore changes', () => {
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {
         ensureExitCode: 1,
       }).jsonOutput;
-      expect(output.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
+      expect(output?.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
     });
 
     it('will push files that are now un-ignored', async () => {
@@ -129,11 +131,11 @@ describe('forceignore changes', () => {
       // verify file pushed in results
       const unIgnoredOutput = execCmd<DeployResultJson>('deploy:metadata --json', {
         ensureExitCode: 0,
-      }).jsonOutput.result.files;
+      }).jsonOutput?.result?.files;
 
       // all 4 files should have been pushed
       expect(unIgnoredOutput).to.have.length(4);
-      unIgnoredOutput.map((result) => {
+      unIgnoredOutput?.map((result) => {
         expect(result.type === 'ApexClass');
         expect(result.state === ComponentStatus.Created);
       });
@@ -161,17 +163,17 @@ describe('forceignore changes', () => {
       // gets file into source tracking
       const statusOutput = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
-      }).jsonOutput.result;
-      expect(statusOutput.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
+      }).jsonOutput?.result;
+      expect(statusOutput?.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
     });
 
     it('metadata preview recognizes change and marks it ignored', () => {
       // gets file into source tracking
       const response = execCmd<PreviewResult>('retrieve metadata preview --json', {
         ensureExitCode: 0,
-      }).jsonOutput.result;
+      }).jsonOutput?.result;
       expect(
-        response.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true),
+        response?.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true),
         JSON.stringify(response)
       ).to.equal(true);
     });
@@ -180,10 +182,10 @@ describe('forceignore changes', () => {
       // pull doesn't retrieve that change
       const pullOutput = execCmd<RetrieveResultJson>('retrieve:metadata --json', {
         ensureExitCode: 0,
-      }).jsonOutput.result;
+      }).jsonOutput?.result;
       expect(
-        pullOutput.files.some((result) => result.fullName === 'CreatedClass'),
-        JSON.stringify(pullOutput.files)
+        pullOutput?.files.some((result) => result.fullName === 'CreatedClass'),
+        JSON.stringify(pullOutput?.files)
       ).to.equal(false);
     });
   });

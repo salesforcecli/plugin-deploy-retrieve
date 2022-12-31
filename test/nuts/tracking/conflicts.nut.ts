@@ -10,8 +10,8 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import { strict as assert } from 'node:assert';
 import { expect } from 'chai';
-
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
@@ -28,12 +28,14 @@ describe('conflict detection and resolution', () => {
         gitClone: 'https://github.com/trailheadapps/ebikes-lwc',
       },
       devhubAuthStrategy: 'AUTO',
-      scratchOrgs: [{
-        executable: 'sf',
-        duration: 1,
-        setDefault: true,
-        config: path.join('config', 'project-scratch-def.json'),
-      }]
+      scratchOrgs: [
+        {
+          executable: 'sf',
+          duration: 1,
+          setDefault: true,
+          config: path.join('config', 'project-scratch-def.json'),
+        },
+      ],
     });
   });
 
@@ -44,7 +46,8 @@ describe('conflict detection and resolution', () => {
 
   it('pushes to initiate the remote', () => {
     const pushResult = execCmd<DeployResultJson>('deploy metadata --json');
-    expect(pushResult.jsonOutput?.status, JSON.stringify(pushResult)).equals(0);
+    assert(pushResult.jsonOutput);
+    expect(pushResult.jsonOutput.status, JSON.stringify(pushResult)).equals(0);
     const pushedSource = pushResult.jsonOutput.result.files;
     expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.greaterThan(eBikesDeployResultCount - 5);
     expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.lessThan(eBikesDeployResultCount + 5);
@@ -55,10 +58,9 @@ describe('conflict detection and resolution', () => {
   });
 
   it('edits a remote file', async () => {
+    const username = session.orgs.get('default')?.username;
     const conn = await Connection.create({
-      authInfo: await AuthInfo.create({
-        username: session.orgs.get('default').username,
-      }),
+      authInfo: await AuthInfo.create({ username }),
     });
     const app = await conn.singleRecordQuery<{ Id: string; Metadata: any }>(
       "select Id, Metadata from CustomApplication where DeveloperName = 'EBikes'",
@@ -75,9 +77,9 @@ describe('conflict detection and resolution', () => {
     });
     const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
       ensureExitCode: 0,
-    }).jsonOutput.result;
+    }).jsonOutput?.result;
     expect(
-      result.filter((r) => r.type === 'CustomApplication'),
+      result?.filter((r) => r.type === 'CustomApplication'),
       JSON.stringify(result)
     ).to.have.lengthOf(1);
   });
@@ -98,7 +100,7 @@ describe('conflict detection and resolution', () => {
   it('can see the conflict in status', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
-    }).jsonOutput.result.filter((app) => app.type === 'CustomApplication');
+    }).jsonOutput?.result.filter((app) => app.type === 'CustomApplication');
     // json is not sorted.  This relies on the implementation of getConflicts()
     expect(result).to.deep.equal([
       {
@@ -127,7 +129,7 @@ describe('conflict detection and resolution', () => {
   it('sf can see the conflict in status (deploy)', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json', {
       ensureExitCode: 0,
-    }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
+    }).jsonOutput?.result.conflicts.filter((app) => app.type === 'CustomApplication');
     // json is not sorted.  This relies on the implementation of getConflicts()
     expect(result).to.deep.equal([
       {
@@ -145,7 +147,7 @@ describe('conflict detection and resolution', () => {
   it('sf can see the conflict in status (retrieve)', () => {
     const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
       ensureExitCode: 0,
-    }).jsonOutput.result.conflicts.filter((app) => app.type === 'CustomApplication');
+    }).jsonOutput?.result.conflicts.filter((app) => app.type === 'CustomApplication');
     // json is not sorted.  This relies on the implementation of getConflicts()
     expect(result).to.deep.equal([
       {
@@ -163,7 +165,7 @@ describe('conflict detection and resolution', () => {
   it('sf can see the conflict in status (deploy) ignoring conflicts', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json -c', {
       ensureExitCode: 0,
-    }).jsonOutput.result.toDeploy.filter((app) => app.type === 'CustomApplication');
+    }).jsonOutput?.result.toDeploy.filter((app) => app.type === 'CustomApplication');
     // json is not sorted.  This relies on the implementation of getConflicts()
     expect(result).to.deep.equal([
       {
@@ -181,7 +183,7 @@ describe('conflict detection and resolution', () => {
   it('sf can see the conflict in status (retrieve) ignoring conflicts', () => {
     const result = execCmd<PreviewResult>('retrieve metadata preview --json -c', {
       ensureExitCode: 0,
-    }).jsonOutput.result.toRetrieve.filter((app) => app.type === 'CustomApplication');
+    }).jsonOutput?.result.toRetrieve.filter((app) => app.type === 'CustomApplication');
     // json is not sorted.  This relies on the implementation of getConflicts()
     expect(result).to.deep.equal([
       {
