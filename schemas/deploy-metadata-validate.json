@@ -124,89 +124,69 @@
     "FileResponse": {
       "anyOf": [
         {
-          "type": "object",
-          "properties": {
-            "fullName": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "filePath": {
-              "type": "string"
-            },
-            "state": {
-              "type": "string",
-              "enum": [
-                "Created",
-                "Changed",
-                "Unchanged",
-                "Deleted"
-              ]
-            }
-          },
-          "required": [
-            "fullName",
-            "state",
-            "type"
-          ],
-          "additionalProperties": false
+          "$ref": "#/definitions/FileResponseSuccess"
         },
         {
-          "type": "object",
-          "properties": {
-            "fullName": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "filePath": {
-              "type": "string"
-            },
-            "state": {
-              "type": "string",
-              "const": "Failed"
-            },
-            "lineNumber": {
-              "type": "number"
-            },
-            "columnNumber": {
-              "type": "number"
-            },
-            "error": {
-              "type": "string"
-            },
-            "problemType": {
-              "type": "string",
-              "enum": [
-                "Warning",
-                "Error"
-              ]
-            }
-          },
-          "required": [
-            "error",
-            "fullName",
-            "problemType",
-            "state",
-            "type"
-          ],
-          "additionalProperties": false
+          "$ref": "#/definitions/FileResponseFailure"
         }
       ]
     },
+    "FileResponseSuccess": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "filePath": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["Created", "Changed", "Unchanged", "Deleted"]
+        }
+      },
+      "required": ["fullName", "state", "type"],
+      "additionalProperties": false
+    },
+    "FileResponseFailure": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "filePath": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "const": "Failed"
+        },
+        "lineNumber": {
+          "type": "number"
+        },
+        "columnNumber": {
+          "type": "number"
+        },
+        "error": {
+          "type": "string"
+        },
+        "problemType": {
+          "type": "string",
+          "enum": ["Warning", "Error"]
+        }
+      },
+      "required": ["error", "fullName", "problemType", "state", "type"],
+      "additionalProperties": false
+    },
     "RequestStatus": {
       "type": "string",
-      "enum": [
-        "Pending",
-        "InProgress",
-        "Succeeded",
-        "SucceededPartial",
-        "Failed",
-        "Canceling",
-        "Canceled"
-      ]
+      "enum": ["Pending", "InProgress", "Succeeded", "SucceededPartial", "Failed", "Canceling", "Canceled"]
     },
     "DeployDetails": {
       "type": "object",
@@ -247,16 +227,8 @@
       "type": "object",
       "properties": {
         "changed": {
-          "type": [
-            "string",
-            "boolean"
-          ],
-          "enum": [
-            "true",
-            "false",
-            true,
-            false
-          ]
+          "type": ["string", "boolean"],
+          "enum": ["true", "false", true, false]
         },
         "columnNumber": {
           "type": "string"
@@ -265,31 +237,15 @@
           "type": "string"
         },
         "created": {
-          "type": [
-            "string",
-            "boolean"
-          ],
-          "enum": [
-            "true",
-            "false",
-            true,
-            false
-          ]
+          "type": ["string", "boolean"],
+          "enum": ["true", "false", true, false]
         },
         "createdDate": {
           "type": "string"
         },
         "deleted": {
-          "type": [
-            "string",
-            "boolean"
-          ],
-          "enum": [
-            "true",
-            "false",
-            true,
-            false
-          ]
+          "type": ["string", "boolean"],
+          "enum": ["true", "false", true, false]
         },
         "fileName": {
           "type": "string"
@@ -308,33 +264,14 @@
         },
         "problemType": {
           "type": "string",
-          "enum": [
-            "Warning",
-            "Error"
-          ]
+          "enum": ["Warning", "Error"]
         },
         "success": {
-          "type": [
-            "string",
-            "boolean"
-          ],
-          "enum": [
-            "true",
-            "false",
-            true,
-            false
-          ]
+          "type": ["string", "boolean"],
+          "enum": ["true", "false", true, false]
         }
       },
-      "required": [
-        "changed",
-        "created",
-        "createdDate",
-        "deleted",
-        "fileName",
-        "fullName",
-        "success"
-      ],
+      "required": ["changed", "created", "createdDate", "deleted", "fileName", "fullName", "success"],
       "additionalProperties": false
     },
     "RunTestResult": {
@@ -402,11 +339,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "numFailures",
-        "numTestsRun",
-        "totalTime"
-      ],
+      "required": ["numFailures", "numTestsRun", "totalTime"],
       "additionalProperties": false
     },
     "CodeCoverage": {
@@ -441,13 +374,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "id",
-        "name",
-        "numLocations",
-        "numLocationsNotCovered",
-        "type"
-      ],
+      "required": ["id", "name", "numLocations", "numLocationsNotCovered", "type"],
       "additionalProperties": false
     },
     "LocationsNotCovered": {
@@ -466,12 +393,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "column",
-        "line",
-        "numExecutions",
-        "time"
-      ],
+      "required": ["column", "line", "numExecutions", "time"],
       "additionalProperties": false
     },
     "CodeCoverageWarnings": {
@@ -487,11 +409,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "id",
-        "message",
-        "namespace"
-      ],
+      "required": ["id", "message", "namespace"],
       "additionalProperties": false
     },
     "Failures": {
@@ -522,16 +440,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "id",
-        "message",
-        "methodName",
-        "name",
-        "packageName",
-        "stackTrace",
-        "time",
-        "type"
-      ],
+      "required": ["id", "message", "methodName", "name", "packageName", "stackTrace", "time", "type"],
       "additionalProperties": false
     },
     "Successes": {
@@ -550,12 +459,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "id",
-        "methodName",
-        "name",
-        "time"
-      ],
+      "required": ["id", "methodName", "name", "time"],
       "additionalProperties": false
     },
     "AsyncDeployResultJson": {
@@ -655,10 +559,7 @@
           "type": "boolean"
         }
       },
-      "required": [
-        "files",
-        "status"
-      ]
+      "required": ["files", "status"]
     }
   }
 }
