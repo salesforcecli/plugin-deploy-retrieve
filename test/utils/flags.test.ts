@@ -73,7 +73,6 @@ describe('testLevelFlag', () => {
       });
       assert.fail('This should have failed');
     } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       assert(err instanceof Error);
       expect(err.message).to.include('Expected --testLevel=FooBar to be one of');
     }

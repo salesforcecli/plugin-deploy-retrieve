@@ -4,9 +4,6 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as path from 'path';
 import * as fs from 'fs';
@@ -62,6 +59,7 @@ describe('conflict detection and resolution', () => {
     const conn = await Connection.create({
       authInfo: await AuthInfo.create({ username }),
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const app = await conn.singleRecordQuery<{ Id: string; Metadata: any }>(
       "select Id, Metadata from CustomApplication where DeveloperName = 'EBikes'",
       {
@@ -70,6 +68,7 @@ describe('conflict detection and resolution', () => {
     );
     await conn.tooling.sobject('CustomApplication').update({
       ...app,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       Metadata: {
         ...app.Metadata,
         description: 'modified',

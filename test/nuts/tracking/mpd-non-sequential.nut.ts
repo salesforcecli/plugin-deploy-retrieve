@@ -9,6 +9,7 @@ import * as path from 'path';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { assert } from '@salesforce/ts-types';
 import { DeployResultJson } from '../../../src/utils/types';
 
 let session: TestSession;
@@ -21,17 +22,19 @@ describe('multiple pkgDirectories pushed as one deploy', () => {
         gitClone: 'https://github.com/salesforcecli/sample-project-multiple-packages',
       },
       devhubAuthStrategy: 'AUTO',
-      scratchOrgs: [{
-        executable: 'sf',
-        duration: 1,
-        setDefault: true,
-        config: path.join('config', 'project-scratch-def.json'),
-      }]
+      scratchOrgs: [
+        {
+          executable: 'sf',
+          duration: 1,
+          setDefault: true,
+          config: path.join('config', 'project-scratch-def.json'),
+        },
+      ],
     });
 
     conn = await Connection.create({
       authInfo: await AuthInfo.create({
-        username: session.orgs.get('default').username,
+        username: session.orgs.get('default')?.username,
       }),
     });
   });
@@ -45,8 +48,8 @@ describe('multiple pkgDirectories pushed as one deploy', () => {
     it('pushes using MPD', () => {
       const result = execCmd<DeployResultJson>('deploy:metadata --json', {
         ensureExitCode: 0,
-      }).jsonOutput.result.files;
-      expect(result).to.be.an.instanceof(Array);
+      }).jsonOutput?.result.files;
+      assert(Array.isArray(result));
       // the fields should be populated
       expect(result.every((row) => row.type && row.fullName)).to.equal(true);
     });

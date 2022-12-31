@@ -60,11 +60,11 @@ async function ensureDirectoryPath(path: string): Promise<string> {
 }
 
 function resolveZipFileName(zipFileName?: string): string {
-  // If no file extension was provided append, '.zip'
-  if (zipFileName && !extname(zipFileName)) {
-    zipFileName += '.zip';
+  if (!zipFileName) {
+    return 'unpackaged.zip';
   }
-  return zipFileName ?? 'unpackaged.zip';
+  // If no file extension was provided append, '.zip'
+  return zipFileName && !extname(zipFileName) ? (zipFileName += '.zip') : zipFileName;
 }
 
 /**
