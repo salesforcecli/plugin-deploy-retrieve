@@ -6,6 +6,7 @@
  */
 
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { assert, isObject } from '@salesforce/ts-types';
 import { DeployResultJson } from '../../../../src/utils/types';
 
 describe('deploy metadata report NUTs', () => {
@@ -35,7 +36,7 @@ describe('deploy metadata report NUTs', () => {
         json: true,
         exitCode: 0,
       });
-
+      assert(isObject(deploy));
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
   });
@@ -47,13 +48,12 @@ describe('deploy metadata report NUTs', () => {
         json: true,
         exitCode: 0,
       });
-
       const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
-        args: `--job-id ${first.result.id}`,
+        args: `--job-id ${first?.result.id}`,
         json: true,
         exitCode: 0,
       });
-
+      assert(isObject(deploy));
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
   });
