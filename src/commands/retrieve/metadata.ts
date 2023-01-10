@@ -15,7 +15,7 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { Duration } from '@salesforce/kit';
-import { ensuredDirFlag, zipFileFlag } from '../../utils/flags';
+import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../utils/flags';
 import { MetadataRetrieveResultFormatter, RetrieveResultFormatter } from '../../utils/output';
 import { getPackageDirs } from '../../utils/project';
 import { RetrieveResultJson } from '../../utils/types';
@@ -125,6 +125,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected retrieveResult!: RetrieveResult;
 
+  // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
 
@@ -209,8 +210,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const formatter = flags['target-metadata-dir']
       ? new MetadataRetrieveResultFormatter(result, {
           'target-metadata-dir': flags['target-metadata-dir'],
-          // zip-file-name doesn't have a default but the parse function ensures one.
-          'zip-file-name': flags['zip-file-name'] as string,
+          'zip-file-name': flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME,
           unzip: flags.unzip,
         })
       : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
