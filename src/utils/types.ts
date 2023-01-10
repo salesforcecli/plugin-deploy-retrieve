@@ -41,7 +41,9 @@ export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'stat
   files: FileResponse[];
 };
 
-export type DeployResultJson = (MetadataApiDeployStatus & { files: FileResponse[] }) | AsyncDeployResultJson;
+export type DeployResultJson =
+  | (MetadataApiDeployStatus & { files: FileResponse[] } & { replacements?: Record<string, string[]> })
+  | AsyncDeployResultJson;
 
 export type MetadataRetrieveResultJson = Omit<MetadataApiRetrieveStatus, 'zipFile'> & {
   zipFilePath: string;
