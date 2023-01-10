@@ -109,7 +109,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       summary: messages.getMessage('flags.zip-file-name.summary'),
       dependsOn: ['target-metadata-dir'],
       exclusive: ['ignore-conflicts'],
-      default: 'unpackaged.zip',
     }),
   };
 
@@ -206,15 +205,15 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
     this.spinner.stop();
 
-    const formatter =
-      format === 'source'
-        ? new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete)
-        : new MetadataRetrieveResultFormatter(result, {
-            ...flags,
-            // format (source/metadata') was determined because target-metadata-dir was set
-            'target-metadata-dir': flags['target-metadata-dir'] as string,
-          });
-
+    // reference the flag instead of `foramt` so we get correct type
+    const formatter = flags['target-metadata-dir']
+      ? new MetadataRetrieveResultFormatter(result, {
+          'target-metadata-dir': flags['target-metadata-dir'],
+          // zip-file-name doesn't have a default but the parse function ensures one.
+          'zip-file-name': flags['zip-file-name'] as string,
+          unzip: flags.unzip,
+        })
+      : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
     if (!this.jsonEnabled()) {
       if (result.response.status === 'Succeeded') {
         await formatter.display();
@@ -228,7 +227,9 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     if (format === 'metadata' && flags.unzip) {
       try {
-        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'])), { recursive: true });
+        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'] as string)), {
+          recursive: true,
+        });
       } catch (e) {
         // do nothing
       }
