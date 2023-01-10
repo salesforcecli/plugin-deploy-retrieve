@@ -167,6 +167,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
     ]);
 
+    const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
     const retrieveOpts: RetrieveSetOptions = {
       usernameOrConnection:
         flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
@@ -178,7 +179,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         ? {
             singlePackage: flags['single-package'],
             unzip: flags.unzip,
-            zipFileName: flags['zip-file-name'],
+            zipFileName,
             output: flags['target-metadata-dir'],
           }
         : {}),
@@ -210,7 +211,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const formatter = flags['target-metadata-dir']
       ? new MetadataRetrieveResultFormatter(result, {
           'target-metadata-dir': flags['target-metadata-dir'],
-          'zip-file-name': flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME,
+          'zip-file-name': zipFileName,
           unzip: flags.unzip,
         })
       : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
