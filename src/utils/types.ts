@@ -15,7 +15,7 @@ import {
   FileResponseFailure,
   FileResponseSuccess,
 } from '@salesforce/source-deploy-retrieve';
-import { isPlainObject } from '@salesforce/ts-types';
+import { isObject } from '@salesforce/ts-types';
 
 export enum TestLevel {
   NoTestRun = 'NoTestRun',
@@ -52,7 +52,7 @@ export type RetrieveResultJson = (MetadataApiRetrieveStatus & { files: FileRespo
 
 /** validates source component with fullname, type, and xml props */
 export const isSourceComponent = (sc: unknown): sc is SourceComponent & { xml: string } =>
-  isPlainObject(sc) && 'fullName' in sc && 'type' in sc && 'xml' in sc;
+  isObject(sc) && 'fullName' in sc && 'type' in sc && 'xml' in sc;
 
 export const isSdrFailure = (fileResponse: FileResponse): fileResponse is FileResponseFailure =>
   fileResponse.state === ComponentStatus.Failed;
