@@ -6,13 +6,14 @@
  */
 
 import * as path from 'path';
+import { assert } from 'chai';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { TEST_REPOS_MAP } from '../testMatrix';
 import { DeployResultJson } from '../../../src/utils/types';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
-
+assert(REPO);
 context('deploy metadata --source-dir NUTs [name: %REPO_NAME%]', () => {
   let testkit: SourceTestkit;
 
@@ -38,12 +39,14 @@ context('deploy metadata --source-dir NUTs [name: %REPO_NAME%]', () => {
       it(`should deploy ${testCase.toDeploy.join(', ')}`, async () => {
         const args = testCase.toDeploy.map((t) => `--source-dir ${path.normalize(t)}`).join(' ');
         const deploy = await testkit.deploy<DeployResultJson>({ args });
+        assert(deploy);
         await testkit.expect.filesToBeDeployedViaResult(testCase.toVerify, testCase.toIgnore, deploy.result.files);
       });
     }
 
     it('should throw an error if the directory does not exist', async () => {
       const deploy = await testkit.deploy({ args: '--source-dir DOES_NOT_EXIST', exitCode: 1 });
+      assert(deploy);
       testkit.expect.errorToHaveName(deploy, 'SfError');
     });
   });

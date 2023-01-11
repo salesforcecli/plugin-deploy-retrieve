@@ -11,7 +11,8 @@ import { SourceConflictError } from '@salesforce/source-tracking';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
 import { DeployProgress } from '../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../utils/types';
-import { executeDeploy, resolveApi, validateTests, determineExitCode, DeployCache } from '../../utils/deploy';
+import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../utils/deploy';
+import { DeployCache } from '../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
 import { ConfigVars } from '../../configMeta';
 import { fileOrDirFlag, testLevelFlag } from '../../utils/flags';
@@ -29,7 +30,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
 
-  public static flags = {
+  public static readonly flags = {
     'api-version': Flags.orgApiVersion({
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
@@ -99,6 +100,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
       summary: messages.getMessage('flags.target-org.summary'),
+      required: true,
     }),
     tests: Flags.string({
       char: 't',

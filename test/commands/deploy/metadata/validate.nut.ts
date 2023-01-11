@@ -6,6 +6,8 @@
  */
 
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { isObject } from '@salesforce/ts-types';
+import { assert } from 'chai';
 import { DeployResultJson } from '../../../../src/utils/types';
 
 describe('deploy metadata validate NUTs', () => {
@@ -29,6 +31,7 @@ describe('deploy metadata validate NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(isObject(deploy));
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
   });

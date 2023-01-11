@@ -23,7 +23,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
 
-  public static flags = {
+  public static readonly flags = {
     'ignore-conflicts': Flags.boolean({
       char: 'c',
       summary: messages.getMessage('flags.ignore-conflicts.summary'),
@@ -54,6 +54,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       char: 'o',
       description: messages.getMessage('flags.target-org.description'),
       summary: messages.getMessage('flags.target-org.summary'),
+      required: true,
     }),
   };
 

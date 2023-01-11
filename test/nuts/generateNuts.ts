@@ -10,7 +10,7 @@ import * as fs from 'fs';
 import * as shelljs from 'shelljs';
 import { RepoConfig, TEST_REPOS_MAP } from './testMatrix';
 
-const SEED_FILTER = process.env.PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER || '';
+const SEED_FILTER = process.env.PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER ?? '';
 const SEED_EXCLUDE = process.env.PLUGIN_DEPLOY_RETRIEVE_SEED_EXCLUDE;
 
 function getSeedFiles(): string[] {
@@ -32,7 +32,10 @@ function generateNut(generatedDir: string, seedName: string, seedContents: strin
   const nutFileName = repoName ? `${seedName}.${repoName}.nut.ts` : `${seedName}.nut.ts`;
   const nutFilePath = path.join(generatedDir, nutFileName);
 
-  const contents = seedContents.replace(/%REPO_URL%/g, repo?.gitUrl).replace(/%REPO_NAME%/g, repoName);
+  const contents = (repo?.gitUrl ? seedContents.replace(/%REPO_URL%/g, repo?.gitUrl) : seedContents).replace(
+    /%REPO_NAME%/g,
+    repoName
+  );
   fs.writeFileSync(nutFilePath, contents);
 }
 

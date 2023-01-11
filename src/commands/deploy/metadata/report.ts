@@ -9,7 +9,8 @@ import { Messages, Org } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
-import { DeployCache, buildComponentSet } from '../../../utils/deploy';
+import { buildComponentSet } from '../../../utils/deploy';
+import { DeployCache } from '../../../utils/deployCache';
 import { DeployReportResultFormatter } from '../../../utils/output';
 import { DeployResultJson } from '../../../utils/types';
 
@@ -23,7 +24,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
 
-  public static flags = {
+  public static readonly flags = {
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',

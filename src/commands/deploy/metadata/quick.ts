@@ -9,17 +9,12 @@ import { bold } from 'chalk';
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
-import {
-  buildComponentSet,
-  DeployCache,
-  DeployOptions,
-  determineExitCode,
-  poll,
-  resolveApi,
-} from '../../../utils/deploy';
+import { Duration } from '@salesforce/kit';
+import { buildComponentSet, DeployOptions, determineExitCode, poll, resolveApi } from '../../../utils/deploy';
+import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
-import { API, DeployResultJson } from '../../../utils/types';
+import { DeployResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.quick');
@@ -31,7 +26,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
 
-  public static flags = {
+  public static readonly flags = {
     async: Flags.boolean({
       summary: messages.getMessage('flags.async.summary'),
       description: messages.getMessage('flags.async.description'),
@@ -69,6 +64,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       description: messages.getMessage('flags.wait.description'),
       unit: 'minutes',
       defaultValue: 33,
+      default: Duration.minutes(33),
       helpValue: '<minutes>',
       min: 1,
       exclusive: ['async'],
@@ -87,7 +83,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
     const api = await resolveApi();
 
-    await org.getConnection().deployRecentValidation({ id: jobId, rest: api === API.REST });
+    await org.getConnection().deployRecentValidation({ id: jobId, rest: api === 'REST' });
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
 
     this.log(getVersionMessage('Deploying', componentSet, api));

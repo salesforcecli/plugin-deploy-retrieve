@@ -38,9 +38,19 @@ describe('checkForHookFailures', () => {
     const shouldThrow = () =>
       testDeploy.checkForHookFailures({
         successes: [],
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         failures: [{ plugin: { name: 'foo' }, error: { name: 'fooerror', message: 'bad stuff happened' } }],
-      } as Result<Deployer[]>);
+        // plugin has a lot more properties this test omits.
+      } as unknown as Result<Deployer[]>);
     expect(shouldThrow).to.throw(/One or more initialization steps failed./);
   });
 });
+
+/**
+ * Conversion of type '{ successes: never[]; failures: { plugin: { name: string; }; error: { name: string; message: string; }; }[]; }' to type 'Result<Deployer[]>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of property 'failures' are incompatible.
+    Type '{ plugin: { name: string; }; error: { name: string; message: string; }; }[]' is not comparable to type '{ error: Error; plugin: Plugin; }[]'.
+      Type '{ plugin: { name: string; }; error: { name: string; message: string; }; }' is not comparable to type '{ error: Error; plugin: Plugin; }'.
+        Types of property 'plugin' are incompatible.
+          Type '{ name: string; }' is missing the following properties from type 'Plugin': _base, alias, version, pjson, and 9 more.
+ * 
+ */

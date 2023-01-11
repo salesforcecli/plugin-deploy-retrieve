@@ -9,12 +9,13 @@ import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { JsonMap } from '@salesforce/ts-types';
+import { assert } from 'chai';
 import { TEST_REPOS_MAP } from '../testMatrix';
 import { DeployResultJson } from '../../../src/utils/types';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
-
+assert(REPO);
 context('deploy metadata --metadata-dir NUTs [name: %REPO_NAME%]', () => {
   let testkit: SourceTestkit;
 
@@ -44,12 +45,14 @@ context('deploy metadata --metadata-dir NUTs [name: %REPO_NAME%]', () => {
         await testkit.convert({ args: `--sourcepath ${paths} --outputdir out`, cli: 'sfdx' });
 
         const deploy = await testkit.deploy<DeployResultJson>({ args: '--metadata-dir out' });
+        assert(deploy);
         testkit.expect.toHavePropertyAndValue(deploy.result as unknown as JsonMap, 'status', RequestStatus.Succeeded);
       });
     }
 
     it('should throw an error if the directory does not exist', async () => {
       const deploy = await testkit.deploy({ args: '--metadata-dir DOES_NOT_EXIST', exitCode: 1 });
+      assert(deploy);
       testkit.expect.errorToHaveName(deploy, 'InvalidFlagPathError');
     });
   });

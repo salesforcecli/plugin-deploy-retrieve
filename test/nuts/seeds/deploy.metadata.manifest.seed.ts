@@ -7,12 +7,13 @@
 
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { assert } from 'chai';
 import { TEST_REPOS_MAP } from '../testMatrix';
 import { DeployResultJson } from '../../../src/utils/types';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
-
+assert(REPO);
 context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
   let testkit: SourceTestkit;
 
@@ -49,13 +50,14 @@ context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
         const packageXml = path.join('out', 'package.xml');
 
         const deploy = await testkit.deploy<DeployResultJson>({ args: `--manifest ${packageXml}` });
-
+        assert(deploy);
         await testkit.expect.filesToBeDeployedViaResult(testCase.toVerify, testCase.toIgnore, deploy.result.files);
       });
     }
 
     it('should throw an error if the package.xml is not valid', async () => {
       const deploy = await testkit.deploy({ args: '--manifest DOES_NOT_EXIST.xml', exitCode: 1 });
+      assert(deploy);
       testkit.expect.errorToHaveName(deploy, 'Error');
       testkit.expect.errorToHaveMessage(deploy, 'No file found at DOES_NOT_EXIST.xml');
     });

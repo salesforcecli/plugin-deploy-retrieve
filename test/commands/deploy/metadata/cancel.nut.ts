@@ -7,6 +7,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { strict as assert } from 'node:assert';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
@@ -39,6 +40,8 @@ describe('deploy metadata cancel NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(first);
+      assert(first.result.id);
 
       const cacheBefore = readDeployCache(testkit.projectDir);
       expect(cacheBefore).to.have.property(first.result.id);
@@ -49,7 +52,7 @@ describe('deploy metadata cancel NUTs', () => {
         exitCode: 0,
       });
 
-      if (cancel.status === 0) {
+      if (cancel?.status === 0) {
         // successful cancel
         expect(cancel.result.status).to.equal('Canceled');
         expect(cancel.result.canceledBy).to.not.be.undefined;
@@ -57,14 +60,15 @@ describe('deploy metadata cancel NUTs', () => {
         expect(cancel.result.success).to.be.false;
       } else {
         // the deploy likely already finished
-        expect(cancel.status).to.equal(1);
-        expect(cancel.name).to.equal('CancelFailed');
-        expect(cancel.message).to.include('Deployment already completed');
+        expect(cancel?.status).to.equal(1);
+        expect(cancel?.name).to.equal('CancelFailed');
+        expect(cancel?.message).to.include('Deployment already completed');
       }
 
       const cacheAfter = readDeployCache(testkit.projectDir);
       expect(cacheAfter).to.have.property(first.result.id);
       expect(cacheAfter[first.result.id]).have.property('status');
+
       expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Canceled);
     });
   });
@@ -76,6 +80,8 @@ describe('deploy metadata cancel NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(first);
+      assert(first.result.id);
 
       const cacheBefore = readDeployCache(testkit.projectDir);
       expect(cacheBefore).to.have.property(first.result.id);
@@ -85,6 +91,7 @@ describe('deploy metadata cancel NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(cancel);
 
       if (cancel.status === 0) {
         // successful cancel

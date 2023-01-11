@@ -14,7 +14,8 @@ import { RetrieveResult, ComponentSetBuilder, RetrieveSetOptions } from '@salesf
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
-import { ensuredDirFlag, zipFileFlag } from '../../utils/flags';
+import { Duration } from '@salesforce/kit';
+import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../utils/flags';
 import { MetadataRetrieveResultFormatter, RetrieveResultFormatter } from '../../utils/output';
 import { getPackageDirs } from '../../utils/project';
 import { RetrieveResultJson } from '../../utils/types';
@@ -31,7 +32,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
 
-  public static flags = {
+  public static readonly flags = {
     'api-version': Flags.orgApiVersion({
       char: 'a',
       summary: messages.getMessage('flags.api-version.summary'),
@@ -88,10 +89,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       char: 'o',
       summary: messages.getMessage('flags.target-org.summary'),
       description: messages.getMessage('flags.target-org.description'),
+      required: true,
     }),
     wait: Flags.duration({
       char: 'w',
       defaultValue: 33,
+      default: Duration.minutes(33),
       unit: 'minutes',
       summary: messages.getMessage('flags.wait.summary'),
       description: messages.getMessage('flags.wait.description'),
@@ -122,6 +125,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected retrieveResult!: RetrieveResult;
 
+  // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
 
@@ -141,14 +145,17 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
             apiversion: flags['api-version'],
             sourcepath: flags['source-dir'],
             packagenames: flags['package-name'],
-            manifest: flags.manifest && {
-              manifestPath: flags.manifest,
-              directoryPaths: await getPackageDirs(),
-            },
-            metadata: flags.metadata && {
-              metadataEntries: flags.metadata,
-              directoryPaths: await getPackageDirs(),
-            },
+            ...(flags.manifest
+              ? {
+                  manifest: {
+                    manifestPath: flags.manifest,
+                    directoryPaths: await getPackageDirs(),
+                  },
+                }
+              : {}),
+            ...(flags.metadata
+              ? { metadata: { metadataEntries: flags.metadata, directoryPaths: await getPackageDirs() } }
+              : {}),
           }),
           fileResponsesFromDelete: [],
         };
@@ -160,22 +167,23 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
     ]);
 
+    const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
     const retrieveOpts: RetrieveSetOptions = {
-      usernameOrConnection: flags['target-org'].getUsername(),
+      usernameOrConnection:
+        flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
       merge: true,
       output: this.project.getDefaultPackage().fullPath,
       packageOptions: flags['package-name'],
       format,
+      ...(format === 'metadata'
+        ? {
+            singlePackage: flags['single-package'],
+            unzip: flags.unzip,
+            zipFileName,
+            output: flags['target-metadata-dir'],
+          }
+        : {}),
     };
-
-    const zipFileName = flags['zip-file-name'] ?? 'unpackaged.zip';
-
-    if (format === 'metadata') {
-      retrieveOpts.singlePackage = flags['single-package'];
-      retrieveOpts.unzip = flags.unzip;
-      retrieveOpts.zipFileName = zipFileName;
-      retrieveOpts.output = flags['target-metadata-dir'];
-    }
 
     const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
 
@@ -188,7 +196,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     // any thing else should stop the progress bar
     retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
 
-    retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data.status)));
+    retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
 
     retrieve.onError((error: Error) => {
       this.spinner.stop(error.name);
@@ -199,11 +207,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
     this.spinner.stop();
 
-    const formatter =
-      format === 'source'
-        ? new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete)
-        : new MetadataRetrieveResultFormatter(result, { ...flags, 'zip-file-name': zipFileName });
-
+    // reference the flag instead of `foramt` so we get correct type
+    const formatter = flags['target-metadata-dir']
+      ? new MetadataRetrieveResultFormatter(result, {
+          'target-metadata-dir': flags['target-metadata-dir'],
+          'zip-file-name': zipFileName,
+          unzip: flags.unzip,
+        })
+      : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
     if (!this.jsonEnabled()) {
       if (result.response.status === 'Succeeded') {
         await formatter.display();
@@ -217,7 +228,9 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     if (format === 'metadata' && flags.unzip) {
       try {
-        await rm(resolve(join(flags['target-metadata-dir'], zipFileName)), { recursive: true });
+        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'] as string)), {
+          recursive: true,
+        });
       } catch (e) {
         // do nothing
       }

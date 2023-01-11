@@ -5,19 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import {
-  ConfigAggregator,
-  Global,
-  Messages,
-  Org,
-  PollingClient,
-  SfError,
-  SfProject,
-  StatusResult,
-  TTLConfig,
-} from '@salesforce/core';
+import { ConfigAggregator, Messages, Org, PollingClient, SfError, SfProject, StatusResult } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
-import { AnyJson, JsonMap, Nullable } from '@salesforce/ts-types';
+import { AnyJson, Nullable } from '@salesforce/ts-types';
 import {
   ComponentSet,
   ComponentSetBuilder,
@@ -31,8 +21,9 @@ import ConfigMeta, { ConfigVars } from '../configMeta';
 import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, PathInfo, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
+import { DeployCache } from './deployCache';
 Messages.importMessagesDirectory(__dirname);
-const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache', [
+export const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache', [
   'error.NoRecentJobId',
   'error.InvalidJobId',
 ]);
@@ -96,14 +87,15 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
     apiversion: opts['api-version'],
     sourceapiversion: await getSourceApiVersion(),
     sourcepath: opts['source-dir'],
-    manifest: opts.manifest && {
-      manifestPath: opts.manifest,
-      directoryPaths: await getPackageDirs(),
-    },
-    metadata: opts.metadata && {
-      metadataEntries: opts.metadata,
-      directoryPaths: await getPackageDirs(),
-    },
+    ...(opts.manifest
+      ? {
+          manifest: {
+            manifestPath: opts.manifest,
+            directoryPaths: await getPackageDirs(),
+          },
+        }
+      : {}),
+    ...(opts.metadata ? { metadata: { metadataEntries: opts.metadata, directoryPaths: await getPackageDirs() } } : {}),
   });
 }
 
@@ -111,19 +103,19 @@ export async function executeDeploy(
   opts: Partial<DeployOptions>,
   project?: SfProject,
   id?: string
-): Promise<{ deploy: MetadataApiDeploy; componentSet: ComponentSet }> {
+): Promise<{ deploy: MetadataApiDeploy; componentSet?: ComponentSet }> {
   project ??= await SfProject.resolve();
   const apiOptions = {
-    checkOnly: opts['dry-run'] || false,
-    ignoreWarnings: opts['ignore-warnings'] || false,
-    rest: opts.api === API.REST,
+    checkOnly: opts['dry-run'] ?? false,
+    ignoreWarnings: opts['ignore-warnings'] ?? false,
+    rest: opts.api === 'REST',
     rollbackOnError: !opts['ignore-errors'] || false,
-    runTests: opts.tests || [],
+    runTests: opts.tests ?? [],
     testLevel: opts['test-level'],
   };
 
-  let deploy: MetadataApiDeploy;
-  let componentSet: ComponentSet;
+  let deploy: MetadataApiDeploy | undefined;
+  let componentSet: ComponentSet | undefined;
 
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   const usernameOrConnection = org.getConnection();
@@ -144,7 +136,7 @@ export async function executeDeploy(
       deploy = new MetadataApiDeploy({
         [key]: opts['metadata-dir'].path,
         usernameOrConnection,
-        apiOptions: { ...apiOptions, singlePackage: opts['single-package'] || false },
+        apiOptions: { ...apiOptions, singlePackage: opts['single-package'] ?? false },
       });
       await deploy.start();
     }
@@ -163,26 +155,31 @@ export async function executeDeploy(
           usernameOrConnection,
           apiOptions,
         });
+    await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
   }
 
   await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
+
   return { deploy, componentSet };
 }
 
 export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Promise<DeployResult> {
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
-  const deploy = new MetadataApiDeploy({ usernameOrConnection: org.getUsername(), id });
-  const componentSet = await buildComponentSet({ ...opts });
+  const usernameOrConnection = org.getUsername() ?? org.getConnection();
 
+  const deploy = new MetadataApiDeploy({ usernameOrConnection, id });
+
+  const componentSet = await buildComponentSet({ ...opts });
   await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
 
   await deploy.cancel();
-  return poll(org, deploy.id, opts.wait, componentSet);
+  return poll(org, deploy.id, opts.wait ?? Duration.minutes(33), componentSet);
 }
 
 export async function cancelDeployAsync(opts: Partial<DeployOptions>, id: string): Promise<{ id: string }> {
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
-  const deploy = new MetadataApiDeploy({ usernameOrConnection: org.getUsername(), id });
+  const usernameOrConnection = org.getUsername() ?? org.getConnection();
+  const deploy = new MetadataApiDeploy({ usernameOrConnection, id });
   await deploy.cancel();
   return { id: deploy.id };
 }
@@ -214,73 +211,11 @@ export function determineExitCode(result: DeployResult, async = false): number {
     return result.response.status === RequestStatus.Succeeded ? 0 : 1;
   }
 
-  return DEPLOY_STATUS_CODES.get(result.response.status);
+  return DEPLOY_STATUS_CODES.get(result.response.status) ?? 1;
 }
 
-export function isNotResumable(status: RequestStatus): boolean {
-  return [
-    RequestStatus.Succeeded,
-    RequestStatus.Failed,
-    RequestStatus.SucceededPartial,
-    RequestStatus.Canceled,
-  ].includes(status);
-}
-
-export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
-  public static getFileName(): string {
-    return 'deploy-cache.json';
-  }
-
-  public static getDefaultOptions(): TTLConfig.Options {
-    return {
-      isGlobal: false,
-      isState: true,
-      filename: DeployCache.getFileName(),
-      stateFolder: Global.SF_STATE_FOLDER,
-      ttl: Duration.days(3),
-    };
-  }
-
-  public static async set(key: string, value: Partial<CachedOptions>): Promise<void> {
-    const cache = await DeployCache.create();
-    cache.set(key, value);
-    await cache.write();
-  }
-
-  public static async unset(key: string): Promise<void> {
-    const cache = await DeployCache.create();
-    cache.unset(key);
-    await cache.write();
-  }
-
-  public static async update(key: string, obj: JsonMap): Promise<void> {
-    const cache = await DeployCache.create();
-    cache.update(key, obj);
-    await cache.write();
-  }
-
-  public resolveLatest(useMostRecent: boolean, key: Nullable<string>, throwOnNotFound = true): string {
-    const jobId = this.resolveLongId(useMostRecent ? this.getLatestKey() : key);
-    if (!jobId && useMostRecent) throw cacheMessages.createError('error.NoRecentJobId');
-
-    if (throwOnNotFound && !this.has(jobId)) {
-      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
-    }
-
-    return jobId;
-  }
-
-  public resolveLongId(jobId: string): string {
-    if (jobId.length === 18) {
-      return jobId;
-    } else if (jobId.length === 15) {
-      return this.keys().find((k) => k.startsWith(jobId));
-    } else {
-      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
-    }
-  }
-
-  public get(jobId: string): TTLConfig.Entry<CachedOptions> {
-    return super.get(this.resolveLongId(jobId));
-  }
-}
+export const isNotResumable = (status?: RequestStatus): boolean =>
+  status !== undefined &&
+  [RequestStatus.Succeeded, RequestStatus.Failed, RequestStatus.SucceededPartial, RequestStatus.Canceled].includes(
+    status
+  );

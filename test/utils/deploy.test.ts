@@ -44,7 +44,18 @@ describe('deploy utils', () => {
     });
 
     it('should return SOAP by default', async () => {
-      sandbox.stub(ConfigAggregator.prototype, 'getInfo').returns(null);
+      sandbox.stub(ConfigAggregator.prototype, 'getInfo').returns({
+        key: '',
+        isLocal(): boolean {
+          throw new Error('Function not implemented.');
+        },
+        isGlobal(): boolean {
+          throw new Error('Function not implemented.');
+        },
+        isEnvVar(): boolean {
+          throw new Error('Function not implemented.');
+        },
+      });
       const actual = await resolveApi();
       expect(actual).to.equal(API.SOAP);
     });

@@ -39,8 +39,8 @@ interface FsError extends Error {
  * Ensures that the specified directory exists. If it does not, it is created.
  */
 async function ensureDirectoryPath(path: string): Promise<string> {
-  const trimmedPath = path?.trim();
-  const resolvedPath = trimmedPath?.length ? resolve(trimmedPath) : null;
+  const trimmedPath = path.trim();
+  const resolvedPath = trimmedPath?.length ? resolve(trimmedPath) : '';
 
   try {
     const stats = await fs.promises.stat(resolvedPath);
@@ -60,13 +60,14 @@ async function ensureDirectoryPath(path: string): Promise<string> {
 }
 
 function resolveZipFileName(zipFileName?: string): string {
-  // If no file extension was provided append, '.zip'
-  if (zipFileName && !extname(zipFileName)) {
-    zipFileName += '.zip';
+  if (!zipFileName) {
+    return DEFAULT_ZIP_FILE_NAME;
   }
-  return zipFileName || 'unpackaged.zip';
+  // If no file extension was provided append, '.zip'
+  return !extname(zipFileName) ? (zipFileName += '.zip') : zipFileName;
 }
 
+export const DEFAULT_ZIP_FILE_NAME = 'unpackaged.zip';
 /**
  * Flag value is a directory path that may or may not exist. If it doesn't exist, then it will be created.
  */

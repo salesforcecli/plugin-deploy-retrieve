@@ -6,11 +6,16 @@
  */
 
 import {
+  ComponentStatus,
   FileResponse,
   MetadataApiDeployStatus,
   MetadataApiRetrieveStatus,
   RequestStatus,
+  SourceComponent,
+  FileResponseFailure,
+  FileResponseSuccess,
 } from '@salesforce/source-deploy-retrieve';
+import { isObject } from '@salesforce/ts-types';
 
 export enum TestLevel {
   NoTestRun = 'NoTestRun',
@@ -44,3 +49,13 @@ export type MetadataRetrieveResultJson = Omit<MetadataApiRetrieveStatus, 'zipFil
 };
 
 export type RetrieveResultJson = (MetadataApiRetrieveStatus & { files: FileResponse[] }) | MetadataRetrieveResultJson;
+
+/** validates source component with fullname, type, and xml props */
+export const isSourceComponent = (sc: unknown): sc is SourceComponent & { xml: string } =>
+  isObject(sc) && 'fullName' in sc && 'type' in sc && 'xml' in sc;
+
+export const isSdrFailure = (fileResponse: FileResponse): fileResponse is FileResponseFailure =>
+  fileResponse.state === ComponentStatus.Failed;
+
+export const isSdrSuccess = (fileResponse: FileResponse): fileResponse is FileResponseSuccess =>
+  fileResponse.state !== ComponentStatus.Failed;

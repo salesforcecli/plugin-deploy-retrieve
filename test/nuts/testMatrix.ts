@@ -6,7 +6,7 @@
  */
 
 import * as path from 'path';
-import { set, keyBy } from '@salesforce/kit';
+import { set } from '@salesforce/kit';
 import { get, getString, isString } from '@salesforce/ts-types';
 
 /**
@@ -278,7 +278,7 @@ const testRepos: RepoConfig[] = [
  * 2. have normalized file paths
  */
 export const TEST_REPOS_MAP = new Map<string, RepoConfig>(
-  Object.entries(keyBy(normalizeFilePaths(testRepos), 'gitUrl'))
+  normalizeFilePaths(testRepos).map((repo) => [repo.gitUrl, repo])
 );
 
 export type RepoConfig = {

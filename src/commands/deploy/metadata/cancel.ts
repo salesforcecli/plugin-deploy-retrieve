@@ -8,7 +8,8 @@
 import { Messages } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
-import { DeployCache, cancelDeploy, cancelDeployAsync } from '../../../utils/deploy';
+import { cancelDeploy, cancelDeployAsync } from '../../../utils/deploy';
+import { DeployCache } from '../../../utils/deployCache';
 import { AsyncDeployCancelResultFormatter, DeployCancelResultFormatter } from '../../../utils/output';
 import { DeployResultJson } from '../../../utils/types';
 
@@ -22,7 +23,7 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
 
-  public static flags = {
+  public static readonly flags = {
     async: Flags.boolean({
       summary: messages.getMessage('flags.async.summary'),
       description: messages.getMessage('flags.async.description'),
@@ -65,7 +66,7 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
       if (!this.jsonEnabled()) formatter.display();
       return formatter.getJson();
     } else {
-      const wait = flags.wait || Duration.minutes(deployOpts.wait);
+      const wait = flags.wait ?? Duration.minutes(deployOpts.wait);
       const result = await cancelDeploy({ ...deployOpts, wait }, jobId);
       const formatter = new DeployCancelResultFormatter(result);
       if (!this.jsonEnabled()) formatter.display();

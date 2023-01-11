@@ -6,6 +6,7 @@
  */
 
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { assert } from 'chai';
 import { DeployResultJson } from '../../../../src/utils/types';
 
 describe('deploy metadata quick NUTs', () => {
@@ -29,6 +30,7 @@ describe('deploy metadata quick NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(validation);
       await testkit.expect.filesToBeDeployedViaResult(
         ['force-app/**/*'],
         ['force-app/test/**/*'],
@@ -40,7 +42,7 @@ describe('deploy metadata quick NUTs', () => {
         json: true,
         exitCode: 0,
       });
-
+      assert(deploy);
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
   });
@@ -52,6 +54,7 @@ describe('deploy metadata quick NUTs', () => {
         json: true,
         exitCode: 0,
       });
+      assert(validation);
       await testkit.expect.filesToBeDeployedViaResult(
         ['force-app/**/*'],
         ['force-app/test/**/*'],
@@ -63,7 +66,7 @@ describe('deploy metadata quick NUTs', () => {
         json: true,
         exitCode: 0,
       });
-
+      assert(deploy);
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
 
@@ -73,13 +76,13 @@ describe('deploy metadata quick NUTs', () => {
         json: true,
         exitCode: 0,
       });
-
+      assert(first);
       const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:quick', {
         args: `--job-id ${first.result.id}`,
         json: true,
         exitCode: 1,
       });
-
+      assert(deploy);
       testkit.expect.errorToHaveName(deploy, 'CannotQuickDeployError');
     });
   });
