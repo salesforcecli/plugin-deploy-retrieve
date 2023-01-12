@@ -1,3 +1,12 @@
+## [1.6.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.6.17...1.6.18) (2023-01-12)
+
+
+### Bug Fixes
+
+* **deps:** bump json5 from 1.0.1 to 1.0.2 ([fef2ea7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fef2ea7c65b378a8b13841dc20add4da23c5ed2c))
+
+
+
 ## [1.6.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.6.16...1.6.17) (2022-12-10)
 
 
