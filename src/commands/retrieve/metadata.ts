@@ -15,7 +15,7 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { Duration } from '@salesforce/kit';
-import { ensuredDirFlag, zipFileFlag } from '../../utils/flags';
+import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../utils/flags';
 import { MetadataRetrieveResultFormatter, RetrieveResultFormatter } from '../../utils/output';
 import { getPackageDirs } from '../../utils/project';
 import { RetrieveResultJson } from '../../utils/types';
@@ -126,6 +126,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected retrieveResult!: RetrieveResult;
 
+  // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
 
@@ -167,6 +168,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
     ]);
 
+    const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
     const retrieveOpts: RetrieveSetOptions = {
       usernameOrConnection:
         flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
@@ -178,7 +180,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         ? {
             singlePackage: flags['single-package'],
             unzip: flags.unzip,
-            zipFileName: flags['zip-file-name'],
+            zipFileName,
             output: flags['target-metadata-dir'],
           }
         : {}),
@@ -206,15 +208,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
     this.spinner.stop();
 
-    const formatter =
-      format === 'source'
-        ? new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete)
-        : new MetadataRetrieveResultFormatter(result, {
-            ...flags,
-            // format (source/metadata') was determined because target-metadata-dir was set
-            'target-metadata-dir': flags['target-metadata-dir'] as string,
-          });
-
+    // reference the flag instead of `foramt` so we get correct type
+    const formatter = flags['target-metadata-dir']
+      ? new MetadataRetrieveResultFormatter(result, {
+          'target-metadata-dir': flags['target-metadata-dir'],
+          'zip-file-name': zipFileName,
+          unzip: flags.unzip,
+        })
+      : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
     if (!this.jsonEnabled()) {
       if (result.response.status === 'Succeeded') {
         await formatter.display();
@@ -228,7 +229,9 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     if (format === 'metadata' && flags.unzip) {
       try {
-        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'])), { recursive: true });
+        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'] as string)), {
+          recursive: true,
+        });
       } catch (e) {
         // do nothing
       }

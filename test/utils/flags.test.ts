@@ -10,7 +10,13 @@ import * as path from 'path';
 import { assert, expect } from 'chai';
 import { Parser } from '@oclif/core';
 import * as sinon from 'sinon';
-import { testLevelFlag, fileOrDirFlag, ensuredDirFlag, zipFileFlag } from '../../src/utils/flags';
+import {
+  testLevelFlag,
+  fileOrDirFlag,
+  ensuredDirFlag,
+  zipFileFlag,
+  DEFAULT_ZIP_FILE_NAME,
+} from '../../src/utils/flags';
 import { TestLevel } from '../../src/utils/types';
 
 const STAT = {
@@ -192,6 +198,6 @@ describe('zipFileFlag', () => {
     const out = await Parser.parse(['--zipFile='], {
       flags: { zipFile: zipFileFlag() },
     });
-    expect(out.flags).to.deep.equal({ zipFile: 'unpackaged.zip' });
+    expect(out.flags).to.deep.equal({ zipFile: DEFAULT_ZIP_FILE_NAME });
   });
 });

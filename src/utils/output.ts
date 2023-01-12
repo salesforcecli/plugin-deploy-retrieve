@@ -317,14 +317,11 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       CliUx.ux.log();
       CliUx.ux.log(tableHeader('Apex Code Coverage'));
 
-      CliUx.ux.table(
-        coverage.map((c) => coverageOutput(c)),
-        {
-          name: { header: 'Name' },
-          numLocations: { header: '% Covered' },
-          lineNotCovered: { header: 'Uncovered Lines' },
-        }
-      );
+      CliUx.ux.table(coverage.map(coverageOutput), {
+        name: { header: 'Name' },
+        numLocations: { header: '% Covered' },
+        lineNotCovered: { header: 'Uncovered Lines' },
+      });
     }
   }
 
