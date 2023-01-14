@@ -24,7 +24,7 @@
     "@salesforce/plugin-command-reference": "^2.2.8",
     "@salesforce/plugin-config": "^2.3.0",
     "@salesforce/plugin-functions": "^1.17.0",
-    "@salesforce/plugin-source": "^2.3.9",
+    "@salesforce/plugin-source": "^2.3.12",
     "@salesforce/plugin-templates": "^55.1.0",
     "@salesforce/plugin-user": "^2.1.23",
     "@salesforce/prettier-config": "^0.0.2",
