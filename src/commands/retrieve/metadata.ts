@@ -109,7 +109,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       summary: messages.getMessage('flags.zip-file-name.summary'),
       dependsOn: ['target-metadata-dir'],
       exclusive: ['ignore-conflicts'],
-      default: 'unpackaged.zip',
     }),
   };
 
