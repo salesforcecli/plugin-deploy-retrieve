@@ -1,3 +1,12 @@
+# [1.7.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.6.19...1.7.0) (2023-01-18)
+
+
+### Features
+
+* replacements in `deploy metadata` output ([#472](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/472)) ([2075b8b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2075b8be6c68149764735f7ba4836369c3678f10))
+
+
+
 ## [1.6.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.6.18...1.6.19) (2023-01-14)
 
 
