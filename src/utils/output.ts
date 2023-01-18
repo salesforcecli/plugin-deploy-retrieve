@@ -153,7 +153,15 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
         files: this.absoluteFiles.filter((f) => f.state === 'Failed'),
       };
     } else {
-      return { ...this.result.response, files: this.absoluteFiles };
+      return {
+        ...this.result.response,
+        files: this.absoluteFiles,
+        ...(this.result.replacements.size
+          ? {
+              replacements: Object.fromEntries(this.result.replacements),
+            }
+          : {}),
+      };
     }
   }
 
@@ -164,6 +172,28 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     this.displayFailures();
     this.displayDeletes();
     this.displayTestResults();
+    this.displayReplacements();
+  }
+
+  private displayReplacements(): void {
+    if (this.verbosity === 'verbose' && this.result.replacements?.size) {
+      const replacements = Array.from(this.result.replacements.entries()).flatMap(([filepath, stringsReplaced]) =>
+        stringsReplaced.map((replaced) => ({
+          filePath: path.relative(process.cwd(), filepath),
+          replaced,
+        }))
+      );
+      CliUx.ux.table(
+        replacements,
+        {
+          filePath: { header: 'PROJECT PATH' },
+          replaced: { header: 'TEXT REPLACED' },
+        },
+        {
+          title: tableHeader('Metadata Replacements'),
+        }
+      );
+    }
   }
 
   private displaySuccesses(): void {
@@ -287,14 +317,11 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       CliUx.ux.log();
       CliUx.ux.log(tableHeader('Apex Code Coverage'));
 
-      CliUx.ux.table(
-        coverage.map(coverageOutput),
-        {
-          name: { header: 'Name' },
-          numLocations: { header: '% Covered' },
-          lineNotCovered: { header: 'Uncovered Lines' },
-        }
-      );
+      CliUx.ux.table(coverage.map(coverageOutput), {
+        name: { header: 'Name' },
+        numLocations: { header: '% Covered' },
+        lineNotCovered: { header: 'Uncovered Lines' },
+      });
     }
   }
 

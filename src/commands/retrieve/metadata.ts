@@ -228,7 +228,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     if (format === 'metadata' && flags.unzip) {
       try {
-        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'] as string)), {
+        await rm(resolve(join(flags['target-metadata-dir'] ?? '', zipFileName)), {
           recursive: true,
         });
       } catch (e) {
