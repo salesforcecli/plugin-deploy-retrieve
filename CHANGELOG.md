@@ -1,3 +1,12 @@
+## [1.7.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.7.0...1.7.1) (2023-01-21)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/source-tracking from 2.2.17 to 2.2.18 ([ea7ee35](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ea7ee357f216c4119a5555236f6958ddb85dd27d))
+
+
+
 # [1.7.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.6.19...1.7.0) (2023-01-18)
 
 
