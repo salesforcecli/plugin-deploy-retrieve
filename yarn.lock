@@ -432,7 +432,7 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@heroku-cli/color@^1.1.14", "@heroku-cli/color@^1.1.15":
+"@heroku-cli/color@^1.1.15", "@heroku-cli/color@^1.1.16":
   version "1.1.16"
   resolved "https://registry.yarnpkg.com/@heroku-cli/color/-/color-1.1.16.tgz#713b7e57441b27ae93d8d0f695b8036aaef8ec1e"
   integrity sha512-97bYxNaDe/+GCUAKu0V2qudQmR3NFRnv3SrQd2FTtOAa9OWKwkvoBs2WzT7MkNwP4DIpYL6W/e3CSfShfhzEMw==
@@ -1173,7 +1173,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.31.16", "@salesforce/core@^3.31.17", "@salesforce/core@^3.31.18", "@salesforce/core@^3.32.12", "@salesforce/core@^3.32.13", "@salesforce/core@^3.32.6", "@salesforce/core@^3.32.8", "@salesforce/core@^3.8.0":
+"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.31.17", "@salesforce/core@^3.31.18", "@salesforce/core@^3.32.12", "@salesforce/core@^3.32.13", "@salesforce/core@^3.32.6", "@salesforce/core@^3.32.8", "@salesforce/core@^3.8.0":
   version "3.33.0"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.33.0.tgz#481cbd58955a7384a1f9200e02effc4dfe8e59da"
   integrity sha512-nz7qKwm1GpNr8swksthm5jKORj4wn647iCm6Ij1X5oRts1uynLdnqyNDtWD6OJCOaMXunjRmnhRB82JXq/TnFg==
@@ -1277,19 +1277,19 @@
     chalk "^4.1.1"
     tslib "^2"
 
-"@salesforce/plugin-functions@^1.17.0":
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.17.0.tgz#e1b056d38cccea66d2978840a85560bf3e298e54"
-  integrity sha512-8pKRdzQwdjjQbXR8Qhd5bz4VsuzgNSIKFsw3FRmWMgSoMIQgQG1tB3XrWW74BKG3N7ZLU2skEgnyklquSj3XsQ==
+"@salesforce/plugin-functions@^1.17.3":
+  version "1.17.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.17.3.tgz#9d12fb2553ffd9dbfffd7044d05b87880d99ea93"
+  integrity sha512-q2Hu3Ry/94hgP2y5vJDaKmB4pKpPDCWn8fKHqQIvpLCU4IWiF6t8ypxYwOP288o2PDAaysiUI7CluVfnWFD9MQ==
   dependencies:
-    "@heroku-cli/color" "^1.1.14"
+    "@heroku-cli/color" "^1.1.16"
     "@heroku-cli/schema" "^1.0.25"
     "@heroku/eventsource" "^1.0.7"
     "@heroku/function-toml" "^0.0.3"
     "@heroku/project-descriptor" "0.0.6"
     "@hk/functions-core" "npm:@heroku/functions-core@0.5.2"
     "@oclif/core" "^1.6.0"
-    "@salesforce/core" "^3.31.16"
+    "@salesforce/core" "^3.32.12"
     "@salesforce/sf-plugins-core" "^1.7.2"
     "@salesforce/ts-types" "^1.7.1"
     axios "^0.27.2"
@@ -1306,7 +1306,7 @@
     kbpgp "^2.1.15"
     lodash "^4.17.21"
     netrc-parser "^3.1.6"
-    node-fetch "^3.2.3"
+    node-fetch "^3.3.0"
     sha256-file "^1.0.0"
     uuid "^8.3.2"
 
@@ -6690,10 +6690,10 @@ node-fetch@^2.6.1, node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-fetch@^3.2.3:
-  version "3.2.10"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.2.10.tgz#e8347f94b54ae18b57c9c049ef641cef398a85c8"
-  integrity sha512-MhuzNwdURnZ1Cp4XTazr69K0BTizsBroX7Zx3UgDSVcZYKF/6p0CBe4EUb/hLqmzVhl0UpYfgRljQ4yxE+iCxA==
+node-fetch@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.0.tgz#37e71db4ecc257057af828d523a7243d651d91e4"
+  integrity sha512-BKwRP/O0UvoMKp7GNdwPlObhYGB5DQqwhEDQlNKuoqwVYSxkSZCSbHjnFFmUEtwSKRPU4kNK8PbDYYitwaE3QA==
   dependencies:
     data-uri-to-buffer "^4.0.0"
     fetch-blob "^3.1.4"
