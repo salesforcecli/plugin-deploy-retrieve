@@ -5,13 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { CliUx } from '@oclif/core';
+import { ux } from '@oclif/core';
 import { ConflictResponse } from '@salesforce/source-tracking';
 
 export const writeConflictTable = (conflicts: ConflictResponse[]): void => {
   // Interfaces cannot be casted to Record<string, unknown> so we have to cast to unknown first
   // See https://github.com/microsoft/TypeScript/issues/15300
-  CliUx.ux.table(conflicts as unknown as Array<Record<string, unknown>>, {
+  ux.table(conflicts as unknown as Array<Record<string, unknown>>, {
     state: { header: 'STATE' },
     fullName: { header: 'FULL NAME' },
     type: { header: 'TYPE' },
