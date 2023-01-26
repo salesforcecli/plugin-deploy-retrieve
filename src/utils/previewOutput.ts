@@ -238,7 +238,7 @@ const printConflictsTable = (files: PreviewFile[], baseOperation: BaseOperation)
   if (files.length === 0) {
     CliUx.ux.log(dim(messages.getMessage('conflicts.none')));
   } else {
-    CliUx.ux.log(StandardColors.error(bold(messages.getMessage('conflicts.header', [files.length, baseOperation]))));
+    CliUx.ux.log(StandardColors.error(bold(messages.getMessage('conflicts.header', [files.length]))));
     CliUx.ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };
