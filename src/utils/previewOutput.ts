@@ -233,7 +233,7 @@ const printDeleteTable = (files: PreviewFile[]): void => {
   }
 };
 
-const printConflictsTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
+const printConflictsTable = (files: PreviewFile[]): void => {
   CliUx.ux.log();
   if (files.length === 0) {
     CliUx.ux.log(dim(messages.getMessage('conflicts.none')));
@@ -254,7 +254,7 @@ const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): 
 };
 
 export const printTables = (result: PreviewResult, baseOperation: BaseOperation): void => {
-  printConflictsTable(result.conflicts, baseOperation);
+  printConflictsTable(result.conflicts);
   printDeleteTable(result.toDelete);
   if (baseOperation === 'deploy') {
     printDeployTable(result.toDeploy);
