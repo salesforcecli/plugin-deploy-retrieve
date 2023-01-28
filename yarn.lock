@@ -1122,14 +1122,14 @@
     mv "~2"
     safe-json-stringify "~1"
 
-"@salesforce/cli-plugins-testkit@^3.2.17", "@salesforce/cli-plugins-testkit@^3.2.8":
-  version "3.2.17"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-3.2.17.tgz#1b35052545121373dd804980d44e19decc3d318c"
-  integrity sha512-sLpwpXJuDRUfum8mH2/k17qNEXOzFVNp4moAvQXfMae4mNOORzrShMkIS+C35o0uD2fIOl4/7RmntA0ZWnb6Aw==
+"@salesforce/cli-plugins-testkit@^3.2.15", "@salesforce/cli-plugins-testkit@^3.2.17":
+  version "3.2.18"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-3.2.18.tgz#6c2857cef50a0035205a4150c6d609f36e3b0fae"
+  integrity sha512-tfm1lYPYcOsx9+ELUx+b9ZbAD5mOIhtvGjqpG3/NG1jeghLNPjbDDX6bL1ottw/+mYBVymIrj1krhKxOUpqJCw==
   dependencies:
     "@salesforce/core" "^3.32.12"
     "@salesforce/kit" "^1.8.0"
-    "@salesforce/ts-types" "^1.5.21"
+    "@salesforce/ts-types" "^1.7.2"
     "@types/shelljs" "^0.8.11"
     archiver "^5.2.0"
     debug "^4.3.1"
@@ -1173,7 +1173,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.31.17", "@salesforce/core@^3.32.12", "@salesforce/core@^3.32.13", "@salesforce/core@^3.32.14", "@salesforce/core@^3.32.6", "@salesforce/core@^3.8.0":
+"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.25.1", "@salesforce/core@^3.32.12", "@salesforce/core@^3.32.13", "@salesforce/core@^3.32.14", "@salesforce/core@^3.32.6", "@salesforce/core@^3.8.0":
   version "3.33.1"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.33.1.tgz#3dd0a44ba22763e8e0c2c97df03393e5c2c845d9"
   integrity sha512-jaed8rK+NhSxB6MjYUN8f/2VkvtbFN/Ce/l6JvgFE+cvOf2g+lPv1pSsnKKlaSiiYcXkOvIRDT9d9ns1RLJzUw==
@@ -1377,7 +1377,7 @@
     chalk "^4"
     inquirer "^8.2.5"
 
-"@salesforce/source-deploy-retrieve@^7.5.2", "@salesforce/source-deploy-retrieve@^7.6.0", "@salesforce/source-deploy-retrieve@^7.7.3", "@salesforce/source-deploy-retrieve@^7.7.5":
+"@salesforce/source-deploy-retrieve@^7.6.0", "@salesforce/source-deploy-retrieve@^7.7.3", "@salesforce/source-deploy-retrieve@^7.7.5":
   version "7.7.5"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-7.7.5.tgz#4eb64f02d4759f98e1e64187a081c472ebe8a2ae"
   integrity sha512-zkGpbvTVr2nBJfbTxShFfaa4DAOvbXiaaWjZg0oVLUDoAQh+uQKX4aPdsXqJR4pKdQR8u1JwEV7TlR1f5gMCrg==
@@ -1396,15 +1396,15 @@
     proxy-from-env "^1.1.0"
     unzipper "0.10.11"
 
-"@salesforce/source-testkit@^2.0.18":
-  version "2.0.18"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.0.18.tgz#c36670dee56b37688b71b9cc26dcaa7bb602eaeb"
-  integrity sha512-Q2RG8bfTT/TbFdzs86qEuw86Zg7NBouS5N+PHZgkfn7xdn5GyHRcS3yR87czsXxsbaUz2idaMxkiKUyqrfOaHQ==
+"@salesforce/source-testkit@^2.0.35":
+  version "2.0.35"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.0.35.tgz#43a93f55f3028b3da1444cfc30ed9d333fd780c3"
+  integrity sha512-BfHg2Zgc/mxlpvxkJzmNliFeAiVtv5fhAVuji1teAQrtlSgZEHphdgYNzUmr6Gjami2oq0AW9CNdtcl1cY8wBQ==
   dependencies:
-    "@salesforce/cli-plugins-testkit" "^3.2.8"
-    "@salesforce/core" "^3.31.17"
-    "@salesforce/kit" "^1.7.1"
-    "@salesforce/source-deploy-retrieve" "^7.5.2"
+    "@salesforce/cli-plugins-testkit" "^3.2.15"
+    "@salesforce/core" "^3.32.13"
+    "@salesforce/kit" "^1.8.3"
+    "@salesforce/source-deploy-retrieve" "^7.7.5"
     "@salesforce/ts-types" "^1.7.0"
     archiver "^5.2.0"
     chai-each "^0.0.1"
@@ -1449,7 +1449,7 @@
     sinon "^5.1.1"
     tslib "^2.2.0"
 
-"@salesforce/ts-types@^1.5.20", "@salesforce/ts-types@^1.5.21", "@salesforce/ts-types@^1.7.0", "@salesforce/ts-types@^1.7.1", "@salesforce/ts-types@^1.7.2":
+"@salesforce/ts-types@^1.5.20", "@salesforce/ts-types@^1.7.0", "@salesforce/ts-types@^1.7.1", "@salesforce/ts-types@^1.7.2":
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/@salesforce/ts-types/-/ts-types-1.7.2.tgz#ab40399d291c7eca57efc9890daf2fa2632197ec"
   integrity sha512-eCpWKEb03UCKBJ6Svp0Vwcwt+fG6BQbopO4x5wt6CYeT8Rjt0dbDQicZPmVL59j2qyt3Q4Y4EYsxXUGZmdfvDw==
