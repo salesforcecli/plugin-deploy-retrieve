@@ -7,7 +7,7 @@
 
 import * as os from 'os';
 import * as path from 'path';
-import { CliUx } from '@oclif/core';
+import { ux } from '@oclif/core';
 import { blue, bold, dim, underline } from 'chalk';
 import {
   DeployResult,
@@ -183,7 +183,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
           replaced,
         }))
       );
-      CliUx.ux.table(
+      ux.table(
         replacements,
         {
           filePath: { header: 'PROJECT PATH' },
@@ -209,9 +209,9 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     };
     const title = 'Deployed Source';
     const options = { title: tableHeader(title) };
-    CliUx.ux.log();
+    ux.log();
 
-    CliUx.ux.table(
+    ux.table(
       successes.map((s) => ({ filePath: s.filePath, fullName: s.fullName, type: s.type, state: s.state })),
       columns,
       options
@@ -230,8 +230,8 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       error: { header: 'Problem' },
     };
     const options = { title: error(`Component Failures [${failures.length}]`) };
-    CliUx.ux.log();
-    CliUx.ux.table(
+    ux.log();
+    ux.table(
       failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.error })),
       columns,
       options
@@ -250,14 +250,14 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     };
 
     const options = { title: tableHeader('Deleted Source') };
-    CliUx.ux.log();
+    ux.log();
 
-    CliUx.ux.table(getFileResponseSuccessProps(deletions), columns, options);
+    ux.table(getFileResponseSuccessProps(deletions), columns, options);
   }
 
   private displayTestResults(): void {
     if (this.testLevel === TestLevel.NoTestRun) {
-      CliUx.ux.log();
+      ux.log();
       return;
     }
 
@@ -268,27 +268,27 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       this.displayVerboseTestCoverage();
     }
 
-    CliUx.ux.log();
-    CliUx.ux.log(tableHeader('Test Results Summary'));
+    ux.log();
+    ux.log(tableHeader('Test Results Summary'));
     const passing = this.result.response.numberTestsCompleted ?? 0;
     const failing = this.result.response.numberTestErrors ?? 0;
     const total = this.result.response.numberTestsTotal ?? 0;
     const time = this.result.response.details.runTestResult?.totalTime ?? 0;
-    CliUx.ux.log(`Passing: ${passing}`);
-    CliUx.ux.log(`Failing: ${failing}`);
-    CliUx.ux.log(`Total: ${total}`);
-    if (time) CliUx.ux.log(`Time: ${time}`);
+    ux.log(`Passing: ${passing}`);
+    ux.log(`Failing: ${failing}`);
+    ux.log(`Total: ${total}`);
+    if (time) ux.log(`Time: ${time}`);
   }
 
   private displayVerboseTestSuccesses(): void {
     const successes = ensureArray(this.result.response.details.runTestResult?.successes);
     if (successes.length > 0) {
       const testSuccesses = sortTestResults(successes) as Successes[];
-      CliUx.ux.log();
-      CliUx.ux.log(success(`Test Success [${successes.length}]`));
+      ux.log();
+      ux.log(success(`Test Success [${successes.length}]`));
       for (const test of testSuccesses) {
         const testName = underline(`${test.name}.${test.methodName}`);
-        CliUx.ux.log(`${check} ${testName}`);
+        ux.log(`${check} ${testName}`);
       }
     }
   }
@@ -298,15 +298,15 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     const failures = ensureArray(this.result.response.details.runTestResult?.failures);
     const failureCount = this.result.response.details.runTestResult?.numFailures;
     const testFailures = sortTestResults(failures) as Failures[];
-    CliUx.ux.log();
-    CliUx.ux.log(error(`Test Failures [${failureCount}]`));
+    ux.log();
+    ux.log(error(`Test Failures [${failureCount}]`));
     for (const test of testFailures) {
       const testName = underline(`${test.name}.${test.methodName}`);
       const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
-      CliUx.ux.log(`• ${testName}`);
-      CliUx.ux.log(`  ${dim('message')}: ${test.message}`);
-      CliUx.ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
-      CliUx.ux.log();
+      ux.log(`• ${testName}`);
+      ux.log(`  ${dim('message')}: ${test.message}`);
+      ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
+      ux.log();
     }
   }
 
@@ -314,10 +314,10 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     const codeCoverage = ensureArray(this.result.response.details.runTestResult?.codeCoverage);
     if (codeCoverage.length) {
       const coverage = codeCoverage.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1));
-      CliUx.ux.log();
-      CliUx.ux.log(tableHeader('Apex Code Coverage'));
+      ux.log();
+      ux.log(tableHeader('Apex Code Coverage'));
 
-      CliUx.ux.table(coverage.map(coverageOutput), {
+      ux.table(coverage.map(coverageOutput), {
         name: { header: 'Name' },
         numLocations: { header: '% Covered' },
         lineNotCovered: { header: 'Uncovered Lines' },
@@ -334,7 +334,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
 
 export class DeployReportResultFormatter extends DeployResultFormatter {
   public display(): void {
-    CliUx.ux.log(`${this.result.response.id}... ${this.result.response.status}`);
+    ux.log(`${this.result.response.id}... ${this.result.response.status}`);
 
     const response = Object.entries(this.result.response).reduce<Array<{ key: string; value: unknown }>>(
       (result, [key, value]) => {
@@ -350,15 +350,15 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
       []
     );
 
-    CliUx.ux.log();
-    CliUx.ux.table(response, { key: {}, value: {} }, { title: tableHeader('Deploy Info') });
+    ux.log();
+    ux.table(response, { key: {}, value: {} }, { title: tableHeader('Deploy Info') });
 
     const opts = Object.entries(this.flags).reduce<Array<{ key: string; value: unknown }>>((result, [key, value]) => {
       if (key === 'timestamp') return result;
       return result.concat({ key, value });
     }, []);
-    CliUx.ux.log();
-    CliUx.ux.table(opts, { key: {}, value: {} }, { title: tableHeader('Deploy Options') });
+    ux.log();
+    ux.table(opts, { key: {}, value: {} }, { title: tableHeader('Deploy Options') });
     super.display();
   }
 }
@@ -371,11 +371,11 @@ export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJs
   }
 
   public display(): void {
-    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployQueued'));
-    CliUx.ux.log();
-    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.id]));
-    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.id]));
-    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancel', [this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployQueued'));
+    ux.log();
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancel', [this.id]));
   }
 }
 
@@ -388,9 +388,9 @@ export class DeployCancelResultFormatter implements Formatter<DeployResultJson> 
 
   public display(): void {
     if (this.result.response.status === RequestStatus.Canceled) {
-      CliUx.ux.log(`Successfully canceled ${this.result.response.id}`);
+      ux.log(`Successfully canceled ${this.result.response.id}`);
     } else {
-      CliUx.ux.error(`Could not cancel ${this.result.response.id}`);
+      ux.error(`Could not cancel ${this.result.response.id}`);
     }
   }
 }
@@ -403,9 +403,9 @@ export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployRe
   }
 
   public display(): void {
-    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancelQueued'));
-    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.id]));
-    CliUx.ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancelQueued'));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.id]));
   }
 }
 
@@ -441,9 +441,9 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
     };
     const title = 'Retrieved Source';
     const options = { title: tableHeader(title) };
-    CliUx.ux.log();
+    ux.log();
 
-    CliUx.ux.table(getFileResponseSuccessProps(successes), columns, options);
+    ux.table(getFileResponseSuccessProps(successes), columns, options);
   }
 
   private async displayPackages(): Promise<void> {
@@ -455,8 +455,8 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       };
       const title = 'Retrieved Packages';
       const options = { title: tableHeader(title) };
-      CliUx.ux.log();
-      CliUx.ux.table(packages, columns, options);
+      ux.log();
+      ux.table(packages, columns, options);
     }
   }
 
@@ -488,10 +488,10 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async display(): Promise<void> {
-    CliUx.ux.log(retrieveMessages.getMessage('info.WroteZipFile', [this.zipFilePath]));
+    ux.log(retrieveMessages.getMessage('info.WroteZipFile', [this.zipFilePath]));
     if (this.opts.unzip) {
       const extractPath = path.join(this.opts['target-metadata-dir'], path.parse(this.opts['zip-file-name']).name);
-      CliUx.ux.log(retrieveMessages.getMessage('info.ExtractedZipFile', [this.zipFilePath, extractPath]));
+      ux.log(retrieveMessages.getMessage('info.ExtractedZipFile', [this.zipFilePath, extractPath]));
     }
   }
 }

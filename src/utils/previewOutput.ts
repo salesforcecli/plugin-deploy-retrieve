@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
-import { CliUx } from '@oclif/core';
+import { ux } from '@oclif/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { bold, dim } from 'chalk';
 import { Messages } from '@salesforce/core';
@@ -202,54 +202,54 @@ export const compileResults = ({
 };
 
 const printDeployTable = (files: PreviewFile[]): void => {
-  CliUx.ux.log();
+  ux.log();
   if (files.length === 0) {
-    CliUx.ux.log(dim(messages.getMessage('deploy.none')));
+    ux.log(dim(messages.getMessage('deploy.none')));
   } else {
     // not using table title property to avoid all the ASCII art
-    CliUx.ux.log(StandardColors.success(bold(messages.getMessage('deploy.header', [files.length]))));
-    CliUx.ux.table<PreviewFile>(files, columns);
+    ux.log(StandardColors.success(bold(messages.getMessage('deploy.header', [files.length]))));
+    ux.table<PreviewFile>(files, columns);
   }
 };
 
 const printRetrieveTable = (files: PreviewFile[]): void => {
-  CliUx.ux.log();
+  ux.log();
   if (files.length === 0) {
-    CliUx.ux.log(dim(messages.getMessage('retrieve.none')));
+    ux.log(dim(messages.getMessage('retrieve.none')));
   } else {
     // not using table title property to avoid all the ASCII art
-    CliUx.ux.log(StandardColors.success(bold(messages.getMessage('retrieve.header', [files.length]))));
-    CliUx.ux.table<PreviewFile>(files, columns);
+    ux.log(StandardColors.success(bold(messages.getMessage('retrieve.header', [files.length]))));
+    ux.table<PreviewFile>(files, columns);
   }
 };
 
 const printDeleteTable = (files: PreviewFile[]): void => {
-  CliUx.ux.log();
+  ux.log();
   if (files.length === 0) {
-    CliUx.ux.log(dim(messages.getMessage('delete.none')));
+    ux.log(dim(messages.getMessage('delete.none')));
   } else {
-    CliUx.ux.log(StandardColors.warning(bold(messages.getMessage('delete.header', [files.length]))));
-    CliUx.ux.table<PreviewFile>(files, columns);
+    ux.log(StandardColors.warning(bold(messages.getMessage('delete.header', [files.length]))));
+    ux.table<PreviewFile>(files, columns);
   }
 };
 
 const printConflictsTable = (files: PreviewFile[]): void => {
-  CliUx.ux.log();
+  ux.log();
   if (files.length === 0) {
-    CliUx.ux.log(dim(messages.getMessage('conflicts.none')));
+    ux.log(dim(messages.getMessage('conflicts.none')));
   } else {
-    CliUx.ux.log(StandardColors.error(bold(messages.getMessage('conflicts.header', [files.length]))));
-    CliUx.ux.table<PreviewFile>(files, columns, { sort: 'path' });
+    ux.log(StandardColors.error(bold(messages.getMessage('conflicts.header', [files.length]))));
+    ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };
 
 const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
-  CliUx.ux.log();
+  ux.log();
   if (files.length === 0) {
-    CliUx.ux.log(dim(messages.getMessage('ignored.none')));
+    ux.log(dim(messages.getMessage('ignored.none')));
   } else {
-    CliUx.ux.log(dim(messages.getMessage('ignored.header', [files.length, baseOperation])));
-    CliUx.ux.table<PreviewFile>(files, columns, { sort: 'path' });
+    ux.log(dim(messages.getMessage('ignored.header', [files.length, baseOperation])));
+    ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };
 
