@@ -233,12 +233,12 @@ const printDeleteTable = (files: PreviewFile[]): void => {
   }
 };
 
-const printConflictsTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
+const printConflictsTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
     ux.log(dim(messages.getMessage('conflicts.none')));
   } else {
-    ux.log(StandardColors.error(bold(messages.getMessage('conflicts.header', [files.length, baseOperation]))));
+    ux.log(StandardColors.error(bold(messages.getMessage('conflicts.header', [files.length]))));
     ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };
@@ -254,7 +254,7 @@ const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): 
 };
 
 export const printTables = (result: PreviewResult, baseOperation: BaseOperation): void => {
-  printConflictsTable(result.conflicts, baseOperation);
+  printConflictsTable(result.conflicts);
   printDeleteTable(result.toDelete);
   if (baseOperation === 'deploy') {
     printDeployTable(result.toDeploy);

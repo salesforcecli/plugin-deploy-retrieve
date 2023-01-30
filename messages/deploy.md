@@ -41,6 +41,10 @@ One or more initialization steps failed.
 
 Initialization Failures. The following table describes each failure:
 
+# error.UserTerminatedDeployForExpiredOrg
+
+The target-org found in the configuration is expired. The user terminated the deploy.
+
 # warning.TargetOrgIsExpired
 
 The target-org, "%s", is expired. Do you want to pick another org?
