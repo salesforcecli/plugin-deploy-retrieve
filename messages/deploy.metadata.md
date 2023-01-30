@@ -185,10 +185,6 @@ Save %s as default target-org?
 Can't find any active scratch orgs, Dev Hubs, or other orgs.
 Either log into an org or create a scratch org, and then try again.
 
-# error.UserTerminatedDeployForExpiredOrg
-
-The target-org found in the configuration is expired. The user terminated the deploy.
-
 # error.NoTestsSpecified
 
 You must specify tests using the --tests flag if the --test-level flag is set to RunSpecifiedTests.
