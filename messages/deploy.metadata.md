@@ -191,7 +191,7 @@ You must specify tests using the --tests flag if the --test-level flag is set to
 
 # error.ClientTimeout
 
-The client has timed out. Use sf deploy metadata resume to resume watching this deploy.
+The command has timed out, although the deployment is still running. Use "sf deploy metadata resume" to resume watching the deployment.
 
 # error.Conflicts
 
