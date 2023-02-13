@@ -14,13 +14,13 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 # examples
 
-- Deploy local changes not in the org:
+- Deploy local changes not in the org; uses your default org:
 
       <%= config.bin %> <%= command.id %>
 
-- Deploy the source files in a directory:
+- Deploy the source files in a directory to an org with alias "my-scratch":
 
-      <%= config.bin %> <%= command.id %>  --source-dir path/to/source
+      <%= config.bin %> <%= command.id %>  --source-dir path/to/source --target-org my-scratch
 
 - Deploy a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
 
@@ -191,7 +191,7 @@ You must specify tests using the --tests flag if the --test-level flag is set to
 
 # error.ClientTimeout
 
-The client has timed out. Use sf deploy metadata resume to resume watching this deploy.
+The command has timed out, although the deployment is still running. Use "sf deploy metadata resume" to resume watching the deployment.
 
 # error.Conflicts
 
