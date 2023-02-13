@@ -1,3 +1,12 @@
+## [1.8.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.0...1.8.1) (2023-02-13)
+
+
+### Bug Fixes
+
+* minor edits to "sf deploy metadata" messages ([#499](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/499)) ([b90bb4e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b90bb4eb862f347375d62464124ab20e9a9b4c95))
+
+
+
 # [1.8.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.7.2...1.8.0) (2023-01-30)
 
 
