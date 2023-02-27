@@ -6,4 +6,7 @@
  */
 module.exports = {
   extends: ['eslint-config-salesforce-typescript', 'eslint-config-salesforce-license', 'plugin:sf-plugin/recommended'],
+  rules: {
+    '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+  },
 };

@@ -50,7 +50,9 @@ export type MetadataRetrieveResultJson = Omit<MetadataApiRetrieveStatus, 'zipFil
   files: FileResponse[];
 };
 
-export type RetrieveResultJson = (MetadataApiRetrieveStatus & { files: FileResponse[] }) | MetadataRetrieveResultJson;
+export type RetrieveResultJson =
+  | (Omit<MetadataApiRetrieveStatus, 'zipFile'> & { files: FileResponse[] })
+  | MetadataRetrieveResultJson;
 
 /** validates source component with fullname, type, and xml props */
 export const isSourceComponent = (sc: unknown): sc is SourceComponent & { xml: string } =>
