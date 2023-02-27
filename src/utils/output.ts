@@ -420,7 +420,8 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   }
 
   public getJson(): RetrieveResultJson {
-    return { ...this.result.response, files: this.files };
+    const { zipFile, ...responseWithoutZip } = this.result.response;
+    return { ...responseWithoutZip, files: this.files };
   }
 
   public async display(): Promise<void> {
