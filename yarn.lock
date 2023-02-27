@@ -1217,7 +1217,7 @@
     mkdirp "^1.0.4"
     tslib "^2"
 
-"@salesforce/plugin-config@^2.3.0":
+"@salesforce/plugin-config@^2.3.3":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@salesforce/plugin-config/-/plugin-config-2.3.3.tgz#661b1af515d3300207cc9441f2586d2c7e3df597"
   integrity sha512-s2i8xVofXAXRo8hpHfSMtCWUaPJSeLEWqO0jBfxtepAL0BBqEKW7zD/dhD2s3hHPrQ3OOPy0bVPAx33gJCe9xg==
