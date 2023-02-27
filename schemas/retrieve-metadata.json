@@ -51,13 +51,9 @@
                   "$ref": "#/definitions/RetrieveMessage"
                 }
               ]
-            },
-            "zipFile": {
-              "type": "string",
-              "description": "`base64` encoded string"
             }
           },
-          "required": ["done", "fileProperties", "files", "id", "status", "success", "zipFile"]
+          "required": ["done", "fileProperties", "files", "id", "status", "success"]
         },
         {
           "$ref": "#/definitions/MetadataRetrieveResultJson"
