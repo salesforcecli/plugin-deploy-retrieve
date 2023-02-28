@@ -67,8 +67,8 @@ export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): 
   return true;
 }
 
-export async function resolveApi(): Promise<API> {
-  const agg = await ConfigAggregator.create({ customConfigMeta: ConfigMeta });
+export async function resolveApi(existingConfigAggregator?: ConfigAggregator): Promise<API> {
+  const agg = existingConfigAggregator ?? (await ConfigAggregator.create({ customConfigMeta: ConfigMeta }));
   const restDeployConfig = agg.getInfo(ConfigVars.ORG_METADATA_REST_DEPLOY)?.value;
   return restDeployConfig === 'true' ? API.REST : API.SOAP;
 }

@@ -120,7 +120,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   public async run(): Promise<DeployResultJson> {
-    const [{ flags }, api] = await Promise.all([this.parse(DeployMetadataValidate), resolveApi()]);
+    const [{ flags }, api] = await Promise.all([this.parse(DeployMetadataValidate), resolveApi(this.configAggregator)]);
     const { deploy, componentSet } = await executeDeploy(
       {
         ...flags,
