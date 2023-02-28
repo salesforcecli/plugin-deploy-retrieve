@@ -132,4 +132,4 @@ Run "%s project deploy quick --job-id %s" to execute this deploy
 
 # error.FailedValidation
 
-Falied to validate the deployment (%s).
+Failed to validate the deployment (%s).
