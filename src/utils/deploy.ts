@@ -124,14 +124,6 @@ export async function executeDeploy(
 
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   const usernameOrConnection = org.getConnection();
-  // instantiate source tracking
-  // stl will decide, based on the org's properties, what needs to be done
-  const stl = await SourceTracking.create({
-    org,
-    project,
-    subscribeSDREvents: true,
-    ignoreConflicts: opts['ignore-conflicts'],
-  });
 
   if (opts['metadata-dir']) {
     if (id) {
@@ -146,6 +138,14 @@ export async function executeDeploy(
       await deploy.start();
     }
   } else {
+    // instantiate source tracking
+    // stl will decide, based on the org's properties, what needs to be done
+    const stl = await SourceTracking.create({
+      org,
+      project,
+      subscribeSDREvents: true,
+      ignoreConflicts: opts['ignore-conflicts'],
+    });
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
       throw new SfError(
