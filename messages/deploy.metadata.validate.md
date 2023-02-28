@@ -126,6 +126,10 @@ Indicates that the metadata zip file points to a directory structure for a singl
 
 Successfully validated the deployment (%s).
 
+# info.suggestedQuickDeploy
+
+Run "%s project deploy quick --job-id %s" to execute this deploy
+
 # error.FailedValidation
 
 Falied to validate the deployment (%s).

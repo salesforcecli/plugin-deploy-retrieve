@@ -153,9 +153,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     if (result.response.status === RequestStatus.Succeeded) {
       this.log();
       this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
-
-      const suggestedCommand = `${this.config.bin} deploy metadata quick --job-id ${deploy.id}`;
-      this.log(`\nRun ${bold(suggestedCommand)} to execute this deploy.`);
+      this.log(messages.getMessage('info.suggestedQuickDeploy', [this.config.bin, deploy.id]));
     } else {
       throw messages.createError('error.FailedValidation', [deploy.id]);
     }
