@@ -27,6 +27,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
+  public static readonly aliases = ['deploy:metadata:validate'];
+  public static readonly deprecateAliases = true;
 
   public static readonly flags = {
     'api-version': Flags.orgApiVersion({
@@ -118,8 +120,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   public async run(): Promise<DeployResultJson> {
-    const { flags } = await this.parse(DeployMetadataValidate);
-    const api = await resolveApi();
+    const [{ flags }, api] = await Promise.all([this.parse(DeployMetadataValidate), resolveApi()]);
     const { deploy, componentSet } = await executeDeploy(
       {
         ...flags,

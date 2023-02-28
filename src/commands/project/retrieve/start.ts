@@ -15,11 +15,11 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { Duration } from '@salesforce/kit';
-import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../utils/flags';
-import { MetadataRetrieveResultFormatter, RetrieveResultFormatter } from '../../utils/output';
-import { getPackageDirs } from '../../utils/project';
-import { RetrieveResultJson } from '../../utils/types';
-import { writeConflictTable } from '../../utils/conflicts';
+import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags';
+import { MetadataRetrieveResultFormatter, RetrieveResultFormatter } from '../../../utils/output';
+import { getPackageDirs } from '../../../utils/project';
+import { RetrieveResultJson } from '../../../utils/types';
+import { writeConflictTable } from '../../../utils/conflicts';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
@@ -31,6 +31,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
+  public static readonly aliases = ['retrieve:metadata'];
+  public static readonly deprecateAliases = true;
 
   public static readonly flags = {
     'api-version': Flags.orgApiVersion({
@@ -207,7 +209,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
     this.spinner.stop();
 
-    // reference the flag instead of `foramt` so we get correct type
+    // reference the flag instead of `format` so we get correct type
     const formatter = flags['target-metadata-dir']
       ? new MetadataRetrieveResultFormatter(result, {
           'target-metadata-dir': flags['target-metadata-dir'],

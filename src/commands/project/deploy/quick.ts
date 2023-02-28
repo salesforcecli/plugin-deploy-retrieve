@@ -25,6 +25,8 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
+  public static readonly aliases = ['deploy:metadata:quick'];
+  public static readonly deprecateAliases = true;
 
   public static readonly flags = {
     async: Flags.boolean({
@@ -69,13 +71,17 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       min: 1,
       exclusive: ['async'],
     }),
+    'api-version': Flags.orgApiVersion({
+      char: 'a',
+      summary: messages.getMessage('flags.api-version.summary'),
+      description: messages.getMessage('flags.api-version.description'),
+    }),
   };
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   public async run(): Promise<DeployResultJson> {
-    const { flags } = await this.parse(DeployMetadataQuick);
-    const cache = await DeployCache.create();
+    const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataQuick), DeployCache.create()]);
 
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
@@ -83,7 +89,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
     const api = await resolveApi();
 
-    await org.getConnection().deployRecentValidation({ id: jobId, rest: api === 'REST' });
+    await org.getConnection(flags['api-version']).deployRecentValidation({ id: jobId, rest: api === 'REST' });
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
 
     this.log(getVersionMessage('Deploying', componentSet, api));

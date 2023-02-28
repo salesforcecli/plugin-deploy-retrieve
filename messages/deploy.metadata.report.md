@@ -26,10 +26,10 @@ Job ID of the deploy operation you want to check the status of.
 
 These commands return a job ID if they time out or you specified the --async flag:
 
-- sf deploy metadata
-- sf deploy metadata validate
-- sf deploy metadata quick
-- sf deploy metadata cancel
+- <%= config.bin %> project deploy start
+- <%= config.bin %> project deploy validate
+- <%= config.bin %> project deploy quick
+- <%= config.bin %> project deploy cancel
 
 The job ID is valid for 10 days from when you started the deploy operation.
 

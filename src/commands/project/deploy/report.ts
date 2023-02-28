@@ -23,6 +23,8 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
+  public static readonly aliases = ['deploy:metadata:report'];
+  public static readonly deprecateAliases = true;
 
   public static readonly flags = {
     'job-id': Flags.salesforceId({
@@ -41,8 +43,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   };
 
   public async run(): Promise<DeployResultJson> {
-    const flags = (await this.parse(DeployMetadataReport)).flags;
-    const cache = await DeployCache.create();
+    const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataReport), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
     const deployOpts = cache.get(jobId);

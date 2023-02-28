@@ -25,6 +25,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
+  public static readonly aliases = ['deploy:metadata:resume'];
+  public static readonly deprecateAliases = true;
 
   public static readonly flags = {
     concise: Flags.boolean({
@@ -48,6 +50,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.verbose.summary'),
       exclusive: ['concise'],
     }),
+    // we want this to allow undefined so that we can use the default value from the cache
+    // eslint-disable-next-line sf-plugin/flag-min-max-default
     wait: Flags.duration({
       char: 'w',
       summary: messages.getMessage('flags.wait.summary'),
@@ -63,9 +67,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   public async run(): Promise<DeployResultJson> {
-    const { flags } = await this.parse(DeployMetadataResume);
-    const cache = await DeployCache.create();
-
+    const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataResume), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
     const deployOpts = cache.get(jobId);

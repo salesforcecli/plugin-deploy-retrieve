@@ -6,7 +6,7 @@ Preview a deployment to see what will deploy to the org, the potential conflicts
 
 You must run this command from within a project.
 
-The command outputs a table that describes what will happen if you run the "sf deploy metadata" command. The table lists the metadata components that will be deployed and deleted. The table also lists the current conflicts between files in your local project and components in the org. Finally, the table lists the files that won't be deployed because they're included in your .forceignore file.
+The command outputs a table that describes what will happen if you run the "<%= config.bin %> project deploy start" command. The table lists the metadata components that will be deployed and deleted. The table also lists the current conflicts between files in your local project and components in the org. Finally, the table lists the files that won't be deployed because they're included in your .forceignore file.
 
 If your org allows source tracking, then this command considers conflicts between the org and local. Some orgs, such as production orgs, never allow source tracking. Use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
@@ -14,7 +14,7 @@ To preview the deployment of multiple metadata components, either set multiple -
 
 # examples
 
-- NOTE: The commands to preview a deployment and actually deploy it use similar flags. We provide a few preview examples here, but see the help for "sf deploy metadata" for more examples that you can adapt for previewing.
+- NOTE: The commands to preview a deployment and actually deploy it use similar flags. We provide a few preview examples here, but see the help for "<%= config.bin %> project deploy start" for more examples that you can adapt for previewing.
 
 - Preview the deployment of source files in a directory, such as force-app:
 
@@ -90,4 +90,4 @@ There are changes in the org that conflict with the local changes you're trying 
 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
-- To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.
+- To overwrite the local changes, run the "sf project retrieve start" command with the --ignore-conflicts flag.

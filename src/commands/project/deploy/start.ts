@@ -8,15 +8,15 @@ import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
-import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../utils/output';
-import { DeployProgress } from '../../utils/progressBar';
-import { DeployResultJson, TestLevel } from '../../utils/types';
-import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../utils/deploy';
-import { DeployCache } from '../../utils/deployCache';
-import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../utils/errorCodes';
-import { ConfigVars } from '../../configMeta';
-import { fileOrDirFlag, testLevelFlag } from '../../utils/flags';
-import { writeConflictTable } from '../../utils/conflicts';
+import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
+import { DeployProgress } from '../../../utils/progressBar';
+import { DeployResultJson, TestLevel } from '../../../utils/types';
+import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy';
+import { DeployCache } from '../../../utils/deployCache';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
+import { ConfigVars } from '../../../configMeta';
+import { fileOrDirFlag, testLevelFlag } from '../../../utils/flags';
+import { writeConflictTable } from '../../../utils/conflicts';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -29,6 +29,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
+  public static readonly aliases = ['deploy:metadata'];
+  public static readonly deprecateAliases = true;
 
   public static readonly flags = {
     'api-version': Flags.orgApiVersion({

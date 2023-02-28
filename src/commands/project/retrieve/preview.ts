@@ -8,20 +8,19 @@ import { Messages } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
 import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
-import { buildComponentSet } from '../../../utils/deploy';
 import { PreviewResult, printTables, compileResults, getConflictFiles } from '../../../utils/previewOutput';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.preview');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata.preview');
 
-const exclusiveFlags = ['manifest', 'source-dir', 'metadata'];
-
-export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
+export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
   public static readonly state = 'beta';
+  public static readonly aliases = ['retrieve:metadata'];
+  public static readonly deprecateAliases = true;
 
   public static readonly flags = {
     'ignore-conflicts': Flags.boolean({
@@ -29,26 +28,6 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       summary: messages.getMessage('flags.ignore-conflicts.summary'),
       description: messages.getMessage('flags.ignore-conflicts.description'),
       default: false,
-    }),
-    manifest: Flags.file({
-      char: 'x',
-      description: messages.getMessage('flags.manifest.description'),
-      summary: messages.getMessage('flags.manifest.summary'),
-      exclusive: exclusiveFlags.filter((f) => f !== 'manifest'),
-      exists: true,
-    }),
-    metadata: Flags.string({
-      char: 'm',
-      summary: messages.getMessage('flags.metadata.summary'),
-      multiple: true,
-      exclusive: exclusiveFlags.filter((f) => f !== 'metadata'),
-    }),
-    'source-dir': Flags.string({
-      char: 'd',
-      description: messages.getMessage('flags.source-dir.description'),
-      summary: messages.getMessage('flags.source-dir.summary'),
-      multiple: true,
-      exclusive: exclusiveFlags.filter((f) => f !== 'source-dir'),
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -59,23 +38,20 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
   };
 
   public async run(): Promise<PreviewResult> {
-    const { flags } = await this.parse(DeployMetadataPreview);
-    const deploySpecified = [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
+    const { flags } = await this.parse(RetrieveMetadataPreview);
 
-    // we'll need STL both to check conflicts and to get the list of local changes if no flags are provided
-    const stl =
-      flags['ignore-conflicts'] && deploySpecified
-        ? undefined
-        : await SourceTracking.create({
-            org: flags['target-org'],
-            project: this.project,
-          });
+    const stl = await SourceTracking.create({
+      org: flags['target-org'],
+      project: this.project,
+      ignoreConflicts: flags['ignore-conflicts'],
+    });
 
     const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
 
-    const [componentSet, filesWithConflicts] = await Promise.all([
-      buildComponentSet({ ...flags, 'target-org': flags['target-org'].getUsername() }, stl),
+    const [componentSet, filesWithConflicts, remoteDeletes] = await Promise.all([
+      stl.remoteNonDeletesAsComponentSet(),
       getConflictFiles(stl, flags['ignore-conflicts']),
+      stl.getChanges({ origin: 'remote', state: 'delete', format: 'SourceComponent' }),
     ]);
 
     const output = compileResults({
@@ -83,11 +59,12 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       projectPath: this.project.getPath(),
       filesWithConflicts,
       forceIgnore,
-      baseOperation: 'deploy',
+      baseOperation: 'retrieve',
+      remoteDeletes,
     });
 
     if (!this.jsonEnabled()) {
-      printTables(output, 'deploy');
+      printTables(output, 'retrieve');
     }
     return output;
   }
