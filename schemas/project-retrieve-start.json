@@ -1,45 +1,76 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$ref": "#/definitions/PreviewResult",
+  "$ref": "#/definitions/RetrieveResultJson",
   "definitions": {
-    "PreviewResult": {
-      "type": "object",
-      "properties": {
-        "ignored": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PreviewFile"
-          }
+    "RetrieveResultJson": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FileResponse"
+              }
+            },
+            "done": {
+              "type": "boolean"
+            },
+            "fileProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/FileProperties"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/FileProperties"
+                  }
+                }
+              ]
+            },
+            "id": {
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/definitions/RequestStatus"
+            },
+            "success": {
+              "type": "boolean"
+            },
+            "messages": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/RetrieveMessage"
+                  }
+                },
+                {
+                  "$ref": "#/definitions/RetrieveMessage"
+                }
+              ]
+            }
+          },
+          "required": ["done", "fileProperties", "files", "id", "status", "success"]
         },
-        "conflicts": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PreviewFile"
-          }
-        },
-        "toDeploy": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PreviewFile"
-          }
-        },
-        "toDelete": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PreviewFile"
-          }
-        },
-        "toRetrieve": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PreviewFile"
-          }
+        {
+          "$ref": "#/definitions/MetadataRetrieveResultJson"
         }
-      },
-      "required": ["ignored", "conflicts", "toDeploy", "toDelete", "toRetrieve"],
-      "additionalProperties": false
+      ]
     },
-    "PreviewFile": {
+    "FileResponse": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/FileResponseSuccess"
+        },
+        {
+          "$ref": "#/definitions/FileResponseFailure"
+        }
+      ]
+    },
+    "FileResponseSuccess": {
       "type": "object",
       "properties": {
         "fullName": {
@@ -48,25 +79,184 @@
         "type": {
           "type": "string"
         },
-        "conflict": {
-          "type": "boolean"
-        },
-        "ignored": {
-          "type": "boolean"
-        },
-        "path": {
+        "filePath": {
           "type": "string"
         },
-        "projectRelativePath": {
-          "type": "string"
-        },
-        "operation": {
+        "state": {
           "type": "string",
-          "enum": ["deploy", "retrieve", "deletePost", "deletePre"]
+          "enum": ["Created", "Changed", "Unchanged", "Deleted"]
         }
       },
-      "required": ["fullName", "type", "conflict", "ignored"],
+      "required": ["fullName", "state", "type"],
       "additionalProperties": false
+    },
+    "FileResponseFailure": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "filePath": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "const": "Failed"
+        },
+        "lineNumber": {
+          "type": "number"
+        },
+        "columnNumber": {
+          "type": "number"
+        },
+        "error": {
+          "type": "string"
+        },
+        "problemType": {
+          "type": "string",
+          "enum": ["Warning", "Error"]
+        }
+      },
+      "required": ["error", "fullName", "problemType", "state", "type"],
+      "additionalProperties": false
+    },
+    "FileProperties": {
+      "type": "object",
+      "properties": {
+        "createdById": {
+          "type": "string"
+        },
+        "createdByName": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastModifiedById": {
+          "type": "string"
+        },
+        "lastModifiedByName": {
+          "type": "string"
+        },
+        "lastModifiedDate": {
+          "type": "string"
+        },
+        "manageableState": {
+          "type": "string",
+          "enum": [
+            "beta",
+            "deleted",
+            "deprecated",
+            "deprecatedEditable",
+            "installed",
+            "installedEditable",
+            "released",
+            "unmanaged"
+          ]
+        },
+        "namespacePrefix": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "createdById",
+        "createdByName",
+        "createdDate",
+        "fileName",
+        "fullName",
+        "id",
+        "lastModifiedById",
+        "lastModifiedByName",
+        "lastModifiedDate",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "RequestStatus": {
+      "type": "string",
+      "enum": ["Pending", "InProgress", "Succeeded", "SucceededPartial", "Failed", "Canceling", "Canceled"]
+    },
+    "RetrieveMessage": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string"
+        }
+      },
+      "required": ["fileName", "problem"],
+      "additionalProperties": false
+    },
+    "MetadataRetrieveResultJson": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "zipFilePath": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FileResponse"
+          }
+        },
+        "done": {
+          "type": "boolean"
+        },
+        "fileProperties": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FileProperties"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FileProperties"
+              }
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/RequestStatus"
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "messages": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RetrieveMessage"
+              }
+            },
+            {
+              "$ref": "#/definitions/RetrieveMessage"
+            }
+          ]
+        }
+      },
+      "required": ["done", "fileProperties", "files", "id", "status", "success", "zipFilePath"]
     }
   }
 }

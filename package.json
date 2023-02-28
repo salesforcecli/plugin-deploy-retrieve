@@ -100,19 +100,14 @@
       "@salesforce/plugin-templates"
     ],
     "topics": {
-      "deploy": {
-        "description": "Commands to deploy artifacts to an environment.",
+      "project": {
+        "description": "Commands to deploy and retrieve metadata.",
         "subtopics": {
-          "metadata": {
+          "deploy": {
             "description": "Commands to deploy metadata to a Salesforce org."
-          }
-        }
-      },
-      "retrieve": {
-        "description": "Commands to retrieve artifacts from an environment.",
-        "subtopics": {
-          "metadata": {
-            "description": "Commands to retrieve metadata from a Salesforce org."
+          },
+          "retrieve": {
+            "description": "Commands to retrieve metadata from a Salesforce org"
           }
         }
       }
