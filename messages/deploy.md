@@ -87,4 +87,4 @@ Save username %s as default?
 
 # deprecation
 
-The top-level deploy command is deprecated. You should use `functions deploy` to deploy functions, and use project:deploy:start to deploy metadata to Salesforce orgs.
+The top-level deploy command is deprecated. You should use `functions deploy` to deploy functions, and use `project deploy start` to deploy metadata to Salesforce orgs.
