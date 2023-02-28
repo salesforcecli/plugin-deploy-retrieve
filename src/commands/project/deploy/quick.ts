@@ -91,7 +91,6 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     await org.getConnection(flags['api-version']).deployRecentValidation({ id: jobId, rest: api === 'REST' });
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
-
     this.log(getVersionMessage('Deploying', componentSet, api));
     this.log(`Deploy ID: ${bold(jobId)}`);
 

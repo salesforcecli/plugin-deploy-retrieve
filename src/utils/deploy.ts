@@ -22,6 +22,8 @@ import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, PathInfo, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
 import { DeployCache } from './deployCache';
+import { writeManifest } from './manifestCache';
+
 Messages.importMessagesDirectory(__dirname);
 export const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache', [
   'error.NoRecentJobId',
@@ -55,7 +57,10 @@ export type DeployOptions = {
   status?: RequestStatus;
 };
 
-export type CachedOptions = Omit<DeployOptions, 'wait'> & { wait: number };
+/** Manifest is expected.  You cannot pass metadata and source-dir array--use those to get a manifest */
+export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-dir'> & {
+  wait: number;
+} & Partial<Pick<DeployOptions, 'manifest'>>;
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
   if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
@@ -155,10 +160,11 @@ export async function executeDeploy(
           usernameOrConnection,
           apiOptions,
         });
-    await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
   }
 
-  await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
+  // does not apply to mdapi deploys
+  const manifestPath = componentSet ? await writeManifest(deploy.id, componentSet) : undefined;
+  await DeployCache.set(deploy.id, { ...opts, manifest: manifestPath });
 
   return { deploy, componentSet };
 }
@@ -170,7 +176,7 @@ export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Pr
   const deploy = new MetadataApiDeploy({ usernameOrConnection, id });
 
   const componentSet = await buildComponentSet({ ...opts });
-  await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
+  await DeployCache.set(deploy.id, { ...opts });
 
   await deploy.cancel();
   return poll(org, deploy.id, opts.wait ?? Duration.minutes(33), componentSet);
