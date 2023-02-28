@@ -85,7 +85,7 @@
     "command": "project:retrieve:preview",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["ignore-conflicts", "json", "target-org"],
-    "alias": ["retrieve:metadata"]
+    "alias": ["retrieve:metadata:preview"]
   },
   {
     "command": "project:retrieve:start",
