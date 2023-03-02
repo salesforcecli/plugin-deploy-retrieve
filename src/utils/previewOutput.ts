@@ -243,7 +243,7 @@ const printConflictsTable = (files: PreviewFile[]): void => {
   }
 };
 
-const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
+export const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
   ux.log();
   if (files.length === 0) {
     ux.log(dim(messages.getMessage('ignored.none')));

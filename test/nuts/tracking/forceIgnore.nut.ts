@@ -60,7 +60,7 @@ describe('forceignore changes', () => {
     await session?.clean();
   });
 
-  describe('local', () => {
+  describe.only('local', () => {
     it('will not push a file that was created, then ignored', async () => {
       // setup a forceIgnore with some file.  forceignore uses posix style paths
       const newForceIgnore = originalForceIgnore + '\n' + `${classdir}/IgnoreTest.cls*`;
@@ -70,6 +70,54 @@ describe('forceignore changes', () => {
         ensureExitCode: 1,
       }).jsonOutput;
       expect(output?.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
+    });
+
+    it('will list the forceignored files in a certain path', () => {
+      const classDir = path.join('force-app', 'main', 'default', 'classes');
+      const output = execCmd<PreviewResult>(`deploy:metadata:preview --only-ignored --source-dir ${classdir} --json`, {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+
+      expect(output?.conflicts).to.deep.equal([]);
+      expect(output?.toDeploy).to.deep.equal([]);
+      expect(output?.toRetrieve).to.deep.equal([]);
+      expect(output?.toDelete).to.deep.equal([]);
+      expect(output?.ignored?.length).to.equal(2);
+      expect(output?.ignored).to.be.deep.equal([
+        {
+          projectRelativePath: `${path.join(classDir, 'IgnoreTest.cls')}`,
+          fullName: 'IgnoreTest',
+          type: 'ApexClass',
+          ignored: true,
+          conflict: false,
+        },
+        {
+          projectRelativePath: `${path.join(classDir, 'IgnoreTest.cls-meta.xml')}`,
+          fullName: 'IgnoreTest',
+          type: 'ApexClass',
+          ignored: true,
+          conflict: false,
+        },
+      ]);
+    });
+
+    it('will list the forceignored files', () => {
+      const output = execCmd<PreviewResult>('deploy:metadata:preview --only-ignored --json', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+
+      expect(output?.conflicts).to.deep.equal([]);
+      expect(output?.toDeploy).to.deep.equal([]);
+      expect(output?.toRetrieve).to.deep.equal([]);
+      expect(output?.toDelete).to.deep.equal([]);
+      expect(output?.ignored?.length).to.equal(4);
+      expect(
+        output?.ignored.find((entry) => entry.projectRelativePath?.includes(path.join('aura', '.eslintrc.json')))
+      ).to.deep.equal({
+        projectRelativePath: path.join('force-app', 'main', 'default', 'aura', '.eslintrc.json'),
+        ignored: true,
+        conflict: false,
+      });
     });
 
     it('shows the file in status as ignored', () => {
@@ -169,7 +217,7 @@ describe('forceignore changes', () => {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       expect(
-        response?.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true),
+        response?.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored),
         JSON.stringify(response)
       ).to.equal(true);
     });
