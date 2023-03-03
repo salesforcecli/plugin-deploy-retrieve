@@ -56,6 +56,10 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 Login username or alias for the target org.
 
+# flags.purge-on-delete
+
+specify that deleted components in the destructive changes manifest file are immediately eligible for deletion rather than being stored in the Recycle Bin
+
 # flags.target-org.description
 
 Overrides your default org.

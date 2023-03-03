@@ -55,6 +55,8 @@ export type DeployOptions = {
   concise?: boolean;
   'single-package'?: boolean;
   status?: RequestStatus;
+
+  'purge-on-delete'?: boolean;
 };
 
 /** Manifest is expected.  You cannot pass metadata and source-dir array--use those to get a manifest */
@@ -63,8 +65,7 @@ export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-di
 } & Partial<Pick<DeployOptions, 'manifest'>>;
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
-  if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
-  return true;
+  return !(testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0);
 }
 
 export async function resolveApi(): Promise<API> {
@@ -117,6 +118,7 @@ export async function executeDeploy(
     rollbackOnError: !opts['ignore-errors'] || false,
     runTests: opts.tests ?? [],
     testLevel: opts['test-level'],
+    purgeOnDelete: opts['purge-on-delete'] ?? false,
   };
 
   let deploy: MetadataApiDeploy | undefined;

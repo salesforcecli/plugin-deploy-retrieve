@@ -129,6 +129,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       min: 1,
       exclusive: ['async'],
     }),
+    purgeondelete: Flags.boolean({
+      summary: messages.getMessage('flags.purge-on-delete'),
+      dependsOn: ['manifest'],
+    }),
   };
 
   public static configurationVariablesSection = toHelpSection(
