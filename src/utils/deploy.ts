@@ -56,6 +56,9 @@ export type DeployOptions = {
   'single-package'?: boolean;
   status?: RequestStatus;
 
+  'pre-destructive-changes'?: string;
+  'post-destructive-changes'?: string;
+
   'purge-on-delete'?: boolean;
 };
 
@@ -98,6 +101,8 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
           manifest: {
             manifestPath: opts.manifest,
             directoryPaths: await getPackageDirs(),
+            destructiveChangesPre: opts['pre-destructive-changes'],
+            destructiveChangesPost: opts['post-destructive-changes'],
           },
         }
       : {}),

@@ -56,6 +56,14 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 Login username or alias for the target org.
 
+# flags.pre-destructive-changes
+
+file path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy
+
+# flags.post-destructive-changes
+
+file path for a manifest (destructiveChangesPost.xml) of components to delete after the deploy
+
 # flags.purge-on-delete
 
 specify that deleted components in the destructive changes manifest file are immediately eligible for deletion rather than being stored in the Recycle Bin

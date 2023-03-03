@@ -129,8 +129,17 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       min: 1,
       exclusive: ['async'],
     }),
-    purgeondelete: Flags.boolean({
+    'purge-on-delete': Flags.boolean({
       summary: messages.getMessage('flags.purge-on-delete'),
+      dependsOn: ['manifest'],
+      relationships: [{ type: 'some', flags: ['pre-destructive-changes', 'post-destructive-changes'] }],
+    }),
+    'pre-destructive-changes': Flags.file({
+      summary: messages.getMessage('flags.pre-destructive-changes'),
+      dependsOn: ['manifest'],
+    }),
+    'post-destructive-changes': Flags.file({
+      summary: messages.getMessage('flags.post-destructive-changes'),
       dependsOn: ['manifest'],
     }),
   };
