@@ -808,7 +808,7 @@
     widest-line "^3.1.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/core@^2.0.7", "@oclif/core@^2.0.8", "@oclif/core@^2.2.1", "@oclif/core@^2.3.0", "@oclif/core@^2.3.1":
+"@oclif/core@^2.0.7", "@oclif/core@^2.2.1", "@oclif/core@^2.3.0", "@oclif/core@^2.3.1":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-2.3.1.tgz#82d977338c68b3faeda84f780c2f97a3dd322cb2"
   integrity sha512-18CkjjF16hwhBd/42z+0CHAwvZlBfpyCmdZxpasN/od8c/hdm0oDEJvVB33/xD0LDYg8glKoQ5zVNVvPM/uJ/Q==
@@ -1123,7 +1123,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.32.12", "@salesforce/core@^3.32.14", "@salesforce/core@^3.33.1", "@salesforce/core@^3.33.4", "@salesforce/core@^3.33.5":
+"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.32.12", "@salesforce/core@^3.33.1", "@salesforce/core@^3.33.4", "@salesforce/core@^3.33.5":
   version "3.33.5"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.33.5.tgz#7b3ee60860abc5cb7098b9388d01f7ed47d58c0a"
   integrity sha512-4Gb6LzjbhyvdykdclSUTxIlAVqIQZ5dsRhR7XifndvbviAX4s11f3TweOVZl1WEthTBKPF3i34K3QP/MPwbxrQ==
@@ -1261,22 +1261,22 @@
     sha256-file "^1.0.0"
     uuid "^8.3.2"
 
-"@salesforce/plugin-source@^2.5.4":
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.5.4.tgz#3d604c60f5cd79a207745ae4c820e7c85fd85d1d"
-  integrity sha512-zYLCrFMO8prcuMX1em+8YzKre8NH7ddtGxwh0GnY6xwJnvFWUHWxXZJ6SPXhwIXe+ECXV2l4AlutiaQ6FYIQCQ==
+"@salesforce/plugin-source@^2.5.5":
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.5.5.tgz#5cf8b09ca9931a12693dec1283cebc67604773ba"
+  integrity sha512-xrUTM8JtklBYvKJSfMrSxmYxWNLRF6XPGqyn616a6OMVIFkBxmNZwhQvxa7PFrwwmFvWezBW4O/n/iqy7NNaHw==
   dependencies:
-    "@oclif/core" "^2.0.8"
+    "@oclif/core" "^2.3.1"
     "@salesforce/apex-node" "^1.6.0"
     "@salesforce/command" "^5.3.0"
-    "@salesforce/core" "^3.32.14"
-    "@salesforce/kit" "^1.8.3"
-    "@salesforce/source-deploy-retrieve" "^7.9.1"
-    "@salesforce/source-tracking" "^2.2.21"
+    "@salesforce/core" "^3.33.5"
+    "@salesforce/kit" "^1.9.0"
+    "@salesforce/source-deploy-retrieve" "^7.10.1"
+    "@salesforce/source-tracking" "^2.2.22"
     chalk "^4.1.2"
-    got "^11.8.3"
-    jsforce "^2.0.0-beta.19"
-    open "^8.4.1"
+    got "^11.8.6"
+    jsforce "^2.0.0-beta.20"
+    open "^8.4.2"
     proxy-agent "^5.0.0"
     proxy-from-env "^1.1.0"
     tslib "^2"
@@ -1376,7 +1376,7 @@
     sinon "^10.0.0"
     strip-ansi "^7.0.1"
 
-"@salesforce/source-tracking@^2.2.21", "@salesforce/source-tracking@^2.2.22":
+"@salesforce/source-tracking@^2.2.22":
   version "2.2.22"
   resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-2.2.22.tgz#797c58afeb9c4f9d08963d850263d74f6d5c27bc"
   integrity sha512-4w2xGhIWilmllaJUXNkNZAk4OR5IUlHoYrDxB/7jiccZF9Eothz+cB7Cy1i0N/RBvYO1cLDhaLBUGcT471jdSA==
@@ -4595,7 +4595,7 @@ globby@^11.0.1, globby@^11.1.0:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
-got@^11, got@^11.8.2, got@^11.8.3, got@^11.8.6:
+got@^11, got@^11.8.2, got@^11.8.6:
   version "11.8.6"
   resolved "https://registry.yarnpkg.com/got/-/got-11.8.6.tgz#276e827ead8772eddbcfc97170590b841823233a"
   integrity sha512-6tfZ91bOr7bOXnK7PRDCGBLa1H4U080YHNaAQ2KsMGlLEzRbk44nsZF2E1IeRc3vtJHPVbKCYgdFbaGO2ljd8g==
@@ -5469,10 +5469,10 @@ jsforce@^1.11.0:
     request "^2.72.0"
     xml2js "^0.4.16"
 
-jsforce@^2.0.0-beta.19:
-  version "2.0.0-beta.19"
-  resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-2.0.0-beta.19.tgz#4a136b88d6a9f6668714c4ccbb0acd55e46ea493"
-  integrity sha512-WdF6hs7kukXNGvp/VRhu2DngldgiBBorsc2WA5us08oJGbEIPwn/itqYJWKJ+rfPXepz5JbkWQd48XHGjqmPpw==
+jsforce@^2.0.0-beta.19, jsforce@^2.0.0-beta.20:
+  version "2.0.0-beta.20"
+  resolved "https://registry.yarnpkg.com/jsforce/-/jsforce-2.0.0-beta.20.tgz#907630942b2ecd653098caa3f87e7710874cb207"
+  integrity sha512-5TpdU0MEUN34M0mSKmBwOMKaI8dllTYF8NzpJn0/9akrwqKEERK6K2jGiMWcs85Vx1HCHEcwU2n+5ij6z6zr2g==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@babel/runtime-corejs3" "^7.12.5"
@@ -6852,7 +6852,7 @@ open@^7.0.0:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
-open@^8.4.1:
+open@^8.4.2:
   version "8.4.2"
   resolved "https://registry.yarnpkg.com/open/-/open-8.4.2.tgz#5b5ffe2a8f793dcd2aad73e550cb87b59cb084f9"
   integrity sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==
