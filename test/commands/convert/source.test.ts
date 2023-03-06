@@ -15,7 +15,7 @@ import { SfProject } from '@salesforce/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { Source } from '../../../src/commands/project/convert/source';
 
-describe('force:source:convert', () => {
+describe('project convert source', () => {
   const $$ = new TestContext();
   const testOrg = new MockTestOrgData();
   const sandbox = $$.SANDBOX;

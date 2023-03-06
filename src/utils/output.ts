@@ -28,6 +28,7 @@ import { ensureArray } from '@salesforce/kit';
 import {
   API,
   AsyncDeployResultJson,
+  ConvertMdapiJson,
   ConvertResultJson,
   DeployResultJson,
   isSdrFailure,
@@ -413,6 +414,57 @@ export class SourceConvertResultFormatter implements Formatter<ConvertResultJson
       ux.log(convertMessages.getMessage('success', [this.result.packagePath]));
     } else {
       throw new SfError(convertMessages.getMessage('convertFailed'), 'ConvertFailed');
+    }
+  }
+}
+
+export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJson> {
+  private convertResults!: ConvertMdapiJson;
+  public constructor(private result: ConvertResult) {}
+
+  public getJson(): ConvertMdapiJson {
+    this.convertResults = [];
+    this.result?.converted?.forEach((component) => {
+      if (component.xml) {
+        this.convertResults.push({
+          fullName: component.fullName,
+          type: component.type.name,
+          filePath: path.relative('.', component.xml),
+          state: 'Add',
+        });
+      }
+      if (component.content) {
+        this.convertResults.push({
+          fullName: component.fullName,
+          type: component.type.name,
+          filePath: path.relative('.', component.content),
+          state: 'Add',
+        });
+      }
+    });
+
+    return this.convertResults;
+  }
+
+  public display(): void {
+    const convertData = this.getJson();
+    if (convertData?.length) {
+      ux.table(
+        convertData.map((entry) => ({
+          state: entry.state,
+          fullName: entry.fullName,
+          type: entry.type,
+          filePath: entry.filePath,
+        })),
+        {
+          state: { header: 'STATE' },
+          fullName: { header: 'FULL NAME' },
+          type: { header: 'TYPE' },
+          filePath: { header: 'PROJECT PATH' },
+        }
+      );
+    } else {
+      ux.log('No metadata found to convert');
     }
   }
 }

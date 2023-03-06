@@ -41,6 +41,15 @@ export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'stat
   files: FileResponse[];
 };
 
+type ConvertEntry = {
+  fullName: string;
+  type: string;
+  filePath: string;
+  state: 'Add';
+};
+
+export type ConvertMdapiJson = ConvertEntry[];
+
 export type ConvertResultJson = {
   location: string;
 };

@@ -36,6 +36,8 @@ export class Source extends SfCommand<ConvertResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
+  public static readonly aliases = ['force:source:convert'];
+  public static readonly deprecateAliases = true;
   public static readonly flags = {
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,
