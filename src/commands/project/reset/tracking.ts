@@ -19,22 +19,29 @@ import {
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.tracking');
 
-export type DeleteTrackingResult = {
-  clearedFiles: string[];
+export type ResetTrackingResult = {
+  sourceMembersSynced: number;
+  localPathsSynced: number;
 };
 
-export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
+export class ResetTracking extends SfCommand<ResetTrackingResult> {
   public static readonly deprecateAliases = true;
-  public static aliases = ['force:source:beta:tracking:clear', 'force:source:tracking:clear'];
-  public static readonly summary = messages.getMessage('deleteDescription');
-  public static readonly description = messages.getMessage('deleteDescription');
+  public static aliases = ['force:source:beta:tracking:reset', 'force:source:tracking:reset'];
+  public static readonly summary = messages.getMessage('resetDescription');
+  public static readonly description = messages.getMessage('resetDescription');
   public static readonly requiresProject = true;
   public static readonly examples = [];
 
   public static readonly flags = {
+    'target-org': requiredOrgFlagWithDeprecations,
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,
-    'target-org': requiredOrgFlagWithDeprecations,
+    // eslint-disable-next-line sf-plugin/flag-min-max-default
+    revision: Flags.integer({
+      char: 'r',
+      summary: messages.getMessage('revisionDescription'),
+      min: 0,
+    }),
     'no-prompt': Flags.boolean({
       char: 'p',
       summary: messages.getMessage('no-promptDescription'),
@@ -43,18 +50,31 @@ export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
     }),
   };
 
-  public async run(): Promise<DeleteTrackingResult> {
-    const { flags } = await this.parse(DeleteTracking);
+  public async run(): Promise<ResetTrackingResult> {
+    const { flags } = await this.parse(ResetTracking);
 
-    let clearedFiles: string[] = [];
     if (flags['no-prompt'] || (await this.confirm(chalk.dim(messages.getMessage('promptMessage'))))) {
       const sourceTracking = await SourceTracking.create({
         project: this.project,
         org: flags['target-org'],
       });
-      clearedFiles = await Promise.all([sourceTracking.clearLocalTracking(), sourceTracking.clearRemoteTracking()]);
-      this.log('Cleared local tracking files.');
+
+      const [remoteResets, localResets] = await Promise.all([
+        sourceTracking.resetRemoteTracking(flags.revision),
+        sourceTracking.resetLocalTracking(),
+      ]);
+
+      this.log(`Reset local tracking files${flags.revision ? ` to revision ${flags.revision}` : ''}.`);
+
+      return {
+        sourceMembersSynced: remoteResets,
+        localPathsSynced: localResets.length,
+      };
     }
-    return { clearedFiles };
+
+    return {
+      sourceMembersSynced: 0,
+      localPathsSynced: 0,
+    };
   }
 }

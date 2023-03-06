@@ -4,10 +4,6 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -36,7 +32,7 @@ const getRevisionsAsArray = async (): Promise<MemberRevision[]> => {
   return Reflect.ownKeys(revisionFile.sourceMembers).map((key) => revisionFile.sourceMembers[key as string]);
 };
 
-describe('reset and clear', () => {
+describe('reset and clear tracking', () => {
   before(async () => {
     session = await TestSession.create({
       project: {
@@ -82,7 +78,7 @@ describe('reset and clear', () => {
       expect(fs.existsSync(path.join(trackingFileFolder, 'maxRevision.json'))).to.equal(true);
     });
     it('runs clear', () => {
-      const clearResult = execCmd<DeleteTrackingResult>('force:source:tracking:clear --noprompt --json', {
+      const clearResult = execCmd<DeleteTrackingResult>('force:source:tracking:clear --no-prompt --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       expect(clearResult?.clearedFiles.some((file) => file.includes('maxRevision.json'))).to.equal(true);
@@ -131,7 +127,7 @@ describe('reset and clear', () => {
       });
     });
     it('can reset to a known revision', async () => {
-      execCmd(`force:source:tracking:reset --revision ${lowestRevision} --noprompt`, {
+      execCmd(`force:source:tracking:reset --revision ${lowestRevision} --no-prompt`, {
         ensureExitCode: 0,
       });
       const revisions = await getRevisionsAsArray();
@@ -144,7 +140,7 @@ describe('reset and clear', () => {
     });
 
     it('can reset to a non-specified revision (resets everything)', async () => {
-      execCmd(`force:source:tracking:reset --revision ${lowestRevision} --noprompt`, {
+      execCmd(`force:source:tracking:reset --revision ${lowestRevision} --no-prompt`, {
         ensureExitCode: 0,
       });
       const revisions = await getRevisionsAsArray();
