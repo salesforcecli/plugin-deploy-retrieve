@@ -7,6 +7,7 @@
 
 import * as os from 'os';
 import * as path from 'path';
+import { resolve } from 'path';
 import { ux } from '@oclif/core';
 import { blue, bold, dim, underline } from 'chalk';
 import {
@@ -19,13 +20,15 @@ import {
   ComponentSet,
   CodeCoverage,
   FileResponseSuccess,
+  ConvertResult,
 } from '@salesforce/source-deploy-retrieve';
-import { Messages, NamedPackageDir, SfProject } from '@salesforce/core';
+import { Messages, NamedPackageDir, SfError, SfProject } from '@salesforce/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
 import {
   API,
   AsyncDeployResultJson,
+  ConvertResultJson,
   DeployResultJson,
   isSdrFailure,
   isSdrSuccess,
@@ -48,6 +51,8 @@ const retrieveMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 're
   'info.WroteZipFile',
   'info.ExtractedZipFile',
 ]);
+
+const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 function tableHeader(message: string): string {
   return blue(bold(message));
@@ -391,6 +396,23 @@ export class DeployCancelResultFormatter implements Formatter<DeployResultJson> 
       ux.log(`Successfully canceled ${this.result.response.id}`);
     } else {
       ux.error(`Could not cancel ${this.result.response.id}`);
+    }
+  }
+}
+
+export class SourceConvertResultFormatter implements Formatter<ConvertResultJson> {
+  public constructor(private result: ConvertResult) {}
+  public getJson(): ConvertResultJson {
+    return {
+      location: resolve(this.result.packagePath as string),
+    };
+  }
+
+  public display(): void {
+    if ([0, 69].includes(process.exitCode ?? 0)) {
+      ux.log(convertMessages.getMessage('success', [this.result.packagePath]));
+    } else {
+      throw new SfError(convertMessages.getMessage('convertFailed'), 'ConvertFailed');
     }
   }
 }

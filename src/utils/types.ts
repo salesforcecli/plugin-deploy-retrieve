@@ -41,6 +41,10 @@ export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'stat
   files: FileResponse[];
 };
 
+export type ConvertResultJson = {
+  location: string;
+};
+
 export type DeployResultJson =
   | (MetadataApiDeployStatus & { files: FileResponse[] } & { replacements?: Record<string, string[]> })
   | AsyncDeployResultJson;
