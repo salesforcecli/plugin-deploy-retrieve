@@ -8,7 +8,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { Interfaces, ux } from '@oclif/core';
+import { Interfaces } from '@oclif/core';
 import { Lifecycle, Messages, Org, SfError } from '@salesforce/core';
 import {
   ComponentSet,
@@ -36,25 +36,31 @@ import { DeleteSourceJson, TestLevel } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 import { resolveApi } from '../../../utils/deploy';
 import { DeleteResultFormatter, DeployResultFormatter } from '../../../utils/output';
+import { DeployProgress } from '../../../utils/progressBar';
+import { DeployCache } from '../../../utils/deployCache';
 
 const fsPromises = fs.promises;
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
-const xorFlags = ['metadata', 'sourcepath'];
+const xorFlags = ['metadata', 'source-path'];
 export class Source extends SfCommand<DeleteSourceJson> {
   public static readonly summary = messages.getMessage('description');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
+  public static aliases = ['force:source:delete'];
+  public static readonly deprecateAliases = true;
   public static readonly requiresProject = true;
   public static readonly flags = {
     'api-version': orgApiVersionFlagWithDeprecations,
     loglevel,
     'target-org': requiredOrgFlagWithDeprecations,
-    checkonly: Flags.boolean({
+    'check-only': Flags.boolean({
+      aliases: ['checkonly'],
+      deprecateAliases: true,
       char: 'c',
-      description: messages.getMessage('flags.checkonly'),
-      summary: messages.getMessage('flagsLong.checkonly'),
+      description: messages.getMessage('flags.check-only'),
+      summary: messages.getMessage('flagsLong.check-only'),
     }),
     wait: Flags.duration({
       unit: 'minutes',
@@ -64,16 +70,20 @@ export class Source extends SfCommand<DeleteSourceJson> {
       description: messages.getMessage('flags.wait'),
       summary: messages.getMessage('flagsLong.wait'),
     }),
-    testlevel: Flags.string({
+    'test-level': Flags.string({
       char: 'l',
-      description: messages.getMessage('flags.testLevel'),
-      summary: messages.getMessage('flagsLong.testLevel'),
+      aliases: ['testlevel'],
+      deprecateAliases: true,
+      description: messages.getMessage('flags.test-Level'),
+      summary: messages.getMessage('flagsLong.test-Level'),
       options: ['NoTestRun', 'RunLocalTests', 'RunAllTestsInOrg'],
       default: 'NoTestRun',
     }),
-    noprompt: Flags.boolean({
+    'no-prompt': Flags.boolean({
       char: 'r',
-      summary: messages.getMessage('flags.noprompt'),
+      aliases: ['noprompt'],
+      deprecateAliases: true,
+      summary: messages.getMessage('flags.no-prompt'),
     }),
     metadata: arrayWithDeprecation({
       char: 'm',
@@ -81,21 +91,27 @@ export class Source extends SfCommand<DeleteSourceJson> {
       summary: messages.getMessage('flagsLong.metadata'),
       exactlyOne: xorFlags,
     }),
-    sourcepath: arrayWithDeprecation({
+    'source-path': arrayWithDeprecation({
       char: 'p',
-      description: messages.getMessage('flags.sourcepath'),
-      summary: messages.getMessage('flagsLong.sourcepath'),
+      aliases: ['sourcepath'],
+      deprecateAliases: true,
+      description: messages.getMessage('flags.source-path'),
+      summary: messages.getMessage('flagsLong.source-path'),
       exactlyOne: xorFlags,
     }),
-    tracksource: Flags.boolean({
+    'track-source': Flags.boolean({
       char: 't',
-      summary: messages.getMessage('flags.tracksource'),
-      exclusive: ['checkonly'],
+      aliases: ['tracksource'],
+      deprecateAliases: true,
+      summary: messages.getMessage('flags.track-source'),
+      exclusive: ['check-only'],
     }),
-    forceoverwrite: Flags.boolean({
+    'force-overwrite': Flags.boolean({
       char: 'f',
-      summary: messages.getMessage('flags.forceoverwrite'),
-      dependsOn: ['tracksource'],
+      aliases: ['forceoverwrite'],
+      deprecateAliases: true,
+      summary: messages.getMessage('flags.force-overwrite'),
+      dependsOn: ['track-source'],
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose'),
@@ -103,7 +119,6 @@ export class Source extends SfCommand<DeleteSourceJson> {
   };
   protected fileResponses: FileResponse[] | undefined;
   protected tracking: SourceTracking | undefined;
-  protected readonly lifecycleEventNames = ['predeploy', 'postdeploy'];
   // private deleteResultFormatter: DeleteResultFormatter | DeployResultFormatter;
   private aborted = false;
   private components: MetadataComponent[] | undefined;
@@ -136,24 +151,26 @@ export class Source extends SfCommand<DeleteSourceJson> {
   }
 
   protected async preChecks(): Promise<void> {
-    if (this.flags.tracksource) {
+    if (this.flags['track-source']) {
       this.tracking = await SourceTracking.create({ org: this.org, project: this.project });
     }
   }
 
   protected async delete(): Promise<void> {
-    const sourcepaths = this.flags.sourcepath;
+    const sourcepaths = this.flags['source-path'];
 
     this.componentSet = await ComponentSetBuilder.build({
       apiversion: this.flags['api-version'],
       sourceapiversion: await getSourceApiVersion(),
       sourcepath: sourcepaths,
-      metadata: this.flags.metadata && {
-        metadataEntries: this.flags.metadata,
-        directoryPaths: await getPackageDirs(),
-      },
+      metadata: this.flags.metadata
+        ? {
+            metadataEntries: this.flags.metadata,
+            directoryPaths: await getPackageDirs(),
+          }
+        : undefined,
     });
-    if (this.flags.tracksource && !this.flags.forceoverwrite) {
+    if (this.flags['track-source'] && !this.flags['force-overwrite']) {
       await this.filterConflictsByComponentSet();
     }
     this.components = this.componentSet.toArray();
@@ -167,8 +184,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
     // create a new ComponentSet and mark everything for deletion
     const cs = new ComponentSet([]);
-    cs.apiVersion = this.flags['api-version'] ?? (await this.org.retrieveMaxApiVersion());
-    cs.sourceApiVersion = this.flags['api-version'] ?? ((await getSourceApiVersion()) as string);
+    cs.apiVersion =
+      this.componentSet.apiVersion ?? this.flags['api-version'] ?? (await this.org.retrieveMaxApiVersion());
+    cs.sourceApiVersion =
+      this.componentSet.sourceApiVersion ?? this.flags['api-version'] ?? ((await getSourceApiVersion()) as string);
     this.components.map((component) => {
       if (component instanceof SourceComponent) {
         cs.add(component, DestructiveChangesType.POST);
@@ -208,20 +227,16 @@ export class Source extends SfCommand<DeleteSourceJson> {
       usernameOrConnection: this.org.getUsername() as string,
       apiOptions: {
         rest: this.isRest,
-        checkOnly: this.flags.checkonly ?? false,
-        testLevel: this.flags.testlevel as TestLevel,
+        checkOnly: this.flags['check-only'] ?? false,
+        testLevel: this.flags['test-level'] as TestLevel,
       },
     });
-    // this.updateDeployId(deploy.id);
-    //
-    // if (!this.jsonEnabled()) {
-    //   const progressFormatter: ProgressFormatter = env.getBoolean('SFDX_USE_PROGRESS_BAR', true)
-    //     ? new DeployProgressBarFormatter(new Ux({ jsonEnabled: this.jsonEnabled() }))
-    //     : new DeployProgressStatusFormatter(new Ux({ jsonEnabled: this.jsonEnabled() }));
-    //   progressFormatter.progress(deploy);
-    // }
 
+    new DeployProgress(deploy, this.jsonEnabled()).start();
     this.deployResult = await deploy.pollStatus({ timeout: this.flags.wait });
+
+    await DeployCache.update(deploy.id, { status: this.deployResult.response.status });
+
     await Lifecycle.getInstance().emit('postdeploy', this.deployResult);
 
     // result.getFileResponses() will crawl the tree, but that would throw after the delete occurs.
@@ -237,7 +252,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   protected async resolveSuccess(): Promise<void> {
     const status = this.deployResult?.response?.status;
     if (status !== RequestStatus.Succeeded && !this.aborted) {
-      this.exit(1);
+      process.exitCode = 1;
     }
     // if deploy failed OR the operation was cancelled, restore the stashed files if they exist
     else if (status !== RequestStatus.Succeeded || this.aborted) {
@@ -291,7 +306,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   }
 
   private async maybeUpdateTracking(): Promise<void> {
-    if (this.flags.tracksource ?? false) {
+    if (this.flags['track-source'] ?? false) {
       // might not exist if we exited from the operation early
       if (!this.deployResult) {
         return;
@@ -325,7 +340,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   }
 
   private async deleteFilesLocally(): Promise<void> {
-    if (!this.flags.checkonly && this.deployResult?.response?.status === RequestStatus.Succeeded) {
+    if (!this.flags['check-only'] && this.deployResult?.response?.status === RequestStatus.Succeeded) {
       const promises: Array<Promise<void>> = [];
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - because these types exist locally, they are by definition, a SourceComponent
@@ -388,7 +403,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   }
 
   private async handlePrompt(): Promise<boolean> {
-    if (!this.flags.noprompt) {
+    if (!this.flags['no-prompt']) {
       const remote: string[] = [];
       let local: string[] = [];
       const message: string[] = [];
@@ -423,9 +438,11 @@ export class Source extends SfCommand<DeleteSourceJson> {
       }
 
       message.push(
-        this.flags.checkonly ?? false ? messages.getMessage('areYouSureCheckOnly') : messages.getMessage('areYouSure')
+        this.flags['check-only'] ?? false
+          ? messages.getMessage('areYouSureCheckOnly')
+          : messages.getMessage('areYouSure')
       );
-      return ux.confirm(message.join(''));
+      return this.confirm(message.join('\n'));
     }
     return true;
   }
@@ -435,9 +452,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
    * If conflicts exist, this will output the table and throw
    */
   private filterConflictsByComponentSet = async (): Promise<ChangeResult[]> => {
-    const filteredConflicts = (await this.tracking!.getConflicts()).filter((cr) =>
-      this.componentSet.has({ fullName: cr.name as string, type: cr.type as string })
-    );
+    const filteredConflicts =
+      (await this.tracking?.getConflicts())?.filter((cr) =>
+        this.componentSet.has({ fullName: cr.name as string, type: cr.type as string })
+      ) ?? [];
     this.processConflicts(filteredConflicts, messages.getMessage('conflictMsg'));
     return filteredConflicts;
   };

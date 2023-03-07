@@ -9,23 +9,23 @@ import * as os from 'os';
 import * as path from 'path';
 import { resolve } from 'path';
 import { ux } from '@oclif/core';
+import * as chalk from 'chalk';
 import { blue, bold, dim, underline } from 'chalk';
 import {
-  DeployResult,
-  FileResponse,
-  RetrieveResult,
-  RequestStatus,
-  Failures,
-  Successes,
-  ComponentSet,
   CodeCoverage,
-  FileResponseSuccess,
+  ComponentSet,
   ConvertResult,
+  DeployResult,
+  Failures,
+  FileResponse,
+  FileResponseSuccess,
+  RequestStatus,
+  RetrieveResult,
+  Successes,
 } from '@salesforce/source-deploy-retrieve';
 import { Messages, NamedPackageDir, SfError, SfProject } from '@salesforce/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
-import * as chalk from 'chalk';
 import {
   API,
   AsyncDeployResultJson,
@@ -554,12 +554,13 @@ export class DeleteResultFormatter implements Formatter<DeleteSourceJson> {
    * @returns a JSON formatted result matching the provided type.
    */
   public getJson(): DeleteSourceJson {
-    const json = this.result as unknown as DeleteSourceJson;
-    json.deletedSource = this.result.getFileResponses() ?? []; // to match toolbelt json output
-    json.outboundFiles = []; // to match toolbelt version
-    json.deletes = [Object.assign({}, this.result?.response)]; // to match toolbelt version
-
-    return json;
+    return {
+      ...this.result.response,
+      deletedSource: this.result.getFileResponses() ?? [],
+      outboundFiles: [],
+      deployedSource: [],
+      deletes: [Object.assign({}, this.result?.response)],
+    };
   }
 
   public display(): void {

@@ -60,13 +60,16 @@ describe('project delete source NUTs', () => {
     await testkit?.clean();
   });
 
-  it('should source:delete a static resource folder using the sourcepath param', () => {
+  it('should source:delete a static resource folder using the source-jpath param', () => {
     const pathToSR = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'staticresources');
     const pathToJson = path.join(pathToSR, 'sample_data_properties.json');
     const pathToXml = path.join(pathToSR, 'sample_data_properties.resource-meta.xml');
-    const response = execCmd<DeleteSourceJson>(`force:source:delete --json --noprompt --sourcepath ${pathToJson}`, {
-      ensureExitCode: 0,
-    }).jsonOutput?.result;
+    const response = execCmd<DeleteSourceJson>(
+      `project:delete:source --json --no-prompt --source-jpath ${pathToJson}`,
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput?.result;
     expect(response?.deletedSource).to.have.length(2);
     expect(fs.existsSync(pathToJson)).to.be.false;
     expect(fs.existsSync(pathToXml)).to.be.false;
@@ -75,7 +78,7 @@ describe('project delete source NUTs', () => {
   it('should source:delete an ApexClass using the metadata param', () => {
     const { apexName, pathToClass } = createApexClass();
     const response = execCmd<DeleteSourceJson>(
-      `force:source:delete --json --noprompt --metadata ApexClass:${apexName}`,
+      `project:delete:source --json --no-prompt --metadata ApexClass:${apexName}`,
       {
         ensureExitCode: 0,
       }
@@ -84,9 +87,9 @@ describe('project delete source NUTs', () => {
     expect(fs.existsSync(pathToClass)).to.be.false;
   });
 
-  it('should source:delete all Prompts using the sourcepath param', () => {
+  it('should source:delete all Prompts using the source-jpath param', () => {
     const response = execCmd<DeleteSourceJson>(
-      `force:source:delete --json --noprompt --sourcepath ${path.join('force-app', 'main', 'default', 'prompts')}`,
+      `project:delete:source --json --no-prompt --source-jpath ${path.join('force-app', 'main', 'default', 'prompts')}`,
       {
         ensureExitCode: 0,
       }
@@ -97,11 +100,14 @@ describe('project delete source NUTs', () => {
     expect(fs.readdirSync(pathToPrompts).length).to.equal(0);
   });
 
-  it('should source:delete an ApexClass using the sourcepath param', () => {
+  it('should source:delete an ApexClass using the source-jpath param', () => {
     const { pathToClass } = createApexClass();
-    const response = execCmd<DeleteSourceJson>(`force:source:delete --json --noprompt --sourcepath ${pathToClass}`, {
-      ensureExitCode: 0,
-    }).jsonOutput?.result;
+    const response = execCmd<DeleteSourceJson>(
+      `project:delete:source --json --no-prompt --source-jpath ${pathToClass}`,
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput?.result;
     expect(response?.deletedSource).to.have.length(2);
     expect(fs.existsSync(pathToClass)).to.be.false;
   });
@@ -121,7 +127,7 @@ describe('project delete source NUTs', () => {
     expect(soql.result.records[0].IsNameObsolete).to.be.false;
     await testkit.deleteGlobs(['force-app/main/default/classes/myApexClass.*']);
     const response = execCmd<DeleteSourceJson>(
-      `force:source:delete --json --noprompt --metadata ApexClass:${apexName}`,
+      `project:delete:source --json --no-prompt --metadata ApexClass:${apexName}`,
       {
         ensureExitCode: 0,
       }
@@ -137,7 +143,7 @@ describe('project delete source NUTs', () => {
   it('should NOT delete local files with --checkonly', () => {
     const { apexName, pathToClass } = createApexClass();
     const response = execCmd<{ deletedSource: [{ filePath: string }]; deletes: [{ checkOnly: boolean }] }>(
-      `force:source:delete --json --checkonly --noprompt --metadata ApexClass:${apexName}`,
+      `project:delete:source --json --checkonly --no-prompt --metadata ApexClass:${apexName}`,
       {
         ensureExitCode: 0,
       }
@@ -152,7 +158,7 @@ describe('project delete source NUTs', () => {
     const response = execCmd<{
       checkOnly: boolean;
       runTestsEnabled: boolean;
-    }>(`force:source:delete --json --testlevel RunAllTestsInOrg --noprompt --metadata ApexClass:${apexName}`, {
+    }>(`project:delete:source --json --testlevel RunAllTestsInOrg --no-prompt --metadata ApexClass:${apexName}`, {
       ensureExitCode: 1,
     }).jsonOutput?.result;
     // the delete operation will fail due to test failures without the 'dreamhouse' permission set assigned to the user
@@ -168,7 +174,7 @@ describe('project delete source NUTs', () => {
     fs.writeFileSync(lwcPath, '//', { encoding: 'utf8' });
     execCmd(`force:source:deploy -p ${lwcPath}`);
     const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(
-      `force:source:delete -p ${lwcPath} --noprompt --json`
+      `project:delete:source -p ${lwcPath} --no-prompt --json`
     ).jsonOutput?.result;
 
     expect(deleteResult?.deletedSource.length).to.equal(1);
@@ -189,7 +195,7 @@ describe('project delete source NUTs', () => {
     execCmd(`force:source:deploy -p ${lwcPath1},${lwcPath2}`);
     // delete both helper.js files at the same time
     const deleteResult = execCmd<{ deletedSource: FileResponse[] }>(
-      `force:source:delete -p "${lwcPath1},${lwcPath2}" --noprompt --json`
+      `project:delete:source -p "${lwcPath1},${lwcPath2}" --no-prompt --json`
     ).jsonOutput?.result;
 
     expect(deleteResult?.deletedSource.length).to.equal(2);
@@ -214,7 +220,7 @@ describe('project delete source NUTs', () => {
     execCmd(`force:source:deploy -p ${mylwcPath}`);
     expect(await isNameObsolete(testkit.username, 'LightningComponentBundle', 'mylwc')).to.be.false;
     const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(
-      `force:source:delete -p ${mylwcPath} --noprompt --json`
+      `project:delete:source -p ${mylwcPath} --no-prompt --json`
     ).jsonOutput?.result;
 
     expect(deleteResult?.deletedSource.length).to.equal(3);
@@ -231,7 +237,7 @@ describe('project delete source NUTs', () => {
     const lwcPath = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc');
     const brokerPath = path.join(lwcPath, 'brokerCard');
     const deleteResult = execCmd<{ deletedSource: [FileResponse & { error: string }] }>(
-      `force:source:delete -p ${brokerPath} --noprompt --json`,
+      `project:delete:source -p ${brokerPath} --no-prompt --json`,
       { ensureExitCode: 1 }
     ).jsonOutput?.result;
 

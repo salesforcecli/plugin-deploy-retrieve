@@ -6,7 +6,6 @@
  */
 
 import * as fs from 'fs';
-import { join } from 'path';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
 import {
@@ -22,6 +21,7 @@ import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 import { ComponentProperties } from '@salesforce/source-deploy-retrieve/lib/src/resolve/sourceComponent';
 import { Source } from '../../../src/commands/project/delete/source';
+import { DeployCache } from '../../../src/utils/deployCache';
 
 const fsPromises = fs.promises;
 
@@ -109,7 +109,7 @@ describe('project delete source', () => {
   const sandbox = $$.SANDBOX;
   testOrg.username = 'delete-test@org.com';
   const defaultPackagePath = 'defaultPackagePath';
-  let confirm = true;
+  const confirm = true;
 
   const oclifConfigStub = fromStub(stubInterface<Config>(sandbox));
 
@@ -118,9 +118,6 @@ describe('project delete source', () => {
   let lifecycleEmitStub: sinon.SinonStub;
   let resolveProjectConfigStub: sinon.SinonStub;
   let fsUnlink: sinon.SinonStub;
-  let moveToStashStub: sinon.SinonStub;
-  let restoreFromStashStub: sinon.SinonStub;
-  let deleteStashStub: sinon.SinonStub;
 
   class TestDelete extends Source {
     public async runIt() {
@@ -145,12 +142,16 @@ describe('project delete source', () => {
     stubMethod(sandbox, ComponentSet.prototype, 'deploy').resolves({
       id: '123',
       pollStatus: () => exampleDeleteResponse,
+      onUpdate: () => {},
+      onFinish: () => {
+        exampleDeleteResponse;
+      },
+      onCancel: () => {},
+      onError: () => {},
     });
     stubMethod(sandbox, cmd, 'handlePrompt').returns(confirm);
     fsUnlink = stubMethod(sandbox, fsPromises, 'unlink').resolves(true);
-    moveToStashStub = stubMethod(sandbox, cmd, 'moveFileToStash');
-    restoreFromStashStub = stubMethod(sandbox, cmd, 'restoreFileFromStash');
-    deleteStashStub = stubMethod(sandbox, cmd, 'deleteStash');
+    stubMethod(sandbox, DeployCache, 'update').resolves();
 
     return cmd.runIt();
   };
@@ -247,68 +248,5 @@ describe('project delete source', () => {
       },
     });
     ensureHookArgs();
-  });
-
-  const stubLWC = (): string => {
-    buildComponentSetStub.restore();
-    const comp = new SourceComponent({
-      name: 'mylwc',
-      type: {
-        id: 'lightningcomponentbundle',
-        name: 'LightningComponentBundle',
-        strategies: {
-          adapter: 'bundle',
-        },
-      },
-    });
-    stubMethod(sandbox, ComponentSetBuilder, 'build').resolves({
-      toArray: () => [comp],
-    });
-    const helperPath = join('dreamhouse-lwc', 'force-app', 'main', 'default', 'lwc', 'mylwc', 'helper.js');
-
-    stubMethod(sandbox, comp, 'walkContent').returns([
-      join('dreamhouse-lwc', 'force-app', 'main', 'default', 'lwc', 'mylwc', 'mylwc.js'),
-      helperPath,
-    ]);
-
-    stubMethod(sandbox, fs, 'statSync').returns({ isDirectory: () => false });
-    return helperPath;
-  };
-
-  it('will use stash and delete stash upon successful delete', async () => {
-    const sourcepath = stubLWC();
-    const result = await runDeleteCmd(['--sourcepath', sourcepath, '--json', '-r']);
-    // successful delete will move files to the stash, delete the stash, and won't restore from it
-    expect(moveToStashStub.calledOnce).to.be.true;
-    expect(deleteStashStub.calledOnce).to.be.true;
-    expect(restoreFromStashStub.called).to.be.false;
-    expect(result.deletedSource).to.deep.equal([
-      {
-        filePath: sourcepath,
-        fullName: join('mylwc', 'helper.js'),
-        state: 'Deleted',
-        type: 'LightningComponentBundle',
-      },
-    ]);
-  });
-
-  it('restores from stash during aborted delete', async () => {
-    const sourcepath = stubLWC();
-
-    confirm = false;
-    const result = await runDeleteCmd(['--sourcepath', sourcepath, '--json', '-r']);
-    // aborted delete will move files to the stash, and restore from it
-    expect(moveToStashStub.calledOnce).to.be.true;
-    expect(deleteStashStub.called).to.be.false;
-    expect(restoreFromStashStub.calledOnce).to.be.true;
-    // ensure JSON output from aborted delete
-    expect(result).to.deep.equal({
-      result: {
-        deletedSource: [],
-        deletes: [{}],
-        outboundFiles: [],
-      },
-      status: 0,
-    });
   });
 });
