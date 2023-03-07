@@ -25,11 +25,13 @@ import {
 import { Messages, NamedPackageDir, SfError, SfProject } from '@salesforce/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
+import * as chalk from 'chalk';
 import {
   API,
   AsyncDeployResultJson,
   ConvertMdapiJson,
   ConvertResultJson,
+  DeleteSourceJson,
   DeployResultJson,
   isSdrFailure,
   isSdrSuccess,
@@ -541,6 +543,72 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       const packagePath = path.join(projectPath, name);
       return { name, path: packagePath, fullPath: path.resolve(packagePath) };
     });
+  }
+}
+
+export class DeleteResultFormatter implements Formatter<DeleteSourceJson> {
+  public constructor(private result: DeployResult) {}
+  /**
+   * Get the JSON output from the DeployResult.
+   *
+   * @returns a JSON formatted result matching the provided type.
+   */
+  public getJson(): DeleteSourceJson {
+    const json = this.result as unknown as DeleteSourceJson;
+    json.deletedSource = this.result.getFileResponses() ?? []; // to match toolbelt json output
+    json.outboundFiles = []; // to match toolbelt version
+    json.deletes = [Object.assign({}, this.result?.response)]; // to match toolbelt version
+
+    return json;
+  }
+
+  public display(): void {
+    if ([0, 69].includes(process.exitCode ?? 0)) {
+      const successes: FileResponse[] = [];
+      const fileResponseSuccesses: Map<string, FileResponse> = new Map<string, FileResponse>();
+
+      if (this.result?.getFileResponses()?.length) {
+        const fileResponses: FileResponse[] = [];
+        this.result?.getFileResponses().map((f: FileResponse) => {
+          fileResponses.push(f);
+          fileResponseSuccesses.set(`${f.type}#${f.fullName}`, f);
+        });
+        sortFileResponses(fileResponses);
+        asRelativePaths(fileResponses);
+        successes.push(...fileResponses);
+      }
+
+      const deployMessages = ensureArray(this.result?.response?.details?.componentSuccesses).filter(
+        (item) => !item.fileName.includes('package.xml')
+      );
+      if (deployMessages.length >= successes.length) {
+        // if there's additional successes in the API response, find the success and add it to the output
+        deployMessages.map((deployMessage) => {
+          if (!fileResponseSuccesses.has(`${deployMessage.componentType}#${deployMessage.fullName}`)) {
+            successes.push(
+              Object.assign(deployMessage, {
+                type: deployMessage.componentType,
+              } as FileResponse)
+            );
+          }
+        });
+      }
+
+      ux.log('');
+      ux.styledHeader(chalk.blue('Deleted Source'));
+      ux.table(
+        successes.map((entry) => ({
+          fullName: entry.fullName,
+          type: entry.type,
+          filePath: entry.filePath,
+        })),
+        {
+          fullName: { header: 'FULL NAME' },
+          type: { header: 'TYPE' },
+          filePath: { header: 'PROJECT PATH' },
+        }
+      );
+    }
   }
 }
 
