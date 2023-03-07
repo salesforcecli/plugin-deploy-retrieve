@@ -6,6 +6,54 @@
     "alias": []
   },
   {
+    "command": "project:convert:mdapi",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["api-version", "json", "loglevel", "manifest", "metadata", "metadata-path", "output-dir", "root-dir"],
+    "alias": ["force:mdapi:beta:convert", "force:mdapi:convert"]
+  },
+  {
+    "command": "project:convert:source",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "json",
+      "loglevel",
+      "manifest",
+      "metadata",
+      "output-dir",
+      "package-name",
+      "root-dir",
+      "source-path"
+    ],
+    "alias": ["force:source:convert"]
+  },
+  {
+    "command": "project:delete:source",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "check-only",
+      "force-overwrite",
+      "json",
+      "loglevel",
+      "metadata",
+      "no-prompt",
+      "source-path",
+      "target-org",
+      "test-level",
+      "track-source",
+      "verbose",
+      "wait"
+    ],
+    "alias": ["force:source:delete"]
+  },
+  {
+    "command": "project:delete:tracking",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["api-version", "json", "loglevel", "no-prompt", "target-org"],
+    "alias": ["force:source:beta:tracking:clear", "force:source:tracking:clear"]
+  },
+  {
     "command": "project:deploy:cancel",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["async", "job-id", "json", "use-most-recent", "wait"],
@@ -80,6 +128,29 @@
       "wait"
     ],
     "alias": ["deploy:metadata:validate"]
+  },
+  {
+    "command": "project:manifest:create",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "from-org",
+      "include-packages",
+      "json",
+      "loglevel",
+      "manifest-name",
+      "manifest-type",
+      "metadata",
+      "output-dir",
+      "source-path"
+    ],
+    "alias": []
+  },
+  {
+    "command": "project:reset:tracking",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["api-version", "json", "loglevel", "no-prompt", "revision", "target-org"],
+    "alias": ["force:source:beta:tracking:reset", "force:source:tracking:reset"]
   },
   {
     "command": "project:retrieve:preview",

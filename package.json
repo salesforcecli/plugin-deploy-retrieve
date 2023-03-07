@@ -109,6 +109,18 @@
           },
           "retrieve": {
             "description": "Commands to retrieve metadata from a Salesforce org"
+          },
+          "convert": {
+            "description": "Commands to convert metadata from one format to another."
+          },
+          "delete": {
+            "description": "Commands to delete metadata from a Salesforce org."
+          },
+          "manifest": {
+            "description": "Commands to create a manifest file."
+          },
+          "reset": {
+            "description": "Commands to reset the source tracking state."
           }
         }
       }
