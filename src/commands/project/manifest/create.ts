@@ -42,6 +42,8 @@ export class Create extends SfCommand<CreateCommandResult> {
   public static readonly summary = messages.getMessage('description');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
+  public static readonly aliases = ['force:source:manifest:create'];
+  public static readonly deprecateAliases = true;
   public static readonly requiresProject = true;
   public static readonly flags = {
     'api-version': orgApiVersionFlagWithDeprecations,
