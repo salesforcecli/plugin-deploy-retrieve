@@ -111,7 +111,7 @@ Are you sure you want to proceed?
 
 # areYouSureCheckOnly
 
-Are you sure you want to proceed (this is only a check and won't actually delete anything) (y/n)?
+Are you sure you want to proceed (this is only a check and won't actually delete anything)?
 
 # conflictMsg
 

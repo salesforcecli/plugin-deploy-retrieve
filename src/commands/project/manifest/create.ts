@@ -16,6 +16,7 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
+import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'manifest.create');
@@ -128,16 +129,20 @@ export class Create extends SfCommand<CreateCommandResult> {
     }
 
     const componentSet = await ComponentSetBuilder.build({
-      apiversion: this.flags['api-version'] ?? ((await this.project.resolveProjectConfig()).sourceApiVersion as string),
+      apiversion: this.flags['api-version'] ?? (await getSourceApiVersion()),
       sourcepath: this.flags['source-path'],
-      metadata: this.flags.metadata && {
-        metadataEntries: this.flags.metadata,
-        directoryPaths: this.project.getUniquePackageDirectories().map((pDir) => pDir.fullPath),
-      },
-      org: this.flags['from-org'] && {
-        username: this.flags['from-org'].getUsername() as string,
-        exclude,
-      },
+      metadata: this.flags.metadata
+        ? {
+            metadataEntries: this.flags.metadata,
+            directoryPaths: await getPackageDirs(),
+          }
+        : undefined,
+      org: this.flags['from-org']
+        ? {
+            username: this.flags['from-org'].getUsername() as string,
+            exclude,
+          }
+        : undefined,
     });
 
     // add the .xml suffix if the user just provided a file name

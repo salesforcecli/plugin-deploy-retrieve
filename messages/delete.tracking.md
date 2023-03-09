@@ -27,7 +27,7 @@ reset to a specific SourceMember revision counter number
 
 # promptMessage
 
-WARNING: This operation will modify all your local source tracking files. The operation can have unintended consequences on all the force:source commands. Are you sure you want to proceed (y/n)?
+WARNING: This operation will modify all your local source tracking files. The operation can have unintended consequences on all the force:source commands. Are you sure you want to proceed?
 
 # conflictMsg
 

@@ -144,7 +144,7 @@
       "output-dir",
       "source-path"
     ],
-    "alias": []
+    "alias": ["force:source:manifest:create"]
   },
   {
     "command": "project:reset:tracking",

@@ -187,7 +187,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
     cs.apiVersion =
       this.componentSet.apiVersion ?? this.flags['api-version'] ?? (await this.org.retrieveMaxApiVersion());
     cs.sourceApiVersion =
-      this.componentSet.sourceApiVersion ?? this.flags['api-version'] ?? ((await getSourceApiVersion()) as string);
+      this.componentSet.sourceApiVersion ?? this.flags['api-version'] ?? (await getSourceApiVersion());
     this.components.map((component) => {
       if (component instanceof SourceComponent) {
         cs.add(component, DestructiveChangesType.POST);
@@ -470,6 +470,14 @@ export class Source extends SfCommand<DeleteSourceJson> {
     if (conflicts.length === 0) {
       return;
     }
+
+    this.table(conflicts, {
+      state: { header: 'STATE' },
+      fullName: { header: 'FULL NAME' },
+      type: { header: 'TYPE' },
+      filePath: { header: 'FILE PATH' },
+    });
+
     // map do dedupe by name-type-filename
     const conflictMap = new Map<string, ConflictResponse>();
     conflicts.forEach((c) => {
@@ -483,12 +491,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       });
     });
     const reformattedConflicts = Array.from(conflictMap.values());
-    this.table(conflicts, {
-      state: { header: 'STATE' },
-      fullName: { header: 'FULL NAME' },
-      type: { header: 'TYPE' },
-      filePath: { header: 'FILE PATH' },
-    });
+
     const err = new SfError(message, 'sourceConflictDetected');
     err.setData(reformattedConflicts);
     throw err;
