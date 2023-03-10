@@ -1,3 +1,12 @@
+## [1.8.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.1...1.8.2) (2023-02-28)
+
+
+### Bug Fixes
+
+* **deps:** bump http-cache-semantics from 4.1.0 to 4.1.1 ([ddd14f8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ddd14f8aaadf4143fda925cad0ddd7d9cf195d1c))
+
+
+
 ## [1.8.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.0...1.8.1) (2023-02-13)
 
 
