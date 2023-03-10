@@ -106,12 +106,11 @@ export const exampleDeleteResponse = {
 describe('project delete source', () => {
   const $$ = new TestContext();
   const testOrg = new MockTestOrgData();
-  const sandbox = $$.SANDBOX;
   testOrg.username = 'delete-test@org.com';
   const defaultPackagePath = 'defaultPackagePath';
   const confirm = true;
 
-  const oclifConfigStub = fromStub(stubInterface<Config>(sandbox));
+  const oclifConfigStub = fromStub(stubInterface<Config>($$.SANDBOX));
 
   // Stubs
   let buildComponentSetStub: sinon.SinonStub;
@@ -131,15 +130,17 @@ describe('project delete source', () => {
   const runDeleteCmd = async (params: string[], options?: { sourceApiVersion?: string }) => {
     const cmd = new TestDelete(params, oclifConfigStub);
     cmd.project = SfProject.getInstance();
-    sandbox.stub(cmd.project, 'getDefaultPackage').returns({ name: '', path: '', fullPath: defaultPackagePath });
-    sandbox
-      .stub(cmd.project, 'getUniquePackageDirectories')
-      .returns([{ fullPath: defaultPackagePath, path: '', name: '' }]);
-    sandbox.stub(cmd.project, 'getPackageDirectories').returns([{ fullPath: defaultPackagePath, path: '', name: '' }]);
-    sandbox.stub(cmd.project, 'resolveProjectConfig').resolves({ sourceApiVersion: options?.sourceApiVersion });
+    $$.SANDBOX.stub(cmd.project, 'getDefaultPackage').returns({ name: '', path: '', fullPath: defaultPackagePath });
+    $$.SANDBOX.stub(cmd.project, 'getUniquePackageDirectories').returns([
+      { fullPath: defaultPackagePath, path: '', name: '' },
+    ]);
+    $$.SANDBOX.stub(cmd.project, 'getPackageDirectories').returns([
+      { fullPath: defaultPackagePath, path: '', name: '' },
+    ]);
+    $$.SANDBOX.stub(cmd.project, 'resolveProjectConfig').resolves({ sourceApiVersion: options?.sourceApiVersion });
 
-    stubMethod(sandbox, SfCommand.prototype, 'log');
-    stubMethod(sandbox, ComponentSet.prototype, 'deploy').resolves({
+    stubMethod($$.SANDBOX, SfCommand.prototype, 'log');
+    stubMethod($$.SANDBOX, ComponentSet.prototype, 'deploy').resolves({
       id: '123',
       pollStatus: () => exampleDeleteResponse,
       onUpdate: () => {},
@@ -149,9 +150,9 @@ describe('project delete source', () => {
       onCancel: () => {},
       onError: () => {},
     });
-    stubMethod(sandbox, cmd, 'handlePrompt').returns(confirm);
-    fsUnlink = stubMethod(sandbox, fsPromises, 'unlink').resolves(true);
-    stubMethod(sandbox, DeployCache, 'update').resolves();
+    stubMethod($$.SANDBOX, cmd, 'handlePrompt').returns(confirm);
+    fsUnlink = stubMethod($$.SANDBOX, fsPromises, 'unlink').resolves(true);
+    stubMethod($$.SANDBOX, DeployCache, 'update').resolves();
 
     return cmd.runIt();
   };
@@ -160,16 +161,16 @@ describe('project delete source', () => {
     await $$.stubAuths(testOrg);
     await $$.stubConfig({ 'target-org': testOrg.username });
 
-    resolveProjectConfigStub = sandbox.stub();
-    buildComponentSetStub = stubMethod(sandbox, ComponentSetBuilder, 'build').resolves({
+    resolveProjectConfigStub = $$.SANDBOX.stub();
+    buildComponentSetStub = stubMethod($$.SANDBOX, ComponentSetBuilder, 'build').resolves({
       toArray: () => [new SourceComponent(exampleSourceComponent)],
     });
-    lifecycleEmitStub = sandbox.stub(Lifecycle.prototype, 'emit');
+    lifecycleEmitStub = $$.SANDBOX.stub(Lifecycle.prototype, 'emit');
   });
 
   afterEach(() => {
     $$.restore();
-    sandbox.restore();
+    $$.SANDBOX.restore();
   });
 
   // Ensure SourceCommand.createComponentSet() args
@@ -196,7 +197,7 @@ describe('project delete source', () => {
 
   it('should pass along sourcepath', async () => {
     const sourcepath = ['somepath'];
-    stubMethod(sandbox, fs, 'statSync').returns({ isDirectory: () => false });
+    stubMethod($$.SANDBOX, fs, 'statSync').returns({ isDirectory: () => false });
     await runDeleteCmd(['--sourcepath', sourcepath[0], '--json', '-r']);
     ensureCreateComponentSetArgs({ sourcepath });
     ensureHookArgs();
@@ -206,7 +207,7 @@ describe('project delete source', () => {
 
   it('should pass along metadata', async () => {
     const metadata = ['ApexClass:MyClass'];
-    stubMethod(sandbox, fs, 'statSync').returns({ isDirectory: () => false });
+    stubMethod($$.SANDBOX, fs, 'statSync').returns({ isDirectory: () => false });
     await runDeleteCmd(['--metadata', metadata[0], '--json', '-r']);
     ensureCreateComponentSetArgs({
       metadata: {
@@ -219,7 +220,7 @@ describe('project delete source', () => {
 
   it('should pass along apiversion', async () => {
     const metadata = ['ApexClass:MyClass'];
-    stubMethod(sandbox, fs, 'statSync').returns({ isDirectory: () => false });
+    stubMethod($$.SANDBOX, fs, 'statSync').returns({ isDirectory: () => false });
 
     await runDeleteCmd(['--metadata', metadata[0], '--json', '-r', '--apiversion', '52.0']);
     ensureCreateComponentSetArgs({
@@ -237,7 +238,7 @@ describe('project delete source', () => {
     const metadata = ['ApexClass:MyClass'];
 
     resolveProjectConfigStub.resolves({ sourceApiVersion });
-    stubMethod(sandbox, fs, 'statSync').returns({ isDirectory: () => false });
+    stubMethod($$.SANDBOX, fs, 'statSync').returns({ isDirectory: () => false });
 
     await runDeleteCmd(['--metadata', metadata[0], '--json', '-r'], { sourceApiVersion });
     ensureCreateComponentSetArgs({

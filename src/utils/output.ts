@@ -8,6 +8,7 @@
 import * as os from 'os';
 import * as path from 'path';
 import { resolve } from 'path';
+import * as fs from 'fs';
 import { ux } from '@oclif/core';
 import * as chalk from 'chalk';
 import { blue, bold, dim, underline } from 'chalk';
@@ -21,11 +22,25 @@ import {
   FileResponseSuccess,
   RequestStatus,
   RetrieveResult,
+  RunTestResult,
   Successes,
 } from '@salesforce/source-deploy-retrieve';
-import { Messages, NamedPackageDir, SfError, SfProject } from '@salesforce/core';
+import { Messages, NamedPackageDir, SfError, SfProject, Org } from '@salesforce/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
+import {
+  ApexCodeCoverageAggregate,
+  ApexCodeCoverageAggregateRecord,
+  ApexTestResultData,
+  ApexTestResultOutcome,
+  CodeCoverageResult,
+  CoverageReporter,
+  CoverageReporterOptions,
+  CoverageReportFormats,
+  DefaultReportOptions,
+  JUnitReporter,
+  TestResult,
+} from '@salesforce/apex-node';
 import {
   API,
   AsyncDeployResultJson,
@@ -56,6 +71,7 @@ const retrieveMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 're
 ]);
 
 const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
+type SuccessOrFailure = Successes & Failures;
 
 function tableHeader(message: string): string {
   return blue(bold(message));
@@ -126,7 +142,7 @@ export function getVersionMessage(action: string, componentSet: ComponentSet | u
     return `*** ${action} with ${api} API v${componentSet.apiVersion ?? componentSet.sourceApiVersion} ***`;
   }
   // has both but they don't match
-  return `*** ${action} v${componentSet.sourceApiVersion} metadata with ${api} API v${componentSet.apiVersion} connection ***`;
+  return `*** ${action} v${componentSet.sourceApiVersion} metadata with ${api} API v${componentSet.apiVersion} this.org.getConnection() ***`;
 }
 
 interface Formatter<T> {
@@ -139,15 +155,29 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private absoluteFiles: FileResponse[];
   private testLevel: TestLevel;
   private verbosity: Verbosity;
+  private coverageOptions: CoverageReporterOptions;
+  private resultsDir: string;
+  private readonly junit: boolean | undefined;
 
   public constructor(
     protected result: DeployResult,
-    protected flags: Partial<{ 'test-level': TestLevel; verbose: boolean; concise: boolean }>
+    protected flags: Partial<{
+      'test-level': TestLevel;
+      verbose: boolean;
+      concise: boolean;
+      'coverage-formatters': string[];
+      junit: boolean;
+      'results-dir': string;
+      'target-org': Org;
+    }>
   ) {
     this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
     this.relativeFiles = asRelativePaths(this.absoluteFiles);
     this.testLevel = this.flags['test-level'] ?? TestLevel.NoTestRun;
     this.verbosity = this.determineVerbosity();
+    this.resultsDir = this.flags['results-dir'] ?? 'coverage';
+    this.coverageOptions = this.getCoverageFormattersOptions(this.flags['coverage-formatters']);
+    this.junit = this.flags.junit;
   }
 
   public getJson(): DeployResultJson {
@@ -180,7 +210,177 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     this.displayFailures();
     this.displayDeletes();
     this.displayTestResults();
+    this.maybeCreateRequestedReports();
     this.displayReplacements();
+  }
+
+  private maybeCreateRequestedReports(): void {
+    // only generate reports if test results are presentd
+    if (this.result.response?.numberTestsTotal) {
+      if (this.coverageOptions) {
+        ux.log(
+          `Code Coverage formats, [${this.flags['coverage-formatters']?.join(', ')}], written to ${this.resultsDir}/`
+        );
+        this.createCoverageReport('no-map');
+      }
+      if (this.junit) {
+        ux.log(`Junit results written to ${this.resultsDir}/junit/junit.xml`);
+        this.createJunitResults();
+      }
+    }
+  }
+
+  private createJunitResults(): void {
+    const testResult = this.transformDeployTestsResultsToTestResult();
+    if (testResult.summary.testsRan > 0) {
+      const jUnitReporter = new JUnitReporter();
+      const junitResults = jUnitReporter.format(testResult);
+
+      const junitReportPath = path.join(this.resultsDir ?? '', 'junit');
+      fs.mkdirSync(junitReportPath, { recursive: true });
+      fs.writeFileSync(path.join(junitReportPath, 'junit.xml'), junitResults, 'utf8');
+    }
+  }
+
+  private transformDeployTestsResultsToTestResult(): TestResult {
+    const runTestResult = this.result.response?.details?.runTestResult as RunTestResult;
+    const numTestsRun = parseInt(runTestResult.numTestsRun, 10);
+    const numTestFailures = parseInt(runTestResult.numFailures, 10);
+    return {
+      summary: {
+        commandTimeInMs: 0,
+        failRate: ((numTestFailures / numTestsRun) * 100).toFixed(2) + '%',
+        failing: numTestFailures,
+        hostname: this.flags['target-org']?.getConnection().getConnectionOptions().instanceUrl as string,
+        orgId: this.flags['target-org']?.getConnection().getAuthInfoFields().orgId as string,
+        outcome: '',
+        passRate: numTestFailures === 0 ? '100%' : ((1 - numTestFailures / numTestsRun) * 100).toFixed(2) + '%',
+        passing: numTestsRun - numTestFailures,
+        skipRate: '',
+        skipped: 0,
+        testExecutionTimeInMs: parseFloat(runTestResult.totalTime),
+        testRunId: '',
+        testStartTime: new Date().toISOString(),
+        testTotalTimeInMs: parseFloat(runTestResult.totalTime),
+        testsRan: numTestsRun,
+        userId: this.flags['target-org']?.getConnection().getConnectionOptions().userId as string,
+        username: this.flags['target-org']?.getConnection().getUsername() as string,
+      },
+      tests: [
+        ...this.mapTestResults(ensureArray(runTestResult.successes)),
+        ...this.mapTestResults(ensureArray(runTestResult.failures)),
+      ],
+      codecoverage: ensureArray(runTestResult?.codeCoverage).map((cov) => {
+        const codeCoverageResult: CodeCoverageResult = {} as CodeCoverageResult;
+        codeCoverageResult.apexId = cov.id;
+        codeCoverageResult.name = cov.name;
+        codeCoverageResult.numLinesUncovered = parseInt(cov.numLocationsNotCovered, 10);
+        codeCoverageResult.numLinesCovered = parseInt(cov.numLocations, 10) - codeCoverageResult.numLinesUncovered;
+        const [uncoveredLines, coveredLines] = this.generateCoveredLines(cov);
+        codeCoverageResult.coveredLines = coveredLines;
+        codeCoverageResult.uncoveredLines = uncoveredLines;
+        const numLocationsNum = parseInt(cov.numLocations, 10);
+        const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
+
+        codeCoverageResult.percentage =
+          numLocationsNum > 0
+            ? (((numLocationsNum - numLocationsNotCovered) / numLocationsNum) * 100).toFixed() + '%'
+            : '';
+        return codeCoverageResult;
+      }),
+    };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private mapTestResults(testResults: Failures[] | Successes[]): ApexTestResultData[] {
+    return testResults.map((successOrFailure) => {
+      const testResult = successOrFailure as SuccessOrFailure;
+      return {
+        apexClass: { fullName: testResult.name, id: testResult.id, name: testResult.name, namespacePrefix: '' },
+        apexLogId: '',
+        asyncApexJobId: '',
+        fullName: testResult.name,
+        id: testResult.id,
+        message: testResult.message ?? '',
+        methodName: testResult.methodName,
+        outcome: !testResult.message ? ApexTestResultOutcome.Pass : ApexTestResultOutcome.Fail,
+        queueItemId: '',
+        runTime: parseInt(testResult.time, 10),
+        stackTrace: testResult.stackTrace || '',
+        testTimestamp: '',
+      };
+    });
+  }
+
+  private transformCoverageToApexCoverage(mdCoverage: CodeCoverage[]): ApexCodeCoverageAggregate {
+    const apexCoverage = mdCoverage.map((cov) => {
+      const numCovered = parseInt(cov.numLocations, 10);
+      const numUncovered = parseInt(cov.numLocationsNotCovered, 10);
+      const [uncoveredLines, coveredLines] = this.generateCoveredLines(cov);
+
+      const ac: ApexCodeCoverageAggregateRecord = {
+        ApexClassOrTrigger: {
+          Id: cov.id,
+          Name: cov.name,
+        },
+        NumLinesCovered: numCovered,
+        NumLinesUncovered: numUncovered,
+        Coverage: {
+          coveredLines,
+          uncoveredLines,
+        },
+      };
+      return ac;
+    });
+    return { done: true, totalSize: apexCoverage.length, records: apexCoverage };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private generateCoveredLines(cov: CodeCoverage): [number[], number[]] {
+    const numCovered = parseInt(cov.numLocations, 10);
+    const numUncovered = parseInt(cov.numLocationsNotCovered, 10);
+    const uncoveredLines = ensureArray(cov.locationsNotCovered).map((location) => parseInt(location.line, 10));
+    const minLineNumber = uncoveredLines.length ? Math.min(...uncoveredLines) : 1;
+    const lines = [...Array(numCovered + numUncovered).keys()].map((i) => i + minLineNumber);
+    const coveredLines = lines.filter((line) => !uncoveredLines.includes(line));
+    return [uncoveredLines, coveredLines];
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private getCoverageFormattersOptions = (formatters: string[] = []): CoverageReporterOptions => {
+    const reportFormats = formatters as CoverageReportFormats[];
+    const reportOptions = Object.fromEntries(
+      reportFormats.map((format) => {
+        const formatDefaults = DefaultReportOptions[format];
+        return [
+          format,
+          {
+            ...formatDefaults,
+            // always join any subdir from the defaults with our custom coverage dir
+            ...('subdir' in formatDefaults ? { subdir: path.join('coverage', formatDefaults.subdir) } : {}),
+            // if there is no subdir, we also put the file in the coverage dir, otherwise leave it alone
+            ...('file' in formatDefaults && !('subdir' in formatDefaults)
+              ? { file: path.join('coverage', formatDefaults.file) }
+              : {}),
+          },
+        ];
+      })
+    );
+    return {
+      reportFormats,
+      reportOptions,
+    };
+  };
+
+  private createCoverageReport(sourceDir: string): void {
+    if (this.resultsDir) {
+      const apexCoverage = this.transformCoverageToApexCoverage(
+        ensureArray(this.result.response?.details?.runTestResult?.codeCoverage)
+      );
+      fs.mkdirSync(this.resultsDir, { recursive: true });
+      const coverageReport = new CoverageReporter(apexCoverage, this.resultsDir, sourceDir, this.coverageOptions);
+      coverageReport.generateReports();
+    }
   }
 
   private displayReplacements(): void {

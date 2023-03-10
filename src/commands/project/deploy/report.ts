@@ -13,6 +13,7 @@ import { buildComponentSet } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DeployReportResultFormatter } from '../../../utils/output';
 import { DeployResultJson } from '../../../utils/types';
+import { reportsFormatters } from './start';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.report');
@@ -40,6 +41,17 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.use-most-recent.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
+    'coverage-formatters': Flags.string({
+      multiple: true,
+      summary: messages.getMessage('flags.coverage-formatters'),
+      options: reportsFormatters,
+      helpValue: reportsFormatters.join(','),
+    }),
+    junit: Flags.boolean({ summary: messages.getMessage('flags.junit') }),
+    'results-dir': Flags.directory({
+      dependsOn: ['junit', 'coverage-formatters'],
+      summary: messages.getMessage('flags.results-dir'),
+    }),
   };
 
   public async run(): Promise<DeployResultJson> {
@@ -53,7 +65,10 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     const componentSet = await buildComponentSet({ ...deployOpts, wait: Duration.minutes(deployOpts.wait) });
     const result = new DeployResult(deployStatus as unknown as MetadataApiDeployStatus, componentSet);
 
-    const formatter = new DeployReportResultFormatter(result, deployOpts);
+    const formatter = new DeployReportResultFormatter(result, {
+      ...deployOpts,
+      ...{ 'target-org': flags['target-org'] as Org },
+    });
 
     if (!this.jsonEnabled()) formatter.display();
 

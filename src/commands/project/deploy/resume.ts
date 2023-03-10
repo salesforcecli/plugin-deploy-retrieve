@@ -15,6 +15,7 @@ import { DeployResultJson } from '../../../utils/types';
 import { determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
+import { reportsFormatters } from './start';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.resume');
@@ -59,6 +60,17 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       unit: 'minutes',
       helpValue: '<minutes>',
       min: 1,
+    }),
+    'coverage-formatters': Flags.string({
+      multiple: true,
+      summary: messages.getMessage('flags.coverage-formatters'),
+      options: reportsFormatters,
+      helpValue: reportsFormatters.join(','),
+    }),
+    junit: Flags.boolean({ summary: messages.getMessage('flags.junit') }),
+    'results-dir': Flags.directory({
+      dependsOn: ['junit', 'coverage-formatters'],
+      summary: messages.getMessage('flags.results-dir'),
     }),
   };
 

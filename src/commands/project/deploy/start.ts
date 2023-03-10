@@ -8,6 +8,7 @@ import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
+import { DefaultReportOptions } from '@salesforce/apex-node';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../../utils/types';
@@ -20,6 +21,7 @@ import { writeConflictTable } from '../../../utils/conflicts';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
+export const reportsFormatters = Object.keys(DefaultReportOptions);
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 
@@ -129,6 +131,17 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       min: 1,
       exclusive: ['async'],
     }),
+    'coverage-formatters': Flags.string({
+      multiple: true,
+      summary: messages.getMessage('flags.coverage-formatters'),
+      options: reportsFormatters,
+      helpValue: reportsFormatters.join(','),
+    }),
+    junit: Flags.boolean({ summary: messages.getMessage('flags.junit') }),
+    'results-dir': Flags.directory({
+      dependsOn: ['junit', 'coverage-formatters'],
+      summary: messages.getMessage('flags.results-dir'),
+    }),
   };
 
   public static configurationVariablesSection = toHelpSection(
@@ -167,6 +180,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     this.log(`Deploy ID: ${bold(deploy.id)}`);
 
     if (flags.async) {
+      if (flags['coverage-formatters']) {
+        this.warn(messages.getMessage('asyncCoverageJunitWarning'));
+      }
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();

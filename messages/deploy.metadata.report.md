@@ -40,3 +40,15 @@ Use the job ID of the most recent deploy operation.
 # flags.use-most-recent.description
 
 For performance reasons, this flag uses job IDs for deploy operations that started only in the past 3 days or less. If your most recent operation was more than 3 days ago, this flag won't find a job ID.
+
+# flags.junit
+
+output JUnit test results
+
+# flags.coverage-formatters
+
+format of the code coverage results
+
+# flags.results-dir
+
+output directory for code coverage and JUnit results; defaults to the deploy ID
