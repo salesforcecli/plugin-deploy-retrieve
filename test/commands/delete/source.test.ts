@@ -165,7 +165,8 @@ describe('project delete source', () => {
     buildComponentSetStub = stubMethod($$.SANDBOX, ComponentSetBuilder, 'build').resolves({
       toArray: () => [new SourceComponent(exampleSourceComponent)],
     });
-    lifecycleEmitStub = $$.SANDBOX.stub(Lifecycle.prototype, 'emit');
+    const lifecycle = Lifecycle.getInstance();
+    lifecycleEmitStub = $$.SANDBOX.stub(lifecycle, 'emit');
   });
 
   afterEach(() => {
