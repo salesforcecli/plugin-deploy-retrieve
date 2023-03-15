@@ -28,6 +28,11 @@ jobs:
           # - 'yarn test:nuts:deploy:metadata:source-dir'
           # - 'yarn test:nuts:deploy:metadata:test-level'
           - 'yarn test:nuts:static'
+          - 'yarn test:nuts:retrieve'
+          - 'yarn test:nuts:delete'
+          - 'yarn test:nuts:convert'
+          - 'yarn test:nuts:manifest'
+          - 'yarn test:nuts:specialTypes'
           # - 'yarn test:nuts:tracking'
       fail-fast: false
     with:
