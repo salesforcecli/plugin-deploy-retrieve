@@ -8,10 +8,9 @@ import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
-import { DefaultReportOptions } from '@salesforce/apex-node';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
-import { DeployResultJson, TestLevel } from '../../../utils/types';
+import { DeployResultJson, TestLevel, reportsFormatters } from '../../../utils/types';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
@@ -21,7 +20,6 @@ import { writeConflictTable } from '../../../utils/conflicts';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
-export const reportsFormatters = Object.keys(DefaultReportOptions);
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 

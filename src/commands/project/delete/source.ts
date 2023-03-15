@@ -32,7 +32,7 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import * as chalk from 'chalk';
-import { DeleteSourceJson, TestLevel } from '../../../utils/types';
+import { DeleteSourceJson, TestLevel, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 import { resolveApi } from '../../../utils/deploy';
 import { DeleteResultFormatter, DeployResultFormatter } from '../../../utils/output';
@@ -202,9 +202,8 @@ export class Source extends SfCommand<DeleteSourceJson> {
       // determine if user is trying to delete a single file from a bundle, which is actually just an fs delete operation
       // and then a constructive deploy on the "new" bundle
       this.components
-        .filter((comp) => comp.type.strategies?.adapter === 'bundle' && comp instanceof SourceComponent)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - filtered as SourceComponent above
+        .filter((comp) => comp.type.strategies?.adapter === 'bundle')
+        .filter(isSourceComponent)
         .map((bundle: SourceComponent) => {
           sourcepaths.map(async (sourcepath) => {
             // walkContent returns absolute paths while sourcepath will usually be relative
@@ -342,9 +341,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   private async deleteFilesLocally(): Promise<void> {
     if (!this.flags['check-only'] && this.deployResult?.response?.status === RequestStatus.Succeeded) {
       const promises: Array<Promise<void>> = [];
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - because these types exist locally, they are by definition, a SourceComponent
-      this.components?.map((component: SourceComponent) => {
+      this.components?.filter(isSourceComponent).map((component: SourceComponent) => {
         // mixed delete/deploy operations have already been deleted and stashed
         if (!this.mixedDeployDelete.delete.length) {
           if (component.content) {

@@ -11,11 +11,10 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
-import { DeployResultJson } from '../../../utils/types';
+import { DeployResultJson, reportsFormatters } from '../../../utils/types';
 import { determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { reportsFormatters } from './start';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.resume');

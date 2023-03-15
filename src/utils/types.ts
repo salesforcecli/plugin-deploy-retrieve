@@ -18,6 +18,8 @@ import {
 import { isObject } from '@salesforce/ts-types';
 import { DefaultReportOptions, CoverageReporterOptions } from '@salesforce/apex-node';
 
+export const reportsFormatters = Object.keys(DefaultReportOptions);
+
 export enum TestLevel {
   NoTestRun = 'NoTestRun',
   RunSpecifiedTests = 'RunSpecifiedTests',

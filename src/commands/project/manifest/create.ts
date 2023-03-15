@@ -26,7 +26,7 @@ const manifestTypes = {
   post: 'destructiveChangesPost.xml',
   destroy: 'destructiveChanges.xml',
   package: 'package.xml',
-};
+} as const;
 
 const packageTypes: Record<string, string[]> = {
   managed: ['beta', 'deleted', 'deprecated', 'installed', 'released'],
@@ -112,10 +112,11 @@ export class Create extends SfCommand<CreateCommandResult> {
     // convert the manifesttype into one of the "official" manifest names
     // if no manifesttype flag passed, use the manifestname flag
     // if no manifestname flag, default to 'package.xml'
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - allow potentially undefined index of manifestTypes, fall backs will guarantee a result
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    this.manifestName = manifestTypes[this.flags['manifest-type']] ?? this.flags['manifest-name'] ?? 'package.xml';
+    const manifestTypeFromFlag = this.flags['manifest-type'] as keyof typeof manifestTypes;
+    this.manifestName =
+      typeof manifestTypeFromFlag === 'string'
+        ? manifestTypes[manifestTypeFromFlag]
+        : undefined ?? this.flags['manifest-name'] ?? 'package.xml';
     this.outputDir = this.flags['output-dir'];
     this.includePackages = this.flags['include-packages'];
 
