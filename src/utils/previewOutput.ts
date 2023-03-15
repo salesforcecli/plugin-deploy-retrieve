@@ -24,18 +24,7 @@ import { SourceTracking } from '@salesforce/source-tracking';
 import { isSourceComponent } from './types';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.load('@salesforce/plugin-deploy-retrieve', 'previewMessages', [
-  'conflicts.header',
-  'conflicts.none',
-  'ignored.header',
-  'ignored.none',
-  'deploy.none',
-  'deploy.header',
-  'delete.header',
-  'delete.none',
-  'retrieve.header',
-  'retrieve.none',
-]);
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'previewMessages');
 
 type BaseOperation = 'deploy' | 'retrieve';
 

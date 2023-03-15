@@ -25,9 +25,7 @@ let conn: Connection;
 
 Messages.importMessagesDirectory(__dirname);
 
-const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
-  'error.nothingToDeploy',
-]);
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 describe('forceignore changes', () => {
   before(async () => {

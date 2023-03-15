@@ -195,6 +195,7 @@ describe('project delete source NUTs', () => {
     execCmd(`force:source:deploy -p ${lwcPath1},${lwcPath2}`);
     // delete both helper.js files at the same time
     const deleteResult = execCmd<{ deletedSource: FileResponse[] }>(
+      // eslint-disable-next-line sf-plugin/no-execcmd-double-quotes
       `project:delete:source -p "${lwcPath1},${lwcPath2}" --no-prompt --json`
     ).jsonOutput?.result;
 
