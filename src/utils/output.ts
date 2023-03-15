@@ -470,6 +470,8 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
 
     const opts = Object.entries(this.flags).reduce<Array<{ key: string; value: unknown }>>((result, [key, value]) => {
       if (key === 'timestamp') return result;
+      if (key === 'target-org')
+        return result.concat({ key: 'target-org', value: this.flags['target-org']?.getUsername() });
       return result.concat({ key, value });
     }, []);
     ux.log();
