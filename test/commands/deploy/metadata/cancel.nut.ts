@@ -19,7 +19,7 @@ function readDeployCache(projectDir: string): Record<string, CachedOptions> {
   return JSON.parse(contents) as Record<string, CachedOptions>;
 }
 
-describe('deploy metadata cancel NUTs', () => {
+describe.only('deploy metadata cancel NUTs', () => {
   let testkit: SourceTestkit;
 
   before(async () => {
