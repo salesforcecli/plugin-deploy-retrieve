@@ -112,17 +112,21 @@ context('deploy metadata --test-level NUTs [name: %REPO_NAME%]', () => {
       const packages = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
 
       execCmd(
-        `project:deploy:start ${packages} --test-level RunAllTestsInOrg  --coverage-formatters html --results-dir abc`
+        `project:deploy:start ${packages} --test-level RunAllTestsInOrg --coverage-formatters html --results-dir abc`,
+        { ensureExitCode: 0 }
       );
       expect(fs.existsSync(path.join(testkit.projectDir, 'abc', 'coverage', 'html', 'index.html'))).to.be.true;
       await testkit.expect.apexTestsToBeRun();
     });
 
     it('should run tests in org --coverage-formatters html and store in directory and contain junit', async () => {
-      const packages = testkit.packageNames.map((p) => `--source-dir ${p} --coverage-formatters html`).join(' ');
-      execCmd(`project:deploy:start ${packages} --test-level RunAllTestsInOrg --results-dir abc --junit`, {
-        ensureExitCode: 0,
-      });
+      const packages = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
+      execCmd(
+        `project:deploy:start ${packages} --test-level RunAllTestsInOrg  --coverage-formatters html --results-dir abc --junit`,
+        {
+          ensureExitCode: 0,
+        }
+      );
       await testkit.expect.apexTestsToBeRun();
       expect(fs.existsSync(path.join(testkit.projectDir, 'abc', 'coverage', 'html', 'index.html'))).to.be.true;
       expect(fs.existsSync(path.join(testkit.projectDir, 'abc', 'junit', 'junit.xml'))).to.be.true;

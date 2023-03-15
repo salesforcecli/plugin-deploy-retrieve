@@ -58,9 +58,7 @@ import {
 
 Messages.importMessagesDirectory(__dirname);
 const deployAsyncMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
-
 const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
-
 const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 function tableHeader(message: string): string {
