@@ -64,12 +64,9 @@ describe('project delete source NUTs', () => {
     const pathToSR = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'staticresources');
     const pathToJson = path.join(pathToSR, 'sample_data_properties.json');
     const pathToXml = path.join(pathToSR, 'sample_data_properties.resource-meta.xml');
-    const response = execCmd<DeleteSourceJson>(
-      `project:delete:source --json --no-prompt --source-jpath ${pathToJson}`,
-      {
-        ensureExitCode: 0,
-      }
-    ).jsonOutput?.result;
+    const response = execCmd<DeleteSourceJson>(`project:delete:source --json --no-prompt --source-path ${pathToJson}`, {
+      ensureExitCode: 0,
+    }).jsonOutput?.result;
     expect(response?.deletedSource).to.have.length(2);
     expect(fs.existsSync(pathToJson)).to.be.false;
     expect(fs.existsSync(pathToXml)).to.be.false;
@@ -89,7 +86,7 @@ describe('project delete source NUTs', () => {
 
   it('should source:delete all Prompts using the source-jpath param', () => {
     const response = execCmd<DeleteSourceJson>(
-      `project:delete:source --json --no-prompt --source-jpath ${path.join('force-app', 'main', 'default', 'prompts')}`,
+      `project:delete:source --json --no-prompt --source-path ${path.join('force-app', 'main', 'default', 'prompts')}`,
       {
         ensureExitCode: 0,
       }
@@ -103,7 +100,7 @@ describe('project delete source NUTs', () => {
   it('should source:delete an ApexClass using the source-jpath param', () => {
     const { pathToClass } = createApexClass();
     const response = execCmd<DeleteSourceJson>(
-      `project:delete:source --json --no-prompt --source-jpath ${pathToClass}`,
+      `project:delete:source --json --no-prompt --source-path ${pathToClass}`,
       {
         ensureExitCode: 0,
       }
