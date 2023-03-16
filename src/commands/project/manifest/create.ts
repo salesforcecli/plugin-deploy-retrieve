@@ -6,7 +6,7 @@
  */
 import { join } from 'path';
 import * as fs from 'fs';
-import { Messages } from '@salesforce/core';
+import { Messages, Org } from '@salesforce/core';
 import { ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import {
   arrayWithDeprecation,
@@ -39,6 +39,7 @@ export type CreateCommandResult = {
 };
 
 const xorFlags = ['metadata', 'source-path', 'from-org'];
+
 export class Create extends SfCommand<CreateCommandResult> {
   public static readonly summary = messages.getMessage('description');
   public static readonly description = messages.getMessage('description');
@@ -83,12 +84,13 @@ export class Create extends SfCommand<CreateCommandResult> {
       char: 'c',
       dependsOn: ['fromorg'],
     }),
-    'from-org': Flags.optionalOrg({
+    'from-org': Flags.custom({
       summary: messages.getMessage('flags.from-org'),
       exactlyOne: xorFlags,
       aliases: ['fromorg'],
       deprecateAliases: true,
-    }),
+      parse: async (input: string | undefined) => (input ? Org.create({ aliasOrUsername: input }) : undefined),
+    })(),
     'output-dir': Flags.string({
       char: 'd',
       aliases: ['outputdir', 'o'],
