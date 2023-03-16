@@ -57,8 +57,7 @@ export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-di
 } & Partial<Pick<DeployOptions, 'manifest'>>;
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
-  if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
-  return true;
+  return !(testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0);
 }
 
 export async function resolveApi(): Promise<API> {

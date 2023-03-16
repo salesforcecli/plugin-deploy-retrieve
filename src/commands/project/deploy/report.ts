@@ -12,7 +12,7 @@ import { DeployResult, MetadataApiDeployStatus } from '@salesforce/source-deploy
 import { buildComponentSet } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DeployReportResultFormatter } from '../../../utils/output';
-import { DeployResultJson } from '../../../utils/types';
+import { DeployResultJson, reportsFormatters } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.report');
@@ -27,6 +27,11 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   public static readonly deprecateAliases = true;
 
   public static readonly flags = {
+    'target-org': Flags.requiredOrg({
+      summary: messages.getMessage('flags.target-org.summary'),
+      required: true,
+    }),
+    'api-version': Flags.orgApiVersion(),
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
@@ -40,6 +45,17 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.use-most-recent.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
+    'coverage-formatters': Flags.string({
+      multiple: true,
+      summary: messages.getMessage('flags.coverage-formatters'),
+      options: reportsFormatters,
+      helpValue: reportsFormatters.join(','),
+    }),
+    junit: Flags.boolean({ summary: messages.getMessage('flags.junit') }),
+    'results-dir': Flags.directory({
+      dependsOn: ['junit', 'coverage-formatters'],
+      summary: messages.getMessage('flags.results-dir'),
+    }),
   };
 
   public async run(): Promise<DeployResultJson> {
@@ -48,12 +64,15 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
 
     const deployOpts = cache.get(jobId);
     const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
-    const deployStatus = await org.getConnection().metadata.checkDeployStatus(jobId, true);
+    const deployStatus = await org.getConnection(flags['api-version']).metadata.checkDeployStatus(jobId, true);
 
     const componentSet = await buildComponentSet({ ...deployOpts, wait: Duration.minutes(deployOpts.wait) });
-    const result = new DeployResult(deployStatus as unknown as MetadataApiDeployStatus, componentSet);
+    const result = new DeployResult(deployStatus as MetadataApiDeployStatus, componentSet);
 
-    const formatter = new DeployReportResultFormatter(result, deployOpts);
+    const formatter = new DeployReportResultFormatter(result, {
+      ...deployOpts,
+      ...{ 'target-org': flags['target-org'] },
+    });
 
     if (!this.jsonEnabled()) formatter.display();
 
