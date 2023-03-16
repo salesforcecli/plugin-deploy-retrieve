@@ -25,15 +25,9 @@ import { DeployCache } from './deployCache';
 import { writeManifest } from './manifestCache';
 
 Messages.importMessagesDirectory(__dirname);
-export const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache', [
-  'error.NoRecentJobId',
-  'error.InvalidJobId',
-]);
+export const cacheMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
 
-const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
-  'error.nothingToDeploy',
-  'error.nothingToDeploy.Actions',
-]);
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 export type DeployOptions = {
   api: API;

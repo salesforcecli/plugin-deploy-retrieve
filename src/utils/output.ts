@@ -36,18 +36,9 @@ import {
 } from './types';
 
 Messages.importMessagesDirectory(__dirname);
-const deployAsyncMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.async', [
-  'info.AsyncDeployResume',
-  'info.AsyncDeployStatus',
-  'info.AsyncDeployCancel',
-  'info.AsyncDeployQueued',
-  'info.AsyncDeployCancelQueued',
-]);
+const deployAsyncMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
 
-const retrieveMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata', [
-  'info.WroteZipFile',
-  'info.ExtractedZipFile',
-]);
+const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
 
 function tableHeader(message: string): string {
   return blue(bold(message));
