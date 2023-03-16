@@ -6,6 +6,54 @@
     "alias": []
   },
   {
+    "command": "project:convert:mdapi",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["api-version", "json", "loglevel", "manifest", "metadata", "metadata-path", "output-dir", "root-dir"],
+    "alias": ["force:mdapi:beta:convert", "force:mdapi:convert"]
+  },
+  {
+    "command": "project:convert:source",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "json",
+      "loglevel",
+      "manifest",
+      "metadata",
+      "output-dir",
+      "package-name",
+      "root-dir",
+      "source-path"
+    ],
+    "alias": ["force:source:convert"]
+  },
+  {
+    "command": "project:delete:source",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "check-only",
+      "force-overwrite",
+      "json",
+      "loglevel",
+      "metadata",
+      "no-prompt",
+      "source-path",
+      "target-org",
+      "test-level",
+      "track-source",
+      "verbose",
+      "wait"
+    ],
+    "alias": ["force:source:delete"]
+  },
+  {
+    "command": "project:delete:tracking",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["api-version", "json", "loglevel", "no-prompt", "target-org"],
+    "alias": ["force:source:beta:tracking:clear", "force:source:tracking:clear"]
+  },
+  {
     "command": "project:deploy:cancel",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["async", "job-id", "json", "use-most-recent", "wait"],
@@ -26,42 +74,33 @@
   {
     "command": "project:deploy:report",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["job-id", "json", "use-most-recent"],
+    "flags": [
+      "api-version",
+      "coverage-formatters",
+      "job-id",
+      "json",
+      "junit",
+      "results-dir",
+      "target-org",
+      "use-most-recent"
+    ],
     "alias": ["deploy:metadata:report"]
   },
   {
     "command": "project:deploy:resume",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["concise", "job-id", "json", "use-most-recent", "verbose", "wait"],
-    "alias": ["deploy:metadata:resume"]
-  },
-  {
-    "command": "project:deploy:start",
-    "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": [
-      "api-version",
-      "async",
       "concise",
-      "dry-run",
-      "ignore-conflicts",
-      "ignore-errors",
-      "ignore-warnings",
+      "coverage-formatters",
+      "job-id",
       "json",
-      "manifest",
-      "metadata",
-      "metadata-dir",
-      "post-destructive-changes",
-      "pre-destructive-changes",
-      "purge-on-delete",
-      "single-package",
-      "source-dir",
-      "target-org",
-      "test-level",
-      "tests",
+      "junit",
+      "results-dir",
+      "use-most-recent",
       "verbose",
       "wait"
     ],
-    "alias": ["deploy:metadata"]
+    "alias": ["deploy:metadata:resume"]
   },
   {
     "command": "project:deploy:validate",
@@ -83,6 +122,29 @@
       "wait"
     ],
     "alias": ["deploy:metadata:validate"]
+  },
+  {
+    "command": "project:manifest:create",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "from-org",
+      "include-packages",
+      "json",
+      "loglevel",
+      "manifest-name",
+      "manifest-type",
+      "metadata",
+      "output-dir",
+      "source-path"
+    ],
+    "alias": ["force:source:manifest:create"]
+  },
+  {
+    "command": "project:reset:tracking",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["api-version", "json", "loglevel", "no-prompt", "revision", "target-org"],
+    "alias": ["force:source:beta:tracking:reset", "force:source:tracking:reset"]
   },
   {
     "command": "project:retrieve:preview",

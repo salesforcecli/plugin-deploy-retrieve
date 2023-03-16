@@ -222,3 +222,19 @@ No local changes to deploy.
 # error.nothingToDeploy.Actions
 
 - To see conflicts and ignored files, run "sf project deploy preview" with any of the manifest, directory, or metadata flags.
+
+# flags.junit
+
+output JUnit test results
+
+# flags.coverage-formatters
+
+format of the code coverage results
+
+# flags.results-dir
+
+output directory for code coverage and JUnit results; defaults to the deploy ID
+
+# asyncCoverageJunitWarning
+
+You requested an async deploy with code coverage or JUnit results. The reports will be available when the deploy completes.

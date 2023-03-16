@@ -10,7 +10,7 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
 import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
 import { DeployProgress } from '../../../utils/progressBar';
-import { DeployResultJson, TestLevel } from '../../../utils/types';
+import { DeployResultJson, TestLevel, reportsFormatters } from '../../../utils/types';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
@@ -142,6 +142,17 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.post-destructive-changes'),
       dependsOn: ['manifest'],
     }),
+    'coverage-formatters': Flags.string({
+      multiple: true,
+      summary: messages.getMessage('flags.coverage-formatters'),
+      options: reportsFormatters,
+      helpValue: reportsFormatters.join(','),
+    }),
+    junit: Flags.boolean({ summary: messages.getMessage('flags.junit'), dependsOn: ['coverage-formatters'] }),
+    'results-dir': Flags.directory({
+      dependsOn: ['coverage-formatters'],
+      summary: messages.getMessage('flags.results-dir'),
+    }),
   };
 
   public static configurationVariablesSection = toHelpSection(
@@ -180,6 +191,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     this.log(`Deploy ID: ${bold(deploy.id)}`);
 
     if (flags.async) {
+      if (flags['coverage-formatters']) {
+        this.warn(messages.getMessage('asyncCoverageJunitWarning'));
+      }
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
