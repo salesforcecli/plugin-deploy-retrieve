@@ -72,6 +72,7 @@ describe('deploy metadata cancel NUTs', () => {
         // ignore conflicts so that if the first deploy failed to cancel, we don't get errors from conflicts
         args: '--source-dir force-app --async --ignore-conflicts',
         json: true,
+        exitCode: 0,
       });
       assert(first);
       assert(first.result.id);
@@ -82,7 +83,6 @@ describe('deploy metadata cancel NUTs', () => {
       const cancel = await testkit.execute<DeployResultJson>('deploy:metadata:cancel', {
         args: `--job-id ${first.result.id}`,
         json: true,
-        exitCode: 0,
       });
       assert(cancel);
 
