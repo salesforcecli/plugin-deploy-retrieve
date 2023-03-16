@@ -103,6 +103,37 @@
     "alias": ["deploy:metadata:resume"]
   },
   {
+    "command": "project:deploy:start",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": [
+      "api-version",
+      "async",
+      "concise",
+      "coverage-formatters",
+      "dry-run",
+      "ignore-conflicts",
+      "ignore-errors",
+      "ignore-warnings",
+      "json",
+      "junit",
+      "manifest",
+      "metadata",
+      "metadata-dir",
+      "post-destructive-changes",
+      "pre-destructive-changes",
+      "purge-on-delete",
+      "results-dir",
+      "single-package",
+      "source-dir",
+      "target-org",
+      "test-level",
+      "tests",
+      "verbose",
+      "wait"
+    ],
+    "alias": ["deploy:metadata"]
+  },
+  {
     "command": "project:deploy:validate",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": [
