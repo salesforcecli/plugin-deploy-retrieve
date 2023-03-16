@@ -62,7 +62,8 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataCancel), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
-    const deployOpts = cache.get(jobId);
+    // cancel don't care about your tracking conflicts
+    const deployOpts = { ...cache.get(jobId), 'ignore-conflicts': true };
     // we may already know the job finished
     if (
       deployOpts.status &&
