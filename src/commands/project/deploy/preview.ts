@@ -4,21 +4,12 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as fs from 'fs';
-import * as path from 'path';
 import { Messages } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
-import { ForceIgnore, MetadataResolver, NodeFSTreeContainer, RegistryAccess } from '@salesforce/source-deploy-retrieve';
+import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
 import { buildComponentSet } from '../../../utils/deploy';
-import {
-  PreviewResult,
-  printTables,
-  compileResults,
-  getConflictFiles,
-  printIgnoredTable,
-  PreviewFile,
-} from '../../../utils/previewOutput';
+import { PreviewResult, printTables, compileResults, getConflictFiles } from '../../../utils/previewOutput';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.preview');
@@ -44,7 +35,6 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
     'only-ignored': Flags.boolean({
       char: 'i',
       summary: messages.getMessage('flags.only-ignored.summary'),
-      exclusive: ['manifest', 'metadata', 'ignore-conflicts'],
     }),
     manifest: Flags.file({
       char: 'x',
@@ -74,17 +64,10 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
     }),
   };
 
-  public forceIgnore!: ForceIgnore;
-
   public async run(): Promise<PreviewResult> {
     const { flags } = await this.parse(DeployMetadataPreview);
     const deploySpecified = [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
-    const defaultPackagePath = this.project.getDefaultPackage().path;
-    this.forceIgnore = ForceIgnore.findAndCreate(defaultPackagePath);
-
-    if (flags['only-ignored']) {
-      return this.calculateAndPrintForceIgnoredFiles({ sourceDir: flags['source-dir'], defaultPackagePath });
-    }
+    const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
 
     // we'll need STL both to check conflicts and to get the list of local changes if no flags are provided
     const stl =
@@ -97,65 +80,20 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
 
     const [componentSet, filesWithConflicts] = await Promise.all([
       buildComponentSet({ ...flags, 'target-org': flags['target-org'].getUsername() }, stl),
-      getConflictFiles(stl, flags['ignore-conflicts']),
+      getConflictFiles(stl, flags['ignore-conflicts'] || flags['only-ignored']),
     ]);
 
     const output = compileResults({
       componentSet,
       projectPath: this.project.getPath(),
       filesWithConflicts,
-      forceIgnore: this.forceIgnore,
+      forceIgnore,
       baseOperation: 'deploy',
     });
 
     if (!this.jsonEnabled()) {
-      printTables(output, 'deploy');
+      printTables(output, 'deploy', flags['only-ignored']);
     }
     return output;
-  }
-
-  private async calculateAndPrintForceIgnoredFiles(options: {
-    sourceDir?: string[];
-    defaultPackagePath: string;
-  }): Promise<PreviewResult> {
-    // the third parameter makes the resolver use the default ForceIgnore entries, which will allow us to .getComponentsFromPath of a .forceignored path
-    const mdr = new MetadataResolver(new RegistryAccess(), new NodeFSTreeContainer(), false);
-
-    const ignoredFiles: PreviewFile[] = (
-      await Promise.all((options.sourceDir ?? [options.defaultPackagePath]).map((sp) => this.statIgnored(sp.trim())))
-    )
-      .flat()
-      .map((entry) => {
-        try {
-          const component = mdr.getComponentsFromPath(path.resolve(entry))[0];
-          return {
-            projectRelativePath: entry,
-            fullName: component?.fullName,
-            type: component?.type.name,
-            ignored: true,
-            conflict: false,
-          };
-        } catch (e) {
-          // some file paths, such as aura/.eslintrc.json will cause issues when getComponentsFromPath(), so catch the error and continue without type information
-          return { projectRelativePath: entry, ignored: true, conflict: false } as PreviewFile;
-        }
-      });
-    if (!this.jsonEnabled()) printIgnoredTable(ignoredFiles, 'deploy');
-    return { ignored: ignoredFiles, conflicts: [], toDeploy: [], toDelete: [], toRetrieve: [] };
-  }
-
-  // Stat the filepath. Test if a file, recurse if a directory.
-  private async statIgnored(filepath: string): Promise<string[]> {
-    const stats = await fs.promises.stat(filepath);
-    if (stats.isDirectory()) {
-      return (await Promise.all(await this.findIgnored(filepath))).flat();
-    } else {
-      return this.forceIgnore.denies(filepath) ? [filepath] : [];
-    }
-  }
-
-  // Recursively search a directory for source files to test.
-  private async findIgnored(dir: string): Promise<Array<Promise<string[]>>> {
-    return (await fs.promises.readdir(dir)).map((filename) => this.statIgnored(path.join(dir, filename)));
   }
 }

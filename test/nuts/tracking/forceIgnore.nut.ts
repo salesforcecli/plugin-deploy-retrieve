@@ -25,9 +25,7 @@ let conn: Connection;
 
 Messages.importMessagesDirectory(__dirname);
 
-const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
-  'error.nothingToDeploy',
-]);
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 describe('forceignore changes', () => {
   before(async () => {
@@ -60,7 +58,7 @@ describe('forceignore changes', () => {
     await session?.clean();
   });
 
-  describe.only('local', () => {
+  describe('local', () => {
     it('will not push a file that was created, then ignored', async () => {
       // setup a forceIgnore with some file.  forceignore uses posix style paths
       const newForceIgnore = originalForceIgnore + '\n' + `${classdir}/IgnoreTest.cls*`;
