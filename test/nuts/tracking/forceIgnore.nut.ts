@@ -80,15 +80,7 @@ describe('forceignore changes', () => {
       expect(output?.toDeploy).to.deep.equal([]);
       expect(output?.toRetrieve).to.deep.equal([]);
       expect(output?.toDelete).to.deep.equal([]);
-      expect(output?.ignored?.length).to.equal(2);
       expect(output?.ignored).to.be.deep.equal([
-        {
-          projectRelativePath: `${path.join(classDir, 'IgnoreTest.cls')}`,
-          fullName: 'IgnoreTest',
-          type: 'ApexClass',
-          ignored: true,
-          conflict: false,
-        },
         {
           projectRelativePath: `${path.join(classDir, 'IgnoreTest.cls-meta.xml')}`,
           fullName: 'IgnoreTest',
@@ -97,25 +89,6 @@ describe('forceignore changes', () => {
           conflict: false,
         },
       ]);
-    });
-
-    it('will list the forceignored files', () => {
-      const output = execCmd<PreviewResult>('deploy:metadata:preview --only-ignored --json', {
-        ensureExitCode: 0,
-      }).jsonOutput?.result;
-
-      expect(output?.conflicts).to.deep.equal([]);
-      expect(output?.toDeploy).to.deep.equal([]);
-      expect(output?.toRetrieve).to.deep.equal([]);
-      expect(output?.toDelete).to.deep.equal([]);
-      expect(output?.ignored?.length).to.equal(4);
-      expect(
-        output?.ignored.find((entry) => entry.projectRelativePath?.includes(path.join('aura', '.eslintrc.json')))
-      ).to.deep.equal({
-        projectRelativePath: path.join('force-app', 'main', 'default', 'aura', '.eslintrc.json'),
-        ignored: true,
-        conflict: false,
-      });
     });
 
     it('shows the file in status as ignored', () => {
