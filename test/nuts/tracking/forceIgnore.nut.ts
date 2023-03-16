@@ -188,7 +188,7 @@ describe('forceignore changes', () => {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       expect(
-        response?.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored),
+        response?.ignored.some((c) => c.fullName === 'CreatedClass' && c.type === 'ApexClass' && c.ignored === true),
         JSON.stringify(response)
       ).to.equal(true);
     });
