@@ -49,6 +49,11 @@ export type DeployOptions = {
   concise?: boolean;
   'single-package'?: boolean;
   status?: RequestStatus;
+
+  'pre-destructive-changes'?: string;
+  'post-destructive-changes'?: string;
+
+  'purge-on-delete'?: boolean;
 };
 
 /** Manifest is expected.  You cannot pass metadata and source-dir array--use those to get a manifest */
@@ -90,6 +95,8 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
           manifest: {
             manifestPath: opts.manifest,
             directoryPaths: await getPackageDirs(),
+            destructiveChangesPre: opts['pre-destructive-changes'],
+            destructiveChangesPost: opts['post-destructive-changes'],
           },
         }
       : {}),
@@ -110,6 +117,7 @@ export async function executeDeploy(
     rollbackOnError: !opts['ignore-errors'] || false,
     runTests: opts.tests ?? [],
     testLevel: opts['test-level'],
+    purgeOnDelete: opts['purge-on-delete'] ?? false,
   };
 
   let deploy: MetadataApiDeploy | undefined;
