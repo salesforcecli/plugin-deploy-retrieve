@@ -1131,7 +1131,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.32.12", "@salesforce/core@^3.33.1", "@salesforce/core@^3.33.5", "@salesforce/core@^3.33.6", "@salesforce/core@^3.34.1":
+"@salesforce/core@^3.23.9", "@salesforce/core@^3.24.0", "@salesforce/core@^3.32.12", "@salesforce/core@^3.33.1", "@salesforce/core@^3.33.4", "@salesforce/core@^3.33.5", "@salesforce/core@^3.33.6", "@salesforce/core@^3.34.1":
   version "3.34.1"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.34.1.tgz#dd52254cc63143ebad58d53bb80c00a76b303868"
   integrity sha512-mhq7pBU3aTaXdBeheIfsBa3/TxHW0ccLhTZ4pMHawViO+tubXvcU7oa7yWCwI9sQP3S1ZsXwlUPWasbbBEXKHw==
@@ -1268,6 +1268,17 @@
     node-fetch "^3.3.0"
     sha256-file "^1.0.0"
     uuid "^8.3.2"
+
+"@salesforce/plugin-settings@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-settings/-/plugin-settings-1.4.2.tgz#e99be8b141c27431b379ee3f1f878453cc9cad19"
+  integrity sha512-uEgxHlblJOz68ETpnK+aQv9KwNpCN8D3YYOeCtyNC4R1zPa2spz7mz/565F8tuUmZgHePLD1e/vz6vS/9OeI+w==
+  dependencies:
+    "@oclif/core" "^2.3.0"
+    "@salesforce/core" "^3.33.4"
+    "@salesforce/sf-plugins-core" "^2.2.4"
+    fast-levenshtein "^3.0.0"
+    tslib "^2"
 
 "@salesforce/plugin-source@^2.5.4":
   version "2.5.5"
