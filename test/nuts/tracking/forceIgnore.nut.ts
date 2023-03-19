@@ -83,6 +83,7 @@ describe('forceignore changes', () => {
       expect(output?.ignored).to.be.deep.equal([
         {
           projectRelativePath: `${path.join(classDir, 'IgnoreTest.cls-meta.xml')}`,
+          path: path.resolve(path.join(classDir, 'IgnoreTest.cls-meta.xml')),
           fullName: 'IgnoreTest',
           type: 'ApexClass',
           ignored: true,
