@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { join, resolve } from 'path';
+import { join, resolve, sep } from 'path';
 import { ComponentSetBuilder, ComponentSetOptions, MetadataConverter } from '@salesforce/source-deploy-retrieve';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
@@ -22,9 +22,9 @@ describe('project convert source', () => {
 
   let buildComponentSetStub: sinon.SinonStub;
 
-  const defaultDir = join('my', 'default', 'paCKage');
+  const defaultDir = join('my', 'default', 'package');
   // the test is using fs that's in the os temp dir
-  const projectDir = `${join($$.localPathRetrieverSync($$.id), defaultDir)}/`;
+  const projectDir = `${join($$.localPathRetrieverSync($$.id), defaultDir)}${sep}`;
   const myApp = join('new', 'package', 'directory');
   const packageXml = 'package.xml';
 
