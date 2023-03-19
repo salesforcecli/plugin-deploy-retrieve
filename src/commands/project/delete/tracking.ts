@@ -25,7 +25,7 @@ export type DeleteTrackingResult = {
 
 export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
   public static readonly deprecateAliases = true;
-  public static aliases = ['force:source:beta:tracking:clear', 'force:source:tracking:clear'];
+  public static readonly aliases = ['force:source:beta:tracking:clear', 'force:source:tracking:clear'];
   public static readonly summary = messages.getMessage('deleteDescription');
   public static readonly description = messages.getMessage('deleteDescription');
   public static readonly requiresProject = true;
@@ -53,7 +53,7 @@ export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
         org: flags['target-org'],
       });
       clearedFiles = await Promise.all([sourceTracking.clearLocalTracking(), sourceTracking.clearRemoteTracking()]);
-      this.log('Cleared local tracking files.');
+      this.logSuccess('Cleared local tracking files.');
     }
     return { clearedFiles };
   }

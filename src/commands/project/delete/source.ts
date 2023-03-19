@@ -45,10 +45,10 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
 const xorFlags = ['metadata', 'source-path'];
 export class Source extends SfCommand<DeleteSourceJson> {
-  public static readonly summary = messages.getMessage('description');
+  public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
-  public static aliases = ['force:source:delete'];
+  public static readonly aliases = ['force:source:delete'];
   public static readonly deprecateAliases = true;
   public static readonly requiresProject = true;
   public static readonly flags = {
@@ -59,23 +59,23 @@ export class Source extends SfCommand<DeleteSourceJson> {
       aliases: ['checkonly'],
       deprecateAliases: true,
       char: 'c',
-      description: messages.getMessage('flags.check-only'),
-      summary: messages.getMessage('flagsLong.check-only'),
+      description: messages.getMessage('flagsLong.check-only'),
+      summary: messages.getMessage('flags.check-only'),
     }),
     wait: Flags.duration({
       unit: 'minutes',
       char: 'w',
       default: Duration.minutes(33),
       min: 1,
-      description: messages.getMessage('flags.wait'),
-      summary: messages.getMessage('flagsLong.wait'),
+      description: messages.getMessage('flagsLong.wait'),
+      summary: messages.getMessage('flags.wait'),
     }),
     'test-level': Flags.string({
       char: 'l',
       aliases: ['testlevel'],
       deprecateAliases: true,
-      description: messages.getMessage('flags.test-Level'),
-      summary: messages.getMessage('flagsLong.test-Level'),
+      description: messages.getMessage('flagsLong.test-Level'),
+      summary: messages.getMessage('flags.test-Level'),
       options: ['NoTestRun', 'RunLocalTests', 'RunAllTestsInOrg'],
       default: 'NoTestRun',
     }),
@@ -87,16 +87,16 @@ export class Source extends SfCommand<DeleteSourceJson> {
     }),
     metadata: arrayWithDeprecation({
       char: 'm',
-      description: messages.getMessage('flags.metadata'),
-      summary: messages.getMessage('flagsLong.metadata'),
+      description: messages.getMessage('flagsLong.metadata'),
+      summary: messages.getMessage('flags.metadata'),
       exactlyOne: xorFlags,
     }),
     'source-path': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
-      description: messages.getMessage('flags.source-path'),
-      summary: messages.getMessage('flagsLong.source-path'),
+      description: messages.getMessage('flagsLong.source-path'),
+      summary: messages.getMessage('flags.source-path'),
       exactlyOne: xorFlags,
     }),
     'track-source': Flags.boolean({

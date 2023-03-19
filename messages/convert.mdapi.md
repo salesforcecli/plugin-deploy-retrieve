@@ -1,6 +1,9 @@
-# description
+# summary
 
 convert metadata from the Metadata API format into the source format
+
+# description
+
 Converts metadata retrieved via Metadata API into the source format used in Salesforce DX projects.
 
 To use Salesforce CLI to work with components that you retrieved via Metadata API, first convert your files from the metadata format to the source format using "sfdx force:mdapi:convert".

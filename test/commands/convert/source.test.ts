@@ -9,42 +9,24 @@ import { join, resolve } from 'path';
 import { ComponentSetBuilder, ComponentSetOptions, MetadataConverter } from '@salesforce/source-deploy-retrieve';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
-import { fromStub, stubInterface, stubMethod } from '@salesforce/ts-sinon';
-import { Config } from '@oclif/core';
-import { SfProject } from '@salesforce/core';
+import { stubMethod } from '@salesforce/ts-sinon';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
+import * as oclifUtils from '@oclif/core/lib/util';
+import { SfProject } from '@salesforce/core';
 import { Source } from '../../../src/commands/project/convert/source';
 
 describe('project convert source', () => {
   const $$ = new TestContext();
   const testOrg = new MockTestOrgData();
-  const sandbox = $$.SANDBOX;
 
   let buildComponentSetStub: sinon.SinonStub;
 
-  const defaultDir = join('my', 'default', 'package');
+  const defaultDir = join('my', 'default', 'paCKage');
+  // the test is using fs that's in the os temp dir
+  const projectDir = `${join($$.localPathRetrieverSync($$.id), defaultDir)}/`;
   const myApp = join('new', 'package', 'directory');
   const packageXml = 'package.xml';
-  const oclifConfigStub = fromStub(stubInterface<Config>(sandbox));
-  let resolveProjectConfigStub: sinon.SinonStub;
-
-  class TestConvert extends Source {
-    public async runIt() {
-      await this.init();
-      return this.run();
-    }
-  }
-
-  const runConvertCmd = async (params: string[], options?: { sourceApiVersion?: string }) => {
-    const cmd = new TestConvert(params, oclifConfigStub);
-    cmd.project = SfProject.getInstance();
-    sandbox.stub(cmd.project, 'getDefaultPackage').returns({ name: '', path: defaultDir, fullPath: defaultDir });
-    sandbox.stub(cmd.project, 'getUniquePackageDirectories').returns([{ fullPath: defaultDir, path: '', name: '' }]);
-    sandbox.stub(cmd.project, 'getPackageDirectories').returns([{ fullPath: defaultDir, path: '', name: '' }]);
-    sandbox.stub(cmd.project, 'resolveProjectConfig').resolves({ sourceApiVersion: options?.sourceApiVersion });
-
-    return cmd.runIt();
-  };
 
   // Ensure correct ComponentSetBuilder options
   const ensureCreateComponentSetArgs = (overrides?: Partial<ComponentSetOptions>) => {
@@ -62,9 +44,21 @@ describe('project convert source', () => {
 
   beforeEach(async () => {
     await $$.stubAuths(testOrg);
-    resolveProjectConfigStub = sandbox.stub();
-    sandbox.stub(MetadataConverter.prototype, 'convert').resolves({ packagePath: 'temp' });
-    buildComponentSetStub = stubMethod(sandbox, ComponentSetBuilder, 'build').resolves({
+    // TODO: move this to TestSetup
+    // @ts-expect-error accessing a private property
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    SfProject.instances.clear();
+    stubSfCommandUx($$.SANDBOX);
+    // the 2 oclif flags should act as if the dir/file is there and ok
+    $$.SANDBOX.stub(oclifUtils, 'fileExists').callsFake((path: string) => Promise.resolve(path));
+    $$.SANDBOX.stub(oclifUtils, 'dirExists').callsFake((path: string) => Promise.resolve(path));
+    $$.setConfigStubContents('SfProjectJson', {
+      contents: {
+        packageDirectories: [{ path: defaultDir, default: true }],
+      },
+    });
+    $$.SANDBOX.stub(MetadataConverter.prototype, 'convert').resolves({ packagePath: 'temp' });
+    buildComponentSetStub = stubMethod($$.SANDBOX, ComponentSetBuilder, 'build').resolves({
       deploy: sinon.stub(),
       getPackageXml: () => packageXml,
     });
@@ -72,20 +66,26 @@ describe('project convert source', () => {
 
   afterEach(() => {
     $$.restore();
-    sandbox.restore();
   });
 
   it('should pass along sourcepath', async () => {
     const sourcepath = 'somepath';
-    const result = await runConvertCmd(['--sourcepath', sourcepath, '--json']);
+    const result = await Source.run(['--sourcepath', sourcepath, '--json']);
+    // const result = await runConvertCmd(['--sourcepath', sourcepath, '--json']);
     expect(result).to.deep.equal({ location: resolve('temp') });
     ensureCreateComponentSetArgs({ sourcepath: [sourcepath] });
   });
 
   it('should pass along sourceApiVersion', async () => {
     const sourceApiVersion = '50.0';
-    resolveProjectConfigStub.resolves({ sourceApiVersion });
-    const result = await runConvertCmd(['--json'], { sourceApiVersion });
+    $$.setConfigStubContents('SfProjectJson', {
+      contents: {
+        packageDirectories: [{ path: defaultDir, default: true }],
+        sourceApiVersion,
+      },
+    });
+
+    const result = await Source.run(['--json']);
     expect(result).to.deep.equal({ location: resolve('temp') });
     ensureCreateComponentSetArgs({
       sourcepath: [defaultDir],
@@ -94,66 +94,66 @@ describe('project convert source', () => {
   });
 
   it('should call default package dir if no args', async () => {
-    const result = await runConvertCmd(['--json']);
+    const result = await Source.run(['--json']);
     expect(result).to.deep.equal({ location: resolve('temp') });
     ensureCreateComponentSetArgs({ sourcepath: [defaultDir] });
   });
 
   it('should call with metadata', async () => {
     const metadata = 'ApexClass';
-    const result = await runConvertCmd(['--metadata', metadata, '--json']);
+    const result = await Source.run(['--metadata', metadata, '--json']);
     expect(result).to.deep.equal({ location: resolve('temp') });
     ensureCreateComponentSetArgs({
       metadata: {
         metadataEntries: [metadata],
-        directoryPaths: [defaultDir],
+        directoryPaths: [projectDir],
       },
     });
   });
 
   it('should call with package.xml', async () => {
-    const result = await runConvertCmd(['--manifest', packageXml, '--json']);
+    const result = await Source.run(['--manifest', packageXml, '--json']);
     expect(result).to.deep.equal({ location: resolve('temp') });
     ensureCreateComponentSetArgs({
       manifest: {
         manifestPath: packageXml,
-        directoryPaths: [defaultDir],
+        directoryPaths: [projectDir],
       },
     });
   });
 
   it('should call root dir with rootdir flag', async () => {
-    const result = await runConvertCmd(['--rootdir', myApp, '--json']);
+    const result = await Source.run(['--rootdir', myApp, '--json']);
     expect(result).to.deep.equal({ location: resolve('temp') });
     ensureCreateComponentSetArgs({ sourcepath: [myApp] });
   });
 
   describe('rootdir should be overwritten by any other flag', () => {
     it('sourcepath', async () => {
-      const result = await runConvertCmd(['--rootdir', myApp, '--sourcepath', defaultDir, '--json']);
+      const result = await Source.run(['--rootdir', myApp, '--sourcepath', defaultDir, '--json']);
       expect(result).to.deep.equal({ location: resolve('temp') });
       ensureCreateComponentSetArgs({ sourcepath: [defaultDir] });
     });
 
     it('metadata', async () => {
       const metadata = 'ApexClass,CustomObject';
-      const result = await runConvertCmd(['--rootdir', myApp, '--metadata', metadata, '--json']);
+      const result = await Source.run(['--rootdir', myApp, '--metadata', metadata, '--json']);
       expect(result).to.deep.equal({ location: resolve('temp') });
       ensureCreateComponentSetArgs({
         metadata: {
           metadataEntries: metadata.split(','),
-          directoryPaths: [defaultDir],
+          directoryPaths: [projectDir],
         },
       });
     });
 
     it('package', async () => {
-      const result = await runConvertCmd(['--rootdir', myApp, '--manifest', packageXml, '--json']);
+      const result = await Source.run(['--rootdir', myApp, '--manifest', packageXml, '--json']);
       expect(result).to.deep.equal({ location: resolve('temp') });
       ensureCreateComponentSetArgs({
         manifest: {
           manifestPath: packageXml,
-          directoryPaths: [defaultDir],
+          directoryPaths: [projectDir],
         },
       });
     });

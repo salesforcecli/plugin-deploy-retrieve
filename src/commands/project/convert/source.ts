@@ -32,7 +32,7 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 export class Source extends SfCommand<ConvertResultJson> {
-  public static readonly summary = messages.getMessage('description');
+  public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
@@ -46,6 +46,7 @@ export class Source extends SfCommand<ConvertResultJson> {
       deprecateAliases: true,
       char: 'r',
       summary: messages.getMessage('flags.root-dir'),
+      exists: true,
     }),
     'output-dir': Flags.directory({
       aliases: ['outputdir'],
@@ -60,10 +61,11 @@ export class Source extends SfCommand<ConvertResultJson> {
       deprecateAliases: true,
       summary: messages.getMessage('flags.package-name'),
     }),
-    manifest: Flags.string({
+    manifest: Flags.file({
       char: 'x',
       description: messages.getMessage('flags.manifest'),
       summary: messages.getMessage('flagsLong.manifest'),
+      exists: true,
     }),
     'source-path': arrayWithDeprecation({
       char: 'p',

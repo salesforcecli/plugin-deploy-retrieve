@@ -15,7 +15,6 @@ import {
   orgApiVersionFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
-import { Interfaces } from '@oclif/core';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 
 Messages.importMessagesDirectory(__dirname);
@@ -98,76 +97,61 @@ export class Create extends SfCommand<CreateCommandResult> {
       summary: messages.getMessage('flags.output-dir'),
     }),
   };
-  private manifestName!: string;
-  private outputDir!: string | undefined;
-  private outputPath!: string;
-  private includePackages!: string[] | undefined;
-  private flags!: Interfaces.InferredFlags<typeof Create.flags>;
 
   public async run(): Promise<CreateCommandResult> {
-    this.flags = (await this.parse(Create)).flags;
-    await this.createManifest();
-    return this.formatResult();
-  }
-
-  protected async createManifest(): Promise<void> {
+    const { flags } = await this.parse(Create);
     // convert the manifesttype into one of the "official" manifest names
-    // if no manifesttype flag passed, use the manifestname flag
+    // if no manifesttype flag passed, use the manifestname?flag
     // if no manifestname flag, default to 'package.xml'
-    const manifestTypeFromFlag = this.flags['manifest-type'] as keyof typeof manifestTypes;
-    this.manifestName =
+    const manifestTypeFromFlag = flags['manifest-type'] as keyof typeof manifestTypes;
+    const manifestName = ensureFileEnding(
       typeof manifestTypeFromFlag === 'string'
         ? manifestTypes[manifestTypeFromFlag]
-        : undefined ?? this.flags['manifest-name'] ?? 'package.xml';
-    this.outputDir = this.flags['output-dir'];
-    this.includePackages = this.flags['include-packages'];
-
-    let exclude: string[] = [];
-    if (this.includePackages) {
-      Object.keys(packageTypes).forEach(
-        (type) => (exclude = !this.includePackages?.includes(type) ? exclude.concat(packageTypes[type]) : exclude)
-      );
-    } else {
-      exclude = Object.values(packageTypes).flat();
-    }
+        : flags['manifest-name'] ?? 'package.xml',
+      '.xml'
+    );
 
     const componentSet = await ComponentSetBuilder.build({
-      apiversion: this.flags['api-version'] ?? (await getSourceApiVersion()),
-      sourcepath: this.flags['source-path'],
-      metadata: this.flags.metadata
+      apiversion: flags['api-version'] ?? (await getSourceApiVersion()),
+      sourcepath: flags['source-path'],
+      metadata: flags.metadata
         ? {
-            metadataEntries: this.flags.metadata,
+            metadataEntries: flags.metadata,
             directoryPaths: await getPackageDirs(),
           }
         : undefined,
-      org: this.flags['from-org']
+      org: flags['from-org']
         ? {
-            username: this.flags['from-org'].getUsername() as string,
-            exclude,
+            username: flags['from-org'].getUsername() as string,
+            exclude: exclude(flags['include-packages']),
           }
         : undefined,
     });
 
-    // add the .xml suffix if the user just provided a file name
-    this.manifestName = this.manifestName.endsWith('.xml') ? this.manifestName : `${this.manifestName}.xml`;
-
-    if (this.outputDir) {
-      await fs.promises.mkdir(this.outputDir, { recursive: true });
-      this.outputPath = join(this.outputDir, this.manifestName);
-    } else {
-      this.outputPath = this.manifestName;
+    const outputDir = flags['output-dir'];
+    if (outputDir) {
+      await fs.promises.mkdir(outputDir, { recursive: true });
     }
 
-    return fs.promises.writeFile(this.outputPath, await componentSet.getPackageXml());
-  }
+    const outputPath = outputDir ? join(outputDir, manifestName) : manifestName;
+    await fs.promises.writeFile(outputPath, await componentSet.getPackageXml());
 
-  protected formatResult(): CreateCommandResult {
-    if (this.outputDir) {
-      this.log(messages.getMessage('successOutputDir', [this.manifestName, this.outputDir]));
-    } else {
-      this.log(messages.getMessage('success', [this.manifestName]));
-    }
+    this.log(
+      outputDir
+        ? messages.getMessage('successOutputDir', [manifestName, outputDir])
+        : messages.getMessage('success', [manifestName])
+    );
 
-    return { path: this.outputPath, name: this.manifestName };
+    return { path: outputPath, name: manifestName };
   }
 }
+
+const ensureFileEnding = (fileName: string, fileEnding: string): string =>
+  fileName.endsWith(fileEnding) ? fileName : `${fileName}${fileEnding}`;
+
+const exclude = (includedPackages: string[] | undefined): string[] =>
+  includedPackages
+    ? Object.entries(packageTypes)
+        .filter(([type]) => !includedPackages.includes(type))
+        .flatMap(([, types]) => types)
+    : Object.values(packageTypes).flat();

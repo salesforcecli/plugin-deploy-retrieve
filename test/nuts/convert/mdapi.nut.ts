@@ -6,7 +6,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { ComponentSet, SourceComponent } from '@salesforce/source-deploy-retrieve';
 import { ConvertMdapiJson } from '../../../src/utils/types';
@@ -31,7 +31,7 @@ describe('project convert mdapi NUTs', () => {
       project: {
         gitClone: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
       },
-      devhubAuthStrategy: 'AUTO',
+      devhubAuthStrategy: 'NONE',
     });
   });
 
@@ -46,6 +46,30 @@ describe('project convert mdapi NUTs', () => {
     before(() => {
       convertedToMdPath = path.join(session.dir, 'convertedToMdPath_dh');
       execCmd(`project:convert:source --json -d ${convertedToMdPath}`, { ensureExitCode: 0 });
+    });
+    describe('failures', () => {
+      it('should error when outputdir is not a directory', () => {
+        execCmd('project:convert:mdapi --output-dir package.json', { ensureExitCode: 1 });
+      });
+      it('should error when metadatapath does not exist', () => {
+        execCmd('project:convert:mdapi --metadata-path not/a/real/path -d mdapiOut', { ensureExitCode: 1 });
+      });
+      it('should throw when no metadata to convert converted (json)', async () => {
+        const emptyManifest = 'emptyManifest.xml';
+        await fs.promises.writeFile(
+          path.join(session.project.dir, emptyManifest),
+          '<?xml version="1.0" encoding="UTF-8"?> <Package xmlns="http://soap.sforce.com/2006/04/metadata"><version>57.0</version></Package>'
+        );
+        // write an empty manifest
+        const results = execCmd(
+          `project:convert:mdapi -r ${convertedToMdPath} --output-dir output --manifest ${emptyManifest} --json`,
+          {
+            ensureExitCode: 1,
+          }
+        ).jsonOutput;
+        assert(results);
+        expect(results.message).to.deep.include('No results');
+      });
     });
 
     it('should convert the dreamhouse project', () => {

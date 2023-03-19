@@ -26,7 +26,7 @@ export type ResetTrackingResult = {
 
 export class ResetTracking extends SfCommand<ResetTrackingResult> {
   public static readonly deprecateAliases = true;
-  public static aliases = ['force:source:beta:tracking:reset', 'force:source:tracking:reset'];
+  public static readonly aliases = ['force:source:beta:tracking:reset', 'force:source:tracking:reset'];
   public static readonly summary = messages.getMessage('resetDescription');
   public static readonly description = messages.getMessage('resetDescription');
   public static readonly requiresProject = true;
@@ -64,7 +64,7 @@ export class ResetTracking extends SfCommand<ResetTrackingResult> {
         sourceTracking.resetLocalTracking(),
       ]);
 
-      this.log(`Reset local tracking files${flags.revision ? ` to revision ${flags.revision}` : ''}.`);
+      this.logSuccess(`Reset local tracking files${flags.revision ? ` to revision ${flags.revision}` : ''}.`);
 
       return {
         sourceMembersSynced: remoteResets,

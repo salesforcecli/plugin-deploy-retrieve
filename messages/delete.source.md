@@ -1,3 +1,7 @@
+# summary
+
+delete source from your project and from a non-source-tracked org.
+
 # description
 
 delete source from your project and from a non-source-tracked org
