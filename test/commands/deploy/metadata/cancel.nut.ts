@@ -41,9 +41,12 @@ describe('deploy metadata cancel NUTs', () => {
      * windows:  the deploy finishes before the cancel is issued and the error condition happens
      */
     it('should cancel most recently started deployment', () => {
-      const first = execCmd<DeployResultJson>('deploy:metadata --source-dir force-app --async --json', {
-        ensureExitCode: 0,
-      }).jsonOutput?.result;
+      const first = execCmd<DeployResultJson>(
+        'deploy:metadata --source-dir force-app --async --ignore-conflicts --json',
+        {
+          ensureExitCode: 0,
+        }
+      ).jsonOutput?.result;
       assert(first);
       assert(first.id);
 
@@ -65,9 +68,12 @@ describe('deploy metadata cancel NUTs', () => {
 
   describe('--job-id', () => {
     it('should cancel the provided job id', () => {
-      const first = execCmd<DeployResultJson>('deploy:metadata --source-dir force-app --async --json', {
-        ensureExitCode: 0,
-      }).jsonOutput?.result;
+      const first = execCmd<DeployResultJson>(
+        'deploy:metadata --source-dir force-app --async --ignore-conflicts --json',
+        {
+          ensureExitCode: 0,
+        }
+      ).jsonOutput?.result;
       assert(first);
       assert(first.id);
 
