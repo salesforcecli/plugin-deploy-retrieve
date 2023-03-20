@@ -51,13 +51,14 @@ describe('deploy metadata cancel NUTs', () => {
       expect(cacheBefore).to.have.property(first.id);
 
       const cancel = execCmd<DeployResultJson>('deploy:metadata:cancel --use-most-recent --json');
-
-      if (cancel.jsonOutput?.status === 0) {
-        assert(cancel.jsonOutput?.result);
+      assert(cancel.jsonOutput);
+      if (cancel.jsonOutput.status === 0) {
+        assert(cancel.jsonOutput.result);
         assertSuccessfulCancel(session.project.dir, first, cancel.jsonOutput.result);
       } else {
         // the deploy likely already finished
-        expect(cancel.jsonError?.name).to.equal('CannotCancelDeployError');
+        expect(cancel.jsonOutput.exitCode).to.equal(1);
+        expect(cancel.jsonOutput.name).to.equal('CannotCancelDeployError');
       }
     });
   });
@@ -74,13 +75,15 @@ describe('deploy metadata cancel NUTs', () => {
       expect(cacheBefore).to.have.property(first.id);
 
       const cancel = execCmd<DeployResultJson>(`deploy:metadata:cancel --job-id ${first.id} --json`);
+      assert(cancel.jsonOutput);
 
-      if (cancel.jsonOutput?.status === 0) {
-        assert(cancel.jsonOutput?.result);
+      if (cancel.jsonOutput.status === 0) {
+        assert(cancel.jsonOutput.result);
         assertSuccessfulCancel(session.project.dir, first, cancel.jsonOutput.result);
       } else {
         // the deploy likely already finished
-        expect(cancel.jsonError?.name).to.equal('CannotCancelDeployError');
+        expect(cancel.jsonOutput.exitCode).to.equal(1);
+        expect(cancel.jsonOutput.name).to.equal('CannotCancelDeployError');
       }
     });
   });
