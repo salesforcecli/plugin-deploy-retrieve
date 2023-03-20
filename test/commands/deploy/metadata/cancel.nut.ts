@@ -8,7 +8,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { strict as assert } from 'node:assert';
-import { SourceTestkit } from '@salesforce/source-testkit';
+import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { DeployResultJson } from '../../../../src/utils/types';
@@ -20,17 +20,18 @@ function readDeployCache(projectDir: string): Record<string, CachedOptions> {
 }
 
 describe('deploy metadata cancel NUTs', () => {
-  let testkit: SourceTestkit;
+  let session: TestSession;
 
   before(async () => {
-    testkit = await SourceTestkit.create({
-      repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
-      nut: __filename,
+    session = await TestSession.create({
+      project: { gitClone: 'https://github.com/trailheadapps/dreamhouse-lwc' },
+      scratchOrgs: [{ alias: 'test', setDefault: true, config: path.join('config', 'project-scratch-def.json') }],
+      devhubAuthStrategy: 'AUTO',
     });
   });
 
   after(async () => {
-    await testkit?.clean();
+    await session?.clean();
   });
 
   describe('--use-most-recent', () => {
@@ -39,70 +40,58 @@ describe('deploy metadata cancel NUTs', () => {
      * linux:  the cancel reaches the server before the deploy finishes and cancel happens
      * windows:  the deploy finishes before the cancel is issued and the error condition happens
      */
-    it('should cancel most recently started deployment', async () => {
-      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
-        args: '--source-dir force-app --async',
-        json: true,
-        exitCode: 0,
-      });
+    it('should cancel most recently started deployment', () => {
+      const first = execCmd<DeployResultJson>('deploy:metadata --source-dir force-app --async --json', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
       assert(first);
-      assert(first.result.id);
+      assert(first.id);
 
-      const cacheBefore = readDeployCache(testkit.projectDir);
-      expect(cacheBefore).to.have.property(first.result.id);
+      const cacheBefore = readDeployCache(session.project.dir);
+      expect(cacheBefore).to.have.property(first.id);
 
-      const cancel = await testkit.execute<DeployResultJson>('deploy:metadata:cancel', {
-        args: '--use-most-recent',
-        json: true,
-      });
+      const cancel = execCmd<DeployResultJson>('deploy:metadata:cancel --use-most-recent --json');
 
-      if (cancel?.status === 0) {
-        assertSuccessfulCancel(testkit, first.result, cancel.result);
+      if (cancel.jsonOutput?.status === 0) {
+        assert(cancel.jsonOutput?.result);
+        assertSuccessfulCancel(session.project.dir, first, cancel.jsonOutput.result);
       } else {
         // the deploy likely already finished
-        expect(cancel?.status).to.equal(1);
-        expect(cancel?.name).to.equal('CannotCancelDeployError');
+        expect(cancel.jsonError?.name).to.equal('CannotCancelDeployError');
       }
     });
   });
 
   describe('--job-id', () => {
-    it('should cancel the provided job id', async () => {
-      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
-        // ignore conflicts so that if the first deploy failed to cancel, we don't get errors from conflicts
-        args: '--source-dir force-app --async --ignore-conflicts',
-        json: true,
-        exitCode: 0,
-      });
+    it('should cancel the provided job id', () => {
+      const first = execCmd<DeployResultJson>('deploy:metadata --source-dir force-app --async --json', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
       assert(first);
-      assert(first.result.id);
+      assert(first.id);
 
-      const cacheBefore = readDeployCache(testkit.projectDir);
-      expect(cacheBefore).to.have.property(first.result.id);
+      const cacheBefore = readDeployCache(session.project.dir);
+      expect(cacheBefore).to.have.property(first.id);
 
-      const cancel = await testkit.execute<DeployResultJson>('deploy:metadata:cancel', {
-        args: `--job-id ${first.result.id}`,
-        json: true,
-      });
-      assert(cancel);
+      const cancel = execCmd<DeployResultJson>(`deploy:metadata:cancel --job-id ${first.id} --json`);
 
-      if (cancel.status === 0) {
-        assertSuccessfulCancel(testkit, first.result, cancel.result);
+      if (cancel.jsonOutput?.status === 0) {
+        assert(cancel.jsonOutput?.result);
+        assertSuccessfulCancel(session.project.dir, first, cancel.jsonOutput.result);
       } else {
         // the deploy likely already finished
-        expect(cancel?.status).to.equal(1);
-        expect(cancel?.name).to.equal('CannotCancelDeployError');
+        expect(cancel.jsonError?.name).to.equal('CannotCancelDeployError');
       }
     });
   });
 });
 
-const assertSuccessfulCancel = (testkit: SourceTestkit, first: DeployResultJson, cancel: DeployResultJson) => {
+const assertSuccessfulCancel = (dir: string, first: DeployResultJson, cancel: DeployResultJson) => {
   expect(cancel.status).to.equal('Canceled');
   expect(cancel.canceledBy).to.not.be.undefined;
   expect(cancel.canceledByName).to.not.be.undefined;
   expect(cancel.success).to.be.false;
-  const cacheAfter = readDeployCache(testkit.projectDir);
+  const cacheAfter = readDeployCache(dir);
   assert(first.id);
   expect(cacheAfter).to.have.property(first.id);
   expect(cacheAfter[first.id]).have.property('status');
