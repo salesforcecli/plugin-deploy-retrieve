@@ -11,11 +11,7 @@ import { Messages } from '@salesforce/core';
 import { PathInfo, TestLevel } from './types';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.load('@salesforce/plugin-deploy-retrieve', 'validation', [
-  'error.InvalidFlagPath',
-  'error.ExpectedDirectory',
-  'error.ExpectedFileOrDirToExist',
-]);
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'validation');
 
 const parsePathInfo = async (input: string, opts: { exists?: boolean }): Promise<PathInfo> => {
   if (opts.exists && !fs.existsSync(input)) {

@@ -56,6 +56,18 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 Login username or alias for the target org.
 
+# flags.pre-destructive-changes
+
+file path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy
+
+# flags.post-destructive-changes
+
+file path for a manifest (destructiveChangesPost.xml) of components to delete after the deploy
+
+# flags.purge-on-delete
+
+specify that deleted components in the destructive changes manifest file are immediately eligible for deletion rather than being stored in the Recycle Bin
+
 # flags.target-org.description
 
 Overrides your default org.
@@ -210,3 +222,19 @@ No local changes to deploy.
 # error.nothingToDeploy.Actions
 
 - To see conflicts and ignored files, run "sf project deploy preview" with any of the manifest, directory, or metadata flags.
+
+# flags.junit
+
+output JUnit test results
+
+# flags.coverage-formatters
+
+format of the code coverage results
+
+# flags.results-dir
+
+output directory for code coverage and JUnit results; defaults to the deploy ID
+
+# asyncCoverageJunitWarning
+
+You requested an async deploy with code coverage or JUnit results. The reports will be available when the deploy completes.

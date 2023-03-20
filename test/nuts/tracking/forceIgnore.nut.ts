@@ -25,9 +25,7 @@ let conn: Connection;
 
 Messages.importMessagesDirectory(__dirname);
 
-const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
-  'error.nothingToDeploy',
-]);
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 describe('forceignore changes', () => {
   before(async () => {
@@ -70,6 +68,28 @@ describe('forceignore changes', () => {
         ensureExitCode: 1,
       }).jsonOutput;
       expect(output?.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
+    });
+
+    it('will list the forceignored files in a certain path', () => {
+      const classDir = path.join('force-app', 'main', 'default', 'classes');
+      const output = execCmd<PreviewResult>(`deploy:metadata:preview --only-ignored --source-dir ${classdir} --json`, {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+
+      expect(output?.conflicts).to.deep.equal([]);
+      expect(output?.toDeploy).to.deep.equal([]);
+      expect(output?.toRetrieve).to.deep.equal([]);
+      expect(output?.toDelete).to.deep.equal([]);
+      expect(output?.ignored).to.be.deep.equal([
+        {
+          projectRelativePath: `${path.join(classDir, 'IgnoreTest.cls-meta.xml')}`,
+          path: path.resolve(path.join(classDir, 'IgnoreTest.cls-meta.xml')),
+          fullName: 'IgnoreTest',
+          type: 'ApexClass',
+          ignored: true,
+          conflict: false,
+        },
+      ]);
     });
 
     it('shows the file in status as ignored', () => {

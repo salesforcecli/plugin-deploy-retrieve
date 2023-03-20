@@ -60,3 +60,15 @@ Show concise output of the deploy operation result.
 # error.DeployNotResumable
 
 Job ID %s is not resumable with status %s.
+
+# flags.junit
+
+output JUnit test results
+
+# flags.coverage-formatters
+
+format of the code coverage results
+
+# flags.results-dir
+
+output directory for code coverage and JUnit results; defaults to the deploy ID

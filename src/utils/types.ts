@@ -16,6 +16,9 @@ import {
   FileResponseSuccess,
 } from '@salesforce/source-deploy-retrieve';
 import { isObject } from '@salesforce/ts-types';
+import { DefaultReportOptions, CoverageReporterOptions } from '@salesforce/apex-node';
+
+export const reportsFormatters = Object.keys(DefaultReportOptions);
 
 export enum TestLevel {
   NoTestRun = 'NoTestRun',
@@ -40,6 +43,44 @@ export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'stat
   status: RequestStatus | 'Queued';
   files: FileResponse[];
 };
+
+type ConvertEntry = {
+  fullName: string;
+  type: string;
+  filePath: string;
+  state: 'Add';
+};
+
+export type ConvertMdapiJson = ConvertEntry[];
+
+export type ConvertResultJson = {
+  location: string;
+};
+
+export interface DeleteFormatterOptions {
+  verbose?: boolean;
+  quiet?: boolean;
+  waitTime?: number;
+  concise?: boolean;
+  username?: string;
+  coverageOptions?: CoverageReporterOptions;
+  junitTestResults?: boolean;
+  resultsDir?: string;
+  testsRan?: boolean;
+}
+
+export type DeleteSourceJson = {
+  deletedSource?: FileResponse[];
+  deployedSource: FileResponse[];
+  outboundFiles: string[];
+  deploys?: MetadataApiDeployStatus[];
+  deletes?: MetadataApiDeployStatus[];
+  replacements?: Record<string, string[]>;
+  coverage?: CoverageResultsFileInfo;
+  junit?: string;
+} & MetadataApiDeployStatus;
+
+export type CoverageResultsFileInfo = Record<keyof Partial<typeof DefaultReportOptions>, string>;
 
 export type DeployResultJson =
   | (MetadataApiDeployStatus & { files: FileResponse[] } & { replacements?: Record<string, string[]> })

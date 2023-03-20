@@ -17,6 +17,7 @@ import {
   NamedPackageDir,
   OrgAuthorization,
   OrgConfigProperties,
+  Org,
 } from '@salesforce/core';
 import { Deployable, Deployer, DeployerResult, generateTableChoices } from '@salesforce/sf-plugins-core';
 
@@ -141,6 +142,7 @@ export class MetadataDeployer extends Deployer {
       'test-level': this.testLevel,
       verbose: false,
       concise: false,
+      'target-org': await Org.create({ aliasOrUsername: this.username }),
     });
     formatter.display();
     const deployerResult: DeployerResult = {

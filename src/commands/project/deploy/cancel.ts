@@ -8,6 +8,7 @@
 import { Messages } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
+import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { cancelDeploy, cancelDeployAsync } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { AsyncDeployCancelResultFormatter, DeployCancelResultFormatter } from '../../../utils/output';
@@ -61,7 +62,17 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataCancel), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
-    const deployOpts = cache.get(jobId);
+    // cancel don't care about your tracking conflicts
+    const deployOpts = { ...cache.get(jobId), 'ignore-conflicts': true };
+    // we may already know the job finished
+    if (
+      deployOpts.status &&
+      [RequestStatus.Canceled, RequestStatus.Failed, RequestStatus.Succeeded, RequestStatus.SucceededPartial].includes(
+        deployOpts.status
+      )
+    ) {
+      messages.createError('error.CannotCancelDeployPre', [jobId, deployOpts.status]);
+    }
 
     if (flags.async) {
       const asyncResult = await cancelDeployAsync({ 'target-org': deployOpts['target-org'] }, jobId);
