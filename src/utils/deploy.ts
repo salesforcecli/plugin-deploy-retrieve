@@ -25,15 +25,9 @@ import { DeployCache } from './deployCache';
 import { writeManifest } from './manifestCache';
 
 Messages.importMessagesDirectory(__dirname);
-export const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache', [
-  'error.NoRecentJobId',
-  'error.InvalidJobId',
-]);
+export const cacheMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
 
-const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
-  'error.nothingToDeploy',
-  'error.nothingToDeploy.Actions',
-]);
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 export type DeployOptions = {
   api: API;
@@ -55,6 +49,11 @@ export type DeployOptions = {
   concise?: boolean;
   'single-package'?: boolean;
   status?: RequestStatus;
+
+  'pre-destructive-changes'?: string;
+  'post-destructive-changes'?: string;
+
+  'purge-on-delete'?: boolean;
 };
 
 /** Manifest is expected.  You cannot pass metadata and source-dir array--use those to get a manifest */
@@ -63,8 +62,7 @@ export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-di
 } & Partial<Pick<DeployOptions, 'manifest'>>;
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
-  if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
-  return true;
+  return !(testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0);
 }
 
 export async function resolveApi(existingConfigAggregator?: ConfigAggregator): Promise<API> {
@@ -97,6 +95,8 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
           manifest: {
             manifestPath: opts.manifest,
             directoryPaths: await getPackageDirs(),
+            destructiveChangesPre: opts['pre-destructive-changes'],
+            destructiveChangesPost: opts['post-destructive-changes'],
           },
         }
       : {}),
@@ -117,6 +117,7 @@ export async function executeDeploy(
     rollbackOnError: !opts['ignore-errors'] || false,
     runTests: opts.tests ?? [],
     testLevel: opts['test-level'],
+    purgeOnDelete: opts['purge-on-delete'] ?? false,
   };
 
   let deploy: MetadataApiDeploy | undefined;

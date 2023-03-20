@@ -32,6 +32,10 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       description: messages.getMessage('flags.ignore-conflicts.description'),
       default: false,
     }),
+    'only-ignored': Flags.boolean({
+      char: 'i',
+      summary: messages.getMessage('flags.only-ignored.summary'),
+    }),
     manifest: Flags.file({
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),
@@ -63,6 +67,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
   public async run(): Promise<PreviewResult> {
     const { flags } = await this.parse(DeployMetadataPreview);
     const deploySpecified = [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
+    const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
 
     // we'll need STL both to check conflicts and to get the list of local changes if no flags are provided
     const stl =
@@ -73,11 +78,9 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
             project: this.project,
           });
 
-    const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
-
     const [componentSet, filesWithConflicts] = await Promise.all([
       buildComponentSet({ ...flags, 'target-org': flags['target-org'].getUsername() }, stl),
-      getConflictFiles(stl, flags['ignore-conflicts']),
+      getConflictFiles(stl, flags['ignore-conflicts'] || flags['only-ignored']),
     ]);
 
     const output = compileResults({
@@ -89,7 +92,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
     });
 
     if (!this.jsonEnabled()) {
-      printTables(output, 'deploy');
+      printTables(output, 'deploy', flags['only-ignored']);
     }
     return output;
   }

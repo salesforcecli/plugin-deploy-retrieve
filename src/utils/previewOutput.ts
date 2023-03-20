@@ -24,18 +24,7 @@ import { SourceTracking } from '@salesforce/source-tracking';
 import { isSourceComponent } from './types';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.load('@salesforce/plugin-deploy-retrieve', 'previewMessages', [
-  'conflicts.header',
-  'conflicts.none',
-  'ignored.header',
-  'ignored.none',
-  'deploy.none',
-  'deploy.header',
-  'delete.header',
-  'delete.none',
-  'retrieve.header',
-  'retrieve.none',
-]);
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'previewMessages');
 
 type BaseOperation = 'deploy' | 'retrieve';
 
@@ -243,7 +232,7 @@ const printConflictsTable = (files: PreviewFile[]): void => {
   }
 };
 
-const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
+export const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
   ux.log();
   if (files.length === 0) {
     ux.log(dim(messages.getMessage('ignored.none')));
@@ -253,13 +242,15 @@ const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): 
   }
 };
 
-export const printTables = (result: PreviewResult, baseOperation: BaseOperation): void => {
-  printConflictsTable(result.conflicts);
-  printDeleteTable(result.toDelete);
-  if (baseOperation === 'deploy') {
-    printDeployTable(result.toDeploy);
-  } else if (baseOperation === 'retrieve') {
-    printRetrieveTable(result.toRetrieve);
+export const printTables = (result: PreviewResult, baseOperation: BaseOperation, onlyIgnored = false): void => {
+  if (!onlyIgnored) {
+    printConflictsTable(result.conflicts);
+    printDeleteTable(result.toDelete);
+    if (baseOperation === 'deploy') {
+      printDeployTable(result.toDeploy);
+    } else if (baseOperation === 'retrieve') {
+      printRetrieveTable(result.toRetrieve);
+    }
   }
   printIgnoredTable(result.ignored, baseOperation);
 };
