@@ -25,7 +25,6 @@ describe('project manifest create', () => {
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
         {
-          executable: 'sfdx',
           config: join('config', 'project-scratch-def.json'),
           alias: orgAlias,
           setDefault: true,
