@@ -10,4 +10,5 @@ module.exports = {
     // allow deleting object properties via rest operator
     '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
   },
+  ignorePatterns: ['test/nuts/specialTypes/*Project/**'],
 };
