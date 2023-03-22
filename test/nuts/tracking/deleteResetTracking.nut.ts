@@ -29,7 +29,7 @@ const getRevisionsAsArray = async (): Promise<MemberRevision[]> => {
   const revisionFile = JSON.parse(
     await fs.promises.readFile(path.join(trackingFileFolder, 'maxRevision.json'), 'utf8')
   ) as { sourceMembers: { [key: string]: MemberRevision } };
-  return Reflect.ownKeys(revisionFile.sourceMembers).map((key) => revisionFile.sourceMembers[key as string]);
+  return Object.values(revisionFile.sourceMembers);
 };
 
 describe('reset and clear tracking', () => {

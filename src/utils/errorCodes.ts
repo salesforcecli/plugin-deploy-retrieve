@@ -21,10 +21,17 @@ export const DEPLOY_STATUS_CODES = new Map<RequestStatus, number>([
   [RequestStatus.Canceling, 69],
 ]);
 
-export const DEPLOY_STATUS_CODES_DESCRIPTIONS = [...DEPLOY_STATUS_CODES.entries()].reduce(
-  (result, [status, code]) => ({
-    ...result,
-    [`${status} (${code})`]: messages.getMessage(`errorCode.deploy.${status}`),
-  }),
-  {}
+// export const DEPLOY_STATUS_CODES_DESCRIPTIONS = [...DEPLOY_STATUS_CODES.entries()].reduce(
+//   (result, [status, code]) => ({
+//     ...result,
+//     [`${status} (${code})`]: messages.getMessage(`errorCode.deploy.${status}`),
+//   }),
+//   {}
+// );
+
+export const DEPLOY_STATUS_CODES_DESCRIPTIONS = Object.fromEntries(
+  Array.from(DEPLOY_STATUS_CODES).map(([status, code]) => [
+    `${status} (${code})`,
+    messages.getMessage(`errorCode.deploy.${status}`),
+  ])
 );
