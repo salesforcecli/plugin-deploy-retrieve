@@ -99,7 +99,7 @@ describe('Partial Bundle Delete Retrieves', () => {
     expect(fs.existsSync(forgotPasswordTranslationFile)).to.be.false;
 
     // ensure command response
-    const expectedResponse = getExpectedCmdJSON(path.relative(session.project.dir, projectPath));
+    const expectedResponse = getExpectedCmdJSON(projectPath);
     expect(result.success).to.equal(expectedResponse.result.response.success);
     expect(result.id).to.equal(expectedResponse.result.response.id);
     expect(result.fileProperties).to.deep.equal(expectedResponse.result.response.fileProperties);
@@ -153,7 +153,7 @@ describe('Partial Bundle Delete Retrieves', () => {
         fullName: 'auraPropertyListMap',
         type: 'AuraDefinitionBundle',
         state: 'Deleted',
-        filePath: path.relative(dreamhouseProj.dir, testCssFile),
+        filePath: testCssFile,
       });
     });
 
@@ -186,7 +186,7 @@ describe('Partial Bundle Delete Retrieves', () => {
         fullName: 'propertyTile',
         type: 'LightningComponentBundle',
         state: 'Deleted',
-        filePath: path.relative(dreamhouseProj.dir, testCssFile),
+        filePath: testCssFile,
       });
       expect(fs.existsSync(testsDir)).to.be.true;
     });
