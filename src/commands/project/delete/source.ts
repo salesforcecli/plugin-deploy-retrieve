@@ -35,10 +35,11 @@ import * as chalk from 'chalk';
 import { DeleteSourceJson, TestLevel, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 import { resolveApi } from '../../../utils/deploy';
-import { DeleteResultFormatter, DeployResultFormatter } from '../../../utils/output';
+import { DeployResultFormatter } from '../../../formatters/DeployResultFormatter';
+import { DeleteResultFormatter } from '../../../formatters/DeleteResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployCache } from '../../../utils/deployCache';
-
+import { testLevelFlag } from '../../../utils/flags';
 const fsPromises = fs.promises;
 
 Messages.importMessagesDirectory(__dirname);
@@ -70,14 +71,13 @@ export class Source extends SfCommand<DeleteSourceJson> {
       description: messages.getMessage('flagsLong.wait'),
       summary: messages.getMessage('flags.wait'),
     }),
-    'test-level': Flags.string({
-      char: 'l',
+    'test-level': testLevelFlag({
+      options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],
       aliases: ['testlevel'],
-      deprecateAliases: true,
+      default: TestLevel.RunLocalTests,
       description: messages.getMessage('flagsLong.test-Level'),
       summary: messages.getMessage('flags.test-Level'),
-      options: ['NoTestRun', 'RunLocalTests', 'RunAllTestsInOrg'],
-      default: 'NoTestRun',
+      deprecateAliases: true,
     }),
     'no-prompt': Flags.boolean({
       char: 'r',
@@ -227,7 +227,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       apiOptions: {
         rest: this.isRest,
         checkOnly: this.flags['check-only'] ?? false,
-        testLevel: this.flags['test-level'] as TestLevel,
+        testLevel: this.flags['test-level'],
       },
     });
 
