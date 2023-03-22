@@ -13,7 +13,7 @@ import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { ComponentStatus, FileResponse } from '@salesforce/source-deploy-retrieve';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
-import { PreviewResult, PreviewFile } from 'src/utils/previewOutput';
+import { PreviewResult, PreviewFile } from '../../../src/utils/previewOutput';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
 import { eBikesDeployResultCount } from './constants';
 

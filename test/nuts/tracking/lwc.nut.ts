@@ -10,7 +10,7 @@ import * as fs from 'fs';
 import { assert, expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
-import { PreviewResult } from 'src/utils/previewOutput';
+import { PreviewResult } from '../../../src/utils/previewOutput';
 import { DeployResultJson } from '../../../src/utils/types';
 
 let session: TestSession;
