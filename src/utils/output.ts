@@ -7,25 +7,40 @@
 
 import * as os from 'os';
 import * as path from 'path';
+import { resolve } from 'path';
+import * as fs from 'fs';
 import { ux } from '@oclif/core';
+import * as chalk from 'chalk';
 import { blue, bold, dim, underline } from 'chalk';
 import {
-  DeployResult,
-  FileResponse,
-  RetrieveResult,
-  RequestStatus,
-  Failures,
-  Successes,
-  ComponentSet,
   CodeCoverage,
+  ComponentSet,
+  ConvertResult,
+  DeployResult,
+  Failures,
+  FileResponse,
   FileResponseSuccess,
+  RequestStatus,
+  RetrieveResult,
+  RunTestResult,
+  Successes,
 } from '@salesforce/source-deploy-retrieve';
-import { Messages, NamedPackageDir, SfProject } from '@salesforce/core';
+import { Messages, NamedPackageDir, SfError, SfProject, Org } from '@salesforce/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
 import {
+  CodeCoverageResult,
+  CoverageReporter,
+  CoverageReporterOptions,
+  JUnitReporter,
+  TestResult,
+} from '@salesforce/apex-node';
+import {
   API,
   AsyncDeployResultJson,
+  ConvertMdapiJson,
+  ConvertResultJson,
+  DeleteSourceJson,
   DeployResultJson,
   isSdrFailure,
   isSdrSuccess,
@@ -34,20 +49,17 @@ import {
   TestLevel,
   Verbosity,
 } from './types';
+import {
+  generateCoveredLines,
+  getCoverageFormattersOptions,
+  mapTestResults,
+  transformCoverageToApexCoverage,
+} from './coverage';
 
 Messages.importMessagesDirectory(__dirname);
-const deployAsyncMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.async', [
-  'info.AsyncDeployResume',
-  'info.AsyncDeployStatus',
-  'info.AsyncDeployCancel',
-  'info.AsyncDeployQueued',
-  'info.AsyncDeployCancelQueued',
-]);
-
-const retrieveMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata', [
-  'info.WroteZipFile',
-  'info.ExtractedZipFile',
-]);
+const deployAsyncMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
+const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
+const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 function tableHeader(message: string): string {
   return blue(bold(message));
@@ -131,15 +143,29 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private absoluteFiles: FileResponse[];
   private testLevel: TestLevel;
   private verbosity: Verbosity;
+  private coverageOptions: CoverageReporterOptions;
+  private resultsDir: string;
+  private readonly junit: boolean | undefined;
 
   public constructor(
     protected result: DeployResult,
-    protected flags: Partial<{ 'test-level': TestLevel; verbose: boolean; concise: boolean }>
+    protected flags: Partial<{
+      'test-level': TestLevel;
+      verbose: boolean;
+      concise: boolean;
+      'coverage-formatters': string[];
+      junit: boolean;
+      'results-dir': string;
+      'target-org': Org;
+    }>
   ) {
     this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
     this.relativeFiles = asRelativePaths(this.absoluteFiles);
     this.testLevel = this.flags['test-level'] ?? TestLevel.NoTestRun;
     this.verbosity = this.determineVerbosity();
+    this.resultsDir = this.flags['results-dir'] ?? 'coverage';
+    this.coverageOptions = getCoverageFormattersOptions(this.flags['coverage-formatters']);
+    this.junit = this.flags.junit;
   }
 
   public getJson(): DeployResultJson {
@@ -172,7 +198,96 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     this.displayFailures();
     this.displayDeletes();
     this.displayTestResults();
+    this.maybeCreateRequestedReports();
     this.displayReplacements();
+  }
+
+  private maybeCreateRequestedReports(): void {
+    // only generate reports if test results are presented
+    if (this.result.response?.numberTestsTotal) {
+      if (this.coverageOptions) {
+        ux.log(
+          `Code Coverage formats, [${this.flags['coverage-formatters']?.join(', ')}], written to ${this.resultsDir}/`
+        );
+        this.createCoverageReport('no-map');
+      }
+      if (this.junit) {
+        ux.log(`Junit results written to ${this.resultsDir}/junit/junit.xml`);
+        this.createJunitResults();
+      }
+    }
+  }
+
+  private createJunitResults(): void {
+    const testResult = this.transformDeployTestsResultsToTestResult();
+    if (testResult.summary.testsRan > 0) {
+      const jUnitReporter = new JUnitReporter();
+      const junitResults = jUnitReporter.format(testResult);
+
+      const junitReportPath = path.join(this.resultsDir ?? '', 'junit');
+      fs.mkdirSync(junitReportPath, { recursive: true });
+      fs.writeFileSync(path.join(junitReportPath, 'junit.xml'), junitResults, 'utf8');
+    }
+  }
+
+  private transformDeployTestsResultsToTestResult(): TestResult {
+    const runTestResult = this.result.response?.details?.runTestResult as RunTestResult;
+    const numTestsRun = parseInt(runTestResult.numTestsRun, 10);
+    const numTestFailures = parseInt(runTestResult.numFailures, 10);
+    return {
+      summary: {
+        commandTimeInMs: 0,
+        failRate: ((numTestFailures / numTestsRun) * 100).toFixed(2) + '%',
+        failing: numTestFailures,
+        hostname: this.flags['target-org']?.getConnection().getConnectionOptions().instanceUrl as string,
+        orgId: this.flags['target-org']?.getConnection().getAuthInfoFields().orgId as string,
+        outcome: '',
+        passRate: numTestFailures === 0 ? '100%' : ((1 - numTestFailures / numTestsRun) * 100).toFixed(2) + '%',
+        passing: numTestsRun - numTestFailures,
+        skipRate: '',
+        skipped: 0,
+        testExecutionTimeInMs: parseFloat(runTestResult.totalTime),
+        testRunId: '',
+        testStartTime: new Date().toISOString(),
+        testTotalTimeInMs: parseFloat(runTestResult.totalTime),
+        testsRan: numTestsRun,
+        userId: this.flags['target-org']?.getConnection().getConnectionOptions().userId as string,
+        username: this.flags['target-org']?.getConnection().getUsername() as string,
+      },
+      tests: [
+        ...mapTestResults(ensureArray(runTestResult.successes)),
+        ...mapTestResults(ensureArray(runTestResult.failures)),
+      ],
+      codecoverage: ensureArray(runTestResult?.codeCoverage).map((cov) => {
+        const codeCoverageResult: CodeCoverageResult = {} as CodeCoverageResult;
+        codeCoverageResult.apexId = cov.id;
+        codeCoverageResult.name = cov.name;
+        codeCoverageResult.numLinesUncovered = parseInt(cov.numLocationsNotCovered, 10);
+        codeCoverageResult.numLinesCovered = parseInt(cov.numLocations, 10) - codeCoverageResult.numLinesUncovered;
+        const [uncoveredLines, coveredLines] = generateCoveredLines(cov);
+        codeCoverageResult.coveredLines = coveredLines;
+        codeCoverageResult.uncoveredLines = uncoveredLines;
+        const numLocationsNum = parseInt(cov.numLocations, 10);
+        const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
+
+        codeCoverageResult.percentage =
+          numLocationsNum > 0
+            ? (((numLocationsNum - numLocationsNotCovered) / numLocationsNum) * 100).toFixed() + '%'
+            : '';
+        return codeCoverageResult;
+      }),
+    };
+  }
+
+  private createCoverageReport(sourceDir: string): void {
+    if (this.resultsDir) {
+      const apexCoverage = transformCoverageToApexCoverage(
+        ensureArray(this.result.response?.details?.runTestResult?.codeCoverage)
+      );
+      fs.mkdirSync(this.resultsDir, { recursive: true });
+      const coverageReport = new CoverageReporter(apexCoverage, this.resultsDir, sourceDir, this.coverageOptions);
+      coverageReport.generateReports();
+    }
   }
 
   private displayReplacements(): void {
@@ -355,6 +470,8 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
 
     const opts = Object.entries(this.flags).reduce<Array<{ key: string; value: unknown }>>((result, [key, value]) => {
       if (key === 'timestamp') return result;
+      if (key === 'target-org')
+        return result.concat({ key: 'target-org', value: this.flags['target-org']?.getUsername() });
       return result.concat({ key, value });
     }, []);
     ux.log();
@@ -391,6 +508,74 @@ export class DeployCancelResultFormatter implements Formatter<DeployResultJson> 
       ux.log(`Successfully canceled ${this.result.response.id}`);
     } else {
       ux.error(`Could not cancel ${this.result.response.id}`);
+    }
+  }
+}
+
+export class SourceConvertResultFormatter implements Formatter<ConvertResultJson> {
+  public constructor(private result: ConvertResult) {}
+  public getJson(): ConvertResultJson {
+    return {
+      location: resolve(this.result.packagePath as string),
+    };
+  }
+
+  public display(): void {
+    if ([0, 69].includes(process.exitCode ?? 0)) {
+      ux.log(convertMessages.getMessage('success', [this.result.packagePath]));
+    } else {
+      throw new SfError(convertMessages.getMessage('convertFailed'), 'ConvertFailed');
+    }
+  }
+}
+
+export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJson> {
+  private convertResults!: ConvertMdapiJson;
+  public constructor(private result: ConvertResult) {}
+
+  public getJson(): ConvertMdapiJson {
+    this.convertResults = [];
+    this.result?.converted?.forEach((component) => {
+      if (component.xml) {
+        this.convertResults.push({
+          fullName: component.fullName,
+          type: component.type.name,
+          filePath: path.relative('.', component.xml),
+          state: 'Add',
+        });
+      }
+      if (component.content) {
+        this.convertResults.push({
+          fullName: component.fullName,
+          type: component.type.name,
+          filePath: path.relative('.', component.content),
+          state: 'Add',
+        });
+      }
+    });
+
+    return this.convertResults;
+  }
+
+  public display(): void {
+    const convertData = this.getJson();
+    if (convertData?.length) {
+      ux.table(
+        convertData.map((entry) => ({
+          state: entry.state,
+          fullName: entry.fullName,
+          type: entry.type,
+          filePath: entry.filePath,
+        })),
+        {
+          state: { header: 'STATE' },
+          fullName: { header: 'FULL NAME' },
+          type: { header: 'TYPE' },
+          filePath: { header: 'PROJECT PATH' },
+        }
+      );
+    } else {
+      ux.log('No metadata found to convert');
     }
   }
 }
@@ -467,6 +652,73 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       const packagePath = path.join(projectPath, name);
       return { name, path: packagePath, fullPath: path.resolve(packagePath) };
     });
+  }
+}
+
+export class DeleteResultFormatter implements Formatter<DeleteSourceJson> {
+  public constructor(private result: DeployResult) {}
+  /**
+   * Get the JSON output from the DeployResult.
+   *
+   * @returns a JSON formatted result matching the provided type.
+   */
+  public getJson(): DeleteSourceJson {
+    return {
+      ...this.result.response,
+      deletedSource: this.result.getFileResponses() ?? [],
+      outboundFiles: [],
+      deployedSource: [],
+      deletes: [Object.assign({}, this.result?.response)],
+    };
+  }
+
+  public display(): void {
+    if ([0, 69].includes(process.exitCode ?? 0)) {
+      const successes: FileResponse[] = [];
+      const fileResponseSuccesses: Map<string, FileResponse> = new Map<string, FileResponse>();
+
+      if (this.result?.getFileResponses()?.length) {
+        const fileResponses: FileResponse[] = [];
+        this.result?.getFileResponses().map((f: FileResponse) => {
+          fileResponses.push(f);
+          fileResponseSuccesses.set(`${f.type}#${f.fullName}`, f);
+        });
+        sortFileResponses(fileResponses);
+        asRelativePaths(fileResponses);
+        successes.push(...fileResponses);
+      }
+
+      const deployMessages = ensureArray(this.result?.response?.details?.componentSuccesses).filter(
+        (item) => !item.fileName.includes('package.xml')
+      );
+      if (deployMessages.length >= successes.length) {
+        // if there's additional successes in the API response, find the success and add it to the output
+        deployMessages.map((deployMessage) => {
+          if (!fileResponseSuccesses.has(`${deployMessage.componentType}#${deployMessage.fullName}`)) {
+            successes.push(
+              Object.assign(deployMessage, {
+                type: deployMessage.componentType,
+              } as FileResponse)
+            );
+          }
+        });
+      }
+
+      ux.log('');
+      ux.styledHeader(chalk.blue('Deleted Source'));
+      ux.table(
+        successes.map((entry) => ({
+          fullName: entry.fullName,
+          type: entry.type,
+          filePath: entry.filePath,
+        })),
+        {
+          fullName: { header: 'FULL NAME' },
+          type: { header: 'TYPE' },
+          filePath: { header: 'PROJECT PATH' },
+        }
+      );
+    }
   }
 }
 

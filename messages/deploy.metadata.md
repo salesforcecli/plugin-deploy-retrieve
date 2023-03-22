@@ -56,6 +56,18 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 Login username or alias for the target org.
 
+# flags.pre-destructive-changes
+
+file path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy
+
+# flags.post-destructive-changes
+
+file path for a manifest (destructiveChangesPost.xml) of components to delete after the deploy
+
+# flags.purge-on-delete
+
+specify that deleted components in the destructive changes manifest file are immediately eligible for deletion rather than being stored in the Recycle Bin
+
 # flags.target-org.description
 
 Overrides your default org.
@@ -98,7 +110,7 @@ Number of minutes to wait for command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume the deployment, run "sf deploy metadata resume". To check the status of the deployment, run "sf deploy metadata report".
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume the deployment, run "sf project deploy resume". To check the status of the deployment, run "sf project deploy report".
 
 # flags.manifest.summary
 
@@ -166,7 +178,7 @@ Run the command asynchronously.
 
 # flags.async.description
 
-The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume the deployment, run "sf deploy metadata resume". To check the status of the deployment, run "sf deploy metadata report".
+The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume the deployment, run "sf project deploy resume". To check the status of the deployment, run "sf project deploy report".
 
 # flags.metadata-dir.summary
 
@@ -191,7 +203,7 @@ You must specify tests using the --tests flag if the --test-level flag is set to
 
 # error.ClientTimeout
 
-The command has timed out, although the deployment is still running. Use "sf deploy metadata resume" to resume watching the deployment.
+The command has timed out, although the deployment is still running. Use "sf project deploy resume" to resume watching the deployment.
 
 # error.Conflicts
 
@@ -201,7 +213,7 @@ There are changes in the org that conflict with the local changes you're trying 
 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
-- To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.
+- To overwrite the local changes, run the "sf project retrieve start" command with the --ignore-conflicts flag.
 
 # error.nothingToDeploy
 
@@ -209,4 +221,20 @@ No local changes to deploy.
 
 # error.nothingToDeploy.Actions
 
-- To see conflicts and ignored files, run "sf deploy metadata preview" with any of the manifest, directory, or metadata flags.
+- To see conflicts and ignored files, run "sf project deploy preview" with any of the manifest, directory, or metadata flags.
+
+# flags.junit
+
+output JUnit test results
+
+# flags.coverage-formatters
+
+format of the code coverage results
+
+# flags.results-dir
+
+output directory for code coverage and JUnit results; defaults to the deploy ID
+
+# asyncCoverageJunitWarning
+
+You requested an async deploy with code coverage or JUnit results. The reports will be available when the deploy completes.

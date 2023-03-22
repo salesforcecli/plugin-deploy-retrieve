@@ -4,7 +4,7 @@ Validate a metadata deployment without actually executing it.
 
 # description
 
-Use this command to verify whether a deployment will succeed without actually deploying the metadata to your org. This command is similar to "sf deploy metadata", except you're required to run Apex tests, and the command returns a job ID rather than executing the deployment. If the validation succeeds, then you pass this job ID to the "sf deploy metadata quick" command to actually deploy the metadata. This quick deploy takes less time because it skips running Apex tests. The job ID is valid for 10 days from when you started the validation. Validating first is useful if the deployment to your production org take several hours and you don’t want to risk a failed deploy.
+Use this command to verify whether a deployment will succeed without actually deploying the metadata to your org. This command is similar to "<%= config.bin %> project deploy start", except you're required to run Apex tests, and the command returns a job ID rather than executing the deployment. If the validation succeeds, then you pass this job ID to the "<%= config.bin %> project deploy quick" command to actually deploy the metadata. This quick deploy takes less time because it skips running Apex tests. The job ID is valid for 10 days from when you started the validation. Validating first is useful if the deployment to your production org take several hours and you don’t want to risk a failed deploy.
 
 You must run this command from within a project.
 
@@ -14,7 +14,7 @@ To validate the deployment of multiple metadata components, either set multiple 
 
 # examples
 
-- NOTE: These examples focus on validating large deployments. See the help for "sf deploy metadata" for examples of deploying smaller sets of metadata which you can also use to validate.
+- NOTE: These examples focus on validating large deployments. See the help for "<%= config.bin %> project deploy start" for examples of deploying smaller sets of metadata which you can also use to validate.
 
 - Validate the deployment of all source files in a directory to the default org:
 
@@ -72,7 +72,7 @@ Number of minutes to wait for the command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume watching the validation, run "sf deploy metadata resume". To check the status of the validation, run "sf deploy metadata report".
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume watching the validation, run "<%= config.bin %> project deploy resume". To check the status of the validation, run "<%= config.bin %> project deploy report".
 
 # flags.manifest.summary
 
@@ -112,7 +112,7 @@ Run the command asynchronously.
 
 # flags.async.description
 
-The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume watching the validation, run "sf deploy metadata resume". To check the status of the validation, run "sf deploy metadata report".
+The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume watching the validation, run "<%= config.bin %> project deploy resume". To check the status of the validation, run "<%= config.bin %> project deploy report".
 
 # flags.metadata-dir.summary
 
@@ -126,6 +126,10 @@ Indicates that the metadata zip file points to a directory structure for a singl
 
 Successfully validated the deployment (%s).
 
+# info.suggestedQuickDeploy
+
+Run "%s project deploy quick --job-id %s" to execute this deploy
+
 # error.FailedValidation
 
-Falied to validate the deployment (%s).
+Failed to validate the deployment (%s).
