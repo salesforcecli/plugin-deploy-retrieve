@@ -25,7 +25,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
-import { SourceConvertResultFormatter } from '../../../utils/output';
+import { SourceConvertResultFormatter } from '../../../formatters/SourceConvertResultFormatter';
 import { ConvertResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);

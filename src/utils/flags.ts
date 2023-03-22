@@ -64,6 +64,7 @@ function resolveZipFileName(zipFileName?: string): string {
 }
 
 export const DEFAULT_ZIP_FILE_NAME = 'unpackaged.zip';
+
 /**
  * Flag value is a directory path that may or may not exist. If it doesn't exist, then it will be created.
  */

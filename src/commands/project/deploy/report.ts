@@ -11,7 +11,7 @@ import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { buildComponentSet } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
-import { DeployReportResultFormatter } from '../../../utils/output';
+import { DeployReportResultFormatter } from '../../../formatters/DeployReportResultFormatter';
 import { DeployResultJson, reportsFormatters } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);

@@ -10,7 +10,7 @@ import { assert, expect, config } from 'chai';
 import * as sinon from 'sinon';
 
 import { getCoverageFormattersOptions } from '@salesforce/plugin-source/lib/deployCommand';
-import { DeployResultFormatter } from '../../src/utils/output';
+import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter';
 import { getDeployResult } from './deployResponses';
 
 config.truncateThreshold = 0;

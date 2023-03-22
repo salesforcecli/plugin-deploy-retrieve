@@ -13,7 +13,9 @@ import { Duration } from '@salesforce/kit';
 import { buildComponentSet, DeployOptions, determineExitCode, poll, resolveApi } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { AsyncDeployResultFormatter, DeployResultFormatter, getVersionMessage } from '../../../utils/output';
+import { getVersionMessage } from '../../../utils/output';
+import { AsyncDeployResultFormatter } from '../../../formatters/AsyncDeployResultFormatter';
+import { DeployResultFormatter } from '../../../formatters/DeployResultFormatter';
 import { DeployResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
