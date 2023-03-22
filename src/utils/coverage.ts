@@ -19,26 +19,22 @@ import { Successes, Failures, CodeCoverage } from '@salesforce/source-deploy-ret
 import { ensureArray } from '@salesforce/kit';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 
-type SuccessOrFailure = Successes & Failures;
-
-export const mapTestResults = (testResults: Failures[] | Successes[]): ApexTestResultData[] =>
-  testResults.map((successOrFailure) => {
-    const testResult = successOrFailure as SuccessOrFailure;
-    return {
-      apexClass: { fullName: testResult.name, id: testResult.id, name: testResult.name, namespacePrefix: '' },
-      apexLogId: '',
-      asyncApexJobId: '',
-      fullName: testResult.name,
-      id: testResult.id,
-      message: testResult.message ?? '',
-      methodName: testResult.methodName,
-      outcome: !testResult.message ? ApexTestResultOutcome.Pass : ApexTestResultOutcome.Fail,
-      queueItemId: '',
-      runTime: parseInt(testResult.time, 10),
-      stackTrace: testResult.stackTrace || '',
-      testTimestamp: '',
-    };
-  });
+export const mapTestResults = <T extends Failures | Successes>(testResults: T[]): ApexTestResultData[] =>
+  testResults.map((testResult) => ({
+    apexClass: { fullName: testResult.name, id: testResult.id, name: testResult.name, namespacePrefix: '' },
+    apexLogId: '',
+    asyncApexJobId: '',
+    fullName: testResult.name,
+    id: testResult.id,
+    ...('message' in testResult && testResult.message
+      ? { message: testResult.message, outcome: ApexTestResultOutcome.Pass }
+      : { message: null, outcome: ApexTestResultOutcome.Fail }),
+    methodName: testResult.methodName,
+    queueItemId: '',
+    runTime: parseInt(testResult.time, 10),
+    stackTrace: 'stackTrace' in testResult ? testResult.stackTrace : null,
+    testTimestamp: '',
+  }));
 
 export const generateCoveredLines = (cov: CodeCoverage): [number[], number[]] => {
   const numCovered = parseInt(cov.numLocations, 10);
