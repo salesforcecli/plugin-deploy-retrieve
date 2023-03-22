@@ -16,8 +16,11 @@ export const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-
 export class SourceConvertResultFormatter implements Formatter<ConvertResultJson> {
   public constructor(private result: ConvertResult) {}
   public getJson(): ConvertResultJson {
+    if (!this.result.packagePath) {
+      throw new SfError('Convert result contains no packagePath');
+    }
     return {
-      location: resolve(this.result.packagePath as string),
+      location: resolve(this.result.packagePath),
     };
   }
 

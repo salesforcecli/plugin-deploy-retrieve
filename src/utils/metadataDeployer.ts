@@ -188,7 +188,7 @@ export class MetadataDeployer extends Deployer {
       ).map(async (orgAuth) => {
         const stat = await stateAggregator.orgs.stat(orgAuth.username);
         const timestamp = stat ? new Date(stat.mtimeMs) : new Date();
-        return { ...orgAuth, timestamp } as OrgAuthWithTimestamp;
+        return { ...orgAuth, timestamp };
       });
 
       const authorizations = await Promise.all(promises);
