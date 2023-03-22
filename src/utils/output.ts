@@ -13,12 +13,12 @@ import { ux } from '@oclif/core';
 import * as chalk from 'chalk';
 import { blue, bold, dim, underline } from 'chalk';
 import {
-  CodeCoverage,
   ComponentSet,
   ConvertResult,
   DeployResult,
   Failures,
   FileResponse,
+  FileResponseFailure,
   FileResponseSuccess,
   RequestStatus,
   RetrieveResult,
@@ -54,6 +54,7 @@ import {
   getCoverageFormattersOptions,
   mapTestResults,
   transformCoverageToApexCoverage,
+  coverageOutput,
 } from './coverage';
 
 Messages.importMessagesDirectory(__dirname);
@@ -81,7 +82,9 @@ function colorStatus(status: RequestStatus): string {
 
 const check = StandardColors.success('✓');
 
-export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
+export function asRelativePaths<T extends FileResponse | FileResponseSuccess | FileResponseFailure>(
+  fileResponses: T[]
+): T[] {
   const relative = fileResponses.map((file) =>
     file.filePath ? { ...file, filePath: path.relative(process.cwd(), file.filePath) } : file
   );
@@ -91,7 +94,9 @@ export function asRelativePaths(fileResponses: FileResponse[]): FileResponse[] {
 /**
  * Sorts file responds by type, then by filePath, then by fullName
  */
-export function sortFileResponses(fileResponses: FileResponse[]): FileResponse[] {
+export function sortFileResponses<T extends FileResponse | FileResponseSuccess | FileResponseFailure>(
+  fileResponses: T[]
+): T[] {
   return fileResponses.sort((i, j) => {
     if (i.type === j.type && i.filePath && j.filePath) {
       if (i.filePath === j.filePath) {
@@ -601,7 +606,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
     private packageNames: string[] = [],
     deleteResponses: FileResponse[] = []
   ) {
-    this.files = sortFileResponses(asRelativePaths((this.result.getFileResponses() ?? []).concat(deleteResponses)));
+    this.files = (this.result.getFileResponses() ?? []).concat(deleteResponses);
   }
 
   public getJson(): RetrieveResultJson {
@@ -615,7 +620,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   }
 
   private displaySuccesses(): void {
-    const successes = this.files.filter(isSdrSuccess);
+    const successes = sortFileResponses(asRelativePaths(this.files.filter(isSdrSuccess)));
 
     if (!successes.length) return;
 
@@ -753,32 +758,3 @@ const getFileResponseSuccessProps = (
   successes: FileResponseSuccess[]
 ): Array<Pick<FileResponseSuccess, 'filePath' | 'fullName' | 'state' | 'type'>> =>
   successes.map((s) => ({ filePath: s.filePath, fullName: s.fullName, type: s.type, state: s.state }));
-
-const coverageOutput = (
-  cov: CodeCoverage
-): Pick<CodeCoverage, 'name' | 'numLocations'> & { lineNotCovered: string } => {
-  const numLocationsNum = parseInt(cov.numLocations, 10);
-  const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
-  const color = numLocationsNotCovered > 0 ? StandardColors.error : StandardColors.success;
-
-  let pctCovered = 100;
-  const coverageDecimal: number = parseFloat(((numLocationsNum - numLocationsNotCovered) / numLocationsNum).toFixed(2));
-  if (numLocationsNum > 0) {
-    pctCovered = coverageDecimal * 100;
-  }
-  // cov.numLocations = color(`${pctCovered}%`);
-  const base = {
-    name: cov.name,
-    numLocations: color(`${pctCovered}%`),
-  };
-
-  if (!cov.locationsNotCovered) {
-    return { ...base, lineNotCovered: '' };
-  }
-  const locations = ensureArray(cov.locationsNotCovered);
-
-  return {
-    ...base,
-    lineNotCovered: locations.map((location) => location.line).join(','),
-  };
-};
