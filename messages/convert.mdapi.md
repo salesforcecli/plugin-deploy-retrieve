@@ -14,9 +14,9 @@ To convert files from the source format back to the metadata format, run "<%= co
 
   $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata
 
-- Similar to previous example, but writes converted files to the specified results directory:
+- Similar to previous example, but writes converted files to the specified output directory:
 
-  $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata --results-dir path/to/outputdir
+  $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata --output-dir path/to/outputdir
 
 # flags.root-dir.summary
 

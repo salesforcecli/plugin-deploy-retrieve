@@ -26,7 +26,7 @@ export type DeleteTrackingResult = {
 export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
   public static readonly deprecateAliases = true;
   public static readonly aliases = ['force:source:beta:tracking:clear', 'force:source:tracking:clear'];
-  public static readonly summary = messages.getMessage('deleteDescription');
+  public static readonly summary = messages.getMessage('deleteSummary');
   public static readonly description = messages.getMessage('deleteDescription');
   public static readonly requiresProject = true;
   public static readonly examples = [];
@@ -37,7 +37,7 @@ export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
     'target-org': requiredOrgFlagWithDeprecations,
     'no-prompt': Flags.boolean({
       char: 'p',
-      summary: messages.getMessage('no-promptDescription'),
+      summary: messages.getMessage('flags.no-prompt.summary'),
       aliases: ['noprompt'],
       deprecateAliases: true,
     }),
