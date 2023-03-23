@@ -1,13 +1,10 @@
 # summary
 
-convert source into Metadata API format
+Convert source-formatted files into metadata that you can deploy using Metadata API.
 
 # description
 
-convert source into Metadata API format
-Converts source-formatted files into metadata that you can deploy using Metadata API.
-To convert source-formatted files into the metadata format, so that you can deploy them using Metadata API,
-run "<%= config.bin %> project convert mdapi". Then deploy the metadata using "<%= config.bin %> project deploy".
+To convert source-formatted files into the metadata format, so that you can deploy them using Metadata API, run this command. Then deploy the metadata using "<%= config.bin %> project deploy".
 
 To convert Metadata API–formatted files into the source format, run "<%= config.bin %> project convert mdapi".
 
@@ -15,45 +12,47 @@ To specify a package name that includes spaces, enclose the name in single quote
 
 # examples
 
-- $ <%= config.bin %> <%= command.id %> -r path/to/source
+- Convert source-formatted files in the specified directory into metadata-formatted files; writes converted files into a new directory:
 
-- $ <%= config.bin %> <%= command.id %> -r path/to/source -d path/to/outputdir -n 'My Package'
+  $ <%= config.bin %> <%= command.id %> --root-dir path/to/source
 
-# flags.root-dir
+- Similar to previous example, but writes converted files to the specified output directory and associates the files with the specified package:
 
-a source directory other than the default package to convert
+  $ <%= config.bin %> <%= command.id %> --root-dir path/to/source --output-dir path/to/outputdir --package-name 'My Package'
 
-# flags.output-dir
+# flags.root-dir.summary
 
-output directory to store the Metadata API–formatted files in
+Source directory other than the default package to convert.
 
-# flags.package-name
+# flags.output-dir.summary
 
-name of the package to associate with the metadata-formatted files
+Output directory to store the Metadata API–formatted files in.
 
-# flags.manifest
+# flags.package-name.summary
 
-file path to manifest (package.xml) of metadata types to convert.
+Name of the package to associate with the metadata-formatted files.
 
-# flags.source-dir
+# flags.manifest.summary
 
-comma-separated list of paths to the local source files to convert
+Path to the manifest (package.xml) file that specifies the metadata types to convert.
 
-# flags.metadata
+# flags.source-dir.summary
 
-comma-separated list of metadata component names to convert
+Comma-separated list of paths to the local source files to convert.
 
-# flagsLong.manifest
+# flags.metadata.summary
 
-- The complete path to the manifest (package.xml) file that specifies the metadata types to convert.
+Comma-separated list of metadata component names to convert.
 
-- If you specify this parameter, don’t specify --metadata or --source-dir.
+# flags.manifest.description
 
-# flagsLong.source-dir
+If you specify this parameter, don’t specify --metadata or --source-dir.
 
-- A comma-separated list of paths to the local source files to convert. The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
+# flags.source-dir.description
 
-- If you specify this parameter, don’t specify --manifest or --metadata.
+The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
+
+If you specify this parameter, don’t specify --manifest or --metadata.
 
 # success
 

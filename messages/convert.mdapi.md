@@ -1,64 +1,52 @@
 # summary
 
-convert metadata from the Metadata API format into the source format
+Convert metadata retrieved via Metadata API into the source format used in Salesforce DX projects.
 
 # description
 
-Converts metadata retrieved via Metadata API into the source format used in Salesforce DX projects.
+To use Salesforce CLI to work with components that you retrieved via Metadata API, first convert your files from the metadata format to the source format using this command.
 
-To use Salesforce CLI to work with components that you retrieved via Metadata API, first convert your files from the metadata format to the source format using "sfdx force:mdapi:convert".
-
-To convert files from the source format back to the metadata format, so that you can deploy them using "<%= config.bin %> project deploy", run "<%= config.bin %> project convert source".
+To convert files from the source format back to the metadata format, run "<%= config.bin %> project convert source".
 
 # examples
 
-- $ <%= config.bin %> <%= command.id %> -r path/to/metadata
+- Convert metadata formatted files in the specified directory into source formatted files; writes converted files to your default package directory:
 
-- $ <%= config.bin %> <%= command.id %> -r path/to/metadata -d path/to/outputdir
+  $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata
 
-# flags.root-dir
+- Similar to previous example, but writes converted files to the specified output directory:
 
-the root directory containing the Metadata API–formatted metadata
+  $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata --output-dir path/to/outputdir
 
-# flags.output-dir
+# flags.root-dir.summary
 
-the output directory to store the source–formatted files
+Root directory that contains the Metadata API–formatted metadata.
 
-# flags.manifest
+# flags.output-dir.summary
 
-file path to manifest (package.xml) of metadata types to convert.
+Directory to store your files in after they’re converted to source format; can be an absolute or relative path.
 
-# flags.metadata-dir
+# flags.manifest.summary
 
-comma-separated list of metadata file paths to convert
+File path to manifest (package.xml) of metadata types to convert.
 
-# flags.metadata
+# flags.metadata-dir.summary
 
-comma-separated list of metadata component names to convert
+Comma-separated list of paths to the local metadata files to convert.
 
-# flagsLong.root-dir
+# flags.metadata.summary
 
-The root directory that contains the metadata you retrieved using Metadata API.
+Comma-separated list of metadata component names to convert.
 
-# flagsLong.output-dir
+# flags.manifest.description
 
-The directory to store your files in after they’re converted to the source format. Can be an absolute or relative path.
+If you specify this parameter, don’t specify --metadata or --source-dir.
 
-# flagsLong.manifest
+# flags.metadata-dir.description
 
-- The complete path to the manifest (package.xml) file that specifies the metadata types to convert.
+The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
 
-- If you specify this parameter, don’t specify --metadata or --source-dir.
-
-# flagsLong.metadata-dir
-
-- A comma-separated list of paths to the local metadata files to convert. The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
-
-- If you specify this parameter, don’t specify --manifest or --metadata. If the comma-separated list you’re supplying contains spaces, enclose the entire comma-separated list in one set of double quotes.
-
-# flagsLong.metadata
-
-A comma-separated list of metadata component names to convert.
+If you specify this flag, don’t specify --manifest or --metadata. If the comma-separated list you’re supplying contains spaces, enclose the entire comma-separated list in one set of double quotes.
 
 # expectedDirectory
 

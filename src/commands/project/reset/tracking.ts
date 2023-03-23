@@ -27,7 +27,7 @@ export type ResetTrackingResult = {
 export class ResetTracking extends SfCommand<ResetTrackingResult> {
   public static readonly deprecateAliases = true;
   public static readonly aliases = ['force:source:beta:tracking:reset', 'force:source:tracking:reset'];
-  public static readonly summary = messages.getMessage('resetDescription');
+  public static readonly summary = messages.getMessage('resetSummary');
   public static readonly description = messages.getMessage('resetDescription');
   public static readonly requiresProject = true;
   public static readonly examples = [];
@@ -39,12 +39,12 @@ export class ResetTracking extends SfCommand<ResetTrackingResult> {
     // eslint-disable-next-line sf-plugin/flag-min-max-default
     revision: Flags.integer({
       char: 'r',
-      summary: messages.getMessage('revisionDescription'),
+      summary: messages.getMessage('flags.revision.summary'),
       min: 0,
     }),
     'no-prompt': Flags.boolean({
       char: 'p',
-      summary: messages.getMessage('no-promptDescription'),
+      summary: messages.getMessage('flags.no-prompt.summary'),
       aliases: ['noprompt'],
       deprecateAliases: true,
     }),

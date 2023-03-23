@@ -1,98 +1,110 @@
 # summary
 
-delete source from your project and from a non-source-tracked org.
+Delete source from your project and from a non-source-tracked org.
 
 # description
 
-delete source from your project and from a non-source-tracked org
-IMPORTANT: Where possible, we changed noninclusive terms to align with our company value of Equality. We maintained certain terms to avoid any effect on customer implementations.
+Use this command to delete components from orgs that don’t have source tracking. To remove deleted items from orgs that have source tracking enabled, "sf project deploy start".
 
-Use this command to delete components from orgs that don’t have source tracking.
-To remove deleted items from scratch orgs, which have change tracking, use "sf project deploy start".
+When you run this command, both the local source file and the metadata component in the org are deleted.
 
 # examples
 
-- $ <%= config.bin %> <%= command.id %> -m <metadata>
+- Delete all local Apex source files and all Apex classes from the org with alias "my-scratch":
 
-- $ <%= config.bin %> <%= command.id %> -p path/to/source
+  <%= config.bin %> <%= command.id %> --metadata ApexClass --target-org my-scratch
 
-# flags.source-dir
+- Delete a specific Apex class and a Profile that has a space in it from your default org; don't prompt for confirmation:
 
-comma-separated list of source file paths to delete
+  <%= config.bin %> <%= command.id %> --metadata ApexClass:MyFabulousApexClass --metadata "Profile: My Profile" --no-prompt
 
-# flags.metadata
+- Run the tests that aren’t in any managed packages as part of the deletion; if the delete succeeds, and the org has source-tracking enabled, update the source tracking information:
 
-comma-separated list of names of metadata components to delete
+  <%= config.bin %> <%= command.id %> --metadata ApexClass --test-level RunLocalTests --track-source
 
-# flags.no-prompt
+- Delete the Apex source files in a directory and the corresponding components from your default org:
 
-do not prompt for delete confirmation
+  <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes
 
-# flags.wait
+- Delete all components listed in a manifest:
 
-wait time for command to finish in minutes
+  <%= config.bin %> <%= command.id %> --manifest path/to/package.xml
 
-# flags.check-only
+# flags.source-dir.summary
 
-validate delete command but do not delete from the org or delete files locally
+Comma-separated list of source file paths to delete.
 
-# flags.test-Level
+# flags.metadata.summary
 
-deployment testing level
+Comma-separated list of names of metadata components to delete.
 
-# flags.track-source
+# flags.no-prompt.summary
 
-If the delete succeeds, update the source tracking information, similar to push
+Don't prompt for delete confirmation.
 
-# flags.force-overwrite
+# flags.wait.summary
 
-ignore conflict warnings and overwrite changes to the org
+Number of minutes to wait for the command to finish.
 
-# flags.verbose
+# flags.check-only.summary
 
-verbose output of delete result
+Validate delete command but don't delete anything from the org or the local project.
 
-# flagsLong.check-only
+# flags.test-Level.summary
 
-- Validates the deleted metadata and runs all Apex tests, but prevents the deletion from being saved to the org.
+Deployment Apex testing level.
 
-- If you change a field type from Master-Detail to Lookup or vice versa, that change isn’t supported when using the --chec-konly parameter to test a deletion (validation). This kind of change isn’t supported for test deletions to avoid the risk of data loss or corruption. If a change that isn’t supported for test deletions is included in a deletion package, the test deletion fails and issues an error.
+# flags.track-source.summary
 
-- If your deletion package changes a field type from Master-Detail to Lookup or vice versa, you can still validate the changes prior to deploying to Production by performing a full deletion to another test Sandbox. A full deletion includes a validation of the changes as part of the deletion process.
+If the delete succeeds, update the source tracking information.
 
-- Note: A Metadata API deletion that includes Master-Detail relationships deletes all detail records in the Recycle Bin in the following cases.
+# flags.force-overwrite.summary
 
-- 1. For a deletion with a new Master-Detail field, soft delete (send to the Recycle Bin) all detail records before proceeding to delete the Master-Detail field, or the deletion fails. During the deletion, detail records are permanently deleted from the Recycle Bin and cannot be recovered.
+Ignore conflict warnings and overwrite changes to the org.
 
-- 2. For a deletion that converts a Lookup field relationship to a Master-Detail relationship, detail records must reference a master record or be soft-deleted (sent to the Recycle Bin) for the deletion to succeed. However, a successful deletion permanently deletes any detail records in the Recycle Bin.
+# flags.verbose.summary
 
-# flagsLong.metadata
+Verbose output of the delete result.
 
-- A comma-separated list of names of metadata components to delete from your project and your org.
+# flags.check-only.description
 
-- If you specify this parameter, don’t specify --source-dir.
+IMPORTANT: Where possible, we changed noninclusive terms to align with our company value of Equality. We maintained certain terms to avoid any effect on customer implementations.
 
-# flagsLong.source-dir
+Validates the deleted metadata and runs all Apex tests, but prevents the deletion from being saved to the org.
 
-- A comma-separated list of paths to the local metadata to delete. The supplied paths can be a single file (in which case the operation is applied to only one file) or a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
+If you change a field type from Master-Detail to Lookup or vice versa, that change isn’t supported when using the --chec-konly parameter to test a deletion (validation). This kind of change isn’t supported for test deletions to avoid the risk of data loss or corruption. If a change that isn’t supported for test deletions is included in a deletion package, the test deletion fails and issues an error.
 
-- If you specify this parameter, don’t specify --metadata.
+If your deletion package changes a field type from Master-Detail to Lookup or vice versa, you can still validate the changes prior to deploying to Production by performing a full deletion to another test Sandbox. A full deletion includes a validation of the changes as part of the deletion process.
 
-# flagsLong.wait
+Note: A Metadata API deletion that includes Master-Detail relationships deletes all detail records in the Recycle Bin in the following cases.
 
-Number of minutes to wait for the command to complete and display results to the terminal window. If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
+    1. For a deletion with a new Master-Detail field, soft delete (send to the Recycle Bin) all detail records before proceeding to delete the Master-Detail field, or the deletion fails. During the deletion, detail records are permanently deleted from the Recycle Bin and cannot be recovered.
 
-# flagsLong.test-Level
+    2. For a deletion that converts a Lookup field relationship to a Master-Detail relationship, detail records must reference a master record or be soft-deleted (sent to the Recycle Bin) for the deletion to succeed. However, a successful deletion permanently deletes any detail records in the Recycle Bin.
 
-- Specifies which level of deployment tests to run. Valid values are:
+# flags.metadata.description
 
-- NoTestRu — No tests are run. This test level applies only to deployments to development environments, such as sandbox, Developer Edition, or trial orgs. This test level is the default for development environments.
+If you specify this parameter, don’t specify --source-dir.
 
+# flags.source-dir.description
+
+The supplied paths can be a single file (in which case the operation is applied to only one file) or a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
+
+If you specify this parameter, don’t specify --metadata.
+
+# flags.wait.description
+
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
+
+# flags.test-Level.description
+
+Valid values are:
+
+- NoTestRun — No tests are run. This test level applies only to deployments to development environments, such as sandbox, Developer Edition, or trial orgs. This test level is the default for development environments.
 - RunLocalTests — All tests in your org are run, except the ones that originate from installed managed and unlocked packages. This test level is the default for production deployments that include Apex classes or triggers.
-
 - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
 
-- If you don’t specify a test level, the default behavior depends on the contents of your deployment package. For more information, see “Running Tests in a Deployment” in the Metadata API Developer Guide.
+If you don’t specify a test level, the default behavior depends on the contents of your deployment package. For more information, see “Running Tests in a Deployment” in the Metadata API Developer Guide.
 
 # localPrompt
 
