@@ -168,7 +168,7 @@
       ]
     },
     "compile": {
-      "command": "tsc -p . --pretty",
+      "command": "tsc -p . --pretty --incremental",
       "files": [
         "src/**/*.ts",
         "**/tsconfig.json",
@@ -192,7 +192,7 @@
       "output": []
     },
     "lint": {
-      "command": "eslint src test --color",
+      "command": "eslint src test --color --cache --cache-location .eslintcache",
       "files": [
         "src/**/*.ts",
         "test/**/*.ts",
