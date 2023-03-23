@@ -23,7 +23,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
 import { ConvertMdapiJson } from '../../../utils/types';
-import { MetadataConvertResultFormatter } from '../../../utils/output';
+import { MetadataConvertResultFormatter } from '../../../formatters/metadataConvertResultFormatter';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.mdapi');
@@ -66,19 +66,19 @@ export class Mdapi extends SfCommand<ConvertMdapiJson> {
       summary: messages.getMessage('flags.manifest'),
       exists: true,
     }),
-    'metadata-path': arrayWithDeprecation({
+    'metadata-dir': arrayWithDeprecation({
       char: 'p',
       aliases: ['metadatapath'],
       deprecateAliases: true,
-      description: messages.getMessage('flagsLong.metadata-path'),
-      summary: messages.getMessage('flags.metadata-path'),
+      description: messages.getMessage('flagsLong.metadata-dir'),
+      summary: messages.getMessage('flags.metadata-dir'),
       exclusive: ['manifest', 'metadata'],
     }),
     metadata: arrayWithDeprecation({
       char: 'm',
       description: messages.getMessage('flagsLong.metadata'),
       summary: messages.getMessage('flags.metadata'),
-      exclusive: ['manifest', 'metadatapath'],
+      exclusive: ['manifest', 'metadata-dir'],
     }),
   };
 
@@ -95,12 +95,12 @@ export class Mdapi extends SfCommand<ConvertMdapiJson> {
   protected async convert(): Promise<void> {
     const [outputDir] = await Promise.all([
       resolveOutputDir(this.flags['output-dir'] ?? this.project.getDefaultPackage().path),
-      resolveMetadataPaths(this.flags['metadata-path'] ?? []),
+      resolveMetadataPaths(this.flags['metadata-dir'] ?? []),
     ]);
 
     let paths: string[] = [];
-    if (this.flags['metadata-path']) {
-      paths = this.flags['metadata-path'];
+    if (this.flags['metadata-dir']) {
+      paths = this.flags['metadata-dir'];
     } else if (!this.flags.manifest && !this.flags.metadata) {
       paths = [this.flags['root-dir']];
     }

@@ -60,11 +60,11 @@ describe('project delete source NUTs', () => {
     await testkit?.clean();
   });
 
-  it('should source:delete a static resource folder using the source-jpath param', () => {
+  it('should source:delete a static resource folder using the source-dir param', () => {
     const pathToSR = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'staticresources');
     const pathToJson = path.join(pathToSR, 'sample_data_properties.json');
     const pathToXml = path.join(pathToSR, 'sample_data_properties.resource-meta.xml');
-    const response = execCmd<DeleteSourceJson>(`project:delete:source --json --no-prompt --source-path ${pathToJson}`, {
+    const response = execCmd<DeleteSourceJson>(`project:delete:source --json --no-prompt --source-dir ${pathToJson}`, {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     expect(response?.deletedSource).to.have.length(2);
@@ -84,9 +84,9 @@ describe('project delete source NUTs', () => {
     expect(fs.existsSync(pathToClass)).to.be.false;
   });
 
-  it('should source:delete all Prompts using the source-jpath param', () => {
+  it('should source:delete all Prompts using the source-dir param', () => {
     const response = execCmd<DeleteSourceJson>(
-      `project:delete:source --json --no-prompt --source-path ${path.join('force-app', 'main', 'default', 'prompts')}`,
+      `project:delete:source --json --no-prompt --source-dir ${path.join('force-app', 'main', 'default', 'prompts')}`,
       {
         ensureExitCode: 0,
       }
@@ -97,14 +97,11 @@ describe('project delete source NUTs', () => {
     expect(fs.readdirSync(pathToPrompts).length).to.equal(0);
   });
 
-  it('should source:delete an ApexClass using the source-jpath param', () => {
+  it('should source:delete an ApexClass using the source-dir param', () => {
     const { pathToClass } = createApexClass();
-    const response = execCmd<DeleteSourceJson>(
-      `project:delete:source --json --no-prompt --source-path ${pathToClass}`,
-      {
-        ensureExitCode: 0,
-      }
-    ).jsonOutput?.result;
+    const response = execCmd<DeleteSourceJson>(`project:delete:source --json --no-prompt --source-dir ${pathToClass}`, {
+      ensureExitCode: 0,
+    }).jsonOutput?.result;
     expect(response?.deletedSource).to.have.length(2);
     expect(fs.existsSync(pathToClass)).to.be.false;
   });

@@ -28,7 +28,7 @@ the output directory to store the source–formatted files
 
 file path to manifest (package.xml) of metadata types to convert.
 
-# flags.metadata-path
+# flags.metadata-dir
 
 comma-separated list of metadata file paths to convert
 
@@ -48,9 +48,9 @@ The directory to store your files in after they’re converted to the source for
 
 - The complete path to the manifest (package.xml) file that specifies the metadata types to convert.
 
-- If you specify this parameter, don’t specify --metadata or --source-path.
+- If you specify this parameter, don’t specify --metadata or --source-dir.
 
-# flagsLong.metadata-path
+# flagsLong.metadata-dir
 
 - A comma-separated list of paths to the local metadata files to convert. The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
 

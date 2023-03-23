@@ -35,7 +35,7 @@ name of the package to associate with the metadata-formatted files
 
 file path to manifest (package.xml) of metadata types to convert.
 
-# flags.source-path
+# flags.source-dir
 
 comma-separated list of paths to the local source files to convert
 
@@ -47,9 +47,9 @@ comma-separated list of metadata component names to convert
 
 - The complete path to the manifest (package.xml) file that specifies the metadata types to convert.
 
-- If you specify this parameter, don’t specify --metadata or --source-path.
+- If you specify this parameter, don’t specify --metadata or --source-dir.
 
-# flagsLong.source-path
+# flagsLong.source-dir
 
 - A comma-separated list of paths to the local source files to convert. The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
 

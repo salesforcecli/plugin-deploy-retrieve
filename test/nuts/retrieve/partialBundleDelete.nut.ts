@@ -18,7 +18,7 @@ import {
   MetadataApiRetrieve,
   RetrieveSetOptions,
 } from '@salesforce/source-deploy-retrieve';
-import { RetrieveResultJson } from 'src/utils/types';
+import { RetrieveResultJson } from '../../../src/utils/types';
 import RetrieveMetadata from '../../../src/commands/project/retrieve/start';
 
 describe('Partial Bundle Delete Retrieves', () => {

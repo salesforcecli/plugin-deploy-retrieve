@@ -16,7 +16,7 @@ To remove deleted items from scratch orgs, which have change tracking, use "sf p
 
 - $ <%= config.bin %> <%= command.id %> -p path/to/source
 
-# flags.source-path
+# flags.source-dir
 
 comma-separated list of source file paths to delete
 
@@ -70,9 +70,9 @@ verbose output of delete result
 
 - A comma-separated list of names of metadata components to delete from your project and your org.
 
-- If you specify this parameter, don’t specify --source-path.
+- If you specify this parameter, don’t specify --source-dir.
 
-# flagsLong.source-path
+# flagsLong.source-dir
 
 - A comma-separated list of paths to the local metadata to delete. The supplied paths can be a single file (in which case the operation is applied to only one file) or a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
 
