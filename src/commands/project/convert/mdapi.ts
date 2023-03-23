@@ -23,7 +23,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
 import { ConvertMdapiJson } from '../../../utils/types';
-import { MetadataConvertResultFormatter } from '../../../formatters/MetadataConvertResultFormatter';
+import { MetadataConvertResultFormatter } from '../../../formatters/metadataConvertResultFormatter';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.mdapi');

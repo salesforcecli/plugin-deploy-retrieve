@@ -11,8 +11,8 @@ import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { cancelDeploy, cancelDeployAsync } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
-import { AsyncDeployCancelResultFormatter } from '../../../formatters/AsyncDeployCancelResultFormatter';
-import { DeployCancelResultFormatter } from '../../../formatters/DeployCancelResultFormatter';
+import { AsyncDeployCancelResultFormatter } from '../../../formatters/asyncDeployCancelResultFormatter';
+import { DeployCancelResultFormatter } from '../../../formatters/deployCancelResultFormatter';
 import { DeployResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);

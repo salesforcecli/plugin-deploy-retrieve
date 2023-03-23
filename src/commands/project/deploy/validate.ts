@@ -9,8 +9,8 @@ import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getVersionMessage } from '../../../utils/output';
-import { AsyncDeployResultFormatter } from '../../../formatters/AsyncDeployResultFormatter';
-import { DeployResultFormatter } from '../../../formatters/DeployResultFormatter';
+import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../../utils/types';
 import { executeDeploy, resolveApi, determineExitCode } from '../../../utils/deploy';

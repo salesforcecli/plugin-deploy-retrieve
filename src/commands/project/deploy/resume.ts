@@ -10,7 +10,7 @@ import { EnvironmentVariable, Messages } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
 import { getVersionMessage } from '../../../utils/output';
-import { DeployResultFormatter } from '../../../formatters/DeployResultFormatter';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson, reportsFormatters } from '../../../utils/types';
 import { determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy';

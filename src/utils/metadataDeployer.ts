@@ -21,7 +21,7 @@ import {
 } from '@salesforce/core';
 import { Deployable, Deployer, DeployerResult, generateTableChoices } from '@salesforce/sf-plugins-core';
 
-import { DeployResultFormatter } from '../formatters/DeployResultFormatter';
+import { DeployResultFormatter } from '../formatters/deployResultFormatter';
 import { TestLevel } from './types';
 import { DeployProgress } from './progressBar';
 import { determineExitCode, executeDeploy, resolveApi } from './deploy';

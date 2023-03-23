@@ -9,8 +9,8 @@ import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@sa
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
 import { getVersionMessage } from '../../../utils/output';
-import { AsyncDeployResultFormatter } from '../../../formatters/AsyncDeployResultFormatter';
-import { DeployResultFormatter } from '../../../formatters/DeployResultFormatter';
+import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson, TestLevel, reportsFormatters } from '../../../utils/types';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy';
