@@ -1,18 +1,5 @@
 {
   "test": {
     "testsPath": "test/**/*.test.ts"
-  },
-  "wireit": {
-    "compile": {
-      "command": "tsc -p . --pretty",
-      "files": ["src/**/*.ts", "**/tsconfig.json", "messages/**"],
-      "output": ["lib/**", "*.tsbuildinfo"],
-      "clean": "if-file-deleted"
-    },
-    "lint": {
-      "command": "eslint src test --color",
-      "files": ["src/**/*.ts", "test/**/*.ts", "messages/**", "**/.eslint*", "**/tsconfig.json"],
-      "output": []
-    }
   }
 }
