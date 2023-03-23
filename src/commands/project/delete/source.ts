@@ -72,9 +72,8 @@ export class Source extends SfCommand<DeleteSourceJson> {
       summary: messages.getMessage('flags.wait'),
     }),
     'test-level': testLevelFlag({
-      options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],
       aliases: ['testlevel'],
-      default: TestLevel.RunLocalTests,
+      default: TestLevel.NoTestRun,
       description: messages.getMessage('flagsLong.test-Level'),
       summary: messages.getMessage('flags.test-Level'),
       deprecateAliases: true,
