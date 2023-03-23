@@ -44,7 +44,7 @@ const fsPromises = fs.promises;
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
-const xorFlags = ['metadata', 'source-path'];
+const xorFlags = ['metadata', 'source-dir'];
 export class Source extends SfCommand<DeleteSourceJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
@@ -91,12 +91,12 @@ export class Source extends SfCommand<DeleteSourceJson> {
       summary: messages.getMessage('flags.metadata'),
       exactlyOne: xorFlags,
     }),
-    'source-path': arrayWithDeprecation({
+    'source-dir': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
-      description: messages.getMessage('flagsLong.source-path'),
-      summary: messages.getMessage('flags.source-path'),
+      description: messages.getMessage('flagsLong.source-dir'),
+      summary: messages.getMessage('flags.source-dir'),
       exactlyOne: xorFlags,
     }),
     'track-source': Flags.boolean({
@@ -157,7 +157,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   }
 
   protected async delete(): Promise<void> {
-    const sourcepaths = this.flags['source-path'];
+    const sourcepaths = this.flags['source-dir'];
 
     this.componentSet = await ComponentSetBuilder.build({
       apiversion: this.flags['api-version'],

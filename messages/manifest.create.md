@@ -1,7 +1,7 @@
 # description
 
 create a project manifest that lists the metadata components you want to deploy or retrieve
-Create a manifest from a list of metadata components (--metadata) or from one or more local directories that contain source files (--source-path). You can specify either of these parameters, not both.
+Create a manifest from a list of metadata components (--metadata) or from one or more local directories that contain source files (--source-dir). You can specify either of these parameters, not both.
 
 Use --manifest-type to specify the type of manifest you want to create. The resulting manifest files have specific names, such as the standard package.xml or destructiveChanges.xml to delete metadata. Valid values for this parameter, and their respective file names, are:
 
@@ -20,7 +20,7 @@ Use --manifest-name to specify a custom name for the generated manifest if the p
 
 - $ <%= config.bin %> <%= command.id %> -m ApexClass:MyApexClass --manifest-type destroy
 
-- $ <%= config.bin %> <%= command.id %> --source-path force-app --manifest-name myNewManifest
+- $ <%= config.bin %> <%= command.id %> --source-dir force-app --manifest-name myNewManifest
 
 - $ <%= config.bin %> <%= command.id %> --from-org test@myorg.com --include-packages unlocked
 
@@ -44,7 +44,7 @@ name of a custom manifest file to create
 
 directory to save the created manifest
 
-# flags.source-path
+# flags.source-dir
 
 comma-separated list of paths to the local source files to include in the manifest
 

@@ -8,7 +8,7 @@
   {
     "command": "project:convert:mdapi",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["api-version", "json", "loglevel", "manifest", "metadata", "metadata-path", "output-dir", "root-dir"],
+    "flags": ["api-version", "json", "loglevel", "manifest", "metadata", "metadata-dir", "output-dir", "root-dir"],
     "alias": ["force:mdapi:beta:convert", "force:mdapi:convert"]
   },
   {
@@ -23,7 +23,7 @@
       "output-dir",
       "package-name",
       "root-dir",
-      "source-path"
+      "source-dir"
     ],
     "alias": ["force:source:convert"]
   },
@@ -38,7 +38,7 @@
       "loglevel",
       "metadata",
       "no-prompt",
-      "source-path",
+      "source-dir",
       "target-org",
       "test-level",
       "track-source",
@@ -167,7 +167,7 @@
       "manifest-type",
       "metadata",
       "output-dir",
-      "source-path"
+      "source-dir"
     ],
     "alias": ["force:source:manifest:create"]
   },

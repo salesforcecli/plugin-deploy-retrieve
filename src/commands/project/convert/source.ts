@@ -67,12 +67,12 @@ export class Source extends SfCommand<ConvertResultJson> {
       summary: messages.getMessage('flagsLong.manifest'),
       exists: true,
     }),
-    'source-path': arrayWithDeprecation({
+    'source-dir': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
-      description: messages.getMessage('flags.source-path'),
-      summary: messages.getMessage('flagsLong.source-path'),
+      description: messages.getMessage('flags.source-dir'),
+      summary: messages.getMessage('flagsLong.source-dir'),
       exclusive: ['manifest', 'metadata'],
     }),
     metadata: arrayWithDeprecation({
@@ -97,7 +97,7 @@ export class Source extends SfCommand<ConvertResultJson> {
     const paths: string[] = [];
 
     const { metadata, manifest } = this.flags;
-    const sourcepath = this.flags['source-path'];
+    const sourcepath = this.flags['source-dir'];
     const rootdir = this.flags['root-dir'];
 
     if (sourcepath) {

@@ -37,7 +37,7 @@ export type CreateCommandResult = {
   path: string;
 };
 
-const xorFlags = ['metadata', 'source-path', 'from-org'];
+const xorFlags = ['metadata', 'source-dir', 'from-org'];
 
 export class Create extends SfCommand<CreateCommandResult> {
   public static readonly summary = messages.getMessage('description');
@@ -54,11 +54,11 @@ export class Create extends SfCommand<CreateCommandResult> {
       description: messages.getMessage('flags.metadata'),
       exactlyOne: xorFlags,
     }),
-    'source-path': arrayWithDeprecation({
+    'source-dir': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
-      description: messages.getMessage('flags.source-path'),
+      description: messages.getMessage('flags.source-dir'),
       exactlyOne: xorFlags,
     }),
     'manifest-name': Flags.string({
@@ -113,7 +113,7 @@ export class Create extends SfCommand<CreateCommandResult> {
 
     const componentSet = await ComponentSetBuilder.build({
       apiversion: flags['api-version'] ?? (await getSourceApiVersion()),
-      sourcepath: flags['source-path'],
+      sourcepath: flags['source-dir'],
       metadata: flags.metadata
         ? {
             metadataEntries: flags.metadata,
