@@ -8,7 +8,7 @@ import * as path from 'path';
 import { assert, expect, config } from 'chai';
 import * as sinon from 'sinon';
 import { DeployResult } from '@salesforce/source-deploy-retrieve';
-import { getCoverageFormattersOptions } from '@salesforce/plugin-source/lib/deployCommand';
+import { getCoverageFormattersOptions } from '../../src/utils/coverage';
 import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter';
 import { getDeployResult } from './deployResponses';
 
