@@ -30,7 +30,7 @@ Directory to store your files in after they’re converted to source format; can
 
 File path to manifest (package.xml) of metadata types to convert.
 
-# flags.metadata-path.summary
+# flags.metadata-dir.summary
 
 Comma-separated list of paths to the local metadata files to convert.
 
@@ -42,7 +42,7 @@ Comma-separated list of metadata component names to convert.
 
 If you specify this parameter, don’t specify --metadata or --source-dir.
 
-# flags.metadata-path.description
+# flags.metadata-dir.description
 
 The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
 

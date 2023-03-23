@@ -11,10 +11,13 @@ import { ConflictResponse } from '@salesforce/source-tracking';
 export const writeConflictTable = (conflicts: ConflictResponse[]): void => {
   // Interfaces cannot be casted to Record<string, unknown> so we have to cast to unknown first
   // See https://github.com/microsoft/TypeScript/issues/15300
-  ux.table(conflicts as unknown as Array<Record<string, unknown>>, {
-    state: { header: 'STATE' },
-    fullName: { header: 'FULL NAME' },
-    type: { header: 'TYPE' },
-    filePath: { header: 'FILE PATH' },
-  });
+  ux.table(
+    conflicts.map((c) => ({ state: c.state, fullName: c.fullName, type: c.type, filePath: c.filePath })),
+    {
+      state: { header: 'STATE' },
+      fullName: { header: 'FULL NAME' },
+      type: { header: 'TYPE' },
+      filePath: { header: 'FILE PATH' },
+    }
+  );
 };

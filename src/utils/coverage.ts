@@ -17,27 +17,24 @@ import {
 } from '@salesforce/apex-node';
 import { Successes, Failures, CodeCoverage } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
+import { StandardColors } from '@salesforce/sf-plugins-core';
 
-type SuccessOrFailure = Successes & Failures;
-
-export const mapTestResults = (testResults: Failures[] | Successes[]): ApexTestResultData[] =>
-  testResults.map((successOrFailure) => {
-    const testResult = successOrFailure as SuccessOrFailure;
-    return {
-      apexClass: { fullName: testResult.name, id: testResult.id, name: testResult.name, namespacePrefix: '' },
-      apexLogId: '',
-      asyncApexJobId: '',
-      fullName: testResult.name,
-      id: testResult.id,
-      message: testResult.message ?? '',
-      methodName: testResult.methodName,
-      outcome: !testResult.message ? ApexTestResultOutcome.Pass : ApexTestResultOutcome.Fail,
-      queueItemId: '',
-      runTime: parseInt(testResult.time, 10),
-      stackTrace: testResult.stackTrace || '',
-      testTimestamp: '',
-    };
-  });
+export const mapTestResults = <T extends Failures | Successes>(testResults: T[]): ApexTestResultData[] =>
+  testResults.map((testResult) => ({
+    apexClass: { fullName: testResult.name, id: testResult.id, name: testResult.name, namespacePrefix: '' },
+    apexLogId: '',
+    asyncApexJobId: '',
+    fullName: testResult.name,
+    id: testResult.id,
+    ...('message' in testResult && testResult.message
+      ? { message: testResult.message, outcome: ApexTestResultOutcome.Pass }
+      : { message: null, outcome: ApexTestResultOutcome.Fail }),
+    methodName: testResult.methodName,
+    queueItemId: '',
+    runTime: parseInt(testResult.time, 10),
+    stackTrace: 'stackTrace' in testResult ? testResult.stackTrace : null,
+    testTimestamp: '',
+  }));
 
 export const generateCoveredLines = (cov: CodeCoverage): [number[], number[]] => {
   const numCovered = parseInt(cov.numLocations, 10);
@@ -95,4 +92,33 @@ export const transformCoverageToApexCoverage = (mdCoverage: CodeCoverage[]): Ape
     return ac;
   });
   return { done: true, totalSize: apexCoverage.length, records: apexCoverage };
+};
+
+export const coverageOutput = (
+  cov: CodeCoverage
+): Pick<CodeCoverage, 'name' | 'numLocations'> & { lineNotCovered: string } => {
+  const numLocationsNum = parseInt(cov.numLocations, 10);
+  const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
+  const color = numLocationsNotCovered > 0 ? StandardColors.error : StandardColors.success;
+
+  let pctCovered = 100;
+  const coverageDecimal: number = parseFloat(((numLocationsNum - numLocationsNotCovered) / numLocationsNum).toFixed(2));
+  if (numLocationsNum > 0) {
+    pctCovered = coverageDecimal * 100;
+  }
+  // cov.numLocations = color(`${pctCovered}%`);
+  const base = {
+    name: cov.name,
+    numLocations: color(`${pctCovered}%`),
+  };
+
+  if (!cov.locationsNotCovered) {
+    return { ...base, lineNotCovered: '' };
+  }
+  const locations = ensureArray(cov.locationsNotCovered);
+
+  return {
+    ...base,
+    lineNotCovered: locations.map((location) => location.line).join(','),
+  };
 };

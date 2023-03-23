@@ -35,15 +35,16 @@ import * as chalk from 'chalk';
 import { DeleteSourceJson, TestLevel, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 import { resolveApi } from '../../../utils/deploy';
-import { DeleteResultFormatter, DeployResultFormatter } from '../../../utils/output';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
+import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployCache } from '../../../utils/deployCache';
-
+import { testLevelFlag } from '../../../utils/flags';
 const fsPromises = fs.promises;
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
-const xorFlags = ['metadata', 'source-path'];
+const xorFlags = ['metadata', 'source-dir'];
 export class Source extends SfCommand<DeleteSourceJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
@@ -70,14 +71,13 @@ export class Source extends SfCommand<DeleteSourceJson> {
       description: messages.getMessage('flags.wait.description'),
       summary: messages.getMessage('flags.wait.summary'),
     }),
-    'test-level': Flags.string({
-      char: 'l',
+    'test-level': testLevelFlag({
       aliases: ['testlevel'],
       deprecateAliases: true,
       description: messages.getMessage('flags.test-Level.description'),
       summary: messages.getMessage('flags.test-Level.summary'),
       options: ['NoTestRun', 'RunLocalTests', 'RunAllTestsInOrg'],
-      default: 'NoTestRun',
+      default: TestLevel.NoTestRun,
     }),
     'no-prompt': Flags.boolean({
       char: 'r',
@@ -91,12 +91,12 @@ export class Source extends SfCommand<DeleteSourceJson> {
       summary: messages.getMessage('flags.metadata.summary'),
       exactlyOne: xorFlags,
     }),
-    'source-path': arrayWithDeprecation({
+    'source-dir': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
-      description: messages.getMessage('flags.source-path.description'),
-      summary: messages.getMessage('flags.source-path.summary'),
+      description: messages.getMessage('flags.source-dir.description'),
+      summary: messages.getMessage('flags.source-dir.summary'),
       exactlyOne: xorFlags,
     }),
     'track-source': Flags.boolean({
@@ -157,7 +157,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   }
 
   protected async delete(): Promise<void> {
-    const sourcepaths = this.flags['source-path'];
+    const sourcepaths = this.flags['source-dir'];
 
     this.componentSet = await ComponentSetBuilder.build({
       apiversion: this.flags['api-version'],
@@ -227,7 +227,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       apiOptions: {
         rest: this.isRest,
         checkOnly: this.flags['check-only'] ?? false,
-        testLevel: this.flags['test-level'] as TestLevel,
+        testLevel: this.flags['test-level'],
       },
     });
 

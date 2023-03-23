@@ -5,12 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { assert, expect, config } from 'chai';
 import * as sinon from 'sinon';
-
-import { getCoverageFormattersOptions } from '@salesforce/plugin-source/lib/deployCommand';
-import { DeployResultFormatter } from '../../src/utils/output';
+import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { getCoverageFormattersOptions } from '../../src/utils/coverage';
+import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter';
 import { getDeployResult } from './deployResponses';
 
 config.truncateThreshold = 0;

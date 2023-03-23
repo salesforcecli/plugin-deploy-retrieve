@@ -95,6 +95,11 @@ export type RetrieveResultJson =
   | (Omit<MetadataApiRetrieveStatus, 'zipFile'> & { files: FileResponse[] })
   | MetadataRetrieveResultJson;
 
+export type Formatter<T> = {
+  getJson: () => T;
+  display: () => void;
+};
+
 /** validates source component with fullname, type, and xml props */
 export const isSourceComponent = (sc: unknown): sc is SourceComponent & { xml: string } =>
   isObject(sc) && 'fullName' in sc && 'type' in sc && 'xml' in sc;

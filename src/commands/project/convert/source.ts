@@ -25,7 +25,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
-import { SourceConvertResultFormatter } from '../../../utils/output';
+import { SourceConvertResultFormatter } from '../../../formatters/sourceConvertResultFormatter';
 import { ConvertResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
@@ -67,12 +67,12 @@ export class Source extends SfCommand<ConvertResultJson> {
       description: messages.getMessage('flags.manifest.description'),
       exists: true,
     }),
-    'source-path': arrayWithDeprecation({
+    'source-dir': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
-      description: messages.getMessage('flags.source-path.description'),
-      summary: messages.getMessage('flags.source-path.summary'),
+      description: messages.getMessage('flags.source-dir.description'),
+      summary: messages.getMessage('flags.source-dir.summary'),
       exclusive: ['manifest', 'metadata'],
     }),
     metadata: arrayWithDeprecation({
@@ -97,7 +97,7 @@ export class Source extends SfCommand<ConvertResultJson> {
     const paths: string[] = [];
 
     const { metadata, manifest } = this.flags;
-    const sourcepath = this.flags['source-path'];
+    const sourcepath = this.flags['source-dir'];
     const rootdir = this.flags['root-dir'];
 
     if (sourcepath) {

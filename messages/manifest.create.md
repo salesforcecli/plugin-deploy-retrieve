@@ -4,7 +4,7 @@ Create a project manifest that lists the metadata components you want to deploy 
 
 # description
 
-Create a manifest from a list of metadata components (--metadata) or from one or more local directories that contain source files (--source-path). You can specify either of these parameters, not both.
+Create a manifest from a list of metadata components (--metadata) or from one or more local directories that contain source files (--source-dir). You can specify either of these parameters, not both.
 
 Use --manifest-type to specify the type of manifest you want to create. The resulting manifest files have specific names, such as the standard package.xml or destructiveChanges.xml to delete metadata. Valid values for this parameter, and their respective file names, are:
 
@@ -55,7 +55,7 @@ Name of a custom manifest file to create.
 
 Directory to save the created manifest.
 
-# flags.source-path.summary
+# flags.source-dir.summary
 
 Comma-separated list of paths to the local source files to include in the manifest.
 

@@ -30,7 +30,7 @@ When you run this command, both the local source file and the metadata component
 
   <%= config.bin %> <%= command.id %> --manifest path/to/package.xml
 
-# flags.source-path.summary
+# flags.source-dir.summary
 
 Comma-separated list of source file paths to delete.
 
@@ -86,7 +86,7 @@ Note: A Metadata API deletion that includes Master-Detail relationships deletes 
 
 If you specify this parameter, don’t specify --source-dir.
 
-# flags.source-path.description
+# flags.source-dir.description
 
 The supplied paths can be a single file (in which case the operation is applied to only one file) or a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
 
