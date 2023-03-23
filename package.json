@@ -106,6 +106,9 @@
           "deploy": {
             "description": "Commands to deploy metadata to a Salesforce org."
           },
+          "list": {
+            "description": "Commands to list metadata in a Salesforce project."
+          },
           "retrieve": {
             "description": "Commands to retrieve metadata from a Salesforce org"
           },
