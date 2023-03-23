@@ -18,7 +18,7 @@ To specify a package name that includes spaces, enclose the name in single quote
 
 - Similar to previous example, but writes converted files to the specified output directory and associates the files with the specified package:
 
-  $ <%= config.bin %> <%= command.id %> --root-dir path/to/source --output-dir path/to/outputdir --package-name 'My Package'
+  $ <%= config.bin %> <%= command.id %> --root-dir path/to/source --results-dir path/to/outputdir --package-name 'My Package'
 
 # flags.root-dir.summary
 
@@ -46,7 +46,7 @@ Comma-separated list of metadata component names to convert.
 
 # flags.manifest.description
 
-If you specify this parameter, don’t specify --metadata or --source-path.
+If you specify this parameter, don’t specify --metadata or --source-dir.
 
 # flags.source-path.description
 

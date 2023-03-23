@@ -40,7 +40,7 @@ export type CreateCommandResult = {
 const xorFlags = ['metadata', 'source-path', 'from-org'];
 
 export class Create extends SfCommand<CreateCommandResult> {
-  public static readonly summary = messages.getMessage('description');
+  public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly aliases = ['force:source:manifest:create'];
@@ -51,40 +51,40 @@ export class Create extends SfCommand<CreateCommandResult> {
     loglevel,
     metadata: arrayWithDeprecation({
       char: 'm',
-      description: messages.getMessage('flags.metadata'),
+      summary: messages.getMessage('flags.metadata.summary'),
       exactlyOne: xorFlags,
     }),
     'source-path': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
-      description: messages.getMessage('flags.source-path'),
+      summary: messages.getMessage('flags.source-path.summary'),
       exactlyOne: xorFlags,
     }),
     'manifest-name': Flags.string({
       char: 'n',
       aliases: ['manifestname'],
       deprecateAliases: true,
-      summary: messages.getMessage('flags.manifest-name'),
+      summary: messages.getMessage('flags.manifest-name.summary'),
       exclusive: ['manifest-type'],
     }),
     'manifest-type': Flags.string({
       aliases: ['manifesttype'],
       deprecateAliases: true,
-      summary: messages.getMessage('flags.manifest-type'),
+      summary: messages.getMessage('flags.manifest-type.summary'),
       options: Object.keys(manifestTypes),
       char: 't',
     }),
     'include-packages': arrayWithDeprecation({
       aliases: ['includepackages'],
       deprecateAliases: true,
-      description: messages.getMessage('flags.include-packages'),
+      summary: messages.getMessage('flags.include-packages.summary'),
       options: Object.keys(packageTypes),
       char: 'c',
       dependsOn: ['fromorg'],
     }),
     'from-org': Flags.custom({
-      summary: messages.getMessage('flags.from-org'),
+      summary: messages.getMessage('flags.from-org.summary'),
       exactlyOne: xorFlags,
       aliases: ['fromorg'],
       deprecateAliases: true,
@@ -94,7 +94,7 @@ export class Create extends SfCommand<CreateCommandResult> {
       char: 'd',
       aliases: ['outputdir', 'o'],
       deprecateAliases: true,
-      summary: messages.getMessage('flags.output-dir'),
+      summary: messages.getMessage('flags.output-dir.summary'),
     }),
   };
 
