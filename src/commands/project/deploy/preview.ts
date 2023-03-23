@@ -32,10 +32,6 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       description: messages.getMessage('flags.ignore-conflicts.description'),
       default: false,
     }),
-    'only-ignored': Flags.boolean({
-      char: 'i',
-      summary: messages.getMessage('flags.only-ignored.summary'),
-    }),
     manifest: Flags.file({
       char: 'x',
       description: messages.getMessage('flags.manifest.description'),
@@ -80,7 +76,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
 
     const [componentSet, filesWithConflicts] = await Promise.all([
       buildComponentSet({ ...flags, 'target-org': flags['target-org'].getUsername() }, stl),
-      getConflictFiles(stl, flags['ignore-conflicts'] || flags['only-ignored']),
+      getConflictFiles(stl, flags['ignore-conflicts']),
     ]);
 
     const output = compileResults({
@@ -92,7 +88,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
     });
 
     if (!this.jsonEnabled()) {
-      printTables(output, 'deploy', flags['only-ignored']);
+      printTables(output, 'deploy');
     }
     return output;
   }
