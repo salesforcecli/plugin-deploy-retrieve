@@ -31,7 +31,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
-  public static readonly state = 'beta';
   public static readonly aliases = ['retrieve:metadata'];
   public static readonly deprecateAliases = true;
 

@@ -9,7 +9,7 @@
     "command": "project:convert:mdapi",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["api-version", "json", "loglevel", "manifest", "metadata", "metadata-dir", "output-dir", "root-dir"],
-    "alias": ["force:mdapi:beta:convert", "force:mdapi:convert"]
+    "alias": ["force:mdapi:convert"]
   },
   {
     "command": "project:convert:source",
@@ -51,7 +51,7 @@
     "command": "project:delete:tracking",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["api-version", "json", "loglevel", "no-prompt", "target-org"],
-    "alias": ["force:source:beta:tracking:clear", "force:source:tracking:clear"]
+    "alias": ["force:source:tracking:clear"]
   },
   {
     "command": "project:deploy:cancel",
@@ -181,7 +181,7 @@
     "command": "project:reset:tracking",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["api-version", "json", "loglevel", "no-prompt", "revision", "target-org"],
-    "alias": ["force:source:beta:tracking:reset", "force:source:tracking:reset"]
+    "alias": ["force:source:tracking:reset"]
   },
   {
     "command": "project:retrieve:preview",

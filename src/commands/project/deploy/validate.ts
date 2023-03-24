@@ -28,7 +28,6 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
-  public static readonly state = 'beta';
   public static readonly aliases = ['deploy:metadata:validate'];
   public static readonly deprecateAliases = true;
 

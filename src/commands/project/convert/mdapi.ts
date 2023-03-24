@@ -35,7 +35,7 @@ export interface EnsureFsFlagOptions {
   throwOnENOENT?: boolean;
 }
 export class Mdapi extends SfCommand<ConvertMdapiJson> {
-  public static readonly aliases = ['force:mdapi:beta:convert', 'force:mdapi:convert'];
+  public static readonly aliases = ['force:mdapi:convert'];
   public static readonly deprecateAliases = true;
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');

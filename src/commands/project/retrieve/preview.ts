@@ -18,7 +18,6 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
-  public static readonly state = 'beta';
   public static readonly aliases = ['retrieve:metadata:preview'];
   public static readonly deprecateAliases = true;
 

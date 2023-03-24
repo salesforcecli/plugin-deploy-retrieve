@@ -25,7 +25,7 @@ export type DeleteTrackingResult = {
 
 export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
   public static readonly deprecateAliases = true;
-  public static readonly aliases = ['force:source:beta:tracking:clear', 'force:source:tracking:clear'];
+  public static readonly aliases = ['force:source:tracking:clear'];
   public static readonly summary = messages.getMessage('deleteSummary');
   public static readonly description = messages.getMessage('deleteDescription');
   public static readonly requiresProject = true;
