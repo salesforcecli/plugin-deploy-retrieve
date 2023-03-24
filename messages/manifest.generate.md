@@ -6,7 +6,7 @@ Create a project manifest that lists the metadata components you want to deploy 
 
 Create a manifest from a list of metadata components (--metadata) or from one or more local directories that contain source files (--source-dir). You can specify either of these parameters, not both.
 
-Use --manifest-type to specify the type of manifest you want to create. The resulting manifest files have specific names, such as the standard package.xml or destructiveChanges.xml to delete metadata. Valid values for this parameter, and their respective file names, are:
+Use --type to specify the type of manifest you want to create. The resulting manifest files have specific names, such as the standard package.xml or destructiveChanges.xml to delete metadata. Valid values for this parameter, and their respective file names, are:
 
     * package : package.xml (default)
     * pre : destructiveChangesPre.xml
@@ -15,7 +15,7 @@ Use --manifest-type to specify the type of manifest you want to create. The resu
 
 See https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_deleting_files.htm for information about these destructive manifest files.
 
-Use --manifest-name to specify a custom name for the generated manifest if the pre-defined ones don’t suit your needs. You can specify either --manifest-type or --manifest-name, but not both.
+Use --name to specify a custom name for the generated manifest if the pre-defined ones don’t suit your needs. You can specify either --type or --name, but not both.
 
 # examples
 
@@ -25,11 +25,11 @@ Use --manifest-name to specify a custom name for the generated manifest if the p
 
 - Create a manifest for deleting the specified Apex class:
 
-  $ <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass --manifest-type destroy
+  $ <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass --type destroy
 
 - Create a manifest for deploying or retrieving all the metadata components in the specified local directory; name the file myNewManifest.xml:
 
-  $ <%= config.bin %> <%= command.id %> --source-dir force-app --manifest-name myNewManifest
+  $ <%= config.bin %> <%= command.id %> --source-dir force-app --name myNewManifest
 
 - Create a manifest from the metadata components in the specified org and include metadata in any unlocked packages:
 
@@ -43,11 +43,11 @@ Comma-separated list of package types (managed, unlocked) whose metadata is incl
 
 Username or alias of the org that contains the metadata components from which to build a manifest.
 
-# flags.manifest-type.summary
+# flags.type.summary
 
 Type of manifest to create; the type determines the name of the created file.
 
-# flags.manifest-name.summary
+# flags.name.summary
 
 Name of a custom manifest file to create.
 

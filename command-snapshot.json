@@ -163,11 +163,11 @@
       "include-packages",
       "json",
       "loglevel",
-      "manifest-name",
-      "manifest-type",
       "metadata",
+      "name",
       "output-dir",
-      "source-dir"
+      "source-dir",
+      "type"
     ],
     "alias": ["force:source:manifest:create"]
   },

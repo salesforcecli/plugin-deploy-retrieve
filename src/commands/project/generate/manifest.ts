@@ -18,7 +18,7 @@ import {
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'manifest.create');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'manifest.generate');
 
 const manifestTypes = {
   pre: 'destructiveChangesPre.xml',
@@ -61,19 +61,20 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
       summary: messages.getMessage('flags.source-dir.summary'),
       exactlyOne: xorFlags,
     }),
-    'manifest-name': Flags.string({
+    name: Flags.string({
       char: 'n',
       aliases: ['manifestname'],
       deprecateAliases: true,
-      summary: messages.getMessage('flags.manifest-name.summary'),
-      exclusive: ['manifest-type'],
+      summary: messages.getMessage('flags.name.summary'),
+      exclusive: ['type'],
     }),
-    'manifest-type': Flags.string({
+    type: Flags.string({
       aliases: ['manifesttype'],
       deprecateAliases: true,
-      summary: messages.getMessage('flags.manifest-type.summary'),
+      summary: messages.getMessage('flags.type.summary'),
       options: Object.keys(manifestTypes),
       char: 't',
+      exclusive: ['name'],
     }),
     'include-packages': arrayWithDeprecation({
       aliases: ['includepackages'],
@@ -103,11 +104,9 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
     // convert the manifesttype into one of the "official" manifest names
     // if no manifesttype flag passed, use the manifestname?flag
     // if no manifestname flag, default to 'package.xml'
-    const manifestTypeFromFlag = flags['manifest-type'] as keyof typeof manifestTypes;
+    const manifestTypeFromFlag = flags.type as keyof typeof manifestTypes;
     const manifestName = ensureFileEnding(
-      typeof manifestTypeFromFlag === 'string'
-        ? manifestTypes[manifestTypeFromFlag]
-        : flags['manifest-name'] ?? 'package.xml',
+      typeof manifestTypeFromFlag === 'string' ? manifestTypes[manifestTypeFromFlag] : flags.name ?? 'package.xml',
       '.xml'
     );
 
