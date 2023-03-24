@@ -82,7 +82,7 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
       summary: messages.getMessage('flags.include-packages.summary'),
       options: Object.keys(packageTypes),
       char: 'c',
-      dependsOn: ['fromorg'],
+      dependsOn: ['from-org'],
     }),
     'from-org': Flags.custom({
       summary: messages.getMessage('flags.from-org.summary'),
