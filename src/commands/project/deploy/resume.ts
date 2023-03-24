@@ -81,7 +81,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataResume), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
-    const deployOpts = cache.get(jobId);
+    // if it was async before, then it should not be async now.
+    const deployOpts = { ...cache.get(jobId), async: false };
 
     if (isNotResumable(deployOpts.status)) {
       throw messages.createError('error.DeployNotResumable', [jobId, deployOpts.status]);
