@@ -32,14 +32,14 @@ const packageTypes: Record<string, string[]> = {
   unlocked: ['deprecatedEditable', 'installedEditable'],
 };
 
-export type CreateCommandResult = {
+export type ManifestGenerateCommandResult = {
   name: string;
   path: string;
 };
 
 const xorFlags = ['metadata', 'source-dir', 'from-org'];
 
-export class Create extends SfCommand<CreateCommandResult> {
+export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -98,8 +98,8 @@ export class Create extends SfCommand<CreateCommandResult> {
     }),
   };
 
-  public async run(): Promise<CreateCommandResult> {
-    const { flags } = await this.parse(Create);
+  public async run(): Promise<ManifestGenerateCommandResult> {
+    const { flags } = await this.parse(ManifestGenerate);
     // convert the manifesttype into one of the "official" manifest names
     // if no manifesttype flag passed, use the manifestname?flag
     // if no manifestname flag, default to 'package.xml'

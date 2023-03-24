@@ -155,13 +155,7 @@
     "alias": ["deploy:metadata:validate"]
   },
   {
-    "command": "project:list:ignored",
-    "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["json", "source-dir"],
-    "alias": ["force:source:ignored:list"]
-  },
-  {
-    "command": "project:manifest:create",
+    "command": "project:generate:manifest",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": [
       "api-version",
@@ -176,6 +170,12 @@
       "source-dir"
     ],
     "alias": ["force:source:manifest:create"]
+  },
+  {
+    "command": "project:list:ignored",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["json", "source-dir"],
+    "alias": ["force:source:ignored:list"]
   },
   {
     "command": "project:reset:tracking",

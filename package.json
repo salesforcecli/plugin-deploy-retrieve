@@ -118,7 +118,7 @@
           "delete": {
             "description": "Commands to delete metadata from a Salesforce org."
           },
-          "manifest": {
+          "generate": {
             "description": "Commands to create a manifest file."
           },
           "reset": {
