@@ -126,14 +126,21 @@ export const compileResults = ({
     // There should not be anything in forceignore returned by the componentSet
     ignored: [c.xml, c.content].some((v) => v && forceIgnore.denies(v)),
     // properties to return if we have an xml path
-    ...(c.xml
-      ? {
-          path: path.isAbsolute(c.xml) ? c.xml : path.resolve(c.xml),
-          // for cleaner output
-          projectRelativePath: path.relative(projectPath, c.xml),
-        }
-      : {}),
+    ...getPaths(c),
   });
+
+  /** resolve absolute and relative paths for a source component, with a preference for the xml file, but able to use the content file as backup */
+  const getPaths = (c: SourceComponent): Pick<PreviewFile, 'path' | 'projectRelativePath'> => {
+    const someFile = c.xml ?? c.content;
+    if (someFile) {
+      return {
+        path: path.isAbsolute(someFile) ? someFile : path.resolve(someFile),
+        // for cleaner output
+        projectRelativePath: path.relative(projectPath, someFile),
+      };
+    }
+    return {};
+  };
 
   const actionableFiles = componentSet
     .toArray()
