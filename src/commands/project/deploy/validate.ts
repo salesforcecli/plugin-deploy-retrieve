@@ -135,13 +135,14 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
 
     this.log(getVersionMessage('Validating Deployment', componentSet, api));
     this.log(`Deploy ID: ${bold(deploy.id)}`);
-    new DeployProgress(deploy, this.jsonEnabled()).start();
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
     }
+
+    new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus(500, flags.wait?.seconds);
     process.exitCode = determineExitCode(result);
