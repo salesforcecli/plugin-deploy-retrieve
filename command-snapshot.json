@@ -62,7 +62,7 @@
   {
     "command": "project:deploy:preview",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["ignore-conflicts", "json", "manifest", "metadata", "only-ignored", "source-dir", "target-org"],
+    "flags": ["ignore-conflicts", "json", "manifest", "metadata", "source-dir", "target-org"],
     "alias": ["deploy:metadata:preview"]
   },
   {
@@ -153,6 +153,12 @@
       "wait"
     ],
     "alias": ["deploy:metadata:validate"]
+  },
+  {
+    "command": "project:list:ignored",
+    "plugin": "@salesforce/plugin-deploy-retrieve",
+    "flags": ["json", "source-dir"],
+    "alias": ["force:source:ignored:list"]
   },
   {
     "command": "project:manifest:create",

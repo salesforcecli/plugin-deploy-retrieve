@@ -242,16 +242,15 @@ export const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOpera
   }
 };
 
-export const printTables = (result: PreviewResult, baseOperation: BaseOperation, onlyIgnored = false): void => {
-  if (!onlyIgnored) {
-    printConflictsTable(result.conflicts);
-    printDeleteTable(result.toDelete);
-    if (baseOperation === 'deploy') {
-      printDeployTable(result.toDeploy);
-    } else if (baseOperation === 'retrieve') {
-      printRetrieveTable(result.toRetrieve);
-    }
+export const printTables = (result: PreviewResult, baseOperation: BaseOperation): void => {
+  printConflictsTable(result.conflicts);
+  printDeleteTable(result.toDelete);
+  if (baseOperation === 'deploy') {
+    printDeployTable(result.toDeploy);
+  } else if (baseOperation === 'retrieve') {
+    printRetrieveTable(result.toRetrieve);
   }
+
   printIgnoredTable(result.ignored, baseOperation);
 };
 
