@@ -143,6 +143,7 @@ export const compileResults = ({
   };
 
   const actionableFiles = componentSet
+    .filter((f) => f.fullName !== '*')
     .toArray()
     .map((c) => sourceBackedComponents.get(makeKey(c)) ?? c)
     .map((cmp): PreviewFile => {

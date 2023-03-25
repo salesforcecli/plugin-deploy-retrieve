@@ -219,7 +219,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       type: { header: 'Type' },
       filePath: { header: 'Path' },
     };
-    const title = 'Deployed Source';
+    const title = this.result.response.checkOnly ? 'Validated Source' : 'Deployed Source';
     const options = { title: tableHeader(title) };
     ux.log();
 
