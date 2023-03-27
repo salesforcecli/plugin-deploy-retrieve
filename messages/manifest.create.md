@@ -17,11 +17,13 @@ See https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/met
 
 Use --manifest-name to specify a custom name for the generated manifest if the pre-defined ones don’t suit your needs. You can specify either --manifest-type or --manifest-name, but not both.
 
+To include multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --include-packages and --source-dir.
+
 # examples
 
-- Create a manifest for deploying or retrieving all Apex classes:
+- Create a manifest for deploying or retrieving all Apex classes and custom objects:
 
-  $ <%= config.bin %> <%= command.id %> --metadata ApexClass
+  $ <%= config.bin %> <%= command.id %> --metadata ApexClass --metadata CustomObject
 
 - Create a manifest for deleting the specified Apex class:
 
@@ -37,7 +39,7 @@ Use --manifest-name to specify a custom name for the generated manifest if the p
 
 # flags.include-packages.summary
 
-Comma-separated list of package types (managed, unlocked) whose metadata is included in the manifest; by default, metadata in packages is ignored.
+Package types (managed, unlocked) whose metadata is included in the manifest; by default, metadata in packages is ignored.
 
 # flags.from-org.summary
 
@@ -57,11 +59,11 @@ Directory to save the created manifest.
 
 # flags.source-dir.summary
 
-Comma-separated list of paths to the local source files to include in the manifest.
+Paths to the local source files to include in the manifest.
 
 # flags.metadata.summary
 
-Comma-separated list of names of metadata components to include in the manifest.
+Names of metadata components to include in the manifest.
 
 # success
 

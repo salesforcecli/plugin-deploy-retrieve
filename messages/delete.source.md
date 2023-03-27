@@ -8,6 +8,8 @@ Use this command to delete components from orgs that don’t have source trackin
 
 When you run this command, both the local source file and the metadata component in the org are deleted.
 
+To delete multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
+
 # examples
 
 - Delete all local Apex source files and all Apex classes from the org with alias "my-scratch":
@@ -32,11 +34,11 @@ When you run this command, both the local source file and the metadata component
 
 # flags.source-dir.summary
 
-Comma-separated list of source file paths to delete.
+Source file paths to delete.
 
 # flags.metadata.summary
 
-Comma-separated list of names of metadata components to delete.
+Metadata components to delete.
 
 # flags.no-prompt.summary
 
