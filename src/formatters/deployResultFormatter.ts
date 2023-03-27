@@ -97,7 +97,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private maybeCreateRequestedReports(): void {
     // only generate reports if test results are presented
     if (this.result.response?.numberTestsTotal) {
-      if (this.coverageOptions) {
+      if (this.coverageOptions.reportFormats?.length) {
         ux.log(
           `Code Coverage formats, [${this.flags['coverage-formatters']?.join(', ')}], written to ${this.resultsDir}/`
         );
