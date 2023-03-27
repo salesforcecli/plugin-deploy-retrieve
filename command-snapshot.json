@@ -74,16 +74,7 @@
   {
     "command": "project:deploy:report",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": [
-      "api-version",
-      "coverage-formatters",
-      "job-id",
-      "json",
-      "junit",
-      "results-dir",
-      "target-org",
-      "use-most-recent"
-    ],
+    "flags": ["coverage-formatters", "job-id", "json", "junit", "results-dir", "use-most-recent"],
     "alias": ["deploy:metadata:report"]
   },
   {
