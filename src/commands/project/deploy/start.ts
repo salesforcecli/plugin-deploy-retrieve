@@ -185,6 +185,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         'target-org': flags['target-org'].getUsername(),
         api,
       },
+      this.config.bin,
       this.project
     );
 
@@ -196,7 +197,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
-      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
+      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id, this.config.bin);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
     }
@@ -225,12 +226,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         return super.catch({
           ...error,
           message: messages.getMessage('error.Conflicts'),
-          actions: messages.getMessages('error.Conflicts.Actions'),
+          actions: messages.getMessages('error.Conflicts.Actions', [this.config.bin]),
         });
       }
     }
     if (error.message.includes('client has timed out')) {
-      const err = messages.createError('error.ClientTimeout');
+      const err = messages.createError('error.ClientTimeout', [this.config.bin]);
       return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
     }
     return super.catch(error);

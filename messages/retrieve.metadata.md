@@ -157,7 +157,7 @@ There are changes in your local files that conflict with the org changes you're 
 
 - To overwrite the local changes, rerun this command with the --ignore-conflicts flag.
 
-- To overwrite the remote changes, run the "sf project deploy start" command with the --ignore-conflicts flag.
+- To overwrite the remote changes, run the "%s project deploy start" command with the --ignore-conflicts flag.
 
 # info.WroteZipFile
 

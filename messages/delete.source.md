@@ -4,7 +4,7 @@ Delete source from your project and from a non-source-tracked org.
 
 # description
 
-Use this command to delete components from orgs that don’t have source tracking. To remove deleted items from orgs that have source tracking enabled, "sf project deploy start".
+Use this command to delete components from orgs that don’t have source tracking. To remove deleted items from orgs that have source tracking enabled, "<%= config.bin %> project deploy start".
 
 When you run this command, both the local source file and the metadata component in the org are deleted.
 

@@ -92,6 +92,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const { deploy, componentSet } = await executeDeploy(
       // there will always be conflicts on a resume if anything deployed--the changes on the server are not synced to local
       { ...deployOpts, wait, 'dry-run': false, 'ignore-conflicts': true },
+      this.config.bin,
       this.project,
       jobId
     );

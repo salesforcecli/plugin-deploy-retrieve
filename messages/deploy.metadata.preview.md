@@ -94,4 +94,4 @@ There are changes in the org that conflict with the local changes you're trying 
 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
-- To overwrite the local changes, run the "sf project retrieve start" command with the --ignore-conflicts flag.
+- To overwrite the local changes, run the "%s project retrieve start" command with the --ignore-conflicts flag.

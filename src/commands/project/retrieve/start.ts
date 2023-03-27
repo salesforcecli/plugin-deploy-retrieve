@@ -250,7 +250,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         return super.catch({
           ...error,
           message: messages.getMessage('error.Conflicts'),
-          actions: messages.getMessages('error.Conflicts.Actions'),
+          actions: messages.getMessages('error.Conflicts.Actions', [this.config.bin]),
         });
       }
     }
