@@ -68,7 +68,7 @@ All child components are included. If you specify this flag, don’t specify --m
 
 # flags.ignore-conflicts.summary
 
-Ignore conflicts and deploy local files, even if they overwrite changes in the org.
+Don't display conflicts between your local project and the org.
 
 # flags.ignore-conflicts.description
 
