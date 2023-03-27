@@ -56,17 +56,17 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 Login username or alias for the target org.
 
-# flags.pre-destructive-changes
+# flags.pre-destructive-changes.summary
 
-file path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy
+File path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy
 
-# flags.post-destructive-changes
+# flags.post-destructive-changes.summary
 
-file path for a manifest (destructiveChangesPost.xml) of components to delete after the deploy
+File path for a manifest (destructiveChangesPost.xml) of components to delete after the deploy.
 
-# flags.purge-on-delete
+# flags.purge-on-delete.summary
 
-specify that deleted components in the destructive changes manifest file are immediately eligible for deletion rather than being stored in the Recycle Bin
+Specify that deleted components in the destructive changes manifest file are immediately eligible for deletion rather than being stored in the Recycle Bin.
 
 # flags.target-org.description
 
@@ -223,17 +223,17 @@ No local changes to deploy.
 
 - To see conflicts and ignored files, run "%s project deploy preview" with any of the manifest, directory, or metadata flags.
 
-# flags.junit
+# flags.junit.summary
 
-output JUnit test results
+Output JUnit test results.
 
-# flags.coverage-formatters
+# flags.coverage-formatters.summary
 
-format of the code coverage results
+Format of the code coverage results.
 
-# flags.results-dir
+# flags.results-dir.summary
 
-output directory for code coverage and JUnit results; defaults to the deploy ID
+Output directory for code coverage and JUnit results; defaults to the deploy ID.
 
 # asyncCoverageJunitWarning
 

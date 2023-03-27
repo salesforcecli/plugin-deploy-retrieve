@@ -47,14 +47,14 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     }),
     'coverage-formatters': Flags.string({
       multiple: true,
-      summary: messages.getMessage('flags.coverage-formatters'),
+      summary: messages.getMessage('flags.coverage-formatters.summary'),
       options: reportsFormatters,
       helpValue: reportsFormatters.join(','),
     }),
-    junit: Flags.boolean({ summary: messages.getMessage('flags.junit') }),
+    junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary') }),
     'results-dir': Flags.directory({
       dependsOn: ['junit', 'coverage-formatters'],
-      summary: messages.getMessage('flags.results-dir'),
+      summary: messages.getMessage('flags.results-dir.summary'),
     }),
   };
 
