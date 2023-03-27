@@ -14,13 +14,13 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 # examples
 
-- Retrieve remote changes:
+- Retrieve remote changes from your default org:
 
   <%= config.bin %> <%= command.id %>
 
-- Retrieve the source files in a directory:
+- Retrieve the source files in a directory from an org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --source-dir path/to/source
+  <%= config.bin %> <%= command.id %> --source-dir path/to/source --target-org my-scratch
 
 - Retrieve a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
 

@@ -16,13 +16,13 @@ To preview the deployment of multiple metadata components, either set multiple -
 
 - NOTE: The commands to preview a deployment and actually deploy it use similar flags. We provide a few preview examples here, but see the help for "<%= config.bin %> project deploy start" for more examples that you can adapt for previewing.
 
-- Preview the deployment of source files in a directory, such as force-app:
+- Preview the deployment of source files in a directory, such as force-app, to your default org:
 
       <%= config.bin %> <%= command.id %>  --source-dir force-app
 
-- Preview the deployment of all Apex classes:
+- Preview the deployment of all Apex classes to an org with alias "my-scratch":
 
-      <%= config.bin %> <%= command.id %> --metadata ApexClass
+      <%= config.bin %> <%= command.id %> --metadata ApexClass --target-org my-scratch
 
 - Preview deployment of a specific Apex class:
 
@@ -68,7 +68,7 @@ All child components are included. If you specify this flag, don’t specify --m
 
 # flags.ignore-conflicts.summary
 
-Don't display conflicts between your local project and the org.
+Don't display conflicts in preview of the deployment.
 
 # flags.ignore-conflicts.description
 
