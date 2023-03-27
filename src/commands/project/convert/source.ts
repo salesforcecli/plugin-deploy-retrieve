@@ -39,7 +39,7 @@ export class Source extends SfCommand<ConvertResultJson> {
   public static readonly aliases = ['force:source:convert'];
   public static readonly deprecateAliases = true;
   public static readonly flags = {
-    'api-version': orgApiVersionFlagWithDeprecations,
+    'api-version': { ...orgApiVersionFlagWithDeprecations, summary: messages.getMessage('flags.api-version.summary') },
     loglevel,
     'root-dir': Flags.directory({
       aliases: ['rootdir'],
@@ -117,7 +117,7 @@ export class Source extends SfCommand<ConvertResultJson> {
     }
 
     this.componentSet = await ComponentSetBuilder.build({
-      sourceapiversion: await getSourceApiVersion(),
+      sourceapiversion: this.flags['api-version'] ?? (await getSourceApiVersion()),
       sourcepath: paths,
       manifest: manifest
         ? {

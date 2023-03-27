@@ -26,7 +26,7 @@ export type ResetTrackingResult = {
 
 export class ResetTracking extends SfCommand<ResetTrackingResult> {
   public static readonly deprecateAliases = true;
-  public static readonly aliases = ['force:source:beta:tracking:reset', 'force:source:tracking:reset'];
+  public static readonly aliases = ['force:source:tracking:reset'];
   public static readonly summary = messages.getMessage('resetSummary');
   public static readonly description = messages.getMessage('resetDescription');
   public static readonly requiresProject = true;

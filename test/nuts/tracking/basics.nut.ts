@@ -64,6 +64,15 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(response.toDeploy.every((row) => row.type && row.fullName)).to.equal(true);
       expect(response.conflicts).to.be.an.instanceof(Array).with.length(0);
     });
+    it('includes no wildcard entries', () => {
+      const response = execCmd<PreviewResult>('deploy metadata preview --metadata ApexClass --json', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      assert(response);
+      assert(Array.isArray(response.toDeploy));
+      // the fields should be populated
+      expect(response.toDeploy.every((row) => row.fullName !== '*')).to.equal(true);
+    });
     it('pushes the initial metadata to the org', () => {
       const resp = execCmd<DeployResultJson>('deploy metadata --json');
       expect(resp.jsonOutput?.status, JSON.stringify(resp)).to.equal(0);
