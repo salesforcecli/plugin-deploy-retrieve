@@ -8,7 +8,11 @@
 import { expect } from 'chai';
 import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
+import { Messages } from '@salesforce/core';
 import DeployMetadata from '../../../src/commands/project/deploy/start';
+
+Messages.importMessagesDirectory(__dirname);
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 describe('project deploy start', () => {
   const $$ = new TestContext();
@@ -36,9 +40,9 @@ describe('project deploy start', () => {
     try {
       await DeployMetadata.run([]);
     } catch (e) {
-      expect(warnStub.firstCall.args[0]).to.contain('pushPackageDirectoriesSequentially');
-      expect(warnStub.called).to.be.true;
-      // do nothing, only need to assert that it warns correctly, avoid too much UT setup
+      expect(warnStub.getCalls().flatMap((call: { args: string[] }) => call.args)).to.deep.include(
+        messages.getMessage('pushPackageDirsWarning')
+      ); // do nothing, only need to assert that it warns correctly, avoid too much UT setup
     }
   });
 

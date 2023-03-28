@@ -241,4 +241,4 @@ You requested an async deploy with code coverage or JUnit results. The reports w
 
 # pushPackageDirsWarning
 
-The `pushPackageDirectoriesSequentially` property is no longer respected by this command. Please specify directories by using the `--source-dir | -d` flag in their deployment order.
+The `pushPackageDirectoriesSequentially` property is not respected by this command. Please call the `project deploy start --source-dir` command for each dependency in the correct order.
