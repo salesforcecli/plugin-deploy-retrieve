@@ -96,7 +96,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     this.log(`Deploy ID: ${bold(jobId)}`);
 
     if (flags.async) {
-      const asyncFormatter = new AsyncDeployResultFormatter(jobId);
+      const asyncFormatter = new AsyncDeployResultFormatter(jobId, this.config.bin);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
     }

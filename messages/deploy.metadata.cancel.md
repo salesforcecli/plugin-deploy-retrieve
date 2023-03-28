@@ -47,7 +47,7 @@ Number of minutes to wait for the command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the cancellation, run "sf project deploy resume". To check the status of the cancellation, run "<%= config.bin %> project deploy report".
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the cancellation, run "<%= config.bin %> project deploy resume". To check the status of the cancellation, run "<%= config.bin %> project deploy report".
 
 # flags.async.summary
 
@@ -55,7 +55,7 @@ Run the command asynchronously.
 
 # flags.async.description
 
-The command immediately returns the control of the terminal to you. This way, you can continue to use the CLI. To resume watching the cancellation, run "sf project deploy resume". To check the status of the cancellation, run "<%= config.bin %> project deploy report".
+The command immediately returns the control of the terminal to you. This way, you can continue to use the CLI. To resume watching the cancellation, run "<%= config.bin %> project deploy resume". To check the status of the cancellation, run "<%= config.bin %> project deploy report".
 
 # error.CannotCancelDeploy
 

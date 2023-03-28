@@ -130,6 +130,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
         'target-org': flags['target-org'].getUsername(),
         api,
       },
+      this.config.bin,
       this.project
     );
 
@@ -137,7 +138,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     this.log(`Deploy ID: ${bold(deploy.id)}`);
 
     if (flags.async) {
-      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
+      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id, this.config.bin);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
     }

@@ -12,7 +12,7 @@ For example, if your local project contains a source directory with metadata fil
 
 The command stores your responses in the "deploy-options.json" file in your local project directory and uses them as defaults when you rerun the command. Specify --interactive to force the command to reprompt.
 
-Use this command for quick and simple deploys. For more complicated deployments, use the environment-specific commands, such as "sf project deploy start", that provide additional flags.
+Use this command for quick and simple deploys. For more complicated deployments, use the environment-specific commands, such as "<%= config.bin %> project deploy start", that provide additional flags.
 
 # examples
 

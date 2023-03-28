@@ -10,6 +10,8 @@ To convert Metadata API–formatted files into the source format, run "<%= confi
 
 To specify a package name that includes spaces, enclose the name in single quotes.
 
+To convert multiple components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
+
 # examples
 
 - Convert source-formatted files in the specified directory into metadata-formatted files; writes converted files into a new directory:
@@ -42,11 +44,11 @@ Path to the manifest (package.xml) file that specifies the metadata types to con
 
 # flags.source-dir.summary
 
-Comma-separated list of paths to the local source files to convert.
+Paths to the local source files to convert.
 
 # flags.metadata.summary
 
-Comma-separated list of metadata component names to convert.
+Metadata component names to convert.
 
 # flags.manifest.description
 

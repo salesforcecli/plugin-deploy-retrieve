@@ -12,13 +12,13 @@ If your org allows source tracking, then this command considers conflicts betwee
 
 # examples
 
-- Preview the retrieve of all changes from the org:
+- Preview the retrieve of all changes from your default org:
 
   <%= config.bin %> <%= command.id %>
 
-- Preview the retrieve when ignoring any conflicts:
+- Preview the retrieve when ignoring any conflicts from an org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --ignore-conflicts
+  <%= config.bin %> <%= command.id %> --ignore-conflicts --target-org my-scratch
 
 # flags.target-org.summary
 
@@ -30,7 +30,7 @@ Overrides your default org.
 
 # flags.ignore-conflicts.summary
 
-Ignore conflicts and preview the retrieve of remote components, even if they will overwrite local changes.
+Don't display conflicts in the preview of the retrieval.
 
 # flags.ignore-conflicts.description
 

@@ -62,14 +62,14 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     }),
     'coverage-formatters': Flags.string({
       multiple: true,
-      summary: messages.getMessage('flags.coverage-formatters'),
+      summary: messages.getMessage('flags.coverage-formatters.summary'),
       options: reportsFormatters,
       helpValue: reportsFormatters.join(','),
     }),
-    junit: Flags.boolean({ summary: messages.getMessage('flags.junit') }),
+    junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary') }),
     'results-dir': Flags.directory({
       dependsOn: ['junit', 'coverage-formatters'],
-      summary: messages.getMessage('flags.results-dir'),
+      summary: messages.getMessage('flags.results-dir.summary'),
     }),
   };
 
@@ -92,6 +92,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const { deploy, componentSet } = await executeDeploy(
       // there will always be conflicts on a resume if anything deployed--the changes on the server are not synced to local
       { ...deployOpts, wait, 'dry-run': false, 'ignore-conflicts': true },
+      this.config.bin,
       this.project,
       jobId
     );

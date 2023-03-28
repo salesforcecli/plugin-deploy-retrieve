@@ -61,14 +61,14 @@ Show concise output of the deploy operation result.
 
 Job ID %s is not resumable with status %s.
 
-# flags.junit
+# flags.junit.summary
 
-output JUnit test results
+Output JUnit test results.
 
-# flags.coverage-formatters
+# flags.coverage-formatters.summary
 
-format of the code coverage results
+Format of the code coverage results.
 
-# flags.results-dir
+# flags.results-dir.summary
 
-output directory for code coverage and JUnit results; defaults to the deploy ID
+Output directory for code coverage and JUnit results; defaults to the deploy ID.
