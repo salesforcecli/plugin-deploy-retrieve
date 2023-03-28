@@ -13,7 +13,7 @@ import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { Dictionary } from '@salesforce/ts-types';
 import { expect } from 'chai';
 
-describe('project manifest create', () => {
+describe('project generate manifest', () => {
   let session: TestSession;
   const orgAlias = 'myAlias';
 

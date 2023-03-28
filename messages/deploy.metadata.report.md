@@ -18,14 +18,6 @@ Run this command by either passing it a job ID or specifying the --use-most-rece
 
       <%= config.bin %> <%= command.id %> --use-most-recent
 
-# flags.target-org.summary
-
-Login username or alias for the target org.
-
-# flags.api-version.summary
-
-API version to use
-
 # flags.job-id.summary
 
 Job ID of the deploy operation you want to check the status of.

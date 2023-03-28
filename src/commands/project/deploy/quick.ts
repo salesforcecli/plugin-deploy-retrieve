@@ -26,7 +26,6 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
-  public static readonly state = 'beta';
   public static readonly aliases = ['deploy:metadata:quick'];
   public static readonly deprecateAliases = true;
 

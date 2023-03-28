@@ -22,16 +22,10 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
-  public static readonly state = 'beta';
   public static readonly aliases = ['deploy:metadata:report'];
   public static readonly deprecateAliases = true;
 
   public static readonly flags = {
-    'target-org': Flags.requiredOrg({
-      summary: messages.getMessage('flags.target-org.summary'),
-      required: true,
-    }),
-    'api-version': Flags.orgApiVersion(),
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
@@ -64,14 +58,18 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
 
     const deployOpts = cache.get(jobId);
     const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
-    const deployStatus = await org.getConnection(flags['api-version']).metadata.checkDeployStatus(jobId, true);
+    const [deployStatus, componentSet] = await Promise.all([
+      // we'll use whatever the org supports since we can't specify the org
+      // eslint-disable-next-line sf-plugin/get-connection-with-version
+      org.getConnection().metadata.checkDeployStatus(jobId, true),
+      buildComponentSet({ ...deployOpts, wait: Duration.minutes(deployOpts.wait) }),
+    ]);
 
-    const componentSet = await buildComponentSet({ ...deployOpts, wait: Duration.minutes(deployOpts.wait) });
     const result = new DeployResult(deployStatus as MetadataApiDeployStatus, componentSet);
 
     const formatter = new DeployReportResultFormatter(result, {
       ...deployOpts,
-      ...{ 'target-org': flags['target-org'] },
+      ...{ 'target-org': org },
     });
 
     if (!this.jsonEnabled()) formatter.display();

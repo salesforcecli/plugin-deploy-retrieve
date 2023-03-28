@@ -18,7 +18,7 @@ import {
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'manifest.create');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'manifest.generate');
 
 const manifestTypes = {
   pre: 'destructiveChangesPre.xml',
@@ -32,14 +32,14 @@ const packageTypes: Record<string, string[]> = {
   unlocked: ['deprecatedEditable', 'installedEditable'],
 };
 
-export type CreateCommandResult = {
+export type ManifestGenerateCommandResult = {
   name: string;
   path: string;
 };
 
 const xorFlags = ['metadata', 'source-dir', 'from-org'];
 
-export class Create extends SfCommand<CreateCommandResult> {
+export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -61,19 +61,20 @@ export class Create extends SfCommand<CreateCommandResult> {
       summary: messages.getMessage('flags.source-dir.summary'),
       exactlyOne: xorFlags,
     }),
-    'manifest-name': Flags.string({
+    name: Flags.string({
       char: 'n',
       aliases: ['manifestname'],
       deprecateAliases: true,
-      summary: messages.getMessage('flags.manifest-name.summary'),
-      exclusive: ['manifest-type'],
+      summary: messages.getMessage('flags.name.summary'),
+      exclusive: ['type'],
     }),
-    'manifest-type': Flags.string({
+    type: Flags.string({
       aliases: ['manifesttype'],
       deprecateAliases: true,
-      summary: messages.getMessage('flags.manifest-type.summary'),
+      summary: messages.getMessage('flags.type.summary'),
       options: Object.keys(manifestTypes),
       char: 't',
+      exclusive: ['name'],
     }),
     'include-packages': arrayWithDeprecation({
       aliases: ['includepackages'],
@@ -81,7 +82,7 @@ export class Create extends SfCommand<CreateCommandResult> {
       summary: messages.getMessage('flags.include-packages.summary'),
       options: Object.keys(packageTypes),
       char: 'c',
-      dependsOn: ['fromorg'],
+      dependsOn: ['from-org'],
     }),
     'from-org': Flags.custom({
       summary: messages.getMessage('flags.from-org.summary'),
@@ -98,16 +99,14 @@ export class Create extends SfCommand<CreateCommandResult> {
     }),
   };
 
-  public async run(): Promise<CreateCommandResult> {
-    const { flags } = await this.parse(Create);
+  public async run(): Promise<ManifestGenerateCommandResult> {
+    const { flags } = await this.parse(ManifestGenerate);
     // convert the manifesttype into one of the "official" manifest names
     // if no manifesttype flag passed, use the manifestname?flag
     // if no manifestname flag, default to 'package.xml'
-    const manifestTypeFromFlag = flags['manifest-type'] as keyof typeof manifestTypes;
+    const manifestTypeFromFlag = flags.type as keyof typeof manifestTypes;
     const manifestName = ensureFileEnding(
-      typeof manifestTypeFromFlag === 'string'
-        ? manifestTypes[manifestTypeFromFlag]
-        : flags['manifest-name'] ?? 'package.xml',
+      typeof manifestTypeFromFlag === 'string' ? manifestTypes[manifestTypeFromFlag] : flags.name ?? 'package.xml',
       '.xml'
     );
 

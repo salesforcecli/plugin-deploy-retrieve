@@ -22,6 +22,10 @@ To convert multiple components, either set multiple --metadata <name> flags or a
 
   $ <%= config.bin %> <%= command.id %> --root-dir path/to/source --output-dir path/to/outputdir --package-name 'My Package'
 
+# flags.api-version.summary
+
+API Version to use in the generated project's manifest. By default, will use the version from sfdx-project.json
+
 # flags.root-dir.summary
 
 Source directory other than the default package to convert.

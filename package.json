@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-deploy-retrieve",
   "description": "deploy and retrieve commands for sf",
-  "version": "1.8.5-beta.5",
+  "version": "1.8.5-beta.7",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
@@ -118,7 +118,7 @@
           "delete": {
             "description": "Commands to delete metadata from a Salesforce org."
           },
-          "manifest": {
+          "generate": {
             "description": "Commands to create a manifest file."
           },
           "reset": {
