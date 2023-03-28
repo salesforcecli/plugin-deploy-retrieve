@@ -13,7 +13,7 @@ Messages.importMessagesDirectory(__dirname);
 export const deployAsyncMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
 
 export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployResultJson> {
-  public constructor(private id: string) {}
+  public constructor(private id: string, private bin: string) {}
 
   public getJson(): DeployResultJson {
     return { id: this.id, done: false, status: 'Queued', files: [] };
@@ -21,7 +21,7 @@ export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployRe
 
   public display(): void {
     ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancelQueued'));
-    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.id]));
-    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.bin, this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.bin, this.id]));
   }
 }

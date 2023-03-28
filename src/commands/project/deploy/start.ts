@@ -132,27 +132,27 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       exclusive: ['async'],
     }),
     'purge-on-delete': Flags.boolean({
-      summary: messages.getMessage('flags.purge-on-delete'),
+      summary: messages.getMessage('flags.purge-on-delete.summary'),
       dependsOn: ['manifest'],
       relationships: [{ type: 'some', flags: ['pre-destructive-changes', 'post-destructive-changes'] }],
     }),
     'pre-destructive-changes': Flags.file({
-      summary: messages.getMessage('flags.pre-destructive-changes'),
+      summary: messages.getMessage('flags.pre-destructive-changes.summary'),
       dependsOn: ['manifest'],
     }),
     'post-destructive-changes': Flags.file({
-      summary: messages.getMessage('flags.post-destructive-changes'),
+      summary: messages.getMessage('flags.post-destructive-changes.summary'),
       dependsOn: ['manifest'],
     }),
     'coverage-formatters': Flags.string({
       multiple: true,
-      summary: messages.getMessage('flags.coverage-formatters'),
+      summary: messages.getMessage('flags.coverage-formatters.summary'),
       options: reportsFormatters,
     }),
-    junit: Flags.boolean({ summary: messages.getMessage('flags.junit'), dependsOn: ['coverage-formatters'] }),
+    junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary'), dependsOn: ['coverage-formatters'] }),
     'results-dir': Flags.directory({
       dependsOn: ['coverage-formatters'],
-      summary: messages.getMessage('flags.results-dir'),
+      summary: messages.getMessage('flags.results-dir.summary'),
     }),
   };
 
@@ -195,6 +195,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         'target-org': flags['target-org'].getUsername(),
         api,
       },
+      this.config.bin,
       this.project
     );
 
@@ -206,7 +207,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
-      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
+      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id, this.config.bin);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
     }
@@ -235,12 +236,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         return super.catch({
           ...error,
           message: messages.getMessage('error.Conflicts'),
-          actions: messages.getMessages('error.Conflicts.Actions'),
+          actions: messages.getMessages('error.Conflicts.Actions', [this.config.bin]),
         });
       }
     }
     if (error.message.includes('client has timed out')) {
-      const err = messages.createError('error.ClientTimeout');
+      const err = messages.createError('error.ClientTimeout', [this.config.bin]);
       return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
     }
     return super.catch(error);

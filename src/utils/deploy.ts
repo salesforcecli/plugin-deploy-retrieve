@@ -106,6 +106,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
 
 export async function executeDeploy(
   opts: Partial<DeployOptions>,
+  bin = 'sf',
   project?: SfProject,
   id?: string
 ): Promise<{ deploy: MetadataApiDeploy; componentSet?: ComponentSet }> {
@@ -152,7 +153,7 @@ export async function executeDeploy(
       throw new SfError(
         deployMessages.getMessage('error.nothingToDeploy'),
         'NothingToDeploy',
-        deployMessages.getMessages('error.nothingToDeploy.Actions')
+        deployMessages.getMessages('error.nothingToDeploy.Actions', [bin])
       );
     }
     deploy = id

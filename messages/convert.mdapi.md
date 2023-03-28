@@ -8,6 +8,8 @@ To use Salesforce CLI to work with components that you retrieved via Metadata AP
 
 To convert files from the source format back to the metadata format, run "<%= config.bin %> project convert source".
 
+To convert multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
+
 # examples
 
 - Convert metadata formatted files in the specified directory into source formatted files; writes converted files to your default package directory:
@@ -32,11 +34,11 @@ File path to manifest (package.xml) of metadata types to convert.
 
 # flags.metadata-dir.summary
 
-Comma-separated list of paths to the local metadata files to convert.
+Root of directory or zip file of metadata formatted files to convert.
 
 # flags.metadata.summary
 
-Comma-separated list of metadata component names to convert.
+Metadata component names to convert.
 
 # flags.manifest.description
 

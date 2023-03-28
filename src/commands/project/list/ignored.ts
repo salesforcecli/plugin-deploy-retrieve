@@ -18,7 +18,7 @@ export type SourceIgnoredResults = {
 };
 
 export class Ignored extends SfCommand<SourceIgnoredResults> {
-  public static readonly summary = messages.getMessage('description');
+  public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static readonly requiresProject = true;
@@ -29,7 +29,7 @@ export class Ignored extends SfCommand<SourceIgnoredResults> {
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
-      summary: messages.getMessage('flags.source-dir'),
+      summary: messages.getMessage('flags.source-dir.summary'),
     }),
   };
 

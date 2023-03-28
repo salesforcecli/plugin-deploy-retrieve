@@ -14,13 +14,13 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 # examples
 
-- Retrieve remote changes:
+- Retrieve remote changes from your default org:
 
   <%= config.bin %> <%= command.id %>
 
-- Retrieve the source files in a directory:
+- Retrieve the source files in a directory from an org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --source-dir path/to/source
+  <%= config.bin %> <%= command.id %> --source-dir path/to/source --target-org my-scratch
 
 - Retrieve a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
 
@@ -157,7 +157,7 @@ There are changes in your local files that conflict with the org changes you're 
 
 - To overwrite the local changes, rerun this command with the --ignore-conflicts flag.
 
-- To overwrite the remote changes, run the "sf project deploy start" command with the --ignore-conflicts flag.
+- To overwrite the remote changes, run the "%s project deploy start" command with the --ignore-conflicts flag.
 
 # info.WroteZipFile
 

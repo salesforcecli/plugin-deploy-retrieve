@@ -76,7 +76,7 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
 
     if (flags.async) {
       const asyncResult = await cancelDeployAsync({ 'target-org': deployOpts['target-org'] }, jobId);
-      const formatter = new AsyncDeployCancelResultFormatter(asyncResult.id);
+      const formatter = new AsyncDeployCancelResultFormatter(asyncResult.id, this.config.bin);
       if (!this.jsonEnabled()) formatter.display();
       return formatter.getJson();
     } else {
