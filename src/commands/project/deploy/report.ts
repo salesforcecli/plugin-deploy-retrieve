@@ -26,11 +26,6 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   public static readonly deprecateAliases = true;
 
   public static readonly flags = {
-    // 'target-org': Flags.requiredOrg({
-    //   summary: messages.getMessage('flags.target-org.summary'),
-    //   required: true,
-    // }),
-    // 'api-version': Flags.orgApiVersion(),
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
