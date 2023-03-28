@@ -87,7 +87,9 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
 
       cache.update(result.response.id, { status: result.response.status });
       await cache.write();
-
+      if ([RequestStatus.Succeeded, RequestStatus.SucceededPartial].includes(result.response.status)) {
+        throw messages.createError('error.CannotCancelDeploy');
+      }
       return formatter.getJson();
     }
   }
