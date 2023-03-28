@@ -115,6 +115,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       default: TestLevel.NoTestRun,
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
+      options: [TestLevel.NoTestRun, TestLevel.RunSpecifiedTests, TestLevel.RunLocalTests, TestLevel.RunAllTestsInOrg],
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
@@ -147,7 +148,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       multiple: true,
       summary: messages.getMessage('flags.coverage-formatters'),
       options: reportsFormatters,
-      helpValue: reportsFormatters.join(','),
     }),
     junit: Flags.boolean({ summary: messages.getMessage('flags.junit'), dependsOn: ['coverage-formatters'] }),
     'results-dir': Flags.directory({
