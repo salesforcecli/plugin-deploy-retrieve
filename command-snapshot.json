@@ -8,7 +8,7 @@
   {
     "command": "project:convert:mdapi",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["api-version", "json", "loglevel", "manifest", "metadata", "metadata-dir", "output-dir", "root-dir"],
+    "flags": ["api-version", "loglevel", "manifest", "metadata", "metadata-dir", "output-dir", "root-dir"],
     "alias": ["force:mdapi:convert"]
   },
   {
@@ -16,7 +16,6 @@
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": [
       "api-version",
-      "json",
       "loglevel",
       "manifest",
       "metadata",
@@ -34,7 +33,6 @@
       "api-version",
       "check-only",
       "force-overwrite",
-      "json",
       "loglevel",
       "metadata",
       "no-prompt",
@@ -50,47 +48,37 @@
   {
     "command": "project:delete:tracking",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["api-version", "json", "loglevel", "no-prompt", "target-org"],
+    "flags": ["api-version", "loglevel", "no-prompt", "target-org"],
     "alias": ["force:source:tracking:clear"]
   },
   {
     "command": "project:deploy:cancel",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["async", "job-id", "json", "use-most-recent", "wait"],
+    "flags": ["async", "job-id", "use-most-recent", "wait"],
     "alias": ["deploy:metadata:cancel"]
   },
   {
     "command": "project:deploy:preview",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["ignore-conflicts", "json", "manifest", "metadata", "source-dir", "target-org"],
+    "flags": ["ignore-conflicts", "manifest", "metadata", "source-dir", "target-org"],
     "alias": ["deploy:metadata:preview"]
   },
   {
     "command": "project:deploy:quick",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["api-version", "async", "concise", "job-id", "json", "target-org", "use-most-recent", "verbose", "wait"],
+    "flags": ["api-version", "async", "concise", "job-id", "target-org", "use-most-recent", "verbose", "wait"],
     "alias": ["deploy:metadata:quick"]
   },
   {
     "command": "project:deploy:report",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["coverage-formatters", "job-id", "json", "junit", "results-dir", "use-most-recent"],
+    "flags": ["coverage-formatters", "job-id", "junit", "results-dir", "use-most-recent"],
     "alias": ["deploy:metadata:report"]
   },
   {
     "command": "project:deploy:resume",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": [
-      "concise",
-      "coverage-formatters",
-      "job-id",
-      "json",
-      "junit",
-      "results-dir",
-      "use-most-recent",
-      "verbose",
-      "wait"
-    ],
+    "flags": ["concise", "coverage-formatters", "job-id", "junit", "results-dir", "use-most-recent", "verbose", "wait"],
     "alias": ["deploy:metadata:resume"]
   },
   {
@@ -105,7 +93,6 @@
       "ignore-conflicts",
       "ignore-errors",
       "ignore-warnings",
-      "json",
       "junit",
       "manifest",
       "metadata",
@@ -131,7 +118,6 @@
       "api-version",
       "async",
       "concise",
-      "json",
       "manifest",
       "metadata",
       "metadata-dir",
@@ -152,7 +138,6 @@
       "api-version",
       "from-org",
       "include-packages",
-      "json",
       "loglevel",
       "metadata",
       "name",
@@ -165,19 +150,19 @@
   {
     "command": "project:list:ignored",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["json", "source-dir"],
+    "flags": ["source-dir"],
     "alias": ["force:source:ignored:list"]
   },
   {
     "command": "project:reset:tracking",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["api-version", "json", "loglevel", "no-prompt", "revision", "target-org"],
+    "flags": ["api-version", "loglevel", "no-prompt", "revision", "target-org"],
     "alias": ["force:source:tracking:reset"]
   },
   {
     "command": "project:retrieve:preview",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["ignore-conflicts", "json", "target-org"],
+    "flags": ["ignore-conflicts", "target-org"],
     "alias": ["retrieve:metadata:preview"]
   },
   {
@@ -186,7 +171,6 @@
     "flags": [
       "api-version",
       "ignore-conflicts",
-      "json",
       "manifest",
       "metadata",
       "package-name",
