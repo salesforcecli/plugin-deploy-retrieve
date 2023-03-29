@@ -24,18 +24,7 @@ import { SourceTracking } from '@salesforce/source-tracking';
 import { isSourceComponent } from './types';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.load('@salesforce/plugin-deploy-retrieve', 'previewMessages', [
-  'conflicts.header',
-  'conflicts.none',
-  'ignored.header',
-  'ignored.none',
-  'deploy.none',
-  'deploy.header',
-  'delete.header',
-  'delete.none',
-  'retrieve.header',
-  'retrieve.none',
-]);
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'previewMessages');
 
 type BaseOperation = 'deploy' | 'retrieve';
 
@@ -137,16 +126,24 @@ export const compileResults = ({
     // There should not be anything in forceignore returned by the componentSet
     ignored: [c.xml, c.content].some((v) => v && forceIgnore.denies(v)),
     // properties to return if we have an xml path
-    ...(c.xml
-      ? {
-          path: path.isAbsolute(c.xml) ? c.xml : path.resolve(c.xml),
-          // for cleaner output
-          projectRelativePath: path.relative(projectPath, c.xml),
-        }
-      : {}),
+    ...getPaths(c),
   });
 
+  /** resolve absolute and relative paths for a source component, with a preference for the xml file, but able to use the content file as backup */
+  const getPaths = (c: SourceComponent): Pick<PreviewFile, 'path' | 'projectRelativePath'> => {
+    const someFile = c.xml ?? c.content;
+    if (someFile) {
+      return {
+        path: path.isAbsolute(someFile) ? someFile : path.resolve(someFile),
+        // for cleaner output
+        projectRelativePath: path.relative(projectPath, someFile),
+      };
+    }
+    return {};
+  };
+
   const actionableFiles = componentSet
+    .filter((f) => f.fullName !== '*')
     .toArray()
     .map((c) => sourceBackedComponents.get(makeKey(c)) ?? c)
     .map((cmp): PreviewFile => {
@@ -243,7 +240,7 @@ const printConflictsTable = (files: PreviewFile[]): void => {
   }
 };
 
-const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
+export const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
   ux.log();
   if (files.length === 0) {
     ux.log(dim(messages.getMessage('ignored.none')));
@@ -261,6 +258,7 @@ export const printTables = (result: PreviewResult, baseOperation: BaseOperation)
   } else if (baseOperation === 'retrieve') {
     printRetrieveTable(result.toRetrieve);
   }
+
   printIgnoredTable(result.ignored, baseOperation);
 };
 

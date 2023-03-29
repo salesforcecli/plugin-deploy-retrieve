@@ -6,19 +6,19 @@ Preview a retrieval to see what will be retrieved from the org, the potential co
 
 You must run this command from within a project.
 
-The command outputs a table that describes what will happen if you run the "sf retrieve metadata" command. The table lists the metadata components that will be retrieved and deleted. The table also lists the current conflicts between files in your local project and components in the org. Finally, the table lists the files that won't be retrieved because they're included in your .forceignore file.
+The command outputs a table that describes what will happen if you run the "<%= config.bin %> project retrieve start" command. The table lists the metadata components that will be retrieved and deleted. The table also lists the current conflicts between files in your local project and components in the org. Finally, the table lists the files that won't be retrieved because they're included in your .forceignore file.
 
 If your org allows source tracking, then this command considers conflicts between the org and local. Some orgs, such as production orgs, never allow source tracking. Use the "--no-track-source" flag when you create a scratch or sandbox org to disable source tracking.
 
 # examples
 
-- Preview the retrieve of all changes from the org:
+- Preview the retrieve of all changes from your default org:
 
   <%= config.bin %> <%= command.id %>
 
-- Preview the retrieve when ignoring any conflicts:
+- Preview the retrieve when ignoring any conflicts from an org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --ignore-conflicts
+  <%= config.bin %> <%= command.id %> --ignore-conflicts --target-org my-scratch
 
 # flags.target-org.summary
 
@@ -30,7 +30,7 @@ Overrides your default org.
 
 # flags.ignore-conflicts.summary
 
-Ignore conflicts and preview the retrieve of remote components, even if they will overwrite local changes.
+Don't display conflicts in the preview of the retrieval.
 
 # flags.ignore-conflicts.description
 
@@ -54,6 +54,6 @@ There are local changes that conflict with the remote changes that would be retr
 
 # error.Conflicts.Actions
 
-- To overwrite the remote changes, run the "sf deploy metadata" command with the --ignore-conflicts flag.
+- To overwrite the remote changes, run the "project deploy start" command with the --ignore-conflicts flag.
 
-- To overwrite the local changes, run the "sf retrieve metadata" command with the --ignore-conflicts flag.
+- To overwrite the local changes, run the "project retrieve start" command with the --ignore-conflicts flag.

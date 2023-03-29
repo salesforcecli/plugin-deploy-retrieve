@@ -22,16 +22,12 @@ import { getPackageDirs, getSourceApiVersion } from './project';
 import { API, PathInfo, TestLevel } from './types';
 import { DEPLOY_STATUS_CODES } from './errorCodes';
 import { DeployCache } from './deployCache';
-Messages.importMessagesDirectory(__dirname);
-export const cacheMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'cache', [
-  'error.NoRecentJobId',
-  'error.InvalidJobId',
-]);
+import { writeManifest } from './manifestCache';
 
-const deployMessages = Messages.load('@salesforce/plugin-deploy-retrieve', 'deploy.metadata', [
-  'error.nothingToDeploy',
-  'error.nothingToDeploy.Actions',
-]);
+Messages.importMessagesDirectory(__dirname);
+export const cacheMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
+
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 export type DeployOptions = {
   api: API;
@@ -53,17 +49,24 @@ export type DeployOptions = {
   concise?: boolean;
   'single-package'?: boolean;
   status?: RequestStatus;
+
+  'pre-destructive-changes'?: string;
+  'post-destructive-changes'?: string;
+
+  'purge-on-delete'?: boolean;
 };
 
-export type CachedOptions = Omit<DeployOptions, 'wait'> & { wait: number };
+/** Manifest is expected.  You cannot pass metadata and source-dir array--use those to get a manifest */
+export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-dir'> & {
+  wait: number;
+} & Partial<Pick<DeployOptions, 'manifest'>>;
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
-  if (testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0) return false;
-  return true;
+  return !(testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0);
 }
 
-export async function resolveApi(): Promise<API> {
-  const agg = await ConfigAggregator.create({ customConfigMeta: ConfigMeta });
+export async function resolveApi(existingConfigAggregator?: ConfigAggregator): Promise<API> {
+  const agg = existingConfigAggregator ?? (await ConfigAggregator.create({ customConfigMeta: ConfigMeta }));
   const restDeployConfig = agg.getInfo(ConfigVars.ORG_METADATA_REST_DEPLOY)?.value;
   return restDeployConfig === 'true' ? API.REST : API.SOAP;
 }
@@ -92,6 +95,8 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
           manifest: {
             manifestPath: opts.manifest,
             directoryPaths: await getPackageDirs(),
+            destructiveChangesPre: opts['pre-destructive-changes'],
+            destructiveChangesPost: opts['post-destructive-changes'],
           },
         }
       : {}),
@@ -101,6 +106,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
 
 export async function executeDeploy(
   opts: Partial<DeployOptions>,
+  bin = 'sf',
   project?: SfProject,
   id?: string
 ): Promise<{ deploy: MetadataApiDeploy; componentSet?: ComponentSet }> {
@@ -112,6 +118,7 @@ export async function executeDeploy(
     rollbackOnError: !opts['ignore-errors'] || false,
     runTests: opts.tests ?? [],
     testLevel: opts['test-level'],
+    purgeOnDelete: opts['purge-on-delete'] ?? false,
   };
 
   let deploy: MetadataApiDeploy | undefined;
@@ -119,14 +126,6 @@ export async function executeDeploy(
 
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   const usernameOrConnection = org.getConnection();
-  // instantiate source tracking
-  // stl will decide, based on the org's properties, what needs to be done
-  const stl = await SourceTracking.create({
-    org,
-    project,
-    subscribeSDREvents: true,
-    ignoreConflicts: opts['ignore-conflicts'],
-  });
 
   if (opts['metadata-dir']) {
     if (id) {
@@ -141,12 +140,20 @@ export async function executeDeploy(
       await deploy.start();
     }
   } else {
+    // instantiate source tracking
+    // stl will decide, based on the org's properties, what needs to be done
+    const stl = await SourceTracking.create({
+      org,
+      project,
+      subscribeSDREvents: true,
+      ignoreConflicts: opts['ignore-conflicts'],
+    });
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
       throw new SfError(
         deployMessages.getMessage('error.nothingToDeploy'),
         'NothingToDeploy',
-        deployMessages.getMessages('error.nothingToDeploy.Actions')
+        deployMessages.getMessages('error.nothingToDeploy.Actions', [bin])
       );
     }
     deploy = id
@@ -155,10 +162,11 @@ export async function executeDeploy(
           usernameOrConnection,
           apiOptions,
         });
-    await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
   }
 
-  await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
+  // does not apply to mdapi deploys
+  const manifestPath = componentSet ? await writeManifest(deploy.id, componentSet) : undefined;
+  await DeployCache.set(deploy.id, { ...opts, manifest: manifestPath });
 
   return { deploy, componentSet };
 }
@@ -170,7 +178,7 @@ export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Pr
   const deploy = new MetadataApiDeploy({ usernameOrConnection, id });
 
   const componentSet = await buildComponentSet({ ...opts });
-  await DeployCache.set(deploy.id, { ...opts, wait: opts.wait?.minutes ?? 33 });
+  await DeployCache.set(deploy.id, { ...opts });
 
   await deploy.cancel();
   return poll(org, deploy.id, opts.wait ?? Duration.minutes(33), componentSet);

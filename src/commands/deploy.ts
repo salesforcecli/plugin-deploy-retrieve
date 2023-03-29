@@ -34,6 +34,11 @@ export default class Deploy extends SfCommand<void> {
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
   public static enableJsonFlag = false;
+  public static state = 'deprecated';
+  public static deprecationOptions = {
+    version: '59.0',
+    message: messages.getMessage('deprecation'),
+  };
 
   public static readonly flags = {
     interactive: Flags.boolean({

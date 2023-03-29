@@ -22,13 +22,24 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         command:
+          - 'yarn test:nuts:deb'
           - 'yarn test:nuts:deploy:metadata:manifest'
           - 'yarn test:nuts:deploy:metadata:metadata-dir'
           - 'yarn test:nuts:deploy:metadata:metadata'
           - 'yarn test:nuts:deploy:metadata:source-dir'
           - 'yarn test:nuts:deploy:metadata:test-level'
           - 'yarn test:nuts:static'
+          - 'yarn test:nuts:retrieve'
+          - 'yarn test:nuts:delete'
+          - 'yarn test:nuts:destructive'
+          - 'yarn test:nuts:convert'
+          - 'yarn test:nuts:manifest'
+          - 'yarn test:nuts:specialTypes'
           - 'yarn test:nuts:tracking'
+        # TODO: get windows nuts to pass for DEB
+        exclude:
+          - os: windows-latest
+            command: yarn test:nuts:deb
       fail-fast: false
     with:
       os: ${{ matrix.os }}

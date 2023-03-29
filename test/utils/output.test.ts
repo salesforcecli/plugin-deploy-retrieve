@@ -4,11 +4,12 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import * as path from 'path';
 import { assert, expect, config } from 'chai';
 import * as sinon from 'sinon';
-
-import { DeployResultFormatter } from '../../src/utils/output';
+import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { getCoverageFormattersOptions } from '../../src/utils/coverage';
+import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter';
 import { getDeployResult } from './deployResponses';
 
 config.truncateThreshold = 0;
@@ -18,6 +19,31 @@ describe('deployResultFormatter', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  describe('coverage functions', () => {
+    describe('getCoverageFormattersOptions', () => {
+      it('clover, json', () => {
+        const result = getCoverageFormattersOptions(['clover', 'json']);
+        expect(result).to.deep.equal({
+          reportFormats: ['clover', 'json'],
+          reportOptions: {
+            clover: { file: path.join('coverage', 'clover.xml'), projectRoot: '.' },
+            json: { file: path.join('coverage', 'coverage.json') },
+          },
+        });
+      });
+
+      it('teamcity', () => {
+        const result = getCoverageFormattersOptions(['teamcity']);
+        expect(result).to.deep.equal({
+          reportFormats: ['teamcity'],
+          reportOptions: {
+            teamcity: { file: path.join('coverage', 'teamcity.txt'), blockName: 'coverage' },
+          },
+        });
+      });
+    });
   });
 
   describe('replacements', () => {

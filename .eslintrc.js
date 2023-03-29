@@ -7,6 +7,8 @@
 module.exports = {
   extends: ['eslint-config-salesforce-typescript', 'eslint-config-salesforce-license', 'plugin:sf-plugin/recommended'],
   rules: {
+    // allow deleting object properties via rest operator
     '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
   },
+  ignorePatterns: ['test/nuts/specialTypes/*Project/**', 'test/nuts/retrieve/partialBundleDeleteProject/**'],
 };

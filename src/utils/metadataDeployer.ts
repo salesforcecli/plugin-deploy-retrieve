@@ -17,10 +17,11 @@ import {
   NamedPackageDir,
   OrgAuthorization,
   OrgConfigProperties,
+  Org,
 } from '@salesforce/core';
 import { Deployable, Deployer, DeployerResult, generateTableChoices } from '@salesforce/sf-plugins-core';
 
-import { DeployResultFormatter } from './output';
+import { DeployResultFormatter } from '../formatters/deployResultFormatter';
 import { TestLevel } from './types';
 import { DeployProgress } from './progressBar';
 import { determineExitCode, executeDeploy, resolveApi } from './deploy';
@@ -141,6 +142,7 @@ export class MetadataDeployer extends Deployer {
       'test-level': this.testLevel,
       verbose: false,
       concise: false,
+      'target-org': await Org.create({ aliasOrUsername: this.username }),
     });
     formatter.display();
     const deployerResult: DeployerResult = {
@@ -186,7 +188,7 @@ export class MetadataDeployer extends Deployer {
       ).map(async (orgAuth) => {
         const stat = await stateAggregator.orgs.stat(orgAuth.username);
         const timestamp = stat ? new Date(stat.mtimeMs) : new Date();
-        return { ...orgAuth, timestamp } as OrgAuthWithTimestamp;
+        return { ...orgAuth, timestamp };
       });
 
       const authorizations = await Promise.all(promises);

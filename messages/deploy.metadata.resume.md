@@ -26,10 +26,10 @@ Job ID of the deploy operation you want to resume.
 
 These commands return a job ID if they time out or you specified the --async flag:
 
-- sf deploy metadata
-- sf deploy metadata validate
-- sf deploy metadata quick
-- sf deploy metadata cancel
+- <%= config.bin %> project deploy start
+- <%= config.bin %> project deploy validate
+- <%= config.bin %> project deploy quick
+- <%= config.bin %> project deploy cancel
 
 The job ID is valid for 10 days from when you started the deploy operation.
 
@@ -47,7 +47,7 @@ Number of minutes to wait for the command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the deploy operation, run this command again. To check the status of the deploy operation, run "sf deploy metadata report".
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the deploy operation, run this command again. To check the status of the deploy operation, run "<%= config.bin %> project deploy report".
 
 # flags.verbose.summary
 
@@ -60,3 +60,15 @@ Show concise output of the deploy operation result.
 # error.DeployNotResumable
 
 Job ID %s is not resumable with status %s.
+
+# flags.junit.summary
+
+Output JUnit test results.
+
+# flags.coverage-formatters.summary
+
+Format of the code coverage results.
+
+# flags.results-dir.summary
+
+Output directory for code coverage and JUnit results; defaults to the deploy ID.

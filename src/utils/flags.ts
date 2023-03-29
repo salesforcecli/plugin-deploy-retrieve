@@ -11,11 +11,7 @@ import { Messages } from '@salesforce/core';
 import { PathInfo, TestLevel } from './types';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.load('@salesforce/plugin-deploy-retrieve', 'validation', [
-  'error.InvalidFlagPath',
-  'error.ExpectedDirectory',
-  'error.ExpectedFileOrDirToExist',
-]);
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'validation');
 
 const parsePathInfo = async (input: string, opts: { exists?: boolean }): Promise<PathInfo> => {
   if (opts.exists && !fs.existsSync(input)) {
@@ -31,10 +27,6 @@ const parsePathInfo = async (input: string, opts: { exists?: boolean }): Promise
   return { type: 'file', path: input };
 };
 
-interface FsError extends Error {
-  code: string;
-}
-
 /**
  * Ensures that the specified directory exists. If it does not, it is created.
  */
@@ -48,10 +40,9 @@ async function ensureDirectoryPath(path: string): Promise<string> {
     if (!isDir) {
       throw messages.createError('error.InvalidFlagPath', [path, messages.getMessage('error.ExpectedDirectory')]);
     }
-  } catch (error: unknown) {
-    const err = error as FsError;
-    if (err.code !== 'ENOENT') {
-      throw err;
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code !== 'ENOENT') {
+      throw error;
     } else {
       await fs.promises.mkdir(resolvedPath, { recursive: true });
     }
@@ -68,6 +59,7 @@ function resolveZipFileName(zipFileName?: string): string {
 }
 
 export const DEFAULT_ZIP_FILE_NAME = 'unpackaged.zip';
+
 /**
  * Flag value is a directory path that may or may not exist. If it doesn't exist, then it will be created.
  */
