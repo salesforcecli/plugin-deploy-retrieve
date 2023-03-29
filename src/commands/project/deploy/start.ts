@@ -115,6 +115,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       default: TestLevel.NoTestRun,
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
+      options: [TestLevel.NoTestRun, TestLevel.RunSpecifiedTests, TestLevel.RunLocalTests, TestLevel.RunAllTestsInOrg],
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
@@ -147,7 +148,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       multiple: true,
       summary: messages.getMessage('flags.coverage-formatters.summary'),
       options: reportsFormatters,
-      helpValue: reportsFormatters.join(','),
     }),
     junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary'), dependsOn: ['coverage-formatters'] }),
     'results-dir': Flags.directory({
@@ -173,6 +173,17 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
+    if (
+      this.project.getSfProjectJson().getContents()['pushPackageDirectoriesSequentially'] &&
+      // flag exclusivity is handled correctly above - but to avoid short-circuiting the check, we need to check all of them
+      !flags.manifest &&
+      !flags.metadata &&
+      !flags['source-dir']
+    ) {
+      // if pushPackageDirectoriesSequentially = true, and they're not using any of the flags that would modify their deploy
+      // e.g. they're recreating a `source:push` command, which is the only one that respects this config value, warn them about it not working like it used to
+      this.warn(messages.getMessage('pushPackageDirsWarning'));
+    }
     if (!validateTests(flags['test-level'], flags.tests)) {
       throw messages.createError('error.NoTestsSpecified');
     }

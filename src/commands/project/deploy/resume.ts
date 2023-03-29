@@ -64,7 +64,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       multiple: true,
       summary: messages.getMessage('flags.coverage-formatters.summary'),
       options: reportsFormatters,
-      helpValue: reportsFormatters.join(','),
     }),
     junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary') }),
     'results-dir': Flags.directory({

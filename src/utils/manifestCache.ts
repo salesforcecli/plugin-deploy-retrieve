@@ -15,10 +15,19 @@ const MANIFEST_CACHE_DIR = 'manifestCache';
 /** Give it a jobId, ComponentSet it will write the manifest file
  * returns the file path it wrote to */
 export const writeManifest = async (jobId: string, componentSet: ComponentSet): Promise<string> => {
+  const types = new Set((await componentSet.getObject()).Package.types.map((t) => t.name));
   // when we write a manifest, we will omit the CustomLabels component since it's redundant with the individual labels.
   // this makes the use of the manifest in report/resume/etc accurate in certain mpd scenarios where it would otherwise pull in ALL labels from every dir
   // regardless of whether they were actually deployed
-  const xml = await componentSet.filter((c) => c.type.name !== 'CustomLabels').getPackageXml();
+  // we'll only do this when something like `-m CustomLabels:*` or `-d labels/CustomLabels.labels-meta.xml` is specified which will include every CustomLabel
+  // in the project. When only a single label is specified, we need to strip out the `CustomLabels` entry otherwise we'll display information for every
+  // CustomLabel in the project instead of the single on specified
+
+  const xml =
+    types.has('CustomLabels') && types.has('CustomLabel')
+      ? await componentSet.filter((c) => c.type.name !== 'CustomLabels').getPackageXml()
+      : await componentSet.getPackageXml();
+
   const filePath = getManifestFilePath(jobId);
   await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
   await fs.promises.writeFile(filePath, xml);

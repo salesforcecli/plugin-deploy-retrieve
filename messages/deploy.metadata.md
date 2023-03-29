@@ -238,3 +238,7 @@ Output directory for code coverage and JUnit results; defaults to the deploy ID.
 # asyncCoverageJunitWarning
 
 You requested an async deploy with code coverage or JUnit results. The reports will be available when the deploy completes.
+
+# pushPackageDirsWarning
+
+The `pushPackageDirectoriesSequentially` property is not respected by this command. Please call the `project deploy start --source-dir` command for each dependency in the correct order.
