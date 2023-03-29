@@ -53,6 +53,15 @@ describe('project generate manifest', () => {
       '<Package xmlns="http://soap.sforce.com/2006/04/metadata">\n' +
       '    <types>\n' +
       '        <members>*</members>\n' +
+      '        <members>FileUtilities</members>\n' +
+      '        <members>FileUtilitiesTest</members>\n' +
+      '        <members>GeocodingService</members>\n' +
+      '        <members>GeocodingServiceTest</members>\n' +
+      '        <members>PagedResult</members>\n' +
+      '        <members>PropertyController</members>\n' +
+      '        <members>SampleDataController</members>\n' +
+      '        <members>TestPropertyController</members>\n' +
+      '        <members>TestSampleDataController</members>\n' +
       '        <name>ApexClass</name>\n' +
       '    </types>\n' +
       '    <version>51.0</version>\n' +
