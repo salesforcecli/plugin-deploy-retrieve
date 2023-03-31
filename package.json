@@ -101,7 +101,7 @@
     ],
     "topics": {
       "project": {
-        "description": "Commands to deploy and retrieve metadata.",
+        "external": true,
         "subtopics": {
           "deploy": {
             "description": "Commands to deploy metadata to a Salesforce org."
