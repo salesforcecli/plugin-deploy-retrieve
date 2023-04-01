@@ -41,8 +41,9 @@ export function assertAllDEBAndTheirDECounts(
   expect(
     resp.reduce(
       (acc: [number, number, number, number], curr) => {
-        if (curr.type === TYPES.DE.name && curr.fullName.includes(FULL_NAMES.DEB_A)) acc[0]++;
-        if (curr.type === TYPES.DE.name && curr.fullName.includes(FULL_NAMES.DEB_B)) acc[1]++;
+        assert(TYPES.DE);
+        if (curr.type === TYPES.DE?.name && curr.fullName.includes(FULL_NAMES.DEB_A)) acc[0]++;
+        if (curr.type === TYPES.DE?.name && curr.fullName.includes(FULL_NAMES.DEB_B)) acc[1]++;
         if (curr.type === TYPES.DEB.name && curr.fullName === FULL_NAMES.DEB_A) acc[2]++;
         if (curr.type === TYPES.DEB.name && curr.fullName === FULL_NAMES.DEB_B) acc[3]++;
         return acc;
@@ -58,7 +59,7 @@ export function assertSingleDEBAndItsDECounts(resp: CustomFileResponses, debFull
   expect(
     resp.reduce(
       (acc: [number, number], curr) => {
-        if (curr.type === TYPES.DE.name && curr.fullName.includes(debFullName)) acc[0]++;
+        if (curr.type === TYPES.DE?.name && curr.fullName.includes(debFullName)) acc[0]++;
         if (curr.type === TYPES.DEB.name && curr.fullName === debFullName) acc[1]++;
         return acc;
       },
@@ -73,8 +74,8 @@ export function assertDECountsOfAllDEB(resp: CustomFileResponses) {
   expect(
     resp.reduce(
       (acc: [number, number], curr) => {
-        if (curr.type === TYPES.DE.name && curr.fullName.includes(FULL_NAMES.DEB_A)) acc[0]++;
-        if (curr.type === TYPES.DE.name && curr.fullName.includes(FULL_NAMES.DEB_B)) acc[1]++;
+        if (curr.type === TYPES.DE?.name && curr.fullName.includes(FULL_NAMES.DEB_A)) acc[0]++;
+        if (curr.type === TYPES.DE?.name && curr.fullName.includes(FULL_NAMES.DEB_B)) acc[1]++;
         return acc;
       },
       [0, 0]
@@ -85,7 +86,7 @@ export function assertDECountsOfAllDEB(resp: CustomFileResponses) {
 
 export function assertDECountOfSingleDEB(resp: CustomFileResponses) {
   expect(resp).to.have.length(51);
-  expect(resp.every((s) => s.type === TYPES.DE.name)).to.be.true;
+  expect(resp.every((s) => s.type === TYPES.DE?.name)).to.be.true;
 }
 
 export function assertDEBMeta(resp: CustomFileResponses, deb: 'a' | 'b') {
@@ -111,18 +112,18 @@ export function assertViewHome(resp: CustomFileResponses, deb: 'a' | 'b') {
     }))
   ).to.have.deep.members([
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: deb === 'a' ? FULL_NAMES.DE_VIEW_HOME_A : FULL_NAMES.DE_VIEW_HOME_B,
       filePath: deb === 'a' ? FILE_RELATIVE_PATHS.DE_VIEW_HOME_CONTENT_A : FILE_RELATIVE_PATHS.DE_VIEW_HOME_CONTENT_B,
     },
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: deb === 'a' ? FULL_NAMES.DE_VIEW_HOME_A : FULL_NAMES.DE_VIEW_HOME_B,
       filePath:
         deb === 'a' ? FILE_RELATIVE_PATHS.DE_VIEW_HOME_FR_VARIANT_A : FILE_RELATIVE_PATHS.DE_VIEW_HOME_FR_VARIANT_B,
     },
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: deb === 'a' ? FULL_NAMES.DE_VIEW_HOME_A : FULL_NAMES.DE_VIEW_HOME_B,
       filePath: deb === 'a' ? FILE_RELATIVE_PATHS.DE_VIEW_HOME_META_A : FILE_RELATIVE_PATHS.DE_VIEW_HOME_META_B,
     },
@@ -135,7 +136,7 @@ export function assertViewHomeStatus(resp: CustomFileResponses, deb: 'a' | 'b') 
   resp[0].filePath = relative(process.cwd(), resp[0].filePath);
 
   expect(resp[0]).to.include({
-    type: TYPES.DE.name,
+    type: TYPES.DE?.name,
     fullName: deb === 'a' ? FULL_NAMES.DE_VIEW_HOME_A : FULL_NAMES.DE_VIEW_HOME_B,
     filePath: deb === 'a' ? FILE_RELATIVE_PATHS.DE_VIEW_HOME_COMPONENT_A : FILE_RELATIVE_PATHS.DE_VIEW_HOME_COMPONENT_B,
   });
@@ -150,13 +151,13 @@ export function assertDocumentDetailPageAChanges(resp: CustomFileResponses) {
     }))
   ).to.have.deep.members([
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: FULL_NAMES.DE_VIEW_DOCUMENT_DETAIL_A,
       filePath: FILE_RELATIVE_PATHS.DE_VIEW_DOCUMENT_DETAIL_COMPONENT_A,
     },
 
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: FULL_NAMES.DE_ROUTE_DOCUMENT_DETAIL_A,
       filePath: FILE_RELATIVE_PATHS.DE_ROUTE_DOCUMENT_DETAIL_COMPONENT_A,
     },
@@ -173,22 +174,22 @@ export function assertDocumentDetailPageA(resp: CustomFileResponses) {
     }))
   ).to.have.deep.members([
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: FULL_NAMES.DE_VIEW_DOCUMENT_DETAIL_A,
       filePath: FILE_RELATIVE_PATHS.DE_VIEW_DOCUMENT_DETAIL_META_A,
     },
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: FULL_NAMES.DE_VIEW_DOCUMENT_DETAIL_A,
       filePath: FILE_RELATIVE_PATHS.DE_VIEW_DOCUMENT_DETAIL_CONTENT_A,
     },
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: FULL_NAMES.DE_ROUTE_DOCUMENT_DETAIL_A,
       filePath: FILE_RELATIVE_PATHS.DE_ROUTE_DOCUMENT_DETAIL_META_A,
     },
     {
-      type: TYPES.DE.name,
+      type: TYPES.DE?.name,
       fullName: FULL_NAMES.DE_ROUTE_DOCUMENT_DETAIL_A,
       filePath: FILE_RELATIVE_PATHS.DE_ROUTE_DOCUMENT_DETAIL_CONTENT_A,
     },
@@ -199,6 +200,7 @@ export function assertDocumentDetailPageA(resp: CustomFileResponses) {
 export async function assertDocumentDetailPageADelete(session: TestSession, shouldBeDeletedInLocal: boolean) {
   const username = session.orgs.get('default')?.username;
   assert(username, 'username should be defined');
+  assert(TYPES.DE?.name);
   expect(await isNameObsolete(username, TYPES.DE.name, FULL_NAMES.DE_VIEW_DOCUMENT_DETAIL_A)).to.be.true;
   expect(await isNameObsolete(username, TYPES.DE.name, FULL_NAMES.DE_ROUTE_DOCUMENT_DETAIL_A)).to.be.true;
 

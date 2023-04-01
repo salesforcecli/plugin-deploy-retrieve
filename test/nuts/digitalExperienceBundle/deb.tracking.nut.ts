@@ -149,8 +149,8 @@ describe('deb -- tracking/push/pull', () => {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     assert(statusResult, 'No status result');
-    expect(statusResult.toDeploy.every((s) => s.type !== TYPES.DE.name && s.type !== TYPES.DEB.name)).to.be.true;
-    expect(statusResult.toDelete.every((s) => s.type !== TYPES.DE.name && s.type !== TYPES.DEB.name)).to.be.true;
+    expect(statusResult.toDeploy.every((s) => s.type !== TYPES.DE?.name && s.type !== TYPES.DEB.name)).to.be.true;
+    expect(statusResult.toDelete.every((s) => s.type !== TYPES.DE?.name && s.type !== TYPES.DEB.name)).to.be.true;
   });
 
   describe('new site page', () => {
