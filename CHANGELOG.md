@@ -1,3 +1,12 @@
+## [1.8.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.7...1.8.8) (2023-04-03)
+
+
+### Bug Fixes
+
+* upate package.json for correct help and command ref ([#563](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/563)) ([25add05](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/25add05447330d10b9e821555de98defba262dfc))
+
+
+
 ## [1.8.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.5-beta.9...1.8.7) (2023-03-29)
 
 
