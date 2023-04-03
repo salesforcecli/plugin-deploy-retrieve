@@ -9,8 +9,8 @@ import * as fs from 'fs';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 import { assert, expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { PreviewFile, PreviewResult } from 'src/utils/previewOutput';
 import { AuthInfo, Connection } from '@salesforce/core';
+import { PreviewFile, PreviewResult } from '../../../src/utils/previewOutput';
 import { DIR_RELATIVE_PATHS, FILE_RELATIVE_PATHS, FULL_NAMES, STORE, TYPES } from './constants';
 
 type CustomFileResponses = Array<Pick<FileResponse, 'filePath' | 'fullName' | 'type'>>;

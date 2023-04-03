@@ -8,8 +8,8 @@ import * as fs from 'fs';
 import { join } from 'path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert, expect } from 'chai';
-import { PreviewResult } from 'src/utils/previewOutput';
-import { DeleteTrackingResult } from 'src/commands/project/delete/tracking';
+import { PreviewResult } from '../../../src/utils/previewOutput';
+import { DeleteTrackingResult } from '../../../src/commands/project/delete/tracking';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
 
 // import { SourceTrackingClearResult } from '../../../src/commands/force/source/tracking/clear';
