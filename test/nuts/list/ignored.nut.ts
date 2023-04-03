@@ -9,7 +9,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { SourceIgnoredResults } from '@salesforce/plugin-source/lib/commands/force/source/ignored/list';
+import { SourceIgnoredResults } from '../../../src/commands/project/list/ignored';
 
 describe('project:list:ignored', () => {
   let session: TestSession;
