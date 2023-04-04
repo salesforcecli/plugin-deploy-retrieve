@@ -164,6 +164,10 @@ export async function executeDeploy(
         });
   }
 
+  if (!deploy.id) {
+    throw new SfError('The deploy id is not available.');
+  }
+
   // does not apply to mdapi deploys
   const manifestPath = componentSet ? await writeManifest(deploy.id, componentSet) : undefined;
   await DeployCache.set(deploy.id, { ...opts, manifest: manifestPath });
@@ -176,7 +180,9 @@ export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Pr
   const usernameOrConnection = org.getUsername() ?? org.getConnection();
 
   const deploy = new MetadataApiDeploy({ usernameOrConnection, id });
-
+  if (!deploy.id) {
+    throw new SfError('The deploy id is not available.');
+  }
   const componentSet = await buildComponentSet({ ...opts });
   await DeployCache.set(deploy.id, { ...opts });
 
@@ -189,6 +195,9 @@ export async function cancelDeployAsync(opts: Partial<DeployOptions>, id: string
   const usernameOrConnection = org.getUsername() ?? org.getConnection();
   const deploy = new MetadataApiDeploy({ usernameOrConnection, id });
   await deploy.cancel();
+  if (!deploy.id) {
+    throw new SfError('The deploy id is not available.');
+  }
   return { id: deploy.id };
 }
 
