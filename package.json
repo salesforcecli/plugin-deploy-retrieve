@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-deploy-retrieve",
   "description": "deploy and retrieve commands for sf",
-  "version": "1.8.8",
+  "version": "1.8.8-beta.0",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
@@ -10,7 +10,7 @@
     "@salesforce/core": "^3.34.3",
     "@salesforce/kit": "^1.9.2",
     "@salesforce/sf-plugins-core": "^2.2.5",
-    "@salesforce/source-deploy-retrieve": "^7.14.2",
+    "@salesforce/source-deploy-retrieve": "^7.14.2-beta.1",
     "@salesforce/source-tracking": "^2.2.26",
     "chalk": "^4.1.2",
     "fs-extra": "^10.0.1",
