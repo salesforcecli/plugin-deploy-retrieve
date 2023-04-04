@@ -380,9 +380,6 @@ export class Source extends SfCommand<DeleteSourceJson> {
   private async moveBundleToManifest(bundle: SourceComponent, sourcepath: string): Promise<void> {
     // if one of the passed in sourcepaths is to a bundle component
     const fileName = path.basename(sourcepath);
-    if (!bundle.name) {
-      throw new SfError(`Unable to find bundle name for ${sourcepath}`);
-    }
     const fullName = path.join(bundle.name, fileName);
     this.mixedDeployDelete.delete.push({
       state: ComponentStatus.Deleted,
