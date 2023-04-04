@@ -201,8 +201,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
     this.log(getVersionMessage(action, componentSet, api));
-    if (typeof deploy.id !== 'string') {
-      throw new SfError('The deploy id is not a string');
+    if (!deploy.id) {
+      throw new SfError('The deploy id is not available.');
     }
     this.log(`Deploy ID: ${bold(deploy.id)}`);
 

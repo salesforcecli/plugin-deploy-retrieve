@@ -110,8 +110,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     });
 
     if (!this.jsonEnabled()) formatter.display();
-    if (typeof deploy.id !== 'string') {
-      throw new SfError('The deploy id is not a string');
+    if (!deploy.id) {
+      throw new SfError('The deploy id is not available.');
     }
     cache.update(deploy.id, { status: result.response.status });
     await cache.write();
