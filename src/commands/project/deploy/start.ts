@@ -192,7 +192,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     const { deploy, componentSet } = await executeDeploy(
       {
         ...flags,
-        'target-org': flags['target-org'].getUsername(),
+        // TODO: org authinfo retrieve from FS always has username W-12659566
+        'target-org': flags['target-org'].getUsername() as string,
         api,
       },
       this.config.bin,

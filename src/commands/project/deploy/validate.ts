@@ -127,7 +127,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
         ...flags,
         'ignore-conflicts': true,
         'dry-run': true,
-        'target-org': flags['target-org'].getUsername(),
+        // TODO: org authinfo retrieve from FS always has username W-12659566
+        'target-org': flags['target-org'].getUsername() as string,
         api,
       },
       this.config.bin,

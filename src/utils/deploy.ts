@@ -14,6 +14,7 @@ import {
   DeployResult,
   MetadataApiDeploy,
   MetadataApiDeployStatus,
+  MetadataApiDeployOptions,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SourceTracking } from '@salesforce/source-tracking';
@@ -109,8 +110,10 @@ export async function executeDeploy(
   bin = 'sf',
   project?: SfProject,
   id?: string
-): Promise<{ deploy: MetadataApiDeploy; componentSet?: ComponentSet }> {
-  project ??= await SfProject.resolve();
+): Promise<{
+  deploy: MetadataApiDeploy<MetadataApiDeployOptions & { id: string }>;
+  componentSet?: ComponentSet;
+}> {
   const apiOptions = {
     checkOnly: opts['dry-run'] ?? false,
     ignoreWarnings: opts['ignore-warnings'] ?? false,
@@ -120,35 +123,43 @@ export async function executeDeploy(
     testLevel: opts['test-level'],
     purgeOnDelete: opts['purge-on-delete'] ?? false,
   };
-
-  let deploy: MetadataApiDeploy | undefined;
-  let componentSet: ComponentSet | undefined;
-
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   const usernameOrConnection = org.getConnection();
 
   if (opts['metadata-dir']) {
     if (id) {
-      deploy = new MetadataApiDeploy({ id, usernameOrConnection });
+      const deploy = new MetadataApiDeploy({ id, usernameOrConnection });
+      await DeployCache.set(deploy.id, { ...opts });
+      return { deploy };
     } else {
       const key = opts['metadata-dir'].type === 'directory' ? 'mdapiPath' : 'zipPath';
-      deploy = new MetadataApiDeploy({
+      const firstDeploy = new MetadataApiDeploy({
         [key]: opts['metadata-dir'].path,
         usernameOrConnection,
         apiOptions: { ...apiOptions, singlePackage: opts['single-package'] ?? false },
       });
-      await deploy.start();
+      const asyncResult = await firstDeploy.start();
+      // construct a new deploy with the id so that the ID is guaranteed by the type
+      const deploy = new MetadataApiDeploy({
+        id: asyncResult.id,
+        [key]: opts['metadata-dir'].path,
+        usernameOrConnection,
+        apiOptions: { ...apiOptions, singlePackage: opts['single-package'] ?? false },
+      });
+      await DeployCache.set(deploy.id, { ...opts });
+      return { deploy };
     }
   } else {
     // instantiate source tracking
     // stl will decide, based on the org's properties, what needs to be done
+    project ??= await SfProject.resolve();
     const stl = await SourceTracking.create({
       org,
       project,
       subscribeSDREvents: true,
       ignoreConflicts: opts['ignore-conflicts'],
     });
-    componentSet = await buildComponentSet(opts, stl);
+    const componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
       throw new SfError(
         deployMessages.getMessage('error.nothingToDeploy'),
@@ -156,19 +167,16 @@ export async function executeDeploy(
         deployMessages.getMessages('error.nothingToDeploy.Actions', [bin])
       );
     }
-    deploy = id
+    const deploy = id
       ? new MetadataApiDeploy({ id, usernameOrConnection, components: componentSet })
       : await componentSet.deploy({
           usernameOrConnection,
           apiOptions,
         });
+    const manifestPath = componentSet ? await writeManifest(deploy.id, componentSet) : undefined;
+    await DeployCache.set(deploy.id, { ...opts, manifest: manifestPath });
+    return { deploy, componentSet };
   }
-
-  // does not apply to mdapi deploys
-  const manifestPath = componentSet ? await writeManifest(deploy.id, componentSet) : undefined;
-  await DeployCache.set(deploy.id, { ...opts, manifest: manifestPath });
-
-  return { deploy, componentSet };
 }
 
 export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Promise<DeployResult> {
