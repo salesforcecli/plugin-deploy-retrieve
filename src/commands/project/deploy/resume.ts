@@ -6,7 +6,7 @@
  */
 
 import { bold } from 'chalk';
-import { EnvironmentVariable, Messages } from '@salesforce/core';
+import { EnvironmentVariable, Messages, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
 import { getVersionMessage } from '../../../utils/output';
@@ -110,7 +110,9 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     });
 
     if (!this.jsonEnabled()) formatter.display();
-
+    if (typeof deploy.id !== 'string') {
+      throw new SfError('The deploy id is not a string');
+    }
     cache.update(deploy.id, { status: result.response.status });
     await cache.write();
 

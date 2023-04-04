@@ -233,7 +233,9 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
     new DeployProgress(deploy, this.jsonEnabled()).start();
     this.deployResult = await deploy.pollStatus({ timeout: this.flags.wait });
-
+    if (typeof deploy.id !== 'string') {
+      throw new SfError('The deploy id is not a string');
+    }
     await DeployCache.update(deploy.id, { status: this.deployResult.response.status });
 
     await Lifecycle.getInstance().emit('postdeploy', this.deployResult);
@@ -378,6 +380,9 @@ export class Source extends SfCommand<DeleteSourceJson> {
   private async moveBundleToManifest(bundle: SourceComponent, sourcepath: string): Promise<void> {
     // if one of the passed in sourcepaths is to a bundle component
     const fileName = path.basename(sourcepath);
+    if (!bundle.name) {
+      throw new SfError(`Unable to find bundle name for ${sourcepath}`);
+    }
     const fullName = path.join(bundle.name, fileName);
     this.mixedDeployDelete.delete.push({
       state: ComponentStatus.Deleted,

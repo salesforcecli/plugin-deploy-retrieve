@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { bold } from 'chalk';
-import { EnvironmentVariable, Messages, OrgConfigProperties } from '@salesforce/core';
+import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getVersionMessage } from '../../../utils/output';
@@ -135,6 +135,9 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     );
 
     this.log(getVersionMessage('Validating Deployment', componentSet, api));
+    if (typeof deploy.id !== 'string') {
+      throw new SfError('The deploy id is not a string');
+    }
     this.log(`Deploy ID: ${bold(deploy.id)}`);
 
     if (flags.async) {
