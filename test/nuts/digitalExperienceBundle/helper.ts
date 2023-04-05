@@ -138,7 +138,7 @@ export function assertViewHomeStatus(resp: CustomFileResponses, deb: 'a' | 'b') 
   expect(resp[0]).to.include({
     type: TYPES.DE?.name,
     fullName: deb === 'a' ? FULL_NAMES.DE_VIEW_HOME_A : FULL_NAMES.DE_VIEW_HOME_B,
-    filePath: deb === 'a' ? FILE_RELATIVE_PATHS.DE_VIEW_HOME_COMPONENT_A : FILE_RELATIVE_PATHS.DE_VIEW_HOME_COMPONENT_B,
+    filePath: deb === 'a' ? FILE_RELATIVE_PATHS.DE_VIEW_HOME_META_A : FILE_RELATIVE_PATHS.DE_VIEW_HOME_META_B,
   });
 }
 
@@ -153,13 +153,13 @@ export function assertDocumentDetailPageAChanges(resp: CustomFileResponses) {
     {
       type: TYPES.DE?.name,
       fullName: FULL_NAMES.DE_VIEW_DOCUMENT_DETAIL_A,
-      filePath: FILE_RELATIVE_PATHS.DE_VIEW_DOCUMENT_DETAIL_COMPONENT_A,
+      filePath: FILE_RELATIVE_PATHS.DE_VIEW_DOCUMENT_DETAIL_META_A,
     },
 
     {
       type: TYPES.DE?.name,
       fullName: FULL_NAMES.DE_ROUTE_DOCUMENT_DETAIL_A,
-      filePath: FILE_RELATIVE_PATHS.DE_ROUTE_DOCUMENT_DETAIL_COMPONENT_A,
+      filePath: FILE_RELATIVE_PATHS.DE_ROUTE_DOCUMENT_DETAIL_META_A,
     },
   ]);
   expect(resp).to.have.length(2);
