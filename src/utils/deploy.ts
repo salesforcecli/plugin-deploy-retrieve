@@ -59,6 +59,8 @@ export type DeployOptions = {
 /** Manifest is expected.  You cannot pass metadata and source-dir array--use those to get a manifest */
 export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-dir'> & {
   wait: number;
+  /** whether the user passed in anything for metadata-dir (could be a folder, could be a zip) */
+  isMdapi: boolean;
 } & Partial<Pick<DeployOptions, 'manifest'>>;
 
 export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {

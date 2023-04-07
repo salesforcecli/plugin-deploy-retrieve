@@ -61,9 +61,13 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       // we'll use whatever the org supports since we can't specify the org
       // eslint-disable-next-line sf-plugin/get-connection-with-version
       org.getConnection().metadata.checkDeployStatus(jobId, true),
-      buildComponentSet({ ...deployOpts, wait: Duration.minutes(deployOpts.wait) }),
+      // if we're using mdapi, we won't have a component set
+      deployOpts.isMdapi ? undefined : buildComponentSet({ ...deployOpts, wait: Duration.minutes(deployOpts.wait) }),
     ]);
 
+    // @ts-expect-error sdr/DeployResult handles undefined componentSet.
+    // The strict - null - check branch changes this to explicitly allow undefined.
+    // expect-error can be removed once that merges
     const result = new DeployResult(deployStatus as MetadataApiDeployStatus, componentSet);
 
     const formatter = new DeployReportResultFormatter(result, {
