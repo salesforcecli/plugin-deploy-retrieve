@@ -6,7 +6,7 @@
  */
 
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { assert, isObject } from '@salesforce/ts-types';
+import { assert, expect } from 'chai';
 import { DeployResultJson } from '../../../../src/utils/types';
 
 describe('deploy metadata report NUTs with source-dir', () => {
@@ -17,6 +17,11 @@ describe('deploy metadata report NUTs with source-dir', () => {
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
       nut: __filename,
     });
+    await testkit.convert({
+      args: '--source-dir force-app --output-dir mdapiOut',
+      json: true,
+      exitCode: 0,
+    });
   });
 
   after(async () => {
@@ -25,36 +30,37 @@ describe('deploy metadata report NUTs with source-dir', () => {
 
   describe('--use-most-recent', () => {
     it('should report most recently started deployment', async () => {
-      await testkit.execute<DeployResultJson>('deploy:metadata', {
-        args: '--source-dir force-app --async',
+      await testkit.execute<DeployResultJson>('project deploy start', {
+        args: '--metadata-dir mdapiOut --async',
         json: true,
         exitCode: 0,
       });
 
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
+      const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
         args: '--use-most-recent',
         json: true,
         exitCode: 0,
       });
-      assert(isObject(deploy));
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      assert(deploy?.result);
+      expect(deploy.result.success).to.equal(true);
     });
   });
 
   describe('--job-id', () => {
     it('should report the provided job id', async () => {
-      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
-        args: '--source-dir force-app --async --ignore-conflicts',
+      const first = await testkit.execute<DeployResultJson>('project deploy start', {
+        args: '--metadata-dir mdapiOut --async',
         json: true,
         exitCode: 0,
       });
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
+      const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
         args: `--job-id ${first?.result.id}`,
         json: true,
         exitCode: 0,
       });
-      assert(isObject(deploy));
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      assert(deploy?.result);
+      expect(deploy.result.success).to.equal(true);
+      expect(deploy.result.id).to.equal(first?.result.id);
     });
   });
 });
