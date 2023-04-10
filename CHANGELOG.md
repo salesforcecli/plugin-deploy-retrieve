@@ -1,3 +1,12 @@
+## [1.8.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.9...1.8.10) (2023-04-10)
+
+
+### Bug Fixes
+
+* can report on an async mdapi format deploy ([#574](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/574)) ([9635c1c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9635c1c8852671a11365c0c24f430bb1ede23a2e))
+
+
+
 ## [1.8.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.8...1.8.9) (2023-04-08)
 
 
