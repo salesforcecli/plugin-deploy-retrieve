@@ -33,9 +33,9 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
    */
   public static async set(key: string, value: Partial<DeployOptions>): Promise<void> {
     const cache = await DeployCache.create();
-    // remove properties we won't cache
+    // remove properties we won't cache or that are not primitives
     const { 'metadata-dir': mdDir, 'source-dir': sourceDir, wait, ...cleanValue } = value;
-    cache.set(key, { ...cleanValue, wait: wait?.minutes ?? 33 });
+    cache.set(key, { ...cleanValue, wait: wait?.minutes ?? 33, isMdapi: Boolean(mdDir) });
     await cache.write();
   }
 
