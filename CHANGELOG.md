@@ -1,3 +1,12 @@
+## [1.8.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.8...1.8.9) (2023-04-08)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/sf-plugins-core from 2.2.5 to 2.2.7 ([0e5b39f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0e5b39f87b08feab395ab540ad7bc7577aeab70b))
+
+
+
 ## [1.8.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.7...1.8.8) (2023-04-03)
 
 
