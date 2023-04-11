@@ -65,10 +65,6 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       deployOpts.isMdapi ? undefined : buildComponentSet({ ...deployOpts, wait: Duration.minutes(deployOpts.wait) }),
     ]);
 
-    // The strict - null - check branch changes this to explicitly allow undefined.
-    // expect-error can be removed once that merges
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const result = new DeployResult(deployStatus as MetadataApiDeployStatus, componentSet);
 
     const formatter = new DeployReportResultFormatter(result, {
