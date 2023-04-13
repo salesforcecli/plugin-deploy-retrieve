@@ -146,7 +146,7 @@ export class Source extends SfCommand<ConvertResultJson> {
     if (packageName && this.convertResult.packagePath) {
       // SDR will build an output path like /output/directory/packageName/package.xml
       // this was breaking from toolbelt, so to revert it we copy the directory up a level and delete the original
-      fs.cpSync(this.convertResult.packagePath, outputDirectory);
+      fs.cpSync(this.convertResult.packagePath, outputDirectory, { recursive: true });
       fs.rmSync(this.convertResult.packagePath, { recursive: true });
       this.convertResult.packagePath = outputDirectory;
     }
