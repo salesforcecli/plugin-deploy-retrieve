@@ -80,7 +80,7 @@ describe('manifest cache', () => {
 
   it('it will write a CustomLabel and strip CustomLabels manifest', async () => {
     const cs = new ComponentSet();
-    cs.apiVersion = '57.0';
+    cs.sourceApiVersion = '57.0';
     cs.add({ fullName: 'MyCustom', type: 'CustomLabel' });
     cs.add({ fullName: 'CustomLabels', type: 'CustomLabels' });
     await writeManifest('123', cs);
@@ -93,7 +93,7 @@ describe('manifest cache', () => {
         <members>MyCustom</members>
         <name>CustomLabel</name>
     </types>
-    <version>58.0</version>
+    <version>57.0</version>
 </Package>
 `
     );
@@ -101,7 +101,7 @@ describe('manifest cache', () => {
 
   it('it will write a CustomLabel and strip CustomLabels manifest with other MDTs', async () => {
     const cs = new ComponentSet();
-    cs.apiVersion = '57.0';
+    cs.sourceApiVersion = '57.0';
     cs.add({ fullName: 'MyCustom', type: 'CustomLabel' });
     cs.add({ fullName: 'CustomLabels', type: 'CustomLabels' });
     cs.add({ fullName: 'myClass', type: 'ApexClass' });
@@ -119,7 +119,7 @@ describe('manifest cache', () => {
         <members>MyCustom</members>
         <name>CustomLabel</name>
     </types>
-    <version>58.0</version>
+    <version>57.0</version>
 </Package>
 `
     );

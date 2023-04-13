@@ -23,11 +23,18 @@ export const writeManifest = async (jobId: string, componentSet: ComponentSet): 
   // in the project. When only a single label is specified, we need to strip out the `CustomLabels` entry otherwise we'll display information for every
   // CustomLabel in the project instead of the single on specified
 
-  const xml =
-    types.has('CustomLabels') && types.has('CustomLabel')
-      ? await componentSet.filter((c) => c.type.name !== 'CustomLabels').getPackageXml()
-      : await componentSet.getPackageXml();
-
+  let xml: string;
+  if (types.has('CustomLabels') && types.has('CustomLabel')) {
+    // cs.filter doesn't return the SAME component set, it just returns a new one...
+    // and so when we set anything on the component set that was passed in, it won't be set on the filtered one
+    // so, we create a new CS, and set the values from the original
+    const cs = new ComponentSet(componentSet.filter((c) => c.type.name !== 'CustomLabels'));
+    cs.sourceApiVersion = componentSet.sourceApiVersion;
+    cs.apiVersion = componentSet.apiVersion;
+    xml = await cs.getPackageXml();
+  } else {
+    xml = await componentSet.getPackageXml();
+  }
   const filePath = getManifestFilePath(jobId);
   await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
   await fs.promises.writeFile(filePath, xml);
