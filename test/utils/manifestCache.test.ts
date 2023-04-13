@@ -93,7 +93,7 @@ describe('manifest cache', () => {
         <members>MyCustom</members>
         <name>CustomLabel</name>
     </types>
-    <version>57.0</version>
+    <version>58.0</version>
 </Package>
 `
     );
@@ -119,7 +119,7 @@ describe('manifest cache', () => {
         <members>MyCustom</members>
         <name>CustomLabel</name>
     </types>
-    <version>57.0</version>
+    <version>58.0</version>
 </Package>
 `
     );
