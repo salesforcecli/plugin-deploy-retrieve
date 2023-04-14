@@ -1,3 +1,12 @@
+## [1.8.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.12...1.8.13) (2023-04-14)
+
+
+### Bug Fixes
+
+* bump STL ([a2f82c7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a2f82c7eac0772ee53a8f7c0f67cf997c4b6bff1))
+
+
+
 ## [1.8.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.11...1.8.12) (2023-04-14)
 
 
