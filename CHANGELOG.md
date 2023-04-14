@@ -1,3 +1,12 @@
+## [1.8.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.11...1.8.12) (2023-04-14)
+
+
+### Bug Fixes
+
+* --package-name copies recursively ([69759cc](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/69759ccf3a6db1a4d25d693fa581a0a7fd31e575))
+
+
+
 ## [1.8.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.10...1.8.11) (2023-04-11)
 
 
