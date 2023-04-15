@@ -1,3 +1,12 @@
+## [1.8.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.13...1.8.14) (2023-04-15)
+
+
+### Bug Fixes
+
+* **deps:** bump @oclif/core from 2.8.1 to 2.8.2 ([9c74c6a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9c74c6a9baf29de0e758cbeb8a50fd44dbed85ab))
+
+
+
 ## [1.8.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.12...1.8.13) (2023-04-14)
 
 
