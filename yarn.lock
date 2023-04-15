@@ -1220,18 +1220,18 @@
     fast-levenshtein "^3.0.0"
     tslib "^2"
 
-"@salesforce/plugin-source@^2.9.2":
-  version "2.9.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.9.4.tgz#bdd59ccdbbc6366cdfbc5078ceb3fbf3804cdc86"
-  integrity sha512-AopxygHbNsml15M/pJnkOEaUmHS2vjkuKmyBlEVveb5K/MF3G539cKIBWyB4Hf4uyPsH3rEGjyRTL7znlBY9iA==
+"@salesforce/plugin-source@^2.10.1":
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.10.1.tgz#ce0b2c8b82c40fe5c4fb2e0724c7a67eb5027da4"
+  integrity sha512-cs6SKbm3QwLdn6mbdMC2IQjVZbhDS904VHAxooRyGgdovGFSDhM1jB208BIg2zjExXg/bDtr2qvXBVUOC9Kyhw==
   dependencies:
     "@oclif/core" "^2.6.3"
     "@salesforce/apex-node" "^1.6.0"
-    "@salesforce/core" "^3.33.6"
+    "@salesforce/core" "^3.34.6"
     "@salesforce/kit" "^1.9.0"
     "@salesforce/sf-plugins-core" "^2.2.7"
-    "@salesforce/source-deploy-retrieve" "^7.14.5"
-    "@salesforce/source-tracking" "^2.2.24"
+    "@salesforce/source-deploy-retrieve" "^8.0.1"
+    "@salesforce/source-tracking" "^3.1.0"
     chalk "^4.1.2"
     got "^11.8.6"
     proxy-agent "^5.0.0"
@@ -1285,7 +1285,7 @@
     chalk "^4"
     inquirer "^8.2.5"
 
-"@salesforce/source-deploy-retrieve@^7.14.5", "@salesforce/source-deploy-retrieve@^7.15.0":
+"@salesforce/source-deploy-retrieve@^7.15.0":
   version "7.15.1"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-7.15.1.tgz#059d088f5fb5726323d9822599d730474ce6dc70"
   integrity sha512-37jjQWb24FBEwP0aAW1UnSkVk+TMr8KEtCN5tNa43LXK21m06suMDx92Y+lS8xJ9esgj/GEEuXgG8OCf+L5qcg==
@@ -1338,18 +1338,6 @@
     debug "^4.3.1"
     shelljs "^0.8.4"
     sinon "^10.0.0"
-
-"@salesforce/source-tracking@^2.2.24":
-  version "2.2.27"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-2.2.27.tgz#c6d14d37153cee63c1e1d18593f1b44753562ef8"
-  integrity sha512-3Krl4dngtVKjp10gj8x6eXS/blKK+pVHu7RbIW8BWBUFehANt3/ddKnAcqMIRiHgE3gODbE54Whz6EFl4AEWBg==
-  dependencies:
-    "@salesforce/core" "^3.34.6"
-    "@salesforce/kit" "^1.9.0"
-    "@salesforce/source-deploy-retrieve" "^8.0.1"
-    graceful-fs "^4.2.11"
-    isomorphic-git "1.17.0"
-    ts-retry-promise "^0.7.0"
 
 "@salesforce/source-tracking@^3.1.0":
   version "3.1.0"
