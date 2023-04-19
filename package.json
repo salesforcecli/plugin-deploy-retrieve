@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-deploy-retrieve",
   "description": "deploy and retrieve commands for sf",
-  "version": "1.8.14",
+  "version": "1.8.15",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
