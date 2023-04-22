@@ -1238,14 +1238,14 @@
     proxy-from-env "^1.1.0"
     tslib "^2"
 
-"@salesforce/plugin-templates@^55.4.8":
-  version "55.4.8"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-templates/-/plugin-templates-55.4.8.tgz#7b6f5803e4d1d0172b2036f5ce23850eb36ded98"
-  integrity sha512-2DQjtCZctsfF1qAgiA/PyJsDBx4fKoATOK38sibM1+dXNgUb5PpHkIh48BDbCbGVDKFg3jzCER2pQ/4G0NUpwg==
+"@salesforce/plugin-templates@^55.4.10":
+  version "55.4.10"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-templates/-/plugin-templates-55.4.10.tgz#1d2d0796ca0bf923b19994a3e396eba8da0ea178"
+  integrity sha512-ahOhTWxE99b2ep02RE8674pdAAz+HaXpA3HZWmR8vwyeyzVqyk4QtXZlOBsmDtW+xZPMWWXJkNoVEuzhkVRclw==
   dependencies:
     "@oclif/core" "^2.3.1"
     "@salesforce/core" "^3.34.4"
-    "@salesforce/sf-plugins-core" "^2.0.2"
+    "@salesforce/sf-plugins-core" "^2.2.7"
     "@salesforce/templates" "^57.1.1"
     tslib "^2"
     yeoman-environment "^3.15.1"
@@ -1273,7 +1273,7 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.5.1.tgz#2d1bfdcf593caaa04cd4b3e6fe621097ff7f28fe"
   integrity sha512-MRqU+tn8w5IFvZ0Lm9YKLgxYxr2MQMI+fXXsTrwfUnijsps+ybF9IOTu6MOMxxl2vCUkO8XDjA435wXlWSLI6g==
 
-"@salesforce/sf-plugins-core@^2.0.1", "@salesforce/sf-plugins-core@^2.0.2", "@salesforce/sf-plugins-core@^2.2.4", "@salesforce/sf-plugins-core@^2.2.5", "@salesforce/sf-plugins-core@^2.2.7":
+"@salesforce/sf-plugins-core@^2.0.1", "@salesforce/sf-plugins-core@^2.2.4", "@salesforce/sf-plugins-core@^2.2.5", "@salesforce/sf-plugins-core@^2.2.7":
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-2.2.7.tgz#dd3d567ef89396b3f414645b986dbddadc6ee342"
   integrity sha512-bwtfYfJbvjrx3Up2fLmqHXgfXWdcI3CFS5D5zQf2wZhc5Ori4jlNMPsW2SP2J3ze50thjX+kLOTKu96AHiW7sA==
