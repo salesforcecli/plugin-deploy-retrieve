@@ -1220,10 +1220,10 @@
     fast-levenshtein "^3.0.0"
     tslib "^2"
 
-"@salesforce/plugin-source@^2.10.1":
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.10.1.tgz#ce0b2c8b82c40fe5c4fb2e0724c7a67eb5027da4"
-  integrity sha512-cs6SKbm3QwLdn6mbdMC2IQjVZbhDS904VHAxooRyGgdovGFSDhM1jB208BIg2zjExXg/bDtr2qvXBVUOC9Kyhw==
+"@salesforce/plugin-source@^2.10.4":
+  version "2.10.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.10.4.tgz#8ae50a434f26544462e1b9e3495a96859711e713"
+  integrity sha512-gyQwj4e04Pyij33eiWdrAdSVHOj2V0d6z1lZRNCSbdZk+OhGpUCiTE7sCmtN8b//aKYGRJWjP5usBMivc/jylw==
   dependencies:
     "@oclif/core" "^2.6.3"
     "@salesforce/apex-node" "^1.6.0"
