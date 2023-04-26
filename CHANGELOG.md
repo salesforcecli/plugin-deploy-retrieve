@@ -1,3 +1,12 @@
+## [1.8.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.17...1.8.18) (2023-04-26)
+
+
+### Bug Fixes
+
+* remove bad sample ([#597](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/597)) ([b2d3991](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b2d399191a8cd3e85cab300a2c93c6b7cf0e691e))
+
+
+
 ## [1.8.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.16...1.8.17) (2023-04-26)
 
 
