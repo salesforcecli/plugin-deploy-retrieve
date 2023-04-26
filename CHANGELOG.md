@@ -1,3 +1,12 @@
+## [1.8.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.16...1.8.17) (2023-04-26)
+
+
+### Bug Fixes
+
+* clarify the --no-track-source mention in the help ([#596](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/596)) ([df1bc6e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/df1bc6e3438391b76eb618ff70f799de25f78398))
+
+
+
 ## [1.8.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.15...1.8.16) (2023-04-21)
 
 
