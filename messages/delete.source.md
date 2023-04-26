@@ -28,10 +28,6 @@ To delete multiple metadata components, either set multiple --metadata <name> fl
 
   <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes
 
-- Delete all components listed in a manifest:
-
-  <%= config.bin %> <%= command.id %> --manifest path/to/package.xml
-
 # flags.source-dir.summary
 
 Source file paths to delete.
