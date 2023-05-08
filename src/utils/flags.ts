@@ -7,11 +7,12 @@
 import * as fs from 'fs';
 import { resolve, extname } from 'path';
 import { Flags } from '@oclif/core';
-import { Messages } from '@salesforce/core';
-import { PathInfo, TestLevel } from './types';
+import { Messages, Lifecycle } from '@salesforce/core';
+import { PathInfo, TestLevel, reportsFormatters } from './types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'validation');
+const commonFlagMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'commonFlags');
 
 const parsePathInfo = async (input: string, opts: { exists?: boolean }): Promise<PathInfo> => {
   if (opts.exists && !fs.existsSync(input)) {
@@ -86,3 +87,41 @@ export const fileOrDirFlag = Flags.custom<PathInfo, { exists?: boolean }>({
 export const zipFileFlag = Flags.custom<string>({
   parse: async (input) => Promise.resolve(resolveZipFileName(input)),
 });
+
+export const testsFlag = Flags.string({
+  char: 't',
+  multiple: true,
+  summary: commonFlagMessages.getMessage('flags.tests.summary'),
+  description: commonFlagMessages.getMessage('flags.tests.description'),
+  // the old version allowed comma separated values, and the change is confusing enough to deserve a warning
+  parse: async (input: string): Promise<string> =>
+    commaWarningForMultipleFlags(
+      input,
+      commonFlagMessages.getMessage('commaWarningForTests', [commonFlagMessages.getMessage('flags.tests.description')])
+    ),
+});
+
+export const coverageFormattersFlag = Flags.string({
+  multiple: true,
+  summary: commonFlagMessages.getMessage('flags.coverage-formatters.summary'),
+  description: commonFlagMessages.getMessage('flags.coverage-formatters.description'),
+  parse: async (input: string): Promise<string> =>
+    commaWarningForMultipleFlags(
+      input,
+      commonFlagMessages.getMessage('commaWarningForCoverageFormatters', [
+        commonFlagMessages.getMessage('flags.coverage-formatters.description'),
+      ])
+    ),
+  options: reportsFormatters,
+});
+/**
+ * use when the old version allowed comma separated values, and the change is confusing enough to deserve a warning
+ * Put this as the parse function, like the testsFlag above
+ *
+ */
+export const commaWarningForMultipleFlags = async (input: string, warningText: string): Promise<string> => {
+  if (input.includes(',')) {
+    await Lifecycle.getInstance().emitWarning(warningText);
+  }
+  return input;
+};

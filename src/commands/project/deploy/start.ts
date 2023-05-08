@@ -12,12 +12,12 @@ import { getVersionMessage } from '../../../utils/output';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
-import { DeployResultJson, TestLevel, reportsFormatters } from '../../../utils/types';
+import { DeployResultJson, TestLevel } from '../../../utils/types';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { ConfigVars } from '../../../configMeta';
-import { fileOrDirFlag, testLevelFlag } from '../../../utils/flags';
+import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
 import { writeConflictTable } from '../../../utils/conflicts';
 
 Messages.importMessagesDirectory(__dirname);
@@ -105,12 +105,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.target-org.summary'),
       required: true,
     }),
-    tests: Flags.string({
-      char: 't',
-      multiple: true,
-      summary: messages.getMessage('flags.tests.summary'),
-      description: messages.getMessage('flags.tests.description'),
-    }),
+    tests: testsFlag,
     'test-level': testLevelFlag({
       default: TestLevel.NoTestRun,
       description: messages.getMessage('flags.test-level.description'),
@@ -144,11 +139,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.post-destructive-changes.summary'),
       dependsOn: ['manifest'],
     }),
-    'coverage-formatters': Flags.string({
-      multiple: true,
-      summary: messages.getMessage('flags.coverage-formatters.summary'),
-      options: reportsFormatters,
-    }),
+    'coverage-formatters': coverageFormattersFlag,
     junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary'), dependsOn: ['coverage-formatters'] }),
     'results-dir': Flags.directory({
       dependsOn: ['coverage-formatters'],

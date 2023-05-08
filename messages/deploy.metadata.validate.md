@@ -86,10 +86,6 @@ All child components are included. If you specify this flag, don’t specify --m
 
 The API to use for validating the deployment.
 
-# flags.tests.summary
-
-Apex tests to run when --test-level is RunSpecifiedTests.
-
 # flags.verbose.summary
 
 Show verbose output of the validation result.

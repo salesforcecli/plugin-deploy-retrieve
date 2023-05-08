@@ -45,10 +45,6 @@ For performance reasons, this flag uses job IDs for deploy operations that start
 
 Output JUnit test results.
 
-# flags.coverage-formatters.summary
-
-Format of the code coverage results
-
 # flags.results-dir.summary
 
 Output directory for code coverage and JUnit results; defaults to the deploy ID.
