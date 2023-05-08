@@ -1,6 +1,6 @@
 # commaWarningForTests
 
-The previous version of this command used a comma-separated list for tests. Your tests are probably not running like you expect.
+The previous version of this command used a comma-separated list for tests. We've changed how you specify multiple tests, so if you continue using your current syntax, your tests will probably not run as you expect. 
 
 %s
 
