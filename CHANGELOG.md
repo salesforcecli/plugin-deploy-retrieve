@@ -1,3 +1,12 @@
+## [1.8.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.19...1.8.20) (2023-05-09)
+
+
+### Bug Fixes
+
+* testresult mapping of source deployment ([6366fd3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6366fd3f9b193f596fb9a0c52da96142427f3f84))
+
+
+
 ## [1.8.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.18...1.8.19) (2023-05-06)
 
 
