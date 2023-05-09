@@ -105,13 +105,6 @@ export const coverageFormattersFlag = Flags.string({
   multiple: true,
   summary: commonFlagMessages.getMessage('flags.coverage-formatters.summary'),
   description: commonFlagMessages.getMessage('flags.coverage-formatters.description'),
-  parse: async (input: string): Promise<string> =>
-    commaWarningForMultipleFlags(
-      input,
-      commonFlagMessages.getMessage('commaWarningForCoverageFormatters', [
-        commonFlagMessages.getMessage('flags.coverage-formatters.description'),
-      ])
-    ),
   options: reportsFormatters,
 });
 /**

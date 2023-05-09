@@ -1,6 +1,6 @@
 # commaWarningForTests
 
-The previous version of this command used a comma-separated list for tests. We've changed how you specify multiple tests, so if you continue using your current syntax, your tests will probably not run as you expect. 
+The previous version of this command used a comma-separated list for tests. We've changed how you specify multiple tests, so if you continue using your current syntax, your tests will probably not run as you expect.
 
 %s
 
@@ -24,9 +24,3 @@ Format of the code coverage results.
 
 For multiple formatters, repeat the flag for each formatter.
 --coverage-formatters lcov --coverage-formatters clover
-
-# commaWarningForCoverageFormatters
-
-The previous version of this command used a comma-separated list for coverage formatters. We've changed how you specify multiple coverage formatters, so if you continue using your current syntax, your coverage results will probably not look as you expect. 
-
-%s
