@@ -118,8 +118,8 @@ export async function executeDeploy(
     ignoreWarnings: opts['ignore-warnings'] ?? false,
     rest: opts.api === 'REST',
     rollbackOnError: !opts['ignore-errors'] || false,
-    runTests: opts.tests ?? [],
-    testLevel: opts['test-level'],
+    ...(opts.tests ? { runTests: opts.tests } : {}),
+    ...(opts['test-level'] ? { testLevel: opts['test-level'] } : {}),
     purgeOnDelete: opts['purge-on-delete'] ?? false,
   };
 
