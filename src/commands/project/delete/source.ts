@@ -32,6 +32,7 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import * as chalk from 'chalk';
+import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import { DeleteSourceJson, TestLevel, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 import { resolveApi } from '../../../utils/deploy';
@@ -346,15 +347,39 @@ export class Source extends SfCommand<DeleteSourceJson> {
       this.components?.filter(isSourceComponent).map((component: SourceComponent) => {
         // mixed delete/deploy operations have already been deleted and stashed
         if (!this.mixedDeployDelete.delete.length) {
-          if (component.content) {
+          if (component.type.id === 'customlabel' && component.xml) {
+            const parser = new XMLParser({
+              ignoreDeclaration: false,
+              ignoreAttributes: false,
+              attributeNamePrefix: '@_',
+            });
+            const customLabels = parser.parse(fs.readFileSync(component.xml, 'utf8')) as {
+              CustomLabels: { labels: Array<{ fullName: string }> };
+            };
+            customLabels.CustomLabels.labels = customLabels.CustomLabels.labels.filter(
+              (label) => label.fullName !== component.fullName
+            );
+
+            // delete customLabels.CustomLabels.labels;
+            const builder = new XMLBuilder({
+              attributeNamePrefix: '@_',
+              ignoreAttributes: false,
+              format: true,
+              indentBy: '    ',
+            });
+            const xml = builder.build(customLabels) as string;
+            fs.writeFileSync(component.xml, xml);
+            // parse xml to json
+            // delete json key
+            // write json back to xml
+          } else if (component.content) {
             const stats = fs.statSync(component.content);
             if (stats.isDirectory()) {
               promises.push(fsPromises.rm(component.content, { recursive: true }));
             } else {
               promises.push(fsPromises.unlink(component.content));
             }
-          }
-          if (component.xml) {
+          } else if (component.xml) {
             promises.push(fsPromises.unlink(component.xml));
           }
         }

@@ -48,6 +48,54 @@ describe('project delete source NUTs', () => {
     return { apexName, output, pathToClass };
   };
 
+  describe('CustomLabels', () => {
+    before(async () => {
+      testkit = await SourceTestkit.create({
+        nut: __filename,
+        repository: 'https://github.com/mdapi-issues/sfdx-delete-customlabel.git',
+      });
+      execCmd('force:source:deploy --sourcepath force-app', { ensureExitCode: 0 });
+    });
+
+    after(async () => {
+      await testkit?.clean();
+    });
+    it('will not delete the entire .xml file', () => {
+      const clPath = path.join(
+        testkit.projectDir,
+        'force-app',
+        'main',
+        'default',
+        'labels',
+        'CustomLabels.labels-meta.xml'
+      );
+      const result = execCmd<DeleteSourceJson>('project:delete:source --no-prompt --metadata CustomLabel:DeleteMe', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(result?.deletedSource).to.have.length(2);
+      expect(fs.existsSync(clPath)).to.be.true;
+      expect(fs.readFileSync(clPath, 'utf8')).to.not.contain('<fullName>DeleteMe</fullName>');
+      expect(fs.readFileSync(clPath, 'utf8')).to.contain('<fullName>KeepMe1</fullName>');
+      expect(fs.readFileSync(clPath, 'utf8')).to.contain('<fullName>KeepMe2</fullName>');
+    });
+
+    it('will delete the entire .xml file', () => {
+      const clPath = path.join(
+        testkit.projectDir,
+        'force-app',
+        'main',
+        'default',
+        'labels',
+        'CustomLabels.labels-meta.xml'
+      );
+      const result = execCmd<DeleteSourceJson>('project:delete:source --no-prompt --metadata CustomLabels', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(result?.deletedSource).to.have.length(4);
+      expect(fs.existsSync(clPath)).to.be.false;
+    });
+  });
+
   before(async () => {
     testkit = await SourceTestkit.create({
       nut: __filename,
