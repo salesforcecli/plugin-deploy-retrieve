@@ -226,7 +226,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       apiOptions: {
         rest: this.isRest,
         checkOnly: this.flags['check-only'] ?? false,
-        testLevel: this.flags['test-level'],
+        ...(this.flags['test-level'] ? { testLevel: this.flags['test-level'] } : {}),
       },
     });
 
