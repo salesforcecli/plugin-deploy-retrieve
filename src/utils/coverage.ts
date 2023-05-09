@@ -27,8 +27,8 @@ export const mapTestResults = <T extends Failures | Successes>(testResults: T[])
     fullName: testResult.name,
     id: testResult.id,
     ...('message' in testResult && testResult.message
-      ? { message: testResult.message, outcome: ApexTestResultOutcome.Pass }
-      : { message: null, outcome: ApexTestResultOutcome.Fail }),
+      ? { message: testResult.message, outcome: ApexTestResultOutcome.Fail }
+      : { message: null, outcome: ApexTestResultOutcome.Pass }),
     methodName: testResult.methodName,
     queueItemId: '',
     runTime: parseInt(testResult.time, 10),
