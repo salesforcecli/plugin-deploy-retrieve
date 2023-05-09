@@ -8,7 +8,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { expect } from 'chai';
-import { execCmd } from '@salesforce/cli-plugins-testkit';
+import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { exec } from 'shelljs';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
@@ -29,12 +29,14 @@ const isNameObsolete = async (username: string, memberType: string, memberName: 
 };
 
 describe('CustomLabels', () => {
-  let testkit: SourceTestkit;
+  let testkit: TestSession;
 
   before(async () => {
-    testkit = await SourceTestkit.create({
-      nut: __filename,
-      repository: 'https://github.com/mdapi-issues/sfdx-delete-customlabel.git',
+    testkit = await TestSession.create({
+      project: {
+        gitClone: 'https://github.com/mdapi-issues/sfdx-delete-customlabel.git',
+      },
+      devhubAuthStrategy: 'NONE',
     });
     execCmd('force:source:deploy --sourcepath force-app', { ensureExitCode: 0 });
   });
@@ -44,7 +46,7 @@ describe('CustomLabels', () => {
   });
   it('will not delete the entire .xml file', () => {
     const clPath = path.join(
-      testkit.projectDir,
+      testkit.project.dir,
       'force-app',
       'main',
       'default',
@@ -63,7 +65,7 @@ describe('CustomLabels', () => {
 
   it('will delete the entire .xml file', () => {
     const clPath = path.join(
-      testkit.projectDir,
+      testkit.project.dir,
       'force-app',
       'main',
       'default',
