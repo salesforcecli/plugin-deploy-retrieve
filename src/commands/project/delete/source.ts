@@ -32,7 +32,7 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import * as chalk from 'chalk';
-import { DeleteSourceJson, TestLevel, isSourceComponent } from '../../../utils/types';
+import { DeleteSourceJson, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 import { resolveApi } from '../../../utils/deploy';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
@@ -77,7 +77,6 @@ export class Source extends SfCommand<DeleteSourceJson> {
       description: messages.getMessage('flags.test-Level.description'),
       summary: messages.getMessage('flags.test-Level.summary'),
       options: ['NoTestRun', 'RunLocalTests', 'RunAllTestsInOrg'],
-      default: TestLevel.NoTestRun,
     }),
     'no-prompt': Flags.boolean({
       char: 'r',

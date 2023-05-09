@@ -63,7 +63,7 @@ export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-di
   isMdapi: boolean;
 } & Partial<Pick<DeployOptions, 'manifest'>>;
 
-export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
+export function validateTests(testLevel: TestLevel | undefined, tests: Nullable<string[]>): boolean {
   return !(testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0);
 }
 
