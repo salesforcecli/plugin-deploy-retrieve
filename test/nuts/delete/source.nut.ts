@@ -54,14 +54,17 @@ describe('CustomLabels', () => {
       'labels',
       'CustomLabels.labels-meta.xml'
     );
-    const result = execCmd<DeleteSourceJson>('project:delete:source --no-prompt --metadata CustomLabel:DeleteMe', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result;
-    expect(result?.deletedSource).to.have.length(2);
+    const result = execCmd<DeleteSourceJson>(
+      'project:delete:source --json --no-prompt --metadata CustomLabel:DeleteMe',
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput?.result;
     expect(fs.existsSync(clPath)).to.be.true;
     expect(fs.readFileSync(clPath, 'utf8')).to.not.contain('<fullName>DeleteMe</fullName>');
     expect(fs.readFileSync(clPath, 'utf8')).to.contain('<fullName>KeepMe1</fullName>');
     expect(fs.readFileSync(clPath, 'utf8')).to.contain('<fullName>KeepMe2</fullName>');
+    expect(result?.deletedSource).to.have.length(1);
   });
 
   it('will delete the entire .xml file', () => {
@@ -73,10 +76,10 @@ describe('CustomLabels', () => {
       'labels',
       'CustomLabels.labels-meta.xml'
     );
-    const result = execCmd<DeleteSourceJson>('project:delete:source --no-prompt --metadata CustomLabels', {
+    const result = execCmd<DeleteSourceJson>('project:delete:source --json --no-prompt --metadata CustomLabels', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
-    expect(result?.deletedSource).to.have.length(4);
+    expect(result?.deletedSource).to.have.length(3);
     expect(fs.existsSync(clPath)).to.be.false;
   });
 });
