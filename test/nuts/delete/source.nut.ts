@@ -37,7 +37,7 @@ describe('CustomLabels', () => {
         gitClone: 'https://github.com/mdapi-issues/sfdx-delete-customlabel.git',
       },
       scratchOrgs: [{ setDefault: true, config: path.join('config', 'project-scratch-def.json') }],
-      devhubAuthStrategy: 'NONE',
+      devhubAuthStrategy: 'AUTO',
     });
     execCmd('force:source:deploy --sourcepath force-app', { ensureExitCode: 0 });
   });
