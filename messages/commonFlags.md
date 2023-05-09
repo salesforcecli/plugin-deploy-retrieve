@@ -13,8 +13,8 @@ Apex tests to run when --test-level is RunSpecifiedTests.
 If a test name contains a space, enclose it in double quotes.
 For multiple test names, use one of the following formats:
 
-- Repeat the flag for multiple test names. --tests Test1 --tests Test2 --tests "Test With Space"
-- Separate the test names with spaces --tests Test1 Test2 "Test With Space"
+- Repeat the flag for multiple test names: --tests Test1 --tests Test2 --tests "Test With Space"
+- Separate the test names with spaces: --tests Test1 Test2 "Test With Space"
 
 # flags.coverage-formatters.summary
 
