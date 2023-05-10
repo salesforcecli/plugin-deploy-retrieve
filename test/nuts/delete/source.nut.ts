@@ -34,7 +34,7 @@ describe('CustomLabels', () => {
   before(async () => {
     testkit = await TestSession.create({
       project: {
-        gitClone: 'https://github.com/mdapi-issues/sfdx-delete-customlabel.git',
+        gitClone: 'https://github.com/WillieRuemmele/sfdx-delete-customlabel',
       },
       scratchOrgs: [{ setDefault: true, config: path.join('config', 'project-scratch-def.json') }],
       devhubAuthStrategy: 'AUTO',
