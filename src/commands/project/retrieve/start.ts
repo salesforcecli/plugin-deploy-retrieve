@@ -15,6 +15,7 @@ import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { Duration } from '@salesforce/kit';
+import { MetadataApiRetrieveStatus } from '@salesforce/source-deploy-retrieve/lib/src/client/types';
 import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags';
 import { RetrieveResultFormatter } from '../../../formatters/retrieveResultFormatter';
 import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter';
@@ -161,69 +162,75 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           }),
           fileResponsesFromDelete: [],
         };
-    // stl sets version based on config/files--if the command overrides it, we need to update
-    if (isChanges && flags['api-version']) {
-      componentSetFromNonDeletes.apiVersion = flags['api-version'];
-    }
-    this.spinner.status = messages.getMessage('spinner.sending', [
-      componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
-    ]);
 
+    this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
-    const retrieveOpts: RetrieveSetOptions = {
-      usernameOrConnection:
-        flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
-      merge: true,
-      output: this.project.getDefaultPackage().fullPath,
-      packageOptions: flags['package-name'],
-      format,
-      ...(format === 'metadata'
-        ? {
-            singlePackage: flags['single-package'],
-            unzip: flags.unzip,
-            zipFileName,
-            output: flags['target-metadata-dir'],
-          }
-        : {}),
-    };
 
-    const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
+    if (componentSetFromNonDeletes.size !== 0) {
+      // we have changes to retrieve
+      // stl sets version based on config/files--if the command overrides it, we need to update
+      if (isChanges && flags['api-version']) {
+        componentSetFromNonDeletes.apiVersion = flags['api-version'];
+      }
+      this.spinner.status = messages.getMessage('spinner.sending', [
+        componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
+      ]);
+      const retrieveOpts: RetrieveSetOptions = {
+        usernameOrConnection:
+          flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
+        merge: true,
+        output: this.project.getDefaultPackage().fullPath,
+        packageOptions: flags['package-name'],
+        format,
+        ...(format === 'metadata'
+          ? {
+              singlePackage: flags['single-package'],
+              unzip: flags.unzip,
+              zipFileName,
+              output: flags['target-metadata-dir'],
+            }
+          : {}),
+      };
 
-    this.spinner.status = messages.getMessage('spinner.polling');
+      const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
 
-    retrieve.onUpdate((data) => {
-      this.spinner.status = mdTransferMessages.getMessage(data.status);
-    });
+      this.spinner.status = messages.getMessage('spinner.polling');
 
-    // any thing else should stop the progress bar
-    retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
+      retrieve.onUpdate((data) => {
+        this.spinner.status = mdTransferMessages.getMessage(data.status);
+      });
 
-    retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
+      // any thing else should stop the progress bar
+      retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
 
-    retrieve.onError((error: Error) => {
-      this.spinner.stop(error.name);
-      throw error;
-    });
+      retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
 
-    await retrieve.start();
-    const result = await retrieve.pollStatus(500, flags.wait.seconds);
+      retrieve.onError((error: Error) => {
+        this.spinner.stop(error.name);
+        throw error;
+      });
+
+      await retrieve.start();
+      this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
+    }
     this.spinner.stop();
 
     // reference the flag instead of `format` so we get correct type
     const formatter = flags['target-metadata-dir']
-      ? new MetadataRetrieveResultFormatter(result, {
+      ? new MetadataRetrieveResultFormatter(this.retrieveResult, {
           'target-metadata-dir': flags['target-metadata-dir'],
           'zip-file-name': zipFileName,
           unzip: flags.unzip,
         })
-      : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
+      : new RetrieveResultFormatter(this.retrieveResult, flags['package-name'], fileResponsesFromDelete);
     if (!this.jsonEnabled()) {
-      if (result.response.status === 'Succeeded') {
+      // in the case where we didn't retrieve anything, check if we have any deletes
+      if (this.retrieveResult.response.status === 'Succeeded' || fileResponsesFromDelete.length !== 0) {
         await formatter.display();
       } else {
         throw new SfError(
-          getString(result.response, 'errorMessage', result.response.status),
-          getString(result.response, 'errorStatusCode', 'unknown')
+          getString(this.retrieveResult.response, 'errorMessage', this.retrieveResult.response.status),
+          getString(this.retrieveResult.response, 'errorStatusCode', 'unknown')
         );
       }
     }

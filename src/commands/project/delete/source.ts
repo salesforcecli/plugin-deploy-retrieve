@@ -365,22 +365,27 @@ export class Source extends SfCommand<DeleteSourceJson> {
                 attributeNamePrefix: '@_',
               });
               const customLabels = parser.parse(fs.readFileSync(component.xml, 'utf8')) as {
-                CustomLabels: { labels: Array<{ fullName: string }> };
+                CustomLabels: { labels: Array<{ fullName: string }> | { fullName: string } };
               };
-              // delete the label from the json based on it's fullName
-              customLabels.CustomLabels.labels = customLabels.CustomLabels.labels.filter(
-                (label) => label.fullName !== component.fullName
-              );
+              if ('fullName' in customLabels.CustomLabels.labels) {
+                // a single custom label remains, delete the entire file
+                return fs.promises.unlink(component.xml);
+              } else {
+                // delete the label from the json based on it's fullName
+                customLabels.CustomLabels.labels = customLabels.CustomLabels.labels.filter(
+                  (label) => label.fullName !== component.fullName
+                );
 
-              const builder = new XMLBuilder({
-                attributeNamePrefix: '@_',
-                ignoreAttributes: false,
-                format: true,
-                indentBy: '    ',
-              });
-              // and then write that json back to xml and back to the fs
-              const xml = builder.build(customLabels) as string;
-              fs.writeFileSync(component.xml, xml);
+                const builder = new XMLBuilder({
+                  attributeNamePrefix: '@_',
+                  ignoreAttributes: false,
+                  format: true,
+                  indentBy: '    ',
+                });
+                // and then write that json back to xml and back to the fs
+                const xml = builder.build(customLabels) as string;
+                fs.writeFileSync(component.xml, xml);
+              }
             } else {
               promises.push(fsPromises.unlink(component.xml));
             }
