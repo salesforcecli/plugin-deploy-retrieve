@@ -1,3 +1,12 @@
+## [1.8.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.20...1.8.21) (2023-05-11)
+
+
+### Bug Fixes
+
+* commonFlags with warnings that warn about comma misuse ([484da21](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/484da2138a1aefad32c38cbb6d396f759c806101))
+
+
+
 ## [1.8.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.19...1.8.20) (2023-05-09)
 
 
