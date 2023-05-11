@@ -12,7 +12,8 @@ import { DeployResult, MetadataApiDeployStatus } from '@salesforce/source-deploy
 import { buildComponentSet } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DeployReportResultFormatter } from '../../../formatters/deployReportResultFormatter';
-import { DeployResultJson, reportsFormatters } from '../../../utils/types';
+import { DeployResultJson } from '../../../utils/types';
+import { coverageFormattersFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.report');
@@ -39,11 +40,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.use-most-recent.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
-    'coverage-formatters': Flags.string({
-      multiple: true,
-      summary: messages.getMessage('flags.coverage-formatters.summary'),
-      options: reportsFormatters,
-    }),
+    'coverage-formatters': coverageFormattersFlag,
     junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary') }),
     'results-dir': Flags.directory({
       dependsOn: ['junit', 'coverage-formatters'],

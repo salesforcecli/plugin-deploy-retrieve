@@ -148,14 +148,6 @@ Ignore warnings and allow a deployment to complete successfully.
 
 If a warning occurs and this flag is set to true, the success status of the deployment is set to true. When this flag is set to false, success is set to false, and the warning is treated like an error.
 
-# flags.tests.summary
-
-Apex tests to run when --test-level is RunSpecifiedTests.
-
-# flags.tests.description
-
-Separate multiple test names with commas, and enclose the entire flag value in double quotes if a test contains a space.
-
 # flags.verbose.summary
 
 Show verbose output of the deploy result.
@@ -226,10 +218,6 @@ No local changes to deploy.
 # flags.junit.summary
 
 Output JUnit test results.
-
-# flags.coverage-formatters.summary
-
-Format of the code coverage results.
 
 # flags.results-dir.summary
 

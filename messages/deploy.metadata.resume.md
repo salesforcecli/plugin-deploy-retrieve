@@ -65,10 +65,6 @@ Job ID %s is not resumable with status %s.
 
 Output JUnit test results.
 
-# flags.coverage-formatters.summary
-
-Format of the code coverage results.
-
 # flags.results-dir.summary
 
 Output directory for code coverage and JUnit results; defaults to the deploy ID.
