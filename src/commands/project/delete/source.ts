@@ -22,7 +22,7 @@ import {
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { ChangeResult, ConflictResponse, SourceTracking } from '@salesforce/source-tracking';
+import { ChangeResult, ConflictResponse, deleteCustomLabels, SourceTracking } from '@salesforce/source-tracking';
 import {
   arrayWithDeprecation,
   Flags,
@@ -343,6 +343,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
   private async deleteFilesLocally(): Promise<void> {
     if (!this.flags['check-only'] && this.deployResult?.response?.status === RequestStatus.Succeeded) {
       const promises: Array<Promise<void>> = [];
+      const customLabels = this.componentSet
+        .getSourceComponents()
+        .toArray()
+        .filter((comp) => comp.type.id === 'customlabel');
       this.components?.filter(isSourceComponent).map((component: SourceComponent) => {
         // mixed delete/deploy operations have already been deleted and stashed
         if (!this.mixedDeployDelete.delete.length) {
@@ -356,15 +360,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
           }
           if (component.xml) {
             if (component.type.id === 'customlabel') {
-              promises.push(
-                SourceTracking.deleteCustomLabels(
-                  component.xml,
-                  this.componentSet
-                    .getSourceComponents()
-                    .toArray()
-                    .filter((comp) => comp.type.id === 'customlabel')
-                )
-              );
+              promises.push(deleteCustomLabels(component.xml, customLabels));
             } else {
               promises.push(fsPromises.unlink(component.xml));
             }
