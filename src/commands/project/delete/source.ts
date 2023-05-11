@@ -32,7 +32,6 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import * as chalk from 'chalk';
-import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import { DeleteSourceJson, TestLevel, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 import { resolveApi } from '../../../utils/deploy';
@@ -357,35 +356,15 @@ export class Source extends SfCommand<DeleteSourceJson> {
           }
           if (component.xml) {
             if (component.type.id === 'customlabel') {
-              // for custom labels, we need to remove the individual label from the xml file
-              // so we'll parse the xml
-              const parser = new XMLParser({
-                ignoreDeclaration: false,
-                ignoreAttributes: false,
-                attributeNamePrefix: '@_',
-              });
-              const customLabels = parser.parse(fs.readFileSync(component.xml, 'utf8')) as {
-                CustomLabels: { labels: Array<{ fullName: string }> | { fullName: string } };
-              };
-              if ('fullName' in customLabels.CustomLabels.labels) {
-                // a single custom label remains, delete the entire file
-                return fs.promises.unlink(component.xml);
-              } else {
-                // delete the label from the json based on it's fullName
-                customLabels.CustomLabels.labels = customLabels.CustomLabels.labels.filter(
-                  (label) => label.fullName !== component.fullName
-                );
-
-                const builder = new XMLBuilder({
-                  attributeNamePrefix: '@_',
-                  ignoreAttributes: false,
-                  format: true,
-                  indentBy: '    ',
-                });
-                // and then write that json back to xml and back to the fs
-                const xml = builder.build(customLabels) as string;
-                fs.writeFileSync(component.xml, xml);
-              }
+              promises.push(
+                SourceTracking.deleteCustomLabels(
+                  component.xml,
+                  this.componentSet
+                    .getSourceComponents()
+                    .toArray()
+                    .filter((comp) => comp.type.id === 'customlabel')
+                )
+              );
             } else {
               promises.push(fsPromises.unlink(component.xml));
             }
