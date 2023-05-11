@@ -347,6 +347,9 @@ export class Source extends SfCommand<DeleteSourceJson> {
         .getSourceComponents()
         .toArray()
         .filter((comp) => comp.type.id === 'customlabel');
+      if (customLabels.length && customLabels[0].xml) {
+        promises.push(deleteCustomLabels(customLabels[0].xml, customLabels));
+      }
       this.components?.filter(isSourceComponent).map((component: SourceComponent) => {
         // mixed delete/deploy operations have already been deleted and stashed
         if (!this.mixedDeployDelete.delete.length) {
@@ -359,9 +362,8 @@ export class Source extends SfCommand<DeleteSourceJson> {
             }
           }
           if (component.xml) {
-            if (component.type.id === 'customlabel') {
-              promises.push(deleteCustomLabels(component.xml, customLabels));
-            } else {
+            if (component.type.id !== 'customlabel') {
+              // CustomLabels handled as a special case above
               promises.push(fsPromises.unlink(component.xml));
             }
           }
