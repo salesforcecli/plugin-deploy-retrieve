@@ -268,7 +268,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   }
 
   private displayTestResults(): void {
-    if (this.testLevel === TestLevel.NoTestRun || !this.result.response.details.runTestResult) {
+    if (this.testLevel === TestLevel.NoTestRun || !this.result.response.runTestsEnabled) {
       ux.log();
       return;
     }
@@ -285,7 +285,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     const passing = this.result.response.numberTestsCompleted ?? 0;
     const failing = this.result.response.numberTestErrors ?? 0;
     const total = this.result.response.numberTestsTotal ?? 0;
-    const time = this.result.response.details.runTestResult.totalTime ?? 0;
+    const time = this.result.response.details.runTestResult?.totalTime ?? 0;
     ux.log(`Passing: ${passing}`);
     ux.log(`Failing: ${failing}`);
     ux.log(`Total: ${total}`);
