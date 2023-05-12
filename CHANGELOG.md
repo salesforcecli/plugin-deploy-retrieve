@@ -1,3 +1,12 @@
+# [1.9.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.21...1.9.0) (2023-05-12)
+
+
+### Features
+
+* default undefined test-level when not doing validate ([#611](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/611)) ([e27ad85](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e27ad85b638509d3b34cda813008ea50cb79b90f))
+
+
+
 ## [1.8.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.20...1.8.21) (2023-05-11)
 
 
