@@ -33,7 +33,7 @@ import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccess
 export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private relativeFiles: FileResponse[];
   private absoluteFiles: FileResponse[];
-  private testLevel: TestLevel;
+  private testLevel: TestLevel | undefined;
   private verbosity: Verbosity;
   private coverageOptions: CoverageReporterOptions;
   private resultsDir: string;
@@ -53,7 +53,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   ) {
     this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
     this.relativeFiles = asRelativePaths(this.absoluteFiles);
-    this.testLevel = this.flags['test-level'] ?? TestLevel.NoTestRun;
+    this.testLevel = this.flags['test-level'];
     this.verbosity = this.determineVerbosity();
     this.resultsDir = this.flags['results-dir'] ?? 'coverage';
     this.coverageOptions = getCoverageFormattersOptions(this.flags['coverage-formatters']);
@@ -268,7 +268,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   }
 
   private displayTestResults(): void {
-    if (this.testLevel === TestLevel.NoTestRun) {
+    if (this.testLevel === TestLevel.NoTestRun || !this.result.response.runTestsEnabled) {
       ux.log();
       return;
     }

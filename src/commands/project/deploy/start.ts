@@ -107,7 +107,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }),
     tests: testsFlag,
     'test-level': testLevelFlag({
-      default: TestLevel.NoTestRun,
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
       options: [TestLevel.NoTestRun, TestLevel.RunSpecifiedTests, TestLevel.RunLocalTests, TestLevel.RunAllTestsInOrg],

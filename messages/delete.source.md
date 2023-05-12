@@ -102,7 +102,7 @@ Valid values are:
 - RunLocalTests — All tests in your org are run, except the ones that originate from installed managed and unlocked packages. This test level is the default for production deployments that include Apex classes or triggers.
 - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
 
-If you don’t specify a test level, the default behavior depends on the contents of your deployment package. For more information, see “Running Tests in a Deployment” in the Metadata API Developer Guide.
+If you don’t specify a test level, the default behavior depends on the contents of your deployment package and target org. For more information, see “Running Tests in a Deployment” in the Metadata API Developer Guide.
 
 # localPrompt
 
