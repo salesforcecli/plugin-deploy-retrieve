@@ -112,7 +112,6 @@ export async function executeDeploy(
   project?: SfProject,
   id?: string
 ): Promise<{ deploy: MetadataApiDeploy; componentSet?: ComponentSet }> {
-  project ??= await SfProject.resolve();
   const apiOptions = {
     checkOnly: opts['dry-run'] ?? false,
     ignoreWarnings: opts['ignore-warnings'] ?? false,
@@ -142,6 +141,8 @@ export async function executeDeploy(
       await deploy.start();
     }
   } else {
+    // mddapi format deploys don't require a project
+    project ??= await SfProject.resolve();
     // instantiate source tracking
     // stl will decide, based on the org's properties, what needs to be done
     const stl = await SourceTracking.create({
