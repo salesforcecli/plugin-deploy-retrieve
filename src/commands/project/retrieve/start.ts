@@ -142,10 +142,9 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
       flags,
-      this.project,
       format
     );
-    const retrieveOpts = buildRetrieveOptions(flags, this.project, format);
+    const retrieveOpts = await buildRetrieveOptions(flags, format);
 
     this.spinner.status = messages.getMessage('spinner.sending', [
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
@@ -226,7 +225,6 @@ type RetrieveAndDeleteTargets = {
 
 const buildRetrieveAndDeleteTargets = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
-  project: SfProject,
   format: Format
 ): Promise<RetrieveAndDeleteTargets> => {
   const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
@@ -234,7 +232,7 @@ const buildRetrieveAndDeleteTargets = async (
   if (isChanges) {
     const stl = await SourceTracking.create({
       org: flags['target-org'],
-      project,
+      project: await SfProject.resolve(),
       subscribeSDREvents: true,
       ignoreConflicts: format === 'metadata' || flags['ignore-conflicts'],
     });
@@ -275,11 +273,10 @@ const buildRetrieveAndDeleteTargets = async (
  * @param format 'metadata' or 'source'
  * @returns RetrieveSetOptions (an object that can be passed as the options for a ComponentSet retrieve)
  */
-const buildRetrieveOptions = (
+const buildRetrieveOptions = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
-  project: SfProject,
   format: Format
-): RetrieveSetOptions => ({
+): Promise<RetrieveSetOptions> => ({
   usernameOrConnection: flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
   merge: true,
   packageOptions: flags['package-name'],
@@ -293,6 +290,6 @@ const buildRetrieveOptions = (
         output: flags['target-metadata-dir'] as string,
       }
     : {
-        output: project.getDefaultPackage().fullPath,
+        output: (await SfProject.resolve()).getDefaultPackage().fullPath,
       }),
 });
