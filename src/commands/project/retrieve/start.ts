@@ -118,7 +118,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       summary: messages.getMessage('flags.zip-file-name.summary'),
       dependsOn: ['target-metadata-dir'],
       exclusive: ['ignore-conflicts'],
-      default: DEFAULT_ZIP_FILE_NAME,
     }),
   };
 
@@ -175,7 +174,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const formatter = flags['target-metadata-dir']
       ? new MetadataRetrieveResultFormatter(result, {
           'target-metadata-dir': flags['target-metadata-dir'],
-          'zip-file-name': flags['zip-file-name'],
+          'zip-file-name': flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME,
           unzip: flags.unzip,
         })
       : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
@@ -192,7 +191,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     if (format === 'metadata' && flags.unzip) {
       try {
-        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'])), {
+        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME)), {
           recursive: true,
         });
       } catch (e) {
@@ -289,7 +288,7 @@ const buildRetrieveOptions = (
     ? {
         singlePackage: flags['single-package'],
         unzip: flags.unzip,
-        zipFileName: flags['zip-file-name'],
+        zipFileName: flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME,
         // known to exist because that's how `format` becomes 'metadata'
         output: flags['target-metadata-dir'] as string,
       }
