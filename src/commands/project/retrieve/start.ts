@@ -38,7 +38,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
-  public static readonly requiresProject = true;
   public static readonly aliases = ['retrieve:metadata'];
   public static readonly deprecateAliases = true;
 
@@ -257,7 +256,8 @@ const buildRetrieveAndDeleteTargets = async (
         ? {
             manifest: {
               manifestPath: flags.manifest,
-              directoryPaths: await getPackageDirs(),
+              // if mdapi format, there might not be a project
+              directoryPaths: format === 'metadata' ? [] : await getPackageDirs(),
             },
           }
         : {}),
