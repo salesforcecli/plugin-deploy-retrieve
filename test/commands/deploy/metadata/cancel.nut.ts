@@ -14,8 +14,8 @@ import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { DeployResultJson } from '../../../../src/utils/types';
 import { CachedOptions } from '../../../../src/utils/deploy';
 
-function readDeployCache(projectDir: string): Record<string, CachedOptions> {
-  const contents = fs.readFileSync(path.join(projectDir, '.sf', 'deploy-cache.json'), 'utf-8');
+function readDeployCache(sessionDir: string): Record<string, CachedOptions> {
+  const contents = fs.readFileSync(path.join(sessionDir, '.sf', 'deploy-cache.json'), 'utf-8');
   return JSON.parse(contents) as Record<string, CachedOptions>;
 }
 
@@ -50,14 +50,14 @@ describe('deploy metadata cancel NUTs', () => {
       assert(first);
       assert(first.id);
 
-      const cacheBefore = readDeployCache(session.project.dir);
+      const cacheBefore = readDeployCache(session.dir);
       expect(cacheBefore).to.have.property(first.id);
 
       const cancel = execCmd<DeployResultJson>('deploy:metadata:cancel --use-most-recent --json');
       assert(cancel.jsonOutput);
       if (cancel.jsonOutput.status === 0) {
         assert(cancel.jsonOutput.result);
-        assertSuccessfulCancel(session.project.dir, first, cancel.jsonOutput.result);
+        assertSuccessfulCancel(session.dir, first, cancel.jsonOutput.result);
       } else {
         // the deploy likely already finished
         expect(cancel.jsonOutput.exitCode).to.equal(1);
@@ -77,7 +77,7 @@ describe('deploy metadata cancel NUTs', () => {
       assert(first);
       assert(first.id);
 
-      const cacheBefore = readDeployCache(session.project.dir);
+      const cacheBefore = readDeployCache(session.dir);
       expect(cacheBefore).to.have.property(first.id);
 
       const cancel = execCmd<DeployResultJson>(`deploy:metadata:cancel --job-id ${first.id} --json`);
@@ -85,7 +85,7 @@ describe('deploy metadata cancel NUTs', () => {
 
       if (cancel.jsonOutput.status === 0) {
         assert(cancel.jsonOutput.result);
-        assertSuccessfulCancel(session.project.dir, first, cancel.jsonOutput.result);
+        assertSuccessfulCancel(session.dir, first, cancel.jsonOutput.result);
       } else {
         // the deploy likely already finished
         expect(cancel.jsonOutput.exitCode).to.equal(1);
