@@ -11,7 +11,7 @@ import { expect } from 'chai';
 import * as shell from 'shelljs';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { AuthInfo, Connection, Messages } from '@salesforce/core';
+import { AuthInfo, Connection } from '@salesforce/core';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
@@ -22,10 +22,6 @@ let session: TestSession;
 const classdir = 'force-app/main/default/classes';
 let originalForceIgnore: string;
 let conn: Connection;
-
-Messages.importMessagesDirectory(__dirname);
-
-const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 describe('forceignore changes', () => {
   before(async () => {
@@ -65,9 +61,9 @@ describe('forceignore changes', () => {
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
       // nothing should push -- in sf that's an error
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {
-        ensureExitCode: 1,
-      }).jsonOutput;
-      expect(output?.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(output?.status).to.equal('Nothing to deploy');
     });
 
     it('shows the file in status as ignored', () => {
@@ -113,9 +109,9 @@ describe('forceignore changes', () => {
       });
       // another error when there's nothing to push
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {
-        ensureExitCode: 1,
-      }).jsonOutput;
-      expect(output?.message).to.equal(deployMessages.getMessage('error.nothingToDeploy'));
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(output?.status).to.equal('Nothing to deploy');
     });
 
     it('will push files that are now un-ignored', async () => {
