@@ -19,6 +19,7 @@ import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { ConfigVars } from '../../../configMeta';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
 import { writeConflictTable } from '../../../utils/conflicts';
+import { getOptionalProject } from '../../../utils/project';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -29,7 +30,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
-  public static readonly requiresProject = true;
   public static readonly aliases = ['deploy:metadata'];
   public static readonly deprecateAliases = true;
 
@@ -163,8 +163,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
+    const project = await getOptionalProject();
+
     if (
-      this.project.getSfProjectJson().getContents()['pushPackageDirectoriesSequentially'] &&
+      project?.getSfProjectJson().getContents()['pushPackageDirectoriesSequentially'] &&
       // flag exclusivity is handled correctly above - but to avoid short-circuiting the check, we need to check all of them
       !flags.manifest &&
       !flags.metadata &&
@@ -186,8 +188,13 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         api,
       },
       this.config.bin,
-      this.project
+      project
     );
+
+    if (!deploy) {
+      this.log('No changes to deploy');
+      return { status: 'Nothing to deploy', files: [] };
+    }
 
     const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
     this.log(getVersionMessage(action, componentSet, api));
