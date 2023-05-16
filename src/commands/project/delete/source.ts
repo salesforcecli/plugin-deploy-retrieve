@@ -419,7 +419,12 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
       this.components?.flatMap((component) => {
         if (component instanceof SourceComponent) {
-          local.push(component.xml as string, ...component.walkContent());
+          if (component.type.name === 'CustomLabel') {
+            // for custom labels, print each custom label to be deleted, not the whole file
+            local.push(`${component.type.name}:${component.fullName}`);
+          } else {
+            local.push(component.xml as string, ...component.walkContent());
+          }
         } else {
           // remote only metadata
           remote.push(`${component.type.name}:${component.fullName}`);
