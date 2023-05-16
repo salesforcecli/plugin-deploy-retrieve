@@ -1,3 +1,12 @@
+## [1.9.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.0...1.9.1) (2023-05-16)
+
+
+### Bug Fixes
+
+* **deps:** bump vm2 from 3.9.17 to 3.9.18 ([3ec2742](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3ec274236e605b73cbe1cb9a2206e7bd32391272))
+
+
+
 # [1.9.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.8.21...1.9.0) (2023-05-12)
 
 
