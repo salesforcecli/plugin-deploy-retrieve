@@ -227,7 +227,7 @@ const buildRetrieveAndDeleteTargets = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
   format: Format
 ): Promise<RetrieveAndDeleteTargets> => {
-  const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
+  const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'] && !flags['target-metadata-dir'];
 
   if (isChanges) {
     const stl = await SourceTracking.create({
@@ -242,27 +242,28 @@ const buildRetrieveAndDeleteTargets = async (
     if (flags['api-version']) {
       result.componentSetFromNonDeletes.apiVersion = flags['api-version'];
     }
+    return result;
+  } else {
+    return {
+      componentSetFromNonDeletes: await ComponentSetBuilder.build({
+        apiversion: flags['api-version'],
+        sourcepath: flags['source-dir'],
+        packagenames: flags['package-name'],
+        ...(flags.manifest
+          ? {
+              manifest: {
+                manifestPath: flags.manifest,
+                // if mdapi format, there might not be a project
+                directoryPaths: format === 'metadata' ? [] : await getPackageDirs(),
+              },
+            }
+          : {}),
+        ...(flags.metadata
+          ? { metadata: { metadataEntries: flags.metadata, directoryPaths: await getPackageDirs() } }
+          : {}),
+      }),
+    };
   }
-
-  return {
-    componentSetFromNonDeletes: await ComponentSetBuilder.build({
-      apiversion: flags['api-version'],
-      sourcepath: flags['source-dir'],
-      packagenames: flags['package-name'],
-      ...(flags.manifest
-        ? {
-            manifest: {
-              manifestPath: flags.manifest,
-              // if mdapi format, there might not be a project
-              directoryPaths: format === 'metadata' ? [] : await getPackageDirs(),
-            },
-          }
-        : {}),
-      ...(flags.metadata
-        ? { metadata: { metadataEntries: flags.metadata, directoryPaths: await getPackageDirs() } }
-        : {}),
-    }),
-  };
 };
 
 /**
