@@ -1,3 +1,18 @@
+## [1.9.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.1...1.9.2) (2023-05-17)
+
+
+### Bug Fixes
+
+* avoid hitting project for metadata format when metadata is specified ([7252165](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7252165130b284c7000a5122f7c7db3841454e0e))
+* deploy without project, empty changes deploys aren't error ([a88e154](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a88e154c1ca5cbf150e78674cb464e6e6acf3437))
+* deploys don't require a project ([0b5b1d6](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0b5b1d675d627ca6255ed18505f98d3549a7f42d))
+* late resolution of project because this.project is not available ([af5e66f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/af5e66fc32db854fa3812a8bf198e9f8f7417462))
+* restore undefined, no-default zip-file-name ([5cb20fb](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5cb20fbf87a883d24ec8e10de69754ac2e186379))
+* retrieve doesn't require STL or Project ([1c6d205](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1c6d205cffa06d04b40b338053fd720fb7ec5bca))
+* return correct CS for "changes" deploys + nut ([74cf63f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/74cf63ff63db667d8b70b4e878ca995ab5d53952))
+
+
+
 ## [1.9.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.0...1.9.1) (2023-05-16)
 
 
