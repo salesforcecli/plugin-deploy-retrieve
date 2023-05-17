@@ -15,7 +15,8 @@ import { DeployResultJson } from '../../../../src/utils/types';
 import { CachedOptions } from '../../../../src/utils/deploy';
 
 function readDeployCache(projectDir: string): Record<string, CachedOptions> {
-  const contents = fs.readFileSync(path.join(projectDir, '.sf', 'deploy-cache.json'), 'utf-8');
+  // source-testkit doesn't expose the session, so we'll go up 1 level from the project to get to it
+  const contents = fs.readFileSync(path.join(path.dirname(projectDir), '.sf', 'deploy-cache.json'), 'utf-8');
   return JSON.parse(contents) as Record<string, CachedOptions>;
 }
 

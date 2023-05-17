@@ -483,6 +483,10 @@
             {
               "type": "string",
               "const": "Queued"
+            },
+            {
+              "type": "string",
+              "const": "Nothing to deploy"
             }
           ]
         },

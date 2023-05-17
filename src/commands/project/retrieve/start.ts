@@ -8,14 +8,21 @@
 import { rm } from 'fs/promises';
 import { join, resolve } from 'path';
 
-import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { RetrieveResult, ComponentSetBuilder, RetrieveSetOptions } from '@salesforce/source-deploy-retrieve';
-
+import { EnvironmentVariable, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
+import {
+  RetrieveResult,
+  ComponentSetBuilder,
+  RetrieveSetOptions,
+  ComponentSet,
+  FileResponse,
+} from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { Duration } from '@salesforce/kit';
 import { MetadataApiRetrieveStatus } from '@salesforce/source-deploy-retrieve/lib/src/client/types';
+import { Interfaces } from '@oclif/core';
+
 import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags';
 import { RetrieveResultFormatter } from '../../../formatters/retrieveResultFormatter';
 import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter';
@@ -27,11 +34,11 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
+type Format = 'source' | 'metadata';
 export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
-  public static readonly requiresProject = true;
   public static readonly aliases = ['retrieve:metadata'];
   public static readonly deprecateAliases = true;
 
@@ -128,91 +135,40 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected retrieveResult!: RetrieveResult;
 
-  // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
-
-    this.spinner.start(messages.getMessage('spinner.start'));
-    const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
-    const stl = await SourceTracking.create({
-      org: flags['target-org'],
-      project: this.project,
-      subscribeSDREvents: true,
-      ignoreConflicts: format === 'metadata' || flags['ignore-conflicts'],
-    });
-    const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'];
-    const { componentSetFromNonDeletes, fileResponsesFromDelete } = isChanges
-      ? await stl.maybeApplyRemoteDeletesToLocal(true)
-      : {
-          componentSetFromNonDeletes: await ComponentSetBuilder.build({
-            apiversion: flags['api-version'],
-            sourcepath: flags['source-dir'],
-            packagenames: flags['package-name'],
-            ...(flags.manifest
-              ? {
-                  manifest: {
-                    manifestPath: flags.manifest,
-                    directoryPaths: await getPackageDirs(),
-                  },
-                }
-              : {}),
-            ...(flags.metadata
-              ? { metadata: { metadataEntries: flags.metadata, directoryPaths: await getPackageDirs() } }
-              : {}),
-          }),
-          fileResponsesFromDelete: [],
-        };
-
-    this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
+    const format: Format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
-    if (componentSetFromNonDeletes.size !== 0) {
-      // we have changes to retrieve
-      // stl sets version based on config/files--if the command overrides it, we need to update
-      if (isChanges && flags['api-version']) {
-        componentSetFromNonDeletes.apiVersion = flags['api-version'];
-      }
-      this.spinner.status = messages.getMessage('spinner.sending', [
-        componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
-      ]);
-      const retrieveOpts: RetrieveSetOptions = {
-        usernameOrConnection:
-          flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
-        merge: true,
-        output: this.project.getDefaultPackage().fullPath,
-        packageOptions: flags['package-name'],
-        format,
-        ...(format === 'metadata'
-          ? {
-              singlePackage: flags['single-package'],
-              unzip: flags.unzip,
-              zipFileName,
-              output: flags['target-metadata-dir'],
-            }
-          : {}),
-      };
+    this.spinner.start(messages.getMessage('spinner.start'));
 
-      const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
+    const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
+      flags,
+      format
+    );
+    const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName);
+    this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
-      this.spinner.status = messages.getMessage('spinner.polling');
+    this.spinner.status = messages.getMessage('spinner.sending', [
+      componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
+    ]);
 
-      retrieve.onUpdate((data) => {
-        this.spinner.status = mdTransferMessages.getMessage(data.status);
-      });
+    const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
 
-      // any thing else should stop the progress bar
-      retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
+    retrieve.onUpdate((data) => {
+      this.spinner.status = mdTransferMessages.getMessage(data.status);
+    });
+    // any thing else should stop the progress bar
+    retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
+    retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
+    retrieve.onError((error: Error) => {
+      this.spinner.stop(error.name);
+      throw error;
+    });
 
-      retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
+    await retrieve.start();
+    this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
 
-      retrieve.onError((error: Error) => {
-        this.spinner.stop(error.name);
-        throw error;
-      });
-
-      await retrieve.start();
-      this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
-    }
     this.spinner.stop();
 
     // reference the flag instead of `format` so we get correct type
@@ -249,17 +205,102 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   }
 
   protected catch(error: Error | SfError): Promise<SfCommand.Error> {
-    if (error instanceof SourceConflictError) {
-      if (!this.jsonEnabled()) {
-        writeConflictTable(error.data);
-        // set the message and add plugin-specific actions
-        return super.catch({
-          ...error,
-          message: messages.getMessage('error.Conflicts'),
-          actions: messages.getMessages('error.Conflicts.Actions', [this.config.bin]),
-        });
-      }
+    if (!this.jsonEnabled() && error instanceof SourceConflictError) {
+      writeConflictTable(error.data);
+      // set the message and add plugin-specific actions
+      return super.catch({
+        ...error,
+        message: messages.getMessage('error.Conflicts'),
+        actions: messages.getMessages('error.Conflicts.Actions', [this.config.bin]),
+      });
     }
+
     return super.catch(error);
   }
 }
+
+type RetrieveAndDeleteTargets = {
+  /** componentSet that can be used to retrieve known changes */
+  componentSetFromNonDeletes: ComponentSet;
+  /** optional Array of artificially constructed FileResponses from the deletion of local files */
+  fileResponsesFromDelete?: FileResponse[];
+};
+
+const buildRetrieveAndDeleteTargets = async (
+  flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
+  format: Format
+): Promise<RetrieveAndDeleteTargets> => {
+  const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'] && !flags['target-metadata-dir'];
+
+  if (isChanges) {
+    const stl = await SourceTracking.create({
+      org: flags['target-org'],
+      project: await SfProject.resolve(),
+      subscribeSDREvents: true,
+      ignoreConflicts: format === 'metadata' || flags['ignore-conflicts'],
+    });
+    const result = await stl.maybeApplyRemoteDeletesToLocal(true);
+    // STL returns a componentSet that gets these from the project/config.
+    // if the command has a flag, we'll override
+    if (flags['api-version']) {
+      result.componentSetFromNonDeletes.apiVersion = flags['api-version'];
+    }
+    return result;
+  } else {
+    return {
+      componentSetFromNonDeletes: await ComponentSetBuilder.build({
+        apiversion: flags['api-version'],
+        sourcepath: flags['source-dir'],
+        packagenames: flags['package-name'],
+        ...(flags.manifest
+          ? {
+              manifest: {
+                manifestPath: flags.manifest,
+                // if mdapi format, there might not be a project
+                directoryPaths: format === 'metadata' ? [] : await getPackageDirs(),
+              },
+            }
+          : {}),
+        ...(flags.metadata
+          ? {
+              metadata: {
+                metadataEntries: flags.metadata,
+                // if mdapi format, there might not be a project
+                directoryPaths: format === 'metadata' ? [] : await getPackageDirs(),
+              },
+            }
+          : {}),
+      }),
+    };
+  }
+};
+
+/**
+ *
+ *
+ * @param flags
+ * @param project
+ * @param format 'metadata' or 'source'
+ * @returns RetrieveSetOptions (an object that can be passed as the options for a ComponentSet retrieve)
+ */
+const buildRetrieveOptions = async (
+  flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
+  format: Format,
+  zipFileName: string
+): Promise<RetrieveSetOptions> => ({
+  usernameOrConnection: flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
+  merge: true,
+  packageOptions: flags['package-name'],
+  format,
+  ...(format === 'metadata'
+    ? {
+        singlePackage: flags['single-package'],
+        unzip: flags.unzip,
+        zipFileName,
+        // known to exist because that's how `format` becomes 'metadata'
+        output: flags['target-metadata-dir'] as string,
+      }
+    : {
+        output: (await SfProject.resolve()).getDefaultPackage().fullPath,
+      }),
+});

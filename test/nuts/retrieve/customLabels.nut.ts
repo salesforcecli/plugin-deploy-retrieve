@@ -65,6 +65,7 @@ describe('CustomLabel source tracking', () => {
 
     const result = execCmd<RetrieveResultJson>('project:retrieve:start --json', { ensureExitCode: 0 }).jsonOutput
       ?.result;
+    console.log(result);
     expect(result?.fileProperties).length.to.equal(1);
     expect(fs.existsSync(clFile)).to.be.true;
     expect(fs.readFileSync(clFile, { encoding: 'utf-8' })).to.not.include('DeleteMe');
