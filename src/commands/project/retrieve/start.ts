@@ -137,6 +137,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
     const format: Format = flags['target-metadata-dir'] ? 'metadata' : 'source';
+    const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
     this.spinner.start(messages.getMessage('spinner.start'));
 
@@ -144,7 +145,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       flags,
       format
     );
-    const retrieveOpts = await buildRetrieveOptions(flags, format);
+    const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName);
 
     this.spinner.status = messages.getMessage('spinner.sending', [
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
@@ -173,7 +174,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const formatter = flags['target-metadata-dir']
       ? new MetadataRetrieveResultFormatter(result, {
           'target-metadata-dir': flags['target-metadata-dir'],
-          'zip-file-name': flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME,
+          'zip-file-name': zipFileName,
           unzip: flags.unzip,
         })
       : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
@@ -190,7 +191,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     if (format === 'metadata' && flags.unzip) {
       try {
-        await rm(resolve(join(flags['target-metadata-dir'] ?? '', flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME)), {
+        await rm(resolve(join(flags['target-metadata-dir'] ?? '', zipFileName)), {
           recursive: true,
         });
       } catch (e) {
@@ -282,7 +283,8 @@ const buildRetrieveAndDeleteTargets = async (
  */
 const buildRetrieveOptions = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
-  format: Format
+  format: Format,
+  zipFileName: string
 ): Promise<RetrieveSetOptions> => ({
   usernameOrConnection: flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
   merge: true,
@@ -292,7 +294,7 @@ const buildRetrieveOptions = async (
     ? {
         singlePackage: flags['single-package'],
         unzip: flags.unzip,
-        zipFileName: flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME,
+        zipFileName,
         // known to exist because that's how `format` becomes 'metadata'
         output: flags['target-metadata-dir'] as string,
       }
