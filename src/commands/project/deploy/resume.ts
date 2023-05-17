@@ -12,10 +12,11 @@ import { Duration } from '@salesforce/kit';
 import { getVersionMessage } from '../../../utils/output';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
-import { DeployResultJson, reportsFormatters } from '../../../utils/types';
+import { DeployResultJson } from '../../../utils/types';
 import { determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
+import { coverageFormattersFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.resume');
@@ -60,11 +61,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       helpValue: '<minutes>',
       min: 1,
     }),
-    'coverage-formatters': Flags.string({
-      multiple: true,
-      summary: messages.getMessage('flags.coverage-formatters.summary'),
-      options: reportsFormatters,
-    }),
+    'coverage-formatters': coverageFormattersFlag,
     junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary') }),
     'results-dir': Flags.directory({
       dependsOn: ['junit', 'coverage-formatters'],

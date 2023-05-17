@@ -63,7 +63,7 @@ export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-di
   isMdapi: boolean;
 } & Partial<Pick<DeployOptions, 'manifest'>>;
 
-export function validateTests(testLevel: TestLevel, tests: Nullable<string[]>): boolean {
+export function validateTests(testLevel: TestLevel | undefined, tests: Nullable<string[]>): boolean {
   return !(testLevel === TestLevel.RunSpecifiedTests && (tests ?? []).length === 0);
 }
 
@@ -118,8 +118,8 @@ export async function executeDeploy(
     ignoreWarnings: opts['ignore-warnings'] ?? false,
     rest: opts.api === 'REST',
     rollbackOnError: !opts['ignore-errors'] || false,
-    runTests: opts.tests ?? [],
-    testLevel: opts['test-level'],
+    ...(opts.tests ? { runTests: opts.tests } : {}),
+    ...(opts['test-level'] ? { testLevel: opts['test-level'] } : {}),
     purgeOnDelete: opts['purge-on-delete'] ?? false,
   };
 

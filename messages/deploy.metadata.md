@@ -92,7 +92,7 @@ Valid values are:
 
 - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
 
-  If you don’t specify a test level, the default behavior depends on the contents of your deployment package. For more information, see [Running Tests in a Deployment](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm) in the "Metadata API Developer Guide".
+  If you don’t specify a test level, the default behavior depends on the contents of your deployment package and target org. For more information, see [Running Tests in a Deployment](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm) in the "Metadata API Developer Guide".
 
 # flags.source-dir.summary
 
@@ -147,14 +147,6 @@ Ignore warnings and allow a deployment to complete successfully.
 # flags.ignore-warnings.description
 
 If a warning occurs and this flag is set to true, the success status of the deployment is set to true. When this flag is set to false, success is set to false, and the warning is treated like an error.
-
-# flags.tests.summary
-
-Apex tests to run when --test-level is RunSpecifiedTests.
-
-# flags.tests.description
-
-Separate multiple test names with commas, and enclose the entire flag value in double quotes if a test contains a space.
 
 # flags.verbose.summary
 
@@ -226,10 +218,6 @@ No local changes to deploy.
 # flags.junit.summary
 
 Output JUnit test results.
-
-# flags.coverage-formatters.summary
-
-Format of the code coverage results.
 
 # flags.results-dir.summary
 

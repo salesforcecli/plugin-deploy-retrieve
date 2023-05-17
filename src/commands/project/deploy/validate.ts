@@ -16,7 +16,7 @@ import { DeployResultJson, TestLevel } from '../../../utils/types';
 import { executeDeploy, resolveApi, determineExitCode } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { ConfigVars } from '../../../configMeta';
-import { fileOrDirFlag, testLevelFlag } from '../../../utils/flags';
+import { fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
@@ -79,11 +79,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       summary: messages.getMessage('flags.target-org.summary'),
       required: true,
     }),
-    tests: Flags.string({
-      char: 't',
-      multiple: true,
-      summary: messages.getMessage('flags.tests.summary'),
-    }),
+    tests: testsFlag,
     'test-level': testLevelFlag({
       options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],
       default: TestLevel.RunLocalTests,
