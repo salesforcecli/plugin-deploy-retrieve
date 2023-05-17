@@ -140,6 +140,13 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(response?.toDeploy).to.be.an.instanceof(Array).with.lengthOf(0);
     });
 
+    it('sf deploy no local changes is not an error', () => {
+      const response = execCmd<DeployResultJson>('project deploy start --json', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(response?.files).to.be.an.instanceof(Array).with.lengthOf(0);
+    });
+
     it('sees a local delete in local status', async () => {
       const classDir = path.join(session.project.dir, 'force-app', 'main', 'default', 'classes');
       await Promise.all([

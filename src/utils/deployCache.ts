@@ -17,7 +17,7 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
 
   public static getDefaultOptions(): TTLConfig.Options {
     return {
-      isGlobal: false,
+      isGlobal: true,
       isState: true,
       filename: DeployCache.getFileName(),
       stateFolder: Global.SF_STATE_FOLDER,

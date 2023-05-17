@@ -127,10 +127,13 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
         api,
       },
       this.config.bin,
-      this.project
+      this.project,
+      undefined,
+      true
     );
 
     this.log(getVersionMessage('Validating Deployment', componentSet, api));
+
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }

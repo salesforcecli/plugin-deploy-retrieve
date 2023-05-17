@@ -108,11 +108,18 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
 
 export async function executeDeploy(
   opts: Partial<DeployOptions>,
+  bin?: string,
+  project?: SfProject,
+  id?: string,
+  throwOnEmpty?: true
+): Promise<{ deploy: MetadataApiDeploy; componentSet?: ComponentSet }>;
+export async function executeDeploy(
+  opts: Partial<DeployOptions>,
   bin = 'sf',
   project?: SfProject,
-  id?: string
-): Promise<{ deploy: MetadataApiDeploy; componentSet?: ComponentSet }> {
-  project ??= await SfProject.resolve();
+  id?: string,
+  throwOnEmpty = false
+): Promise<{ deploy?: MetadataApiDeploy; componentSet?: ComponentSet }> {
   const apiOptions = {
     checkOnly: opts['dry-run'] ?? false,
     ignoreWarnings: opts['ignore-warnings'] ?? false,
@@ -142,6 +149,8 @@ export async function executeDeploy(
       await deploy.start();
     }
   } else {
+    // mdapi format deploys don't require a project, but at this point we need one
+    project ??= await SfProject.resolve();
     // instantiate source tracking
     // stl will decide, based on the org's properties, what needs to be done
     const stl = await SourceTracking.create({
@@ -152,11 +161,18 @@ export async function executeDeploy(
     });
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
-      throw new SfError(
-        deployMessages.getMessage('error.nothingToDeploy'),
-        'NothingToDeploy',
-        deployMessages.getMessages('error.nothingToDeploy.Actions', [bin])
-      );
+      if (opts['source-dir'] || opts.manifest || opts.metadata || throwOnEmpty) {
+        // the user specified something to deploy, but there isn't anything
+        throw new SfError(
+          deployMessages.getMessage('error.nothingToDeploy'),
+          'NothingToDeploy',
+          deployMessages.getMessages('error.nothingToDeploy.Actions', [bin])
+        );
+      } else {
+        // this is a push-like "deploy changes" but there aren't any.
+        // users unanimously think this should not be an error https://github.com/forcedotcom/cli/discussions/2065
+        return {};
+      }
     }
     deploy = id
       ? new MetadataApiDeploy({ id, usernameOrConnection, components: componentSet })
