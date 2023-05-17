@@ -259,7 +259,13 @@ const buildRetrieveAndDeleteTargets = async (
             }
           : {}),
         ...(flags.metadata
-          ? { metadata: { metadataEntries: flags.metadata, directoryPaths: await getPackageDirs() } }
+          ? {
+              metadata: {
+                metadataEntries: flags.metadata,
+                // if mdapi format, there might not be a project
+                directoryPaths: format === 'metadata' ? [] : await getPackageDirs(),
+              },
+            }
           : {}),
       }),
     };
