@@ -146,31 +146,33 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       flags,
       format
     );
-    const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName);
-    this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
-    this.spinner.status = messages.getMessage('spinner.sending', [
-      componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
-    ]);
+    if (componentSetFromNonDeletes.size !== 0) {
+      const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName);
+      this.spinner.status = messages.getMessage('spinner.sending', [
+        componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
+      ]);
 
-    const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
+      const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
 
-    retrieve.onUpdate((data) => {
-      this.spinner.status = mdTransferMessages.getMessage(data.status);
-    });
-    // any thing else should stop the progress bar
-    retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
-    retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
-    retrieve.onError((error: Error) => {
-      this.spinner.stop(error.name);
-      throw error;
-    });
+      retrieve.onUpdate((data) => {
+        this.spinner.status = mdTransferMessages.getMessage(data.status);
+      });
+      // any thing else should stop the progress bar
+      retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
+      retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
+      retrieve.onError((error: Error) => {
+        this.spinner.stop(error.name);
+        throw error;
+      });
 
-    await retrieve.start();
-    this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
+      await retrieve.start();
+      this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
 
-    this.spinner.stop();
-
+      this.spinner.stop();
+    } else {
+      this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
+    }
     // reference the flag instead of `format` so we get correct type
     const formatter = flags['target-metadata-dir']
       ? new MetadataRetrieveResultFormatter(this.retrieveResult, {
