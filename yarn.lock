@@ -1338,24 +1338,12 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-3.1.2.tgz#a922820eb6e144b60feb30e669000e41ee6ea6ea"
-  integrity sha512-8TV1El0gzhMbyoqd1beFhJtyBeOspI4J2tHP0lFMs5DfAO2W8PiQtm4uCwo/Ldi2u1s3JGfCN8FFaW5GyI93FQ==
+"@salesforce/source-tracking@^3.1.2", "@salesforce/source-tracking@^3.1.4":
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-3.1.4.tgz#81a0cc89dc6d5791bdaef5d3fada00a9a36acbf9"
+  integrity sha512-3BTB4E9K+wixs2WRO90jy9KIk/0+8DJNr+uPHOz1Fija7TT53weqanPmc/N0STyC8GKcKOBhIcoGTFhifByDvg==
   dependencies:
     "@salesforce/core" "^3.36.1"
-    "@salesforce/kit" "^1.9.2"
-    "@salesforce/source-deploy-retrieve" "^8.4.0"
-    graceful-fs "^4.2.11"
-    isomorphic-git "1.23.0"
-    ts-retry-promise "^0.7.0"
-
-"@salesforce/source-tracking@^3.2.0-beta.1":
-  version "3.2.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-3.2.0-beta.1.tgz#3a43cbee93dd50833e4e0286dd72a86ca690ff46"
-  integrity sha512-WSKsAW5/JgOoTwL+C8xJ2fStzffj+Wqg08UPze2XTo58EFxGLis4IHGYWJGifDpUkiF3RkRyL7aGhYadM7Emhw==
-  dependencies:
-    "@salesforce/core" "^3.36.0"
     "@salesforce/kit" "^1.9.2"
     "@salesforce/source-deploy-retrieve" "^8.4.0"
     fast-xml-parser "^4.2.2"

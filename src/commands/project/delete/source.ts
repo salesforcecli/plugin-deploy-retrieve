@@ -341,7 +341,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
   private async deleteFilesLocally(): Promise<void> {
     if (!this.flags['check-only'] && this.deployResult?.response?.status === RequestStatus.Succeeded) {
-      const promises: Array<Promise<void>> = [];
+      const promises: Array<Promise<void> | ReturnType<typeof deleteCustomLabels>> = [];
       const customLabels = this.componentSet
         .getSourceComponents()
         .toArray()
