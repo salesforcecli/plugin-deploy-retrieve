@@ -6,8 +6,10 @@
  */
 import { ux } from '@oclif/core';
 import * as chalk from 'chalk';
-import { DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
+import { bold } from 'chalk';
+import { StandardColors } from '@salesforce/sf-plugins-core';
 import { DeleteSourceJson, Formatter } from '../utils/types';
 import { sortFileResponses, asRelativePaths } from '../utils/output';
 
@@ -74,6 +76,28 @@ export class DeleteResultFormatter implements Formatter<DeleteSourceJson> {
           filePath: { header: 'PROJECT PATH' },
         }
       );
+    } else {
+      this.displayFailures();
     }
+  }
+
+  private displayFailures(): void {
+    if (this.result.response.status === RequestStatus.Succeeded) return;
+
+    const failures = ensureArray(this.result.response.details.componentFailures);
+    if (!failures.length) return;
+
+    const columns = {
+      problemType: { header: 'Type' },
+      fullName: { header: 'Name' },
+      error: { header: 'Problem' },
+    };
+    const options = { title: StandardColors.error(bold(`Component Failures [${failures.length}]`)) };
+    ux.log();
+    ux.table(
+      failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.problem })),
+      columns,
+      options
+    );
   }
 }

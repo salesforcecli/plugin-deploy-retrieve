@@ -135,7 +135,8 @@ describe('remote changes', () => {
       expect(result?.toDeploy).to.deep.equal([]);
     });
     it('can pull the delete', () => {
-      const result = execCmd<RetrieveResultJson>('retrieve:metadata --json', { ensureExitCode: 0 }).jsonOutput?.result;
+      const result = execCmd<RetrieveResultJson>('project:retrieve:start --json', { ensureExitCode: 0 }).jsonOutput
+        ?.result;
       assert(result);
       assert(Array.isArray(result.files));
       // the 2 files for the apexClass, and possibly one for the Profile (depending on whether it got created in time)
@@ -212,7 +213,8 @@ describe('remote changes', () => {
       ).to.equal(true);
     });
     it('can pull the add', () => {
-      const result = execCmd<RetrieveResultJson>('retrieve:metadata --json', { ensureExitCode: 0 }).jsonOutput?.result;
+      const result = execCmd<RetrieveResultJson>('project:retrieve:start --json', { ensureExitCode: 0 }).jsonOutput
+        ?.result;
       // SDR marks all retrieves as 'Changed' even if it creates new local files.  This is different from toolbelt, which marked those as 'Created'
       result?.files
         .filter((r) => r.fullName === className)
