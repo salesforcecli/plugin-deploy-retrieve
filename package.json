@@ -11,7 +11,7 @@
     "@salesforce/kit": "^1.9.2",
     "@salesforce/sf-plugins-core": "^2.4.2",
     "@salesforce/source-deploy-retrieve": "^8.4.0",
-    "@salesforce/source-tracking": "^3.1.4",
+    "@salesforce/source-tracking": "^3.1.5",
     "chalk": "^4.1.2",
     "fs-extra": "^10.0.1",
     "shelljs": "^0.8.5",
