@@ -127,12 +127,18 @@ export class MetadataDeployer extends Deployer {
     const api = await resolveApi();
     this.log(`${EOL}Deploying ${name} to ${this.username} using ${api} API`);
 
-    const { deploy } = await executeDeploy({
-      'target-org': this.username,
-      'source-dir': directories,
-      'test-level': this.testLevel,
-      api,
-    });
+    const { deploy } = await executeDeploy(
+      {
+        'target-org': this.username,
+        'source-dir': directories,
+        'test-level': this.testLevel,
+        api,
+      },
+      undefined,
+      undefined,
+      undefined,
+      true
+    );
 
     new DeployProgress(deploy).start();
 

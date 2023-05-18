@@ -40,7 +40,7 @@ export type PathInfo = {
 export type Verbosity = 'verbose' | 'concise' | 'normal';
 
 export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'status'> & {
-  status: RequestStatus | 'Queued';
+  status: RequestStatus | 'Queued' | 'Nothing to deploy';
   files: FileResponse[];
 };
 
