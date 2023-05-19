@@ -6,8 +6,9 @@
  */
 
 import { rm } from 'fs/promises';
-import { join, resolve } from 'path';
+import { dirname, join, resolve } from 'path';
 
+import * as fs from 'fs';
 import { EnvironmentVariable, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
 import {
   RetrieveResult,
@@ -28,9 +29,10 @@ import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRet
 import { getPackageDirs } from '../../../utils/project';
 import { RetrieveResultJson } from '../../../utils/types';
 import { writeConflictTable } from '../../../utils/conflicts';
+import { promisesQueue } from '../../../utils/promiseQueue';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
 type Format = 'source' | 'metadata';
@@ -70,6 +72,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       char: 'n',
       summary: messages.getMessage('flags.package-name.summary'),
       multiple: true,
+    }),
+    'retrieve-target-dir': Flags.directory({
+      char: 'r',
+      summary: messages.getMessage('flags.retrieve-target-dir.summary'),
+      description: messages.getMessage('flags.retrieve-target-dir.description'),
+      exclusive: ['package-name', 'source-dir'],
     }),
     'single-package': Flags.boolean({
       summary: messages.getMessage('flags.single-package.summary'),
@@ -136,6 +144,13 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
+    let resolvedTargetDir: string | undefined;
+    if (flags['retrieve-target-dir']) {
+      resolvedTargetDir = resolve(flags['retrieve-target-dir']);
+      if (this.project?.getPackageNameFromPath(resolvedTargetDir)) {
+        throw messages.createError('retrieveTargetDirOverlapsPackage', [flags['retrieve-target-dir']]);
+      }
+    }
     const format: Format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
@@ -145,7 +160,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       flags,
       format
     );
-    const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName);
+    const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName, resolvedTargetDir);
 
     this.spinner.status = messages.getMessage('spinner.sending', [
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
@@ -169,6 +184,11 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     await retrieve.start();
     const result = await retrieve.pollStatus(500, flags.wait.seconds);
     this.spinner.stop();
+
+    // flags['retrieve-target-dir'] will set resolvedTargetDir var, so this check is redundant, but allows for nice typings in the moveResultsForRetrieveTargetDir method
+    if (flags['retrieve-target-dir'] && resolvedTargetDir) {
+      await this.moveResultsForRetrieveTargetDir(flags['retrieve-target-dir'], resolvedTargetDir);
+    }
 
     // reference the flag instead of `format` so we get correct type
     const formatter = flags['target-metadata-dir']
@@ -215,6 +235,56 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     return super.catch(error);
   }
+
+  private async moveResultsForRetrieveTargetDir(targetDir: string, resolvedTargetDir: string): Promise<void> {
+    async function mv(src: string): Promise<string[]> {
+      let directories: string[] = [];
+      let files: string[] = [];
+      const srcStat = await fs.promises.stat(src);
+      if (srcStat.isDirectory()) {
+        const contents = await fs.promises.readdir(src, { withFileTypes: true });
+        [directories, files] = contents.reduce<[string[], string[]]>(
+          (acc, dirent) => {
+            if (dirent.isDirectory()) {
+              acc[0].push(dirent.name);
+            } else {
+              acc[1].push(dirent.name);
+            }
+            return acc;
+          },
+          [[], []]
+        );
+
+        directories = directories.map((dir) => join(src, dir));
+      } else {
+        files.push(src);
+      }
+      await promisesQueue(
+        files,
+        async (file: string): Promise<string> => {
+          const dest = join(src.replace(join('main', 'default'), ''), file);
+          const destDir = dirname(dest);
+          await fs.promises.mkdir(destDir, { recursive: true });
+          await fs.promises.rename(join(src, file), dest);
+          return dest;
+        },
+        50
+      );
+      return directories;
+    }
+
+    if (!targetDir) {
+      return;
+    }
+
+    // move contents of 'main/default' to 'retrievetargetdir'
+    await promisesQueue([join(resolvedTargetDir, 'main', 'default')], mv, 5, true);
+    // remove 'main/default'
+    await fs.promises.rm(join(targetDir, 'main'), { recursive: true });
+    this.retrieveResult.getFileResponses().forEach((fileResponse) => {
+      fileResponse.filePath = fileResponse.filePath?.replace(join('main', 'default'), '');
+    });
+  }
 }
 
 type RetrieveAndDeleteTargets = {
@@ -255,7 +325,7 @@ const buildRetrieveAndDeleteTargets = async (
               manifest: {
                 manifestPath: flags.manifest,
                 // if mdapi format, there might not be a project
-                directoryPaths: format === 'metadata' ? [] : await getPackageDirs(),
+                directoryPaths: format === 'metadata' || flags['retrieve-target-dir'] ? [] : await getPackageDirs(),
               },
             }
           : {}),
@@ -264,7 +334,7 @@ const buildRetrieveAndDeleteTargets = async (
               metadata: {
                 metadataEntries: flags.metadata,
                 // if mdapi format, there might not be a project
-                directoryPaths: format === 'metadata' ? [] : await getPackageDirs(),
+                directoryPaths: format === 'metadata' || flags['retrieve-target-dir'] ? [] : await getPackageDirs(),
               },
             }
           : {}),
@@ -277,14 +347,16 @@ const buildRetrieveAndDeleteTargets = async (
  *
  *
  * @param flags
- * @param project
  * @param format 'metadata' or 'source'
+ * @param zipFileName
+ * @param output
  * @returns RetrieveSetOptions (an object that can be passed as the options for a ComponentSet retrieve)
  */
 const buildRetrieveOptions = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
   format: Format,
-  zipFileName: string
+  zipFileName: string,
+  output: string | undefined
 ): Promise<RetrieveSetOptions> => ({
   usernameOrConnection: flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
   merge: true,
@@ -299,6 +371,6 @@ const buildRetrieveOptions = async (
         output: flags['target-metadata-dir'] as string,
       }
     : {
-        output: (await SfProject.resolve()).getDefaultPackage().fullPath,
+        output: output ?? (await SfProject.resolve()).getDefaultPackage().fullPath,
       }),
 });

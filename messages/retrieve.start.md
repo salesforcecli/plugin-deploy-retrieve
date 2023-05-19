@@ -166,3 +166,17 @@ Wrote retrieve zip file to %s.
 # info.ExtractedZipFile
 
 Extracted %s to %s.
+
+# flags.retrieve-target-dir.description
+
+The root of the directory structure into which the source files are retrieved.
+If the target directory matches one of the package directories in your sfdx-project.json file, the command fails.
+Running the command multiple times with the same target adds new files and overwrites existing files.
+
+# flags.retrieve-target-dir.summary
+
+Directory root for the retrieved source files.
+
+# retrieveTargetDirOverlapsPackage
+
+The retrieve target directory [%s] overlaps one of your package directories. Specify a different retrieve target directory and try again.

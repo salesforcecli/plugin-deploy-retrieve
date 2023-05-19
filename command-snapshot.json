@@ -3,13 +3,17 @@
     "command": "deploy",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["interactive"],
-    "alias": []
+    "alias": [],
+    "flagChars": [],
+    "flagAliases": []
   },
   {
     "command": "project:convert:mdapi",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["api-version", "json", "loglevel", "manifest", "metadata", "metadata-dir", "output-dir", "root-dir"],
-    "alias": ["force:mdapi:convert"]
+    "alias": ["force:mdapi:convert"],
+    "flagChars": ["d", "m", "p", "r", "x"],
+    "flagAliases": ["apiversion", "metadatapath", "outputdir", "rootdir"]
   },
   {
     "command": "project:convert:source",
@@ -25,7 +29,9 @@
       "root-dir",
       "source-dir"
     ],
-    "alias": ["force:source:convert"]
+    "alias": ["force:source:convert"],
+    "flagChars": ["d", "m", "n", "p", "r", "x"],
+    "flagAliases": ["apiversion", "outputdir", "packagename", "rootdir", "sourcepath"]
   },
   {
     "command": "project:delete:source",
@@ -45,37 +51,59 @@
       "verbose",
       "wait"
     ],
-    "alias": ["force:source:delete"]
+    "alias": ["force:source:delete"],
+    "flagChars": ["c", "f", "l", "m", "o", "p", "r", "t", "w"],
+    "flagAliases": [
+      "apiversion",
+      "checkonly",
+      "forceoverwrite",
+      "noprompt",
+      "sourcepath",
+      "targetusername",
+      "testlevel",
+      "tracksource",
+      "u"
+    ]
   },
   {
     "command": "project:delete:tracking",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["api-version", "json", "loglevel", "no-prompt", "target-org"],
-    "alias": ["force:source:tracking:clear"]
+    "alias": ["force:source:tracking:clear"],
+    "flagChars": ["o", "p"],
+    "flagAliases": ["apiversion", "noprompt", "targetusername", "u"]
   },
   {
     "command": "project:deploy:cancel",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["async", "job-id", "json", "use-most-recent", "wait"],
-    "alias": ["deploy:metadata:cancel"]
+    "alias": ["deploy:metadata:cancel"],
+    "flagChars": ["i", "r", "w"],
+    "flagAliases": []
   },
   {
     "command": "project:deploy:preview",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["ignore-conflicts", "json", "manifest", "metadata", "source-dir", "target-org"],
-    "alias": ["deploy:metadata:preview"]
+    "alias": ["deploy:metadata:preview"],
+    "flagChars": ["c", "d", "m", "o", "x"],
+    "flagAliases": []
   },
   {
     "command": "project:deploy:quick",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["api-version", "async", "concise", "job-id", "json", "target-org", "use-most-recent", "verbose", "wait"],
-    "alias": ["deploy:metadata:quick"]
+    "alias": ["deploy:metadata:quick"],
+    "flagChars": ["a", "i", "o", "r", "w"],
+    "flagAliases": []
   },
   {
     "command": "project:deploy:report",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["coverage-formatters", "job-id", "json", "junit", "results-dir", "use-most-recent"],
-    "alias": ["deploy:metadata:report"]
+    "alias": ["deploy:metadata:report"],
+    "flagChars": ["i", "r"],
+    "flagAliases": []
   },
   {
     "command": "project:deploy:resume",
@@ -91,7 +119,9 @@
       "verbose",
       "wait"
     ],
-    "alias": ["deploy:metadata:resume"]
+    "alias": ["deploy:metadata:resume"],
+    "flagChars": ["i", "r", "w"],
+    "flagAliases": []
   },
   {
     "command": "project:deploy:start",
@@ -122,7 +152,9 @@
       "verbose",
       "wait"
     ],
-    "alias": ["deploy:metadata"]
+    "alias": ["deploy:metadata"],
+    "flagChars": ["a", "c", "d", "g", "l", "m", "o", "r", "t", "w", "x"],
+    "flagAliases": []
   },
   {
     "command": "project:deploy:validate",
@@ -143,7 +175,9 @@
       "verbose",
       "wait"
     ],
-    "alias": ["deploy:metadata:validate"]
+    "alias": ["deploy:metadata:validate"],
+    "flagChars": ["a", "d", "l", "m", "o", "t", "w", "x"],
+    "flagAliases": []
   },
   {
     "command": "project:generate:manifest",
@@ -160,25 +194,42 @@
       "source-dir",
       "type"
     ],
-    "alias": ["force:source:manifest:create"]
+    "alias": ["force:source:manifest:create"],
+    "flagChars": ["c", "d", "m", "n", "p", "t"],
+    "flagAliases": [
+      "apiversion",
+      "fromorg",
+      "includepackages",
+      "manifestname",
+      "manifesttype",
+      "o",
+      "outputdir",
+      "sourcepath"
+    ]
   },
   {
     "command": "project:list:ignored",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["json", "source-dir"],
-    "alias": ["force:source:ignored:list"]
+    "alias": ["force:source:ignored:list"],
+    "flagChars": ["p"],
+    "flagAliases": ["sourcepath"]
   },
   {
     "command": "project:reset:tracking",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["api-version", "json", "loglevel", "no-prompt", "revision", "target-org"],
-    "alias": ["force:source:tracking:reset"]
+    "alias": ["force:source:tracking:reset"],
+    "flagChars": ["o", "p", "r"],
+    "flagAliases": ["apiversion", "noprompt", "targetusername", "u"]
   },
   {
     "command": "project:retrieve:preview",
     "plugin": "@salesforce/plugin-deploy-retrieve",
     "flags": ["ignore-conflicts", "json", "target-org"],
-    "alias": ["retrieve:metadata:preview"]
+    "alias": ["retrieve:metadata:preview"],
+    "flagChars": ["c", "o"],
+    "flagAliases": []
   },
   {
     "command": "project:retrieve:start",
@@ -190,6 +241,7 @@
       "manifest",
       "metadata",
       "package-name",
+      "retrieve-target-dir",
       "single-package",
       "source-dir",
       "target-metadata-dir",
@@ -198,6 +250,8 @@
       "wait",
       "zip-file-name"
     ],
-    "alias": ["retrieve:metadata"]
+    "alias": ["retrieve:metadata"],
+    "flagChars": ["a", "c", "d", "m", "n", "o", "r", "t", "w", "x", "z"],
+    "flagAliases": []
   }
 ]
