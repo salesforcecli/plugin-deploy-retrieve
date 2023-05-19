@@ -22,7 +22,7 @@ import {
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { ChangeResult, ConflictResponse, SourceTracking } from '@salesforce/source-tracking';
+import { ChangeResult, ConflictResponse, deleteCustomLabels, SourceTracking } from '@salesforce/source-tracking';
 import {
   arrayWithDeprecation,
   Flags,
@@ -341,7 +341,14 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
   private async deleteFilesLocally(): Promise<void> {
     if (!this.flags['check-only'] && this.deployResult?.response?.status === RequestStatus.Succeeded) {
-      const promises: Array<Promise<void>> = [];
+      const promises: Array<Promise<void> | ReturnType<typeof deleteCustomLabels>> = [];
+      const customLabels = this.componentSet
+        .getSourceComponents()
+        .toArray()
+        .filter((comp) => comp.type.id === 'customlabel');
+      if (customLabels.length && customLabels[0].xml) {
+        promises.push(deleteCustomLabels(customLabels[0].xml, customLabels));
+      }
       this.components?.filter(isSourceComponent).map((component: SourceComponent) => {
         // mixed delete/deploy operations have already been deleted and stashed
         if (!this.mixedDeployDelete.delete.length) {
@@ -354,7 +361,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
             }
           }
           if (component.xml) {
-            promises.push(fsPromises.unlink(component.xml));
+            if (component.type.id !== 'customlabel') {
+              // CustomLabels handled as a special case above
+              promises.push(fsPromises.unlink(component.xml));
+            }
           }
         }
       });
@@ -408,7 +418,12 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
       this.components?.flatMap((component) => {
         if (component instanceof SourceComponent) {
-          local.push(component.xml as string, ...component.walkContent());
+          if (component.type.name === 'CustomLabel') {
+            // for custom labels, print each custom label to be deleted, not the whole file
+            local.push(`${component.type.name}:${component.fullName}`);
+          } else {
+            local.push(component.xml as string, ...component.walkContent());
+          }
         } else {
           // remote only metadata
           remote.push(`${component.type.name}:${component.fullName}`);

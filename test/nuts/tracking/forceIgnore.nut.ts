@@ -170,7 +170,7 @@ describe('forceignore changes', () => {
 
     it('sf will not retrieve a remote file added to the ignore AFTER it is being tracked', () => {
       // pull doesn't retrieve that change
-      const pullOutput = execCmd<RetrieveResultJson>('retrieve:metadata --json', {
+      const pullOutput = execCmd<RetrieveResultJson>('project:retrieve:start --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       expect(

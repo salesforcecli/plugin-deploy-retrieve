@@ -16,6 +16,7 @@ import {
   RetrieveSetOptions,
   ComponentSet,
   FileResponse,
+  MetadataApiRetrieveStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
@@ -166,23 +167,27 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
     ]);
 
-    const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
+    this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
-    this.spinner.status = messages.getMessage('spinner.polling');
+    if (componentSetFromNonDeletes.size !== 0) {
+      const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
+      this.spinner.status = messages.getMessage('spinner.polling');
 
-    retrieve.onUpdate((data) => {
-      this.spinner.status = mdTransferMessages.getMessage(data.status);
-    });
-    // any thing else should stop the progress bar
-    retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
-    retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
-    retrieve.onError((error: Error) => {
-      this.spinner.stop(error.name);
-      throw error;
-    });
+      retrieve.onUpdate((data) => {
+        this.spinner.status = mdTransferMessages.getMessage(data.status);
+      });
+      // any thing else should stop the progress bar
+      retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
+      retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
+      retrieve.onError((error: Error) => {
+        this.spinner.stop(error.name);
+        throw error;
+      });
 
-    await retrieve.start();
-    const result = await retrieve.pollStatus(500, flags.wait.seconds);
+      await retrieve.start();
+      this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
+    }
+
     this.spinner.stop();
 
     // flags['retrieve-target-dir'] will set resolvedTargetDir var, so this check is redundant, but allows for nice typings in the moveResultsForRetrieveTargetDir method
@@ -192,19 +197,20 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     // reference the flag instead of `format` so we get correct type
     const formatter = flags['target-metadata-dir']
-      ? new MetadataRetrieveResultFormatter(result, {
+      ? new MetadataRetrieveResultFormatter(this.retrieveResult, {
           'target-metadata-dir': flags['target-metadata-dir'],
           'zip-file-name': zipFileName,
           unzip: flags.unzip,
         })
-      : new RetrieveResultFormatter(result, flags['package-name'], fileResponsesFromDelete);
+      : new RetrieveResultFormatter(this.retrieveResult, flags['package-name'], fileResponsesFromDelete);
     if (!this.jsonEnabled()) {
-      if (result.response.status === 'Succeeded') {
+      // in the case where we didn't retrieve anything, check if we have any deletes
+      if (this.retrieveResult.response.status === 'Succeeded' || fileResponsesFromDelete.length !== 0) {
         await formatter.display();
       } else {
         throw new SfError(
-          getString(result.response, 'errorMessage', result.response.status),
-          getString(result.response, 'errorStatusCode', 'unknown')
+          getString(this.retrieveResult.response, 'errorMessage', this.retrieveResult.response.status),
+          getString(this.retrieveResult.response, 'errorStatusCode', 'unknown')
         );
       }
     }
