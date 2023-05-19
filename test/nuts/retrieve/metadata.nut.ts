@@ -50,8 +50,8 @@ describe('retrieve metadata NUTs', () => {
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/*', 'force-app/main/default/aura/**/*']);
     });
 
-    it('should retrieve into the retrieve-target-dir', async () => {
-      await testkit.retrieve({ args: '--metadata ApexClass AuraDefinitionBundle --retrieve-target-dir myOutput' });
+    it('should retrieve into the output-dir', async () => {
+      await testkit.retrieve({ args: '--metadata ApexClass AuraDefinitionBundle --output-dir myOutput' });
       await testkit.expect.filesToBeRetrieved(['myOutput/classes/*', 'myOutput/aura/**/*']);
     });
   });
@@ -65,11 +65,11 @@ describe('retrieve metadata NUTs', () => {
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/*']);
     });
 
-    it('should retrieve metadata specified in package.xml to retrieve-target-dir', async () => {
+    it('should retrieve metadata specified in package.xml to output-dir', async () => {
       const xml = '<types><members>*</members><name>ApexClass</name></types>';
       const packageXml = await testkit.createPackageXml(xml);
 
-      await testkit.retrieve({ args: `--manifest ${packageXml} --retrieve-target-dir myOutput` });
+      await testkit.retrieve({ args: `--manifest ${packageXml} --output-dir myOutput` });
       await testkit.expect.filesToBeRetrieved(['myOutput/classes/*']);
     });
   });

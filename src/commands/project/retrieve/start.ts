@@ -74,10 +74,10 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       summary: messages.getMessage('flags.package-name.summary'),
       multiple: true,
     }),
-    'retrieve-target-dir': Flags.directory({
+    'output-dir': Flags.directory({
       char: 'r',
-      summary: messages.getMessage('flags.retrieve-target-dir.summary'),
-      description: messages.getMessage('flags.retrieve-target-dir.description'),
+      summary: messages.getMessage('flags.output-dir.summary'),
+      description: messages.getMessage('flags.output-dir.description'),
       exclusive: ['package-name', 'source-dir'],
     }),
     'single-package': Flags.boolean({
@@ -146,10 +146,10 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
     let resolvedTargetDir: string | undefined;
-    if (flags['retrieve-target-dir']) {
-      resolvedTargetDir = resolve(flags['retrieve-target-dir']);
+    if (flags['output-dir']) {
+      resolvedTargetDir = resolve(flags['output-dir']);
       if (this.project?.getPackageNameFromPath(resolvedTargetDir)) {
-        throw messages.createError('retrieveTargetDirOverlapsPackage', [flags['retrieve-target-dir']]);
+        throw messages.createError('retrieveTargetDirOverlapsPackage', [flags['output-dir']]);
       }
     }
     const format: Format = flags['target-metadata-dir'] ? 'metadata' : 'source';
@@ -190,9 +190,9 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     this.spinner.stop();
 
-    // flags['retrieve-target-dir'] will set resolvedTargetDir var, so this check is redundant, but allows for nice typings in the moveResultsForRetrieveTargetDir method
-    if (flags['retrieve-target-dir'] && resolvedTargetDir) {
-      await this.moveResultsForRetrieveTargetDir(flags['retrieve-target-dir'], resolvedTargetDir);
+    // flags['output-dir'] will set resolvedTargetDir var, so this check is redundant, but allows for nice typings in the moveResultsForRetrieveTargetDir method
+    if (flags['output-dir'] && resolvedTargetDir) {
+      await this.moveResultsForRetrieveTargetDir(flags['output-dir'], resolvedTargetDir);
     }
 
     // reference the flag instead of `format` so we get correct type
@@ -327,7 +327,7 @@ const buildRetrieveAndDeleteTargets = async (
               manifest: {
                 manifestPath: flags.manifest,
                 // if mdapi format, there might not be a project
-                directoryPaths: format === 'metadata' || flags['retrieve-target-dir'] ? [] : await getPackageDirs(),
+                directoryPaths: format === 'metadata' || flags['output-dir'] ? [] : await getPackageDirs(),
               },
             }
           : {}),
@@ -336,7 +336,7 @@ const buildRetrieveAndDeleteTargets = async (
               metadata: {
                 metadataEntries: flags.metadata,
                 // if mdapi format, there might not be a project
-                directoryPaths: format === 'metadata' || flags['retrieve-target-dir'] ? [] : await getPackageDirs(),
+                directoryPaths: format === 'metadata' || flags['output-dir'] ? [] : await getPackageDirs(),
               },
             }
           : {}),

@@ -167,13 +167,13 @@ Wrote retrieve zip file to %s.
 
 Extracted %s to %s.
 
-# flags.retrieve-target-dir.description
+# flags.output-dir.description
 
 The root of the directory structure into which the source files are retrieved.
 If the target directory matches one of the package directories in your sfdx-project.json file, the command fails.
 Running the command multiple times with the same target adds new files and overwrites existing files.
 
-# flags.retrieve-target-dir.summary
+# flags.output-dir.summary
 
 Directory root for the retrieved source files.
 
