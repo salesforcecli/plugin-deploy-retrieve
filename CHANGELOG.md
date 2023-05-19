@@ -1,3 +1,12 @@
+## [1.9.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.3...1.9.4) (2023-05-19)
+
+
+### Bug Fixes
+
+* wrong flag name ([#622](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/622)) ([9290bfc](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9290bfcd88282cd3e940253d9eba7ad58dcca58b))
+
+
+
 ## [1.9.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.2...1.9.3) (2023-05-18)
 
 
