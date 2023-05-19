@@ -278,18 +278,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       );
       return directories;
     }
-
-    if (!targetDir) {
-      return;
-    }
-
+    // getFileResponses fails once the files have been moved, calculate where they're moved to, and then move them
+    this.retrieveResult.getFileResponses().forEach((fileResponse) => {
+      fileResponse.filePath = fileResponse.filePath?.replace(join('main', 'default'), '');
+    });
     // move contents of 'main/default' to 'retrievetargetdir'
     await promisesQueue([join(resolvedTargetDir, 'main', 'default')], mv, 5, true);
     // remove 'main/default'
     await fs.promises.rm(join(targetDir, 'main'), { recursive: true });
-    this.retrieveResult.getFileResponses().forEach((fileResponse) => {
-      fileResponse.filePath = fileResponse.filePath?.replace(join('main', 'default'), '');
-    });
   }
 }
 
