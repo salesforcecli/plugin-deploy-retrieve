@@ -35,6 +35,8 @@ const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 're
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
 type Format = 'source' | 'metadata';
+const mdapiFlagGroup = 'Metadata API Format Option';
+
 export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
@@ -76,6 +78,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       summary: messages.getMessage('flags.single-package.summary'),
       dependsOn: ['target-metadata-dir'],
       exclusive: ['ignore-conflicts'],
+      helpGroup: mdapiFlagGroup,
     }),
     'source-dir': Flags.string({
       char: 'd',
@@ -94,6 +97,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         },
       ],
       exclusive: ['ignore-conflicts'],
+      helpGroup: mdapiFlagGroup,
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -114,11 +118,13 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       summary: messages.getMessage('flags.unzip.summary'),
       dependsOn: ['target-metadata-dir'],
       exclusive: ['ignore-conflicts'],
+      helpGroup: mdapiFlagGroup,
     }),
     'zip-file-name': zipFileFlag({
       summary: messages.getMessage('flags.zip-file-name.summary'),
       dependsOn: ['target-metadata-dir'],
       exclusive: ['ignore-conflicts'],
+      helpGroup: mdapiFlagGroup,
     }),
   };
 

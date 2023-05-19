@@ -25,6 +25,10 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
+const mdapiFormatFlags = 'Metadata API Format Option';
+const sourceFormatFlags = 'Source Format';
+const testFlags = 'Test';
+const destructiveFlags = 'Delete';
 
 export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -76,21 +80,25 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.manifest.summary'),
       exclusive: exclusiveFlags.filter((f) => f !== 'manifest'),
       exists: true,
+      helpGroup: sourceFormatFlags,
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
       exclusive: exclusiveFlags.filter((f) => f !== 'metadata'),
+      helpGroup: sourceFormatFlags,
     }),
     'metadata-dir': fileOrDirFlag({
       summary: messages.getMessage('flags.metadata-dir.summary'),
       exclusive: exclusiveFlags.filter((f) => f !== 'metadata-dir'),
       exists: true,
+      helpGroup: mdapiFormatFlags,
     }),
     'single-package': Flags.boolean({
       summary: messages.getMessage('flags.single-package.summary'),
       dependsOn: ['metadata-dir'],
+      helpGroup: mdapiFormatFlags,
     }),
     'source-dir': Flags.string({
       char: 'd',
@@ -98,6 +106,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.source-dir.summary'),
       multiple: true,
       exclusive: exclusiveFlags.filter((f) => f !== 'source-dir'),
+      helpGroup: sourceFormatFlags,
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -105,11 +114,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.target-org.summary'),
       required: true,
     }),
-    tests: testsFlag,
+    tests: { ...testsFlag, helpGroup: testFlags },
     'test-level': testLevelFlag({
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
       options: [TestLevel.NoTestRun, TestLevel.RunSpecifiedTests, TestLevel.RunLocalTests, TestLevel.RunAllTestsInOrg],
+      helpGroup: testFlags,
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
@@ -129,20 +139,28 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.purge-on-delete.summary'),
       dependsOn: ['manifest'],
       relationships: [{ type: 'some', flags: ['pre-destructive-changes', 'post-destructive-changes'] }],
+      helpGroup: destructiveFlags,
     }),
     'pre-destructive-changes': Flags.file({
       summary: messages.getMessage('flags.pre-destructive-changes.summary'),
       dependsOn: ['manifest'],
+      helpGroup: destructiveFlags,
     }),
     'post-destructive-changes': Flags.file({
       summary: messages.getMessage('flags.post-destructive-changes.summary'),
       dependsOn: ['manifest'],
+      helpGroup: destructiveFlags,
     }),
-    'coverage-formatters': coverageFormattersFlag,
-    junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary'), dependsOn: ['coverage-formatters'] }),
+    'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
+    junit: Flags.boolean({
+      summary: messages.getMessage('flags.junit.summary'),
+      dependsOn: ['coverage-formatters'],
+      helpGroup: testFlags,
+    }),
     'results-dir': Flags.directory({
       dependsOn: ['coverage-formatters'],
       summary: messages.getMessage('flags.results-dir.summary'),
+      helpGroup: testFlags,
     }),
   };
 
