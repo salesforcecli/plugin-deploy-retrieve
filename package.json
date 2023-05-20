@@ -28,7 +28,7 @@
     "@salesforce/plugin-source": "^2.10.4",
     "@salesforce/plugin-templates": "^55.4.10",
     "@salesforce/plugin-user": "^2.3.6",
-    "@salesforce/prettier-config": "^0.0.2",
+    "@salesforce/prettier-config": "^0.0.3",
     "@salesforce/source-testkit": "^2.0.59",
     "@salesforce/ts-sinon": "1.4.6",
     "@salesforce/ts-types": "^1.5.20",
