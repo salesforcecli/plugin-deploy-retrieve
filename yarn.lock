@@ -1218,18 +1218,18 @@
     fast-levenshtein "^3.0.0"
     tslib "^2"
 
-"@salesforce/plugin-source@^2.10.4":
-  version "2.10.9"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.10.9.tgz#d8464b820b677ea212d2b3b1528f3941ae4bf649"
-  integrity sha512-D/xntZtSjimCeCLwTxfUde39iKC/qaByANz2itqpiOVzQMFndtKtXr2BPPMOP7UftOXEiSksNUJHVatWEEA5VA==
+"@salesforce/plugin-source@^2.10.10":
+  version "2.10.10"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.10.10.tgz#e07ad3314c7ec26b50987ecb76d093126fd470a3"
+  integrity sha512-lGHBvBbzk5MGKtmvKsZx5hx40JJG8O6CTt6TfVADfS78OPJP5QginAdqoSc/oLPYsRKh93lz9ooLhPhBf8mcfQ==
   dependencies:
     "@oclif/core" "^2.8.2"
     "@salesforce/apex-node" "^1.6.0"
-    "@salesforce/core" "^3.36.0"
+    "@salesforce/core" "^3.36.1"
     "@salesforce/kit" "^1.9.2"
-    "@salesforce/sf-plugins-core" "^2.4.0"
-    "@salesforce/source-deploy-retrieve" "^8.0.1"
-    "@salesforce/source-tracking" "^3.1.2"
+    "@salesforce/sf-plugins-core" "^2.4.3"
+    "@salesforce/source-deploy-retrieve" "^8.5.1"
+    "@salesforce/source-tracking" "^3.1.5"
     chalk "^4.1.2"
     got "^11.8.6"
     proxy-agent "^5.0.0"
@@ -1307,7 +1307,7 @@
     proxy-from-env "^1.1.0"
     unzipper "0.10.11"
 
-"@salesforce/source-deploy-retrieve@^8.0.1", "@salesforce/source-deploy-retrieve@^8.5.1":
+"@salesforce/source-deploy-retrieve@^8.5.1":
   version "8.5.1"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-8.5.1.tgz#f66f590348857aa51e11fdb69dbd9fcf1d2fba93"
   integrity sha512-bdbyLlpILlGiNzsqrZjOEu3rtp3pqQyPzixL2CA9UebKGytG6zT3J6+/0Br1jAVefbl62KW6dgwurAVL7bp6+w==
@@ -1343,7 +1343,7 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^3.1.2", "@salesforce/source-tracking@^3.1.5":
+"@salesforce/source-tracking@^3.1.5":
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-3.1.5.tgz#2f8843867fe3a7887da52f153e6cbec6d2af23b8"
   integrity sha512-ww7WxRqkWxFock3QqLDvlkW1P7EMZyL6qXIkcx2nAzHs3IhBOJ9wgJlSe/FudWluJ+rLMkvFBvs5D8iN/DaYnQ==
