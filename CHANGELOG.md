@@ -1,3 +1,12 @@
+## [1.9.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.5...1.9.6) (2023-05-20)
+
+
+### Bug Fixes
+
+* **deps:** bump tslib from 2.5.0 to 2.5.2 ([9ccb81c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9ccb81ccf38795fc89bff13e1e0d78f4136f46ae))
+
+
+
 ## [1.9.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.4...1.9.5) (2023-05-19)
 
 
