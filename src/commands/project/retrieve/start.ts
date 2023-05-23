@@ -35,7 +35,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 're
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
 type Format = 'source' | 'metadata';
-const mdapiFlagGroup = 'Metadata API Format Option';
+const mdapiFlagGroup = 'Metadata API Format';
 
 export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly summary = messages.getMessage('summary');

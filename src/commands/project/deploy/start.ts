@@ -25,7 +25,7 @@ Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
-const mdapiFormatFlags = 'Metadata API Format Option';
+const mdapiFormatFlags = 'Metadata API Format';
 const sourceFormatFlags = 'Source Format';
 const testFlags = 'Test';
 const destructiveFlags = 'Delete';
