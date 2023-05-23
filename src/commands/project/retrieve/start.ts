@@ -148,7 +148,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     let resolvedTargetDir: string | undefined;
     if (flags['output-dir']) {
       resolvedTargetDir = resolve(flags['output-dir']);
-      if (this.project?.getPackageNameFromPath(resolvedTargetDir)) {
+      if (SfProject.getInstance()?.getPackageNameFromPath(resolvedTargetDir)) {
         throw messages.createError('retrieveTargetDirOverlapsPackage', [flags['output-dir']]);
       }
     }
