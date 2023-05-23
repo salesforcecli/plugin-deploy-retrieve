@@ -12,7 +12,7 @@ import { Formatter, MetadataRetrieveResultJson } from '../utils/types';
 import { sortFileResponses, asRelativePaths } from '../utils/output';
 
 Messages.importMessagesDirectory(__dirname);
-export const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata');
+export const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 
 export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrieveResultJson> {
   private zipFilePath: string;

@@ -49,6 +49,11 @@ describe('retrieve metadata NUTs', () => {
       await testkit.retrieve({ args: '--metadata ApexClass AuraDefinitionBundle' });
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/*', 'force-app/main/default/aura/**/*']);
     });
+
+    it('should retrieve into the output-dir', async () => {
+      await testkit.retrieve({ args: '--metadata ApexClass AuraDefinitionBundle --output-dir myOutput' });
+      await testkit.expect.filesToBeRetrieved(['myOutput/classes/*', 'myOutput/aura/**/*']);
+    });
   });
 
   describe('--manifest flag', () => {
@@ -58,6 +63,14 @@ describe('retrieve metadata NUTs', () => {
 
       await testkit.retrieve({ args: `--manifest ${packageXml}` });
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/*']);
+    });
+
+    it('should retrieve metadata specified in package.xml to output-dir', async () => {
+      const xml = '<types><members>*</members><name>ApexClass</name></types>';
+      const packageXml = await testkit.createPackageXml(xml);
+
+      await testkit.retrieve({ args: `--manifest ${packageXml} --output-dir myOutput` });
+      await testkit.expect.filesToBeRetrieved(['myOutput/classes/*']);
     });
   });
 
