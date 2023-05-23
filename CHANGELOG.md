@@ -1,3 +1,12 @@
+# [1.10.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.6...1.10.0) (2023-05-23)
+
+
+### Features
+
+* flag groups for deploy/retrieve ([#626](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/626)) ([9438659](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9438659d4c8d217b442da1fa63c151bad3bfacc5))
+
+
+
 ## [1.9.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.9.5...1.9.6) (2023-05-20)
 
 
