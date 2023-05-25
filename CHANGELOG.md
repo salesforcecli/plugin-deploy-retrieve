@@ -1,3 +1,12 @@
+## [1.10.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.10.1...1.10.2) (2023-05-25)
+
+
+### Bug Fixes
+
+* stacktrace can by null (is typed wrong) ([d6b59d8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d6b59d80e707c70bf5cd329e0c9aa95499a14610))
+
+
+
 ## [1.10.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.10.0...1.10.1) (2023-05-23)
 
 
