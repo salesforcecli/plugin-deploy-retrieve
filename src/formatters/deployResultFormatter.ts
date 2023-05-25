@@ -314,10 +314,12 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     ux.log(error(`Test Failures [${failureCount}]`));
     for (const test of testFailures) {
       const testName = underline(`${test.name}.${test.methodName}`);
-      const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
       ux.log(`• ${testName}`);
       ux.log(`  ${dim('message')}: ${test.message}`);
-      ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
+      if (test.stackTrace) {
+        const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
+        ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
+      }
       ux.log();
     }
   }
