@@ -8,6 +8,7 @@ import * as path from 'path';
 import { assert, expect, config } from 'chai';
 import * as sinon from 'sinon';
 import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { ux } from '@oclif/core';
 import { getCoverageFormattersOptions } from '../../src/utils/coverage';
 import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter';
 import { getDeployResult } from './deployResponses';
@@ -19,6 +20,29 @@ describe('deployResultFormatter', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  describe('displayFailures', () => {
+    const deployResultFailure = getDeployResult('failed');
+    const tableStub = sandbox.stub(ux, 'table');
+
+    it('prints file responses, and messages from server', () => {
+      const formatter = new DeployResultFormatter(deployResultFailure, { verbose: true });
+      formatter.display();
+      expect(tableStub.callCount).to.equal(1);
+      expect(tableStub.firstCall.args[0]).to.deep.equal([
+        {
+          error: 'This component has some problems',
+          fullName: 'ProductController',
+          problemType: 'Error',
+        },
+        {
+          error: 'This component has some problems',
+          fullName: 'ProductController',
+          problemType: 'Error',
+        },
+      ]);
+    });
   });
 
   describe('coverage functions', () => {

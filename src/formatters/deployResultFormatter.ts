@@ -9,7 +9,14 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { ux } from '@oclif/core';
 import { dim, underline, bold } from 'chalk';
-import { DeployResult, Failures, FileResponse, RequestStatus, Successes } from '@salesforce/source-deploy-retrieve';
+import {
+  DeployResult,
+  Failures,
+  FileResponse,
+  FileResponseFailure,
+  RequestStatus,
+  Successes,
+} from '@salesforce/source-deploy-retrieve';
 import { Org, SfError } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
 import {
@@ -234,6 +241,17 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     if (this.result.response.status === RequestStatus.Succeeded) return;
 
     const failures = this.relativeFiles.filter(isSdrFailure);
+    // .push returns a number, so push here
+    failures.push(
+      ...ensureArray(this.result.response.details.componentFailures).map(
+        (fail) =>
+          ({
+            problemType: fail.problemType,
+            fullName: fail.fullName,
+            error: fail.problem,
+          } as FileResponseFailure)
+      )
+    );
     if (!failures.length) return;
 
     const columns = {
