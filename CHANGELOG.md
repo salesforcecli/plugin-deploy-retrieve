@@ -1,3 +1,12 @@
+## [1.10.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.10.2...1.10.3) (2023-05-26)
+
+
+### Bug Fixes
+
+* print errors from server ([8d77997](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8d77997b96b58c36f7dce25c28ae197d4cd05dab))
+
+
+
 ## [1.10.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.10.1...1.10.2) (2023-05-25)
 
 
