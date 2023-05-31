@@ -1,3 +1,12 @@
+# [1.11.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.10.4...1.11.0) (2023-05-31)
+
+
+### Features
+
+* node16, core4, etc ([#641](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/641)) ([ac092b4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ac092b4328cfb581c3d69f3247d903a5f8f3cfbc))
+
+
+
 ## [1.10.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.10.3...1.10.4) (2023-05-27)
 
 
