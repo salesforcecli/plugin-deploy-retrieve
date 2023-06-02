@@ -7,13 +7,7 @@
 
 import * as path from 'path';
 import { blue, bold } from 'chalk';
-import {
-  ComponentSet,
-  FileResponse,
-  FileResponseFailure,
-  FileResponseSuccess,
-} from '@salesforce/source-deploy-retrieve';
-import { API } from './types';
+import { FileResponse, FileResponseFailure, FileResponseSuccess } from '@salesforce/source-deploy-retrieve';
 
 export function tableHeader(message: string): string {
   return blue(bold(message));
@@ -43,27 +37,6 @@ export function sortFileResponses<T extends FileResponse | FileResponseSuccess |
     }
     return i.type > j.type ? 1 : -1;
   });
-}
-
-export function getVersionMessage(action: string, componentSet: ComponentSet | undefined, api: API): string {
-  // commands pass in the.componentSet, which may not exist in some tests or mdapi deploys
-  if (!componentSet) {
-    return `*** ${action} with ${api} ***`;
-  }
-  // neither
-  if (!componentSet.sourceApiVersion && !componentSet.apiVersion) {
-    return `*** ${action} with ${api} ***`;
-  }
-  // either OR both match (SDR will use either)
-  if (
-    !componentSet.sourceApiVersion ||
-    !componentSet.apiVersion ||
-    componentSet.sourceApiVersion === componentSet.apiVersion
-  ) {
-    return `*** ${action} with ${api} API v${componentSet.apiVersion ?? componentSet.sourceApiVersion} ***`;
-  }
-  // has both but they don't match
-  return `*** ${action} v${componentSet.sourceApiVersion} metadata with ${api} API v${componentSet.apiVersion} connection ***`;
 }
 
 export const getFileResponseSuccessProps = (

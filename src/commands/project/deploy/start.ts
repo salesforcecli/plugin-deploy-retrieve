@@ -5,10 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { bold } from 'chalk';
-import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
+import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
+import { DeployVersionData } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
-import { getVersionMessage } from '../../../utils/output';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
@@ -199,10 +199,26 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
 
     const api = await resolveApi(this.configAggregator);
-    const { deploy, componentSet } = await executeDeploy(
+    const username = flags['target-org'].getUsername();
+    const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
+
+    // eslint-disable-next-line @typescript-eslint/require-await
+    Lifecycle.getInstance().on('apiVersionDeploy', async (apiData: DeployVersionData) => {
+      this.log(
+        messages.getMessage('apiVersionMsgDetailed', [
+          action,
+          apiData.manifestVersion,
+          username,
+          apiData.apiVersion,
+          apiData.webService,
+        ])
+      );
+    });
+
+    const { deploy } = await executeDeploy(
       {
         ...flags,
-        'target-org': flags['target-org'].getUsername(),
+        'target-org': username,
         api,
       },
       this.config.bin,
@@ -214,8 +230,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return { status: 'Nothing to deploy', files: [] };
     }
 
-    const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
-    this.log(getVersionMessage(action, componentSet, api));
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
