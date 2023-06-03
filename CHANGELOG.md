@@ -1,3 +1,12 @@
+## [1.11.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.0...1.11.1) (2023-06-03)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/core from 4.0.1 to 4.1.0 ([e530782](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e530782b88a7cd7f81d61f5ab74c855d45c75662))
+
+
+
 # [1.11.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.10.4...1.11.0) (2023-05-31)
 
 
