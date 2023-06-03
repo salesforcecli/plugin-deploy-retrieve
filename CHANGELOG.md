@@ -1,3 +1,12 @@
+## [1.11.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.1...1.11.2) (2023-06-03)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/apex-node from 1.6.1 to 1.6.2 ([dcc4433](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/dcc4433a0c6b8389be3ad72e75fcf1d2bc5b7d59))
+
+
+
 ## [1.11.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.0...1.11.1) (2023-06-03)
 
 
