@@ -1157,7 +1157,7 @@
     semver "^7.3.5"
     ts-retry-promise "^0.6.0"
 
-"@salesforce/core@^3.24.0", "@salesforce/core@^3.33.6", "@salesforce/core@^3.34.6", "@salesforce/core@^3.34.8", "@salesforce/core@^3.36.0", "@salesforce/core@^3.36.1", "@salesforce/core@^3.36.2":
+"@salesforce/core@^3.24.0", "@salesforce/core@^3.34.6", "@salesforce/core@^3.34.8", "@salesforce/core@^3.36.0", "@salesforce/core@^3.36.1", "@salesforce/core@^3.36.2":
   version "3.36.2"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-3.36.2.tgz#135fa2fb858da6245b9ecff1e7819aeaeead5150"
   integrity sha512-IS1rR6Y0tMJYx/+TOAUQ9Gs+Vtum0MHLGfodT7ZJMQZQHEp1S4o0BJ8676uq5sASAnVL64GA+Et/LWCCOWWEuw==
@@ -1274,10 +1274,10 @@
     handlebars "^4.7.7"
     tslib "^2"
 
-"@salesforce/plugin-functions@^1.21.6":
-  version "1.21.9"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.21.9.tgz#f45a2b111872cbd86c1c33fb632c98c27e99b65f"
-  integrity sha512-G4j3QjfK06X0wTh67OGrTU/n6eD8WozZRob6gCNSSrOWJ2H+tpGdsKAaVTwB5ENLytBXrChzPXTcR5LzeLtV6g==
+"@salesforce/plugin-functions@^1.21.10":
+  version "1.21.10"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-functions/-/plugin-functions-1.21.10.tgz#745a31563d06325eaeeac739a3f114de92590c76"
+  integrity sha512-ugoV39gs7ndFtjjuafK0PdwC0BpbhliBmm4EiXXUuRbOweiAk2y2qmm84EZpxhIetkxhUsgdLNmUp/DJlbRP3g==
   dependencies:
     "@heroku-cli/color" "^1.1.16"
     "@heroku-cli/schema" "^1.0.25"
@@ -1286,7 +1286,7 @@
     "@heroku/functions-core" "^0.7.0"
     "@heroku/project-descriptor" "0.0.6"
     "@oclif/core" "^2.8.0"
-    "@salesforce/core" "^3.33.6"
+    "@salesforce/core" "^3.36.2"
     "@salesforce/sf-plugins-core" "^2.0.1"
     "@salesforce/ts-types" "^1.7.3"
     axios "^0.27.2"
