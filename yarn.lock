@@ -206,7 +206,7 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@commitlint/cli@^17.1.2", "@commitlint/cli@^17.6.3":
+"@commitlint/cli@^17.1.2":
   version "17.6.3"
   resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-17.6.3.tgz#a02194a2bb6efe4e681eda2addd072a8d02c9497"
   integrity sha512-ItSz2fd4F+CujgIbQOfNNerDF1eFlsBGEfp9QcCb1kxTYMuKTYZzA6Nu1YRRrIaaWwe2E7awUGpIMrPoZkOG3A==
@@ -222,7 +222,7 @@
     resolve-global "1.0.0"
     yargs "^17.0.0"
 
-"@commitlint/config-conventional@^17.1.0", "@commitlint/config-conventional@^17.2.0":
+"@commitlint/config-conventional@^17.1.0":
   version "17.6.3"
   resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-17.6.3.tgz#21f5835235493e386effeaa98b898124230b1000"
   integrity sha512-bLyHEjjRWqlLQWIgYFHmUPbEFMOOLXeF3QbUinDIJev/u9e769tkoTH9YPknEywiuIrAgZaVo+OfzAIsJP0fsw==
@@ -1076,15 +1076,13 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@salesforce/apex-node@^1.6.0", "@salesforce/apex-node@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-1.6.1.tgz#ca01b974e3ee87f31f100c15e9185b1655be87db"
-  integrity sha512-Jx+mD9l8/OpcsVxmgcIPVtN+41RMlGzNehZCwC0irucKFpAi7kKbwMyFo4LXdYZUFg28lFw1WlghfzEwfuJ3aA==
+"@salesforce/apex-node@^1.6.0", "@salesforce/apex-node@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-1.6.2.tgz#ea53c01994994288dcab362548ddda36e3127bbc"
+  integrity sha512-EeBdfkVd6nA6MK8gdkNgk+aVuoxc8KzQvMIBzP1hBYNP0SDGOmq3bSINV3cyiAGCuBgt4VbYTznb/+iPdWRr/w==
   dependencies:
-    "@commitlint/config-conventional" "^17.2.0"
-    "@salesforce/core" "^3.34.6"
+    "@salesforce/core" "^4.0.1"
     "@types/istanbul-reports" "^3.0.1"
-    commitlint "^17.2.0"
     faye "1.4.0"
     glob "^8.0.3"
     istanbul-lib-coverage "^3.2.0"
@@ -3221,14 +3219,6 @@ comment-parser@1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/comment-parser/-/comment-parser-1.3.1.tgz#3d7ea3adaf9345594aedee6563f422348f165c1b"
   integrity sha512-B52sN2VNghyq5ofvUsqZjmk6YkihBX5vMSChmSK9v4ShjKf3Vk5Xcmgpw4o+iIgtrnM/u5FiMpz9VKb8lpBveA==
-
-commitlint@^17.2.0:
-  version "17.6.3"
-  resolved "https://registry.yarnpkg.com/commitlint/-/commitlint-17.6.3.tgz#4f49c76594db7452310036e34b185bf0300a91c7"
-  integrity sha512-0S6j3gKZyLmY4F/YchW7lqXiBeplFBKJqXcrOdxhzJdsZdqiPZxqsN7zq++Ovc4iMLnX65W4bJB7YKalYfXesw==
-  dependencies:
-    "@commitlint/cli" "^17.6.3"
-    "@commitlint/types" "^17.4.4"
 
 common-ancestor-path@^1.0.1:
   version "1.0.1"
