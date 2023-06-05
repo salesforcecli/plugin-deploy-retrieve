@@ -1,3 +1,12 @@
+## [1.11.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.2...1.11.3) (2023-06-05)
+
+
+### Bug Fixes
+
+* display correct api version ([bc391c9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/bc391c96038a8d979137ccfbc2ee3b93399d18a5))
+
+
+
 ## [1.11.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.1...1.11.2) (2023-06-03)
 
 
