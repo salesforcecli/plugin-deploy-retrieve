@@ -58,6 +58,25 @@ describe('deployResultFormatter', () => {
         });
       });
 
+      it('will write test output when in json mode', async () => {
+        const deployResult = getDeployResult('passedTest');
+        const formatter = new DeployResultFormatter(deployResult, {
+          junit: true,
+          'coverage-formatters': ['text', 'cobertura'],
+        });
+        // private method stub
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const coverageReportStub = sandbox.stub(formatter, 'createCoverageReport');
+        // private method stub
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const junitStub = sandbox.stub(formatter, 'createJunitResults');
+        formatter.getJson();
+        expect(coverageReportStub.calledOnce).to.equal(true);
+        expect(junitStub.calledOnce).to.equal(true);
+      });
+
       it('teamcity', () => {
         const result = getCoverageFormattersOptions(['teamcity']);
         expect(result).to.deep.equal({

@@ -68,6 +68,15 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
   }
 
   public getJson(): DeployResultJson {
+    // only generate reports if test results are presented
+    if (this.result.response?.numberTestsTotal) {
+      if (this.coverageOptions.reportFormats?.length) {
+        this.createCoverageReport('no-map');
+      }
+      if (this.junit) {
+        this.createJunitResults();
+      }
+    }
     if (this.verbosity === 'concise') {
       return {
         ...this.result.response,
@@ -81,7 +90,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       return {
         ...this.result.response,
         files: this.absoluteFiles,
-        ...(this.result.replacements.size
+        ...(this.result.replacements?.size
           ? {
               replacements: Object.fromEntries(this.result.replacements),
             }
