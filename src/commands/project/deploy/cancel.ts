@@ -35,6 +35,7 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
+      length: 'both',
       description: messages.getMessage('flags.job-id.description'),
       summary: messages.getMessage('flags.job-id.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],

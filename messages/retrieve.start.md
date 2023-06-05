@@ -180,3 +180,7 @@ Directory root for the retrieved source files.
 # retrieveTargetDirOverlapsPackage
 
 The retrieve target directory [%s] overlaps one of your package directories. Specify a different retrieve target directory and try again.
+
+# apiVersionMsgDetailed
+
+%s v%s metadata from %s using the v%s SOAP API

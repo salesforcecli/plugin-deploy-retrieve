@@ -13,7 +13,6 @@ import { Duration } from '@salesforce/kit';
 import { buildComponentSet, DeployOptions, determineExitCode, poll, resolveApi } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { getVersionMessage } from '../../../utils/output';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployResultJson } from '../../../utils/types';
@@ -42,6 +41,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
+      length: 'both',
       description: messages.getMessage('flags.job-id.description'),
       summary: messages.getMessage('flags.job-id.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
@@ -92,7 +92,6 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     await org.getConnection(flags['api-version']).metadata.deployRecentValidation({ id: jobId, rest: api === 'REST' });
     const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
-    this.log(getVersionMessage('Deploying', componentSet, api));
     this.log(`Deploy ID: ${bold(jobId)}`);
 
     if (flags.async) {

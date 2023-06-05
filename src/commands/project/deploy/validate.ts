@@ -5,10 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { bold } from 'chalk';
-import { EnvironmentVariable, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
+import { DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { getVersionMessage } from '../../../utils/output';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
@@ -20,6 +19,7 @@ import { fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 const EXACTLY_ONE_FLAGS = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 
@@ -118,12 +118,27 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
 
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, api] = await Promise.all([this.parse(DeployMetadataValidate), resolveApi(this.configAggregator)]);
-    const { deploy, componentSet } = await executeDeploy(
+    const username = flags['target-org'].getUsername();
+
+    // eslint-disable-next-line @typescript-eslint/require-await
+    Lifecycle.getInstance().on('apiVersionDeploy', async (apiData: DeployVersionData) => {
+      this.log(
+        deployMessages.getMessage('apiVersionMsgDetailed', [
+          'Validating Deployment of',
+          apiData.manifestVersion,
+          username,
+          apiData.apiVersion,
+          apiData.webService,
+        ])
+      );
+    });
+
+    const { deploy } = await executeDeploy(
       {
         ...flags,
         'ignore-conflicts': true,
         'dry-run': true,
-        'target-org': flags['target-org'].getUsername(),
+        'target-org': username,
         api,
       },
       this.config.bin,
@@ -131,8 +146,6 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       undefined,
       true
     );
-
-    this.log(getVersionMessage('Validating Deployment', componentSet, api));
 
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');

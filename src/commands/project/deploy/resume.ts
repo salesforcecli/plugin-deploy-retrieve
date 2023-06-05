@@ -9,7 +9,6 @@ import { bold } from 'chalk';
 import { EnvironmentVariable, Messages, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
-import { getVersionMessage } from '../../../utils/output';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson } from '../../../utils/types';
@@ -37,6 +36,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
+      length: 'both',
       description: messages.getMessage('flags.job-id.description'),
       summary: messages.getMessage('flags.job-id.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
@@ -85,7 +85,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     }
 
     const wait = flags.wait ?? Duration.minutes(deployOpts.wait);
-    const { deploy, componentSet } = await executeDeploy(
+    const { deploy } = await executeDeploy(
       // there will always be conflicts on a resume if anything deployed--the changes on the server are not synced to local
       { ...deployOpts, wait, 'dry-run': false, 'ignore-conflicts': true },
       this.config.bin,
@@ -93,7 +93,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       jobId
     );
 
-    this.log(getVersionMessage('Resuming Deployment', componentSet, deployOpts.api));
     this.log(`Deploy ID: ${bold(jobId)}`);
     new DeployProgress(deploy, this.jsonEnabled()).start();
 

@@ -9,11 +9,12 @@ import { rm } from 'fs/promises';
 import { dirname, join, resolve } from 'path';
 
 import * as fs from 'fs';
-import { EnvironmentVariable, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
+import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
 import {
   RetrieveResult,
   ComponentSetBuilder,
   RetrieveSetOptions,
+  RetrieveVersionData,
   ComponentSet,
   FileResponse,
   MetadataApiRetrieveStatus,
@@ -161,6 +162,18 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const format: Format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
+    // eslint-disable-next-line @typescript-eslint/require-await
+    Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) => {
+      this.log(
+        messages.getMessage('apiVersionMsgDetailed', [
+          'Retrieving',
+          apiData.manifestVersion,
+          flags['target-org'].getUsername(),
+          apiData.apiVersion,
+        ])
+      );
+    });
+
     this.spinner.start(messages.getMessage('spinner.start'));
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
@@ -190,7 +203,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         throw error;
       });
 
-      await retrieve.start();
       this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
     }
 
