@@ -18,6 +18,7 @@ export const writeConflictTable = (conflicts: ConflictResponse[]): void => {
       fullName: { header: 'FULL NAME' },
       type: { header: 'TYPE' },
       filePath: { header: 'FILE PATH' },
-    }
+    },
+    { 'no-truncate': true }
   );
 };

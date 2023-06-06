@@ -219,6 +219,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
         },
         {
           title: tableHeader('Metadata Replacements'),
+          'no-truncate': true,
         }
       );
     }
@@ -236,7 +237,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       filePath: { header: 'Path' },
     };
     const title = this.result.response.checkOnly ? 'Validated Source' : 'Deployed Source';
-    const options = { title: tableHeader(title) };
+    const options = { title: tableHeader(title), 'no-truncate': true };
     ux.log();
 
     ux.table(
@@ -268,7 +269,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       fullName: { header: 'Name' },
       error: { header: 'Problem' },
     };
-    const options = { title: error(`Component Failures [${failures.length}]`) };
+    const options = { title: error(`Component Failures [${failures.length}]`), 'no-truncate': true };
     ux.log();
     ux.table(
       failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.error })),
@@ -288,7 +289,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       filePath: { header: 'Path' },
     };
 
-    const options = { title: tableHeader('Deleted Source') };
+    const options = { title: tableHeader('Deleted Source'), 'no-truncate': true };
     ux.log();
 
     ux.table(getFileResponseSuccessProps(deletions), columns, options);

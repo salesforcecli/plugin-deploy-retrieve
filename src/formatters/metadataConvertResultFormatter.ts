@@ -52,7 +52,8 @@ export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJso
           fullName: { header: 'FULL NAME' },
           type: { header: 'TYPE' },
           filePath: { header: 'PROJECT PATH' },
-        }
+        },
+        { 'no-truncate': true }
       );
     } else {
       ux.log('No metadata found to convert');
