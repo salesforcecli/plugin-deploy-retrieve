@@ -210,7 +210,7 @@ export default class Deploy extends SfCommand<void> {
         errorMessage: failure.error.message,
       }));
       this.styledHeader(messages.getMessage('error.initialization.title'));
-      this.table(failureData, columns);
+      this.table(failureData, columns, { 'no-truncate': true });
       const err = messages.createError('error.initialization');
       err.data = hookResults.failures;
       throw err;

@@ -359,11 +359,15 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       ux.log();
       ux.log(tableHeader('Apex Code Coverage'));
 
-      ux.table(coverage.map(coverageOutput), {
-        name: { header: 'Name' },
-        numLocations: { header: '% Covered' },
-        lineNotCovered: { header: 'Uncovered Lines' },
-      });
+      ux.table(
+        coverage.map(coverageOutput),
+        {
+          name: { header: 'Name' },
+          numLocations: { header: '% Covered' },
+          lineNotCovered: { header: 'Uncovered Lines' },
+        },
+        { 'no-truncate': true }
+      );
     }
   }
 
