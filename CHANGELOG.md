@@ -1,3 +1,12 @@
+## [1.11.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.3...1.11.4) (2023-06-06)
+
+
+### Bug Fixes
+
+* respect UT flags when running with json ([#650](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/650)) ([12b002c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/12b002c24827912a555409433fe4545e43e244a0))
+
+
+
 ## [1.11.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.2...1.11.3) (2023-06-05)
 
 
