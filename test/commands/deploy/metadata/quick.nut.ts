@@ -6,8 +6,10 @@
  */
 
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { assert } from 'chai';
+import { assert, config } from 'chai';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { DeployResultJson } from '../../../../src/utils/types';
+config.truncateThreshold = 0;
 
 describe('deploy metadata quick NUTs', () => {
   let testkit: SourceTestkit;
@@ -25,49 +27,59 @@ describe('deploy metadata quick NUTs', () => {
 
   describe('--use-most-recent', () => {
     it('should deploy previously validated deployment', async () => {
-      const validation = await testkit.execute<DeployResultJson>('deploy:metadata:validate', {
+      const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
         args: '--source-dir force-app',
         json: true,
         exitCode: 0,
       });
       assert(validation);
-      await testkit.expect.filesToBeDeployedViaResult(
-        ['force-app/**/*'],
-        ['force-app/test/**/*'],
-        validation.result.files
-      );
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
 
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:quick', {
+      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
         args: '--use-most-recent',
         json: true,
         exitCode: 0,
       });
       assert(deploy);
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+    });
+    it('should deploy previously validated deployment with metadata format', async () => {
+      execCmd('project:convert:source --source-dir force-app --output-dir metadata');
+      const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+        args: '--metadata-dir metadata',
+        json: true,
+        exitCode: 0,
+      });
+      assert(validation);
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+
+      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+        args: '--use-most-recent',
+        json: true,
+        exitCode: 0,
+      });
+      assert(deploy);
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
     });
   });
 
   describe('--job-id', () => {
     it('should deploy previously validated deployment', async () => {
-      const validation = await testkit.execute<DeployResultJson>('deploy:metadata:validate', {
+      const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
         args: '--source-dir force-app',
         json: true,
         exitCode: 0,
       });
       assert(validation);
-      await testkit.expect.filesToBeDeployedViaResult(
-        ['force-app/**/*'],
-        ['force-app/test/**/*'],
-        validation.result.files
-      );
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
 
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:quick', {
+      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
         args: `--job-id ${validation.result.id}`,
         json: true,
         exitCode: 0,
       });
       assert(deploy);
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
     });
 
     it('should fail to deploy previously deployed deployment', async () => {
@@ -77,7 +89,7 @@ describe('deploy metadata quick NUTs', () => {
         exitCode: 0,
       });
       assert(first);
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:quick', {
+      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
         args: `--job-id ${first.result.id}`,
         json: true,
         exitCode: 1,
