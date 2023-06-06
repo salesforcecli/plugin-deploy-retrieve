@@ -241,7 +241,7 @@
       "output": []
     },
     "test:command-reference": {
-      "command": "\"./bin/dev\" commandreference:generate --erroronwarnings",
+      "command": "\"./bin/dev\" commandreference:generate --error-on-warnings",
       "files": [
         "src/**/*.ts",
         "messages/**",
