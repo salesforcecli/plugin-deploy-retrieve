@@ -150,6 +150,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected retrieveResult!: RetrieveResult;
 
+  // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
     let resolvedTargetDir: string | undefined;
@@ -222,9 +223,15 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         })
       : new RetrieveResultFormatter(this.retrieveResult, flags['package-name'], fileResponsesFromDelete);
     if (!this.jsonEnabled()) {
-      // in the case where we didn't retrieve anything, check if we have any deletes
       if (this.retrieveResult.response.status === 'Succeeded' || fileResponsesFromDelete.length !== 0) {
         await formatter.display();
+      } // in the case where we didn't retrieve anything, check if we have any deletes
+      else if (
+        componentSetFromNonDeletes.size === 0 &&
+        fileResponsesFromDelete.length === 0 &&
+        (flags.manifest || flags.metadata || flags['source-dir'])
+      ) {
+        throw new SfError('No metadata retrieved');
       } else {
         throw new SfError(
           getString(this.retrieveResult.response, 'errorMessage', this.retrieveResult.response.status),
