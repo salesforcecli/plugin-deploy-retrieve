@@ -194,6 +194,7 @@ export const getDeployResponse = (
         },
       ];
       response.details.runTestResult.numFailures = '0';
+      response.numberTestsTotal = 1;
     }
     response.runTestsEnabled = true;
     response.numberTestErrors = 0;
