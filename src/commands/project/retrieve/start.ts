@@ -189,7 +189,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
-    if (componentSetFromNonDeletes.size !== 0) {
+    if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
       this.spinner.status = messages.getMessage('spinner.polling');
 
@@ -227,7 +227,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       if (this.retrieveResult.response.status === 'Succeeded' || fileResponsesFromDelete.length !== 0) {
         await formatter.display();
       } else if (componentSetFromNonDeletes.size === 0 && fileResponsesFromDelete.length === 0) {
-        if (flags.manifest || flags.metadata || flags['source-dir']) {
+        if (format === 'source' && (flags.manifest || flags.metadata || flags['source-dir'] || flags['package-name'])) {
           // you said to retrieve stuff, but there wasn't anything
           throw new SfError('No metadata retrieved');
         } else {
@@ -327,7 +327,12 @@ const buildRetrieveAndDeleteTargets = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
   format: Format
 ): Promise<RetrieveAndDeleteTargets> => {
-  const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'] && !flags['target-metadata-dir'];
+  const isChanges =
+    !flags['source-dir'] &&
+    !flags['manifest'] &&
+    !flags['metadata'] &&
+    !flags['target-metadata-dir'] &&
+    !flags['package-name']?.length;
 
   if (isChanges) {
     const stl = await SourceTracking.create({
