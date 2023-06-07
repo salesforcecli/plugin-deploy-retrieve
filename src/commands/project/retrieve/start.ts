@@ -19,7 +19,7 @@ import {
   FileResponse,
   MetadataApiRetrieveStatus,
 } from '@salesforce/source-deploy-retrieve';
-import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
+import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { Duration } from '@salesforce/kit';
@@ -221,19 +221,20 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           'zip-file-name': zipFileName,
           unzip: flags.unzip,
         })
-      : new RetrieveResultFormatter(this.retrieveResult, flags['package-name'], fileResponsesFromDelete);
+      : new RetrieveResultFormatter(
+          new Ux({ jsonEnabled: this.jsonEnabled() }),
+          this.retrieveResult,
+          flags['package-name'],
+          fileResponsesFromDelete
+        );
     if (!this.jsonEnabled()) {
       // in the case where we didn't retrieve anything, check if we have any deletes
-      if (this.retrieveResult.response.status === 'Succeeded' || fileResponsesFromDelete.length !== 0) {
-        await formatter.display();
-      } else if (
-        componentSetFromNonDeletes.size === 0 &&
-        fileResponsesFromDelete.length === 0 &&
-        format === 'source' &&
-        !(flags.manifest || flags.metadata || flags['source-dir'] || flags['package-name'])
+      if (
+        !this.retrieveResult.response.status ||
+        this.retrieveResult.response.status === 'Succeeded' ||
+        fileResponsesFromDelete.length !== 0
       ) {
-        // it's ok to have no retrieveResult when it's "pull changes" and there are no non-ignored changes
-        this.info('Nothing to retrieve');
+        await formatter.display();
       } else {
         throw new SfError(
           getString(this.retrieveResult.response, 'errorMessage', this.retrieveResult.response.status),
