@@ -78,6 +78,7 @@ export type DeployResponseType =
   | 'failedTest'
   | 'passedTest'
   | 'passedAndFailedTest'
+  | 'codeCoverageWarning'
   | 'partialSuccessSync';
 
 export const getDeployResponse = (
@@ -178,6 +179,52 @@ export const getDeployResponse = (
         },
       ];
       response.details.runTestResult.failures = [];
+      response.details.runTestResult.codeCoverage = [
+        {
+          id: 'ChangePasswordController',
+          type: 'ApexClass',
+          name: 'ChangePasswordController',
+          numLocations: '1',
+          locationsNotCovered: {
+            column: '54',
+            line: '2',
+            numExecutions: '1',
+            time: '2',
+          },
+          numLocationsNotCovered: '5',
+        },
+      ];
+      response.details.runTestResult.numFailures = '0';
+      response.numberTestsTotal = 1;
+    }
+    response.runTestsEnabled = true;
+    response.numberTestErrors = 0;
+  }
+  if (type === 'codeCoverageWarning') {
+    response.status = RequestStatus.Failed;
+    response.success = false;
+    response.details.componentFailures = cloneJson(baseDeployResponse.details.componentSuccesses[1]) as DeployMessage;
+    response.details.componentSuccesses = cloneJson(baseDeployResponse.details.componentSuccesses[0]) as DeployMessage;
+    response.details.componentFailures.success = 'false';
+    delete response.details.componentFailures.id;
+    if (response.details.runTestResult) {
+      response.details.runTestResult.successes = [
+        {
+          name: 'ChangePasswordController',
+          methodName: 'testMethod',
+          id: 'testId',
+          time: 'testTime',
+        },
+      ];
+      response.details.runTestResult.failures = [];
+      response.details.runTestResult.codeCoverageWarnings = [
+        {
+          id: response.id,
+          namespace: '',
+          message:
+            'Average test coverage across all Apex Classes and Triggers is 25%, at least 75% test coverage is required.',
+        },
+      ];
       response.details.runTestResult.codeCoverage = [
         {
           id: 'ChangePasswordController',
