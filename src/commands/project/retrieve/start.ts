@@ -185,7 +185,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     this.spinner.status = messages.getMessage('spinner.sending', [
       componentSetFromNonDeletes.sourceApiVersion ??
         componentSetFromNonDeletes.apiVersion ??
-        flags['target-org'].getConnection().getApiVersion(),
+        flags['target-org'].getConnection().getApiVersion(), // eslint-disable-line sf-plugin/get-connection-with-version
     ]);
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
