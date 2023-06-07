@@ -180,6 +180,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
         [
           ...ensureArray(result.response.details.runTestResult?.codeCoverageWarnings).map((warning) => warning.message),
           result.response.errorMessage,
+          result.response.numberComponentErrors ? `${result.response.numberComponentErrors} component error(s)` : '',
         ].join(os.EOL),
       ]);
     }
