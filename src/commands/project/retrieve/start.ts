@@ -188,7 +188,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
-    if (componentSetFromNonDeletes.size !== 0) {
+    if (componentSetFromNonDeletes.size !== 0 || flags['package-name']) {
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
       this.spinner.status = messages.getMessage('spinner.polling');
 
@@ -318,7 +318,12 @@ const buildRetrieveAndDeleteTargets = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
   format: Format
 ): Promise<RetrieveAndDeleteTargets> => {
-  const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'] && !flags['target-metadata-dir'];
+  const isChanges =
+    !flags['source-dir'] &&
+    !flags['manifest'] &&
+    !flags['metadata'] &&
+    !flags['target-metadata-dir'] &&
+    !flags['package-name'];
 
   if (isChanges) {
     const stl = await SourceTracking.create({

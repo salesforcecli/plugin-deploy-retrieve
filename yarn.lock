@@ -1398,10 +1398,10 @@
     proxy-from-env "^1.1.0"
     unzipper "0.10.14"
 
-"@salesforce/source-testkit@^2.0.59":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.1.1.tgz#2087a69dbf6bcdeb74b0a406633fe29dcc7ac83f"
-  integrity sha512-ehygWr+l/iY3QPwmWDfSLCrTlFQCEjSAguKJfQGySc21N6miHjZ6xg2vgtTEkdG3ijNszYW5Yjp5wga19zYi5A==
+"@salesforce/source-testkit@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.1.2.tgz#6aef83ad0c10f9270664846acc9b372655a015e1"
+  integrity sha512-iPeoqIP8ZwltqUWd/iugVOIayFGgFPagXCVtIQWdotF8O5Tilb8NLRVUKyP+n+L2vGQTs/UBWj4x5BjW0QX7qQ==
   dependencies:
     "@salesforce/cli-plugins-testkit" "^4.0.1"
     "@salesforce/core" "^4.1.0"
