@@ -226,14 +226,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       // in the case where we didn't retrieve anything, check if we have any deletes
       if (this.retrieveResult.response.status === 'Succeeded' || fileResponsesFromDelete.length !== 0) {
         await formatter.display();
-      } else if (componentSetFromNonDeletes.size === 0 && fileResponsesFromDelete.length === 0) {
-        if (format === 'source' && (flags.manifest || flags.metadata || flags['source-dir'] || flags['package-name'])) {
-          // you said to retrieve stuff, but there wasn't anything
-          throw new SfError('No metadata retrieved');
-        } else {
-          // it's ok to have no results when it's "pull changes"
-          this.info('Nothing to retrieve');
-        }
+      } else if (
+        componentSetFromNonDeletes.size === 0 &&
+        fileResponsesFromDelete.length === 0 &&
+        format === 'source' &&
+        !(flags.manifest || flags.metadata || flags['source-dir'] || flags['package-name'])
+      ) {
+        // it's ok to have no retrieveResult when it's "pull changes" and there are no non-ignored changes
+        this.info('Nothing to retrieve');
       } else {
         throw new SfError(
           getString(this.retrieveResult.response, 'errorMessage', this.retrieveResult.response.status),

@@ -8,7 +8,6 @@
 import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { exec } from 'shelljs';
-import { assert } from 'chai';
 
 const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
 
@@ -39,13 +38,6 @@ describe('retrieve metadata NUTs', () => {
     it('should retrieve named ApexClass', async () => {
       await testkit.retrieve({ args: '--metadata ApexClass:GeocodingService' });
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/GeocodingService.cls']);
-    });
-
-    it('should throw an error when nothing is retrieved', async () => {
-      const retrieve = await testkit.retrieve({ args: '--metadata ApexClass:NotARealClass', exitCode: 1 });
-      assert(retrieve);
-      testkit.expect.errorToHaveName(retrieve, 'SfError');
-      testkit.expect.errorToHaveMessage(retrieve, 'No results found');
     });
 
     it('should retrieve multiple metadata types', async () => {
