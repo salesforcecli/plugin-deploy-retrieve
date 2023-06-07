@@ -183,7 +183,9 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName, resolvedTargetDir);
 
     this.spinner.status = messages.getMessage('spinner.sending', [
-      componentSetFromNonDeletes.sourceApiVersion ?? componentSetFromNonDeletes.apiVersion,
+      componentSetFromNonDeletes.sourceApiVersion ??
+        componentSetFromNonDeletes.apiVersion ??
+        flags['target-org'].getConnection().getApiVersion(),
     ]);
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
