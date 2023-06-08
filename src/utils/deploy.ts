@@ -219,10 +219,10 @@ export async function cancelDeployAsync(opts: Partial<DeployOptions>, id: string
   return { id: deploy.id };
 }
 
-export async function poll(org: Org, id: string, wait: Duration, componentSet: ComponentSet): Promise<DeployResult> {
+export async function poll(org: Org, id: string, wait: Duration, componentSet?: ComponentSet): Promise<DeployResult> {
   const report = async (): Promise<DeployResult> => {
     const res = await org.getConnection().metadata.checkDeployStatus(id, true);
-    const deployStatus = res as unknown as MetadataApiDeployStatus;
+    const deployStatus = res as MetadataApiDeployStatus;
     return new DeployResult(deployStatus, componentSet);
   };
 
@@ -238,7 +238,7 @@ export async function poll(org: Org, id: string, wait: Duration, componentSet: C
     },
   };
   const pollingClient = await PollingClient.create(opts);
-  return pollingClient.subscribe() as unknown as Promise<DeployResult>;
+  return pollingClient.subscribe();
 }
 
 export function determineExitCode(result: DeployResult, async = false): number {
