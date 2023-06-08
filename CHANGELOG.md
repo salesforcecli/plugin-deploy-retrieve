@@ -1,3 +1,12 @@
+## [1.11.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.7...1.11.8) (2023-06-08)
+
+
+### Bug Fixes
+
+* warn when code coverage doesn't meet requirement ([3d5a9f0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3d5a9f039158800074fbd4e9a983d0fe6611f22c))
+
+
+
 ## [1.11.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.6...1.11.7) (2023-06-07)
 
 
