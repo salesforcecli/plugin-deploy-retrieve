@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import { ux } from '@oclif/core';
 import { dim, underline, bold } from 'chalk';
 import {
+  CodeCoverageWarnings,
   DeployResult,
   Failures,
   FileResponse,
@@ -314,8 +315,10 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     ux.log(`Total: ${this.result.response.numberTestsTotal ?? 0}`);
     const time = this.result.response.details.runTestResult?.totalTime ?? 0;
     if (time) ux.log(`Time: ${time}`);
-    ensureArray(this.result.response.details.runTestResult?.codeCoverageWarnings).map((warning) =>
-      ux.warn(warning.message)
+    // I think the type might be wrong in SDR
+    ensureArray(this.result.response.details.runTestResult?.codeCoverageWarnings).map(
+      (warning: CodeCoverageWarnings & { name?: string }) =>
+        ux.warn(`${warning.name ? `${warning.name} - ` : ''}${warning.message}`)
     );
   }
 

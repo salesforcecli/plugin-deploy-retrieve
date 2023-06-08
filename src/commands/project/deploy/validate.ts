@@ -7,7 +7,7 @@
 import * as os from 'os';
 import { bold } from 'chalk';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { CodeCoverageWarnings, DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
@@ -178,10 +178,16 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       throw messages.createError('error.FailedValidation', [
         deploy.id,
         [
-          ...ensureArray(result.response.details.runTestResult?.codeCoverageWarnings).map((warning) => warning.message),
+          // I think the type might be wrong in SDR
+          ...ensureArray(result.response.details.runTestResult?.codeCoverageWarnings).map(
+            (warning: CodeCoverageWarnings & { name?: string }) =>
+              `${warning.name ? `${warning.name} - ` : ''}${warning.message}`
+          ),
           result.response.errorMessage,
           result.response.numberComponentErrors ? `${result.response.numberComponentErrors} component error(s)` : '',
-        ].join(os.EOL),
+        ]
+          .join(os.EOL)
+          .trim(),
       ]);
     }
 
