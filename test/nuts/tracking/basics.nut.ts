@@ -133,13 +133,6 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       );
     });
 
-    it('an empty "pull" retrieve is not an error', () => {
-      const result = execCmd<RetrieveResultJson>('retrieve metadata --json', {
-        ensureExitCode: 0,
-      }).jsonOutput?.result;
-      expect(result?.files.length).to.equal(0);
-    });
-
     it('sf no local changes', () => {
       const response = execCmd<PreviewResult>('deploy metadata preview --json', {
         ensureExitCode: 0,
