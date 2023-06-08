@@ -19,7 +19,7 @@ import {
   FileResponse,
   MetadataApiRetrieveStatus,
 } from '@salesforce/source-deploy-retrieve';
-import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
+import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { Duration } from '@salesforce/kit';
@@ -150,6 +150,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected retrieveResult!: RetrieveResult;
 
+  // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
     let resolvedTargetDir: string | undefined;
@@ -186,7 +187,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
-    if (componentSetFromNonDeletes.size !== 0) {
+    if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
       this.spinner.status = messages.getMessage('spinner.polling');
 
@@ -218,10 +219,19 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           'zip-file-name': zipFileName,
           unzip: flags.unzip,
         })
-      : new RetrieveResultFormatter(this.retrieveResult, flags['package-name'], fileResponsesFromDelete);
+      : new RetrieveResultFormatter(
+          new Ux({ jsonEnabled: this.jsonEnabled() }),
+          this.retrieveResult,
+          flags['package-name'],
+          fileResponsesFromDelete
+        );
     if (!this.jsonEnabled()) {
       // in the case where we didn't retrieve anything, check if we have any deletes
-      if (this.retrieveResult.response.status === 'Succeeded' || fileResponsesFromDelete.length !== 0) {
+      if (
+        !this.retrieveResult.response.status ||
+        this.retrieveResult.response.status === 'Succeeded' ||
+        fileResponsesFromDelete.length !== 0
+      ) {
         await formatter.display();
       } else {
         throw new SfError(
@@ -316,7 +326,12 @@ const buildRetrieveAndDeleteTargets = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
   format: Format
 ): Promise<RetrieveAndDeleteTargets> => {
-  const isChanges = !flags['source-dir'] && !flags['manifest'] && !flags['metadata'] && !flags['target-metadata-dir'];
+  const isChanges =
+    !flags['source-dir'] &&
+    !flags['manifest'] &&
+    !flags['metadata'] &&
+    !flags['target-metadata-dir'] &&
+    !flags['package-name']?.length;
 
   if (isChanges) {
     const stl = await SourceTracking.create({

@@ -8,7 +8,7 @@ Conflicts [%s]. Run the command with the --ignore-conflicts flag to override.
 
 # ignored.none
 
-No files were ignored. Update your your .forceignore file if you want to ignore certain files.
+No files were ignored. Update your .forceignore file if you want to ignore certain files.
 
 # ignored.header
 
