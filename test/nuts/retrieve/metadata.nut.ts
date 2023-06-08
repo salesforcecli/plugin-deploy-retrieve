@@ -35,6 +35,11 @@ describe('retrieve metadata NUTs', () => {
   });
 
   describe('--metadata flag', () => {
+    it('should retrieve ApexClass', async () => {
+      await testkit.retrieve({ args: '--metadata ApexClass' });
+      await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/*']);
+    });
+
     it('should retrieve named ApexClass', async () => {
       await testkit.retrieve({ args: '--metadata ApexClass:GeocodingService' });
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/GeocodingService.cls']);
