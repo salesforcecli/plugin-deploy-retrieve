@@ -1,3 +1,14 @@
+## [1.11.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.8...1.11.9) (2023-06-08)
+
+
+### Bug Fixes
+
+* remove API version from spinner ([67c62a8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/67c62a869bba9232fc6449a917f6212728080472))
+* show valid API version during retrieve ([291cacc](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/291caccf3c37bc76565e651fe3bac3d84cf4903b))
+* show valid API version during retrieve ([983af78](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/983af7889af8b48fcaf77b28f8b34c761b604f27))
+
+
+
 ## [1.11.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.7...1.11.8) (2023-06-08)
 
 
