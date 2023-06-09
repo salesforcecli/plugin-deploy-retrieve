@@ -39,8 +39,9 @@ import { DeployResultFormatter } from '../../../formatters/deployResultFormatter
 import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployCache } from '../../../utils/deployCache';
-import { testLevelFlag } from '../../../utils/flags';
+import { testLevelFlag, testsFlag } from '../../../utils/flags';
 const fsPromises = fs.promises;
+const testFlags = 'Test';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
@@ -71,12 +72,16 @@ export class Source extends SfCommand<DeleteSourceJson> {
       description: messages.getMessage('flags.wait.description'),
       summary: messages.getMessage('flags.wait.summary'),
     }),
+    tests: {
+      ...testsFlag,
+      helpGroup: testFlags,
+      char: undefined,
+    },
     'test-level': testLevelFlag({
       aliases: ['testlevel'],
       deprecateAliases: true,
       description: messages.getMessage('flags.test-Level.description'),
       summary: messages.getMessage('flags.test-Level.summary'),
-      options: ['NoTestRun', 'RunLocalTests', 'RunAllTestsInOrg'],
     }),
     'no-prompt': Flags.boolean({
       char: 'r',
@@ -226,6 +231,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       apiOptions: {
         rest: this.isRest,
         checkOnly: this.flags['check-only'] ?? false,
+        ...(this.flags.tests ? { runTests: this.flags.tests } : {}),
         ...(this.flags['test-level'] ? { testLevel: this.flags['test-level'] } : {}),
       },
     });
