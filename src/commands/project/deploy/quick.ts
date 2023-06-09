@@ -10,7 +10,7 @@ import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { buildComponentSet, DeployOptions, determineExitCode, poll, resolveApi } from '../../../utils/deploy';
+import { DeployOptions, determineExitCode, poll, resolveApi } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
@@ -91,7 +91,6 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const api = await resolveApi(this.configAggregator);
 
     await org.getConnection(flags['api-version']).metadata.deployRecentValidation({ id: jobId, rest: api === 'REST' });
-    const componentSet = await buildComponentSet({ ...deployOpts, wait: flags.wait });
     this.log(`Deploy ID: ${bold(jobId)}`);
 
     if (flags.async) {
@@ -100,8 +99,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       return asyncFormatter.getJson();
     }
 
-    const result = await poll(org, jobId, flags.wait, componentSet);
-
+    const result = await poll(org, jobId, flags.wait);
     const formatter = new DeployResultFormatter(result, flags);
 
     if (!this.jsonEnabled()) formatter.display();

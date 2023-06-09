@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import { ux } from '@oclif/core';
 import { dim, underline, bold } from 'chalk';
 import {
+  CodeCoverageWarnings,
   DeployResult,
   Failures,
   FileResponse,
@@ -310,14 +311,16 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
 
     ux.log();
     ux.log(tableHeader('Test Results Summary'));
-    const passing = this.result.response.numberTestsCompleted ?? 0;
-    const failing = this.result.response.numberTestErrors ?? 0;
-    const total = this.result.response.numberTestsTotal ?? 0;
+    ux.log(`Passing: ${this.result.response.numberTestsCompleted ?? 0}`);
+    ux.log(`Failing: ${this.result.response.numberTestErrors ?? 0}`);
+    ux.log(`Total: ${this.result.response.numberTestsTotal ?? 0}`);
     const time = this.result.response.details.runTestResult?.totalTime ?? 0;
-    ux.log(`Passing: ${passing}`);
-    ux.log(`Failing: ${failing}`);
-    ux.log(`Total: ${total}`);
     if (time) ux.log(`Time: ${time}`);
+    // I think the type might be wrong in SDR
+    ensureArray(this.result.response.details.runTestResult?.codeCoverageWarnings).map(
+      (warning: CodeCoverageWarnings & { name?: string }) =>
+        ux.warn(`${warning.name ? `${warning.name} - ` : ''}${warning.message}`)
+    );
   }
 
   private displayVerboseTestSuccesses(): void {

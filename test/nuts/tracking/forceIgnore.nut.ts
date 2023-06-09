@@ -173,10 +173,18 @@ describe('forceignore changes', () => {
       const pullOutput = execCmd<RetrieveResultJson>('project:retrieve:start --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
+      // this DOES retrieve a profile modified because of the ApexClass
       expect(
         pullOutput?.files.some((result) => result.fullName === 'CreatedClass'),
         JSON.stringify(pullOutput?.files)
       ).to.equal(false);
+    });
+
+    it('exit code 0 when there are no non-ignored changes to retrieve', () => {
+      const pullOutput = execCmd<RetrieveResultJson>('project:retrieve:start --json', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(pullOutput?.files.length).to.equal(0);
     });
   });
 });

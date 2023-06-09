@@ -143,7 +143,7 @@ Preparing retrieve request
 
 # spinner.sending
 
-Sending request to org (metadata API version %s)
+Sending request to org
 
 # spinner.polling
 

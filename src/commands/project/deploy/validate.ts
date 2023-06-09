@@ -4,10 +4,12 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import * as os from 'os';
 import { bold } from 'chalk';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { CodeCoverageWarnings, DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
+import { ensureArray } from '@salesforce/kit';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
@@ -173,7 +175,20 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
       this.log(messages.getMessage('info.suggestedQuickDeploy', [this.config.bin, deploy.id]));
     } else {
-      throw messages.createError('error.FailedValidation', [deploy.id]);
+      throw messages.createError('error.FailedValidation', [
+        deploy.id,
+        [
+          // I think the type might be wrong in SDR
+          ...ensureArray(result.response.details.runTestResult?.codeCoverageWarnings).map(
+            (warning: CodeCoverageWarnings & { name?: string }) =>
+              `${warning.name ? `${warning.name} - ` : ''}${warning.message}`
+          ),
+          result.response.errorMessage,
+          result.response.numberComponentErrors ? `${result.response.numberComponentErrors} component error(s)` : '',
+        ]
+          .join(os.EOL)
+          .trim(),
+      ]);
     }
 
     return formatter.getJson();
