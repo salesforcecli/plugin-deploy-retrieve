@@ -58,6 +58,17 @@ describe('deployResultFormatter', () => {
         });
       });
 
+      it('will warn when code coverage warning present from server', () => {
+        const deployResult = getDeployResult('codeCoverageWarning');
+        const formatter = new DeployResultFormatter(deployResult, {});
+        const warnStub = sandbox.stub(ux, 'warn');
+        formatter.display();
+        expect(warnStub.callCount).to.equal(1);
+        expect(warnStub.firstCall.args[0]).to.equal(
+          'Average test coverage across all Apex Classes and Triggers is 25%, at least 75% test coverage is required.'
+        );
+      });
+
       it('will write test output when in json mode', async () => {
         const deployResult = getDeployResult('passedTest');
         const formatter = new DeployResultFormatter(deployResult, {

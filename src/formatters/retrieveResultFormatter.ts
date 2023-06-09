@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { FileResponse, RetrieveResult } from '@salesforce/source-deploy-retrieve';
 import { NamedPackageDir, SfProject } from '@salesforce/core';
 import { Formatter, isSdrSuccess, RetrieveResultJson } from '../utils/types';
@@ -14,6 +14,7 @@ import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccess
 export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   private files: FileResponse[];
   public constructor(
+    private ux: Ux,
     private result: RetrieveResult,
     private packageNames: string[] = [],
     deleteResponses: FileResponse[] = []
@@ -34,7 +35,16 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   private displaySuccesses(): void {
     const successes = sortFileResponses(asRelativePaths(this.files.filter(isSdrSuccess)));
 
-    if (!successes.length) return;
+    if (!successes.length) {
+      // a retrieve happened, but nothing was retrieved
+      if (this.result.response.status) {
+        this.ux.warn('Nothing retrieved');
+      } else {
+        // a retrieve didn't happen, probably because everything was ignored or there were no remote changes to retrieve
+        this.ux.log('Nothing retrieved');
+      }
+      return;
+    }
 
     const columns = {
       state: { header: 'State' },
@@ -44,9 +54,9 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
     };
     const title = 'Retrieved Source';
     const options = { title: tableHeader(title) };
-    ux.log();
+    this.ux.log();
 
-    ux.table(getFileResponseSuccessProps(successes), columns, options);
+    this.ux.table(getFileResponseSuccessProps(successes), columns, options);
   }
 
   private async displayPackages(): Promise<void> {
@@ -58,8 +68,8 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       };
       const title = 'Retrieved Packages';
       const options = { title: tableHeader(title) };
-      ux.log();
-      ux.table(packages, columns, options);
+      this.ux.log();
+      this.ux.table(packages, columns, options);
     }
   }
 
