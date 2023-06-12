@@ -1189,7 +1189,7 @@
     proxy-from-env "^1.1.0"
     unzipper "0.10.14"
 
-"@salesforce/source-testkit@^2.0.59":
+"@salesforce/source-testkit@^2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.1.2.tgz#6aef83ad0c10f9270664846acc9b372655a015e1"
   integrity sha512-iPeoqIP8ZwltqUWd/iugVOIayFGgFPagXCVtIQWdotF8O5Tilb8NLRVUKyP+n+L2vGQTs/UBWj4x5BjW0QX7qQ==
