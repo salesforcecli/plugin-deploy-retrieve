@@ -29,7 +29,7 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
     );
 
     ux.log();
-    ux.table(response, { key: {}, value: {} }, { title: tableHeader('Deploy Info') });
+    ux.table(response, { key: {}, value: {} }, { title: tableHeader('Deploy Info'), 'no-truncate': true });
 
     const opts = Object.entries(this.flags).reduce<Array<{ key: string; value: unknown }>>((result, [key, value]) => {
       if (key === 'timestamp') return result;
@@ -38,7 +38,7 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
       return result.concat({ key, value });
     }, []);
     ux.log();
-    ux.table(opts, { key: {}, value: {} }, { title: tableHeader('Deploy Options') });
+    ux.table(opts, { key: {}, value: {} }, { title: tableHeader('Deploy Options'), 'no-truncate': true });
     super.display();
   }
 }
