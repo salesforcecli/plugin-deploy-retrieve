@@ -60,14 +60,14 @@ When you want to use a local branch of a dependency, you'll need to link them to
 1.  With the library changes built (e.g., `yarn build`), link the library by running `yarn link`.
 1.  `cd` back to `plugin-deploy-retrieve` and run `yarn clean-all`.
 1.  Download NPM dependencies: `yarn install`.
-1.  Use the linked packaging library: `yarn link "@salesforce/source-deploy-retrieve"`. (this command will be printed after running the `yarn link` command from step 1)
+1.  Use the linked SDR library: `yarn link "@salesforce/source-deploy-retrieve"`. (this command will be printed after running the `yarn link` command from step 1)
 1.  Build and lint the code: `yarn build`. If you get TypeScript module conflict errors during this step, see section below on TypeScript module conflicts.
 
 ## TypeScript Module Conflicts
 
 During TypeScript compilation, you may see errors such as:
 
-`error TS2322: Type 'import(".../plugin-packaging/node_modules/@salesforce/core/lib/org/connection").Connection' is not assignable to type 'import(".../packaging/node_modules/@salesforce/core/lib/org/connection").Connection'.`
+`error TS2322: Type 'import(".../plugin-deploy-retrieve/node_modules/@salesforce/core/lib/org/connection").Connection' is not assignable to type 'import(".../source-deploy-retrieve/node_modules/@salesforce/core/lib/org/connection").Connection'.`
 
 This means the `Connection` interface in the core library used by the **plugin-deploy-retrieve** is different from the `Connection` interface in the core library used by the **source-deploy-retrieve library**, most likely because the core library dependencies are different versions.
 
