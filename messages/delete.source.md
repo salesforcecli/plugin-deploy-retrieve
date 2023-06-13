@@ -134,3 +134,7 @@ Are you sure you want to proceed (this is only a check and won't actually delete
 # conflictMsg
 
 We couldn't complete the operation due to conflicts. Verify that you want to keep the existing versions, then run the command again with the --force-overwrite (-f) option.
+
+# error.NoTestsSpecified
+
+You must specify tests using the --tests flag if the --test-level flag is set to RunSpecifiedTests.

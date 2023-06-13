@@ -34,7 +34,7 @@ import {
 import * as chalk from 'chalk';
 import { DeleteSourceJson, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
-import { resolveApi } from '../../../utils/deploy';
+import { resolveApi, validateTests } from '../../../utils/deploy';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
@@ -82,17 +82,6 @@ export class Source extends SfCommand<DeleteSourceJson> {
       deprecateAliases: true,
       description: messages.getMessage('flags.test-Level.description'),
       summary: messages.getMessage('flags.test-Level.summary'),
-      relationships: [
-        {
-          type: 'all',
-          flags: [
-            {
-              name: 'tests',
-              when: async (flags): Promise<boolean> => Promise.resolve(flags['test-level'] === 'RunSpecifiedTests'),
-            },
-          ],
-        },
-      ],
     }),
     'no-prompt': Flags.boolean({
       char: 'r',
@@ -168,6 +157,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
   protected async preChecks(): Promise<void> {
     if (this.flags['track-source']) {
       this.tracking = await SourceTracking.create({ org: this.org, project: this.project });
+    }
+
+    if (!validateTests(this.flags['test-level'], this.flags.tests)) {
+      throw messages.createError('error.NoTestsSpecified');
     }
   }
 
