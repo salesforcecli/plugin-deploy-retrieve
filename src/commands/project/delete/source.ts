@@ -82,6 +82,17 @@ export class Source extends SfCommand<DeleteSourceJson> {
       deprecateAliases: true,
       description: messages.getMessage('flags.test-Level.description'),
       summary: messages.getMessage('flags.test-Level.summary'),
+      relationships: [
+        {
+          type: 'all',
+          flags: [
+            {
+              name: 'tests',
+              when: async (flags): Promise<boolean> => Promise.resolve(flags['test-level'] === 'RunSpecifiedTests'),
+            },
+          ],
+        },
+      ],
     }),
     'no-prompt': Flags.boolean({
       char: 'r',
