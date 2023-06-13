@@ -28,7 +28,7 @@ context('deploy metadata --test-level NUTs [name: %REPO_NAME%]', () => {
     const args = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
     await testkit.deploy({ args });
     if (REPO.gitUrl.includes('dreamhouse')) {
-      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse', cli: 'sfdx' });
+      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse' });
     }
   });
 

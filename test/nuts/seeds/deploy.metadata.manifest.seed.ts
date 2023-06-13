@@ -26,7 +26,7 @@ context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
     const args = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
     await testkit.deploy({ args });
     if (REPO.gitUrl.includes('dreamhouse')) {
-      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse', cli: 'sfdx' });
+      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse' });
     }
   });
 
@@ -46,7 +46,7 @@ context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
         const paths = testCase.toDeploy.map((t) => path.normalize(t)).join(',');
         // This is using the force:source:convert command from plugin-source. Once we have an
         // sf equivalent, we should switch it to use that.
-        await testkit.convert({ args: `--sourcepath ${paths} --outputdir out`, cli: 'sfdx' });
+        await testkit.convert({ args: `--sourcepath ${paths} --outputdir out` });
         const packageXml = path.join('out', 'package.xml');
 
         const deploy = await testkit.deploy<DeployResultJson>({ args: `--manifest ${packageXml}` });

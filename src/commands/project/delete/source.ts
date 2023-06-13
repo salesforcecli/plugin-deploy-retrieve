@@ -484,12 +484,16 @@ export class Source extends SfCommand<DeleteSourceJson> {
       return;
     }
 
-    this.table(conflicts, {
-      state: { header: 'STATE' },
-      fullName: { header: 'FULL NAME' },
-      type: { header: 'TYPE' },
-      filePath: { header: 'FILE PATH' },
-    });
+    this.table(
+      conflicts,
+      {
+        state: { header: 'STATE' },
+        fullName: { header: 'FULL NAME' },
+        type: { header: 'TYPE' },
+        filePath: { header: 'FILE PATH' },
+      },
+      { 'no-truncate': true }
+    );
 
     // map do dedupe by name-type-filename
     const conflictMap = new Map<string, ConflictResponse>();

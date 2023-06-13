@@ -6,8 +6,10 @@
  */
 
 import * as path from 'path';
+import * as fs from 'fs';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { exec } from 'shelljs';
+import { expect } from 'chai';
 
 const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
 
@@ -76,15 +78,38 @@ describe('retrieve metadata NUTs', () => {
 
   describe('--package-name flag', () => {
     it('should retrieve an installed package', async () => {
-      exec(`sfdx force:package:install --noprompt --package ${ELECTRON.id} --wait 5 --json`, { silent: true });
+      exec(`sf force:package:install --noprompt --package ${ELECTRON.id} --wait 5 --json`, { silent: true });
 
       await testkit.retrieve({ args: `--package-name "${ELECTRON.name}"` });
       await testkit.expect.packagesToBeRetrieved([ELECTRON.name]);
     });
 
-    it('should retrieve an installed package and directory', async () => {
-      exec(`sfdx force:package:install --noprompt --package ${ELECTRON.id} --wait 5 --json`, { silent: true });
+    it('should retrieve an installed package and write to the output dir', async () => {
+      await testkit.retrieve({ args: `--package-name "${ELECTRON.name}" --target-metadata-dir package-output` });
+      await testkit.expect.packagesToBeRetrieved([ELECTRON.name]);
+      expect(fs.existsSync(path.join(testkit.projectDir, 'package-output', 'unpackaged.zip'))).to.be.true;
+    });
 
+    it('should retrieve an installed package and write to the output dir (unzipped)', async () => {
+      await testkit.retrieve({
+        args: `--package-name "${ELECTRON.name}" --target-metadata-dir package-output1 --unzip`,
+      });
+      await testkit.expect.packagesToBeRetrieved([ELECTRON.name]);
+      expect(
+        fs.existsSync(
+          path.join(
+            testkit.projectDir,
+            'package-output1',
+            'unpackaged',
+            'ElectronBranding',
+            'lightningExperienceThemes',
+            'Electron.lightningExperienceTheme'
+          )
+        )
+      ).to.be.true;
+    });
+
+    it('should retrieve an installed package and directory', async () => {
       await testkit.retrieve({
         args: `--package-name "${ELECTRON.name}" --source-dir "${path.join(
           'force-app',

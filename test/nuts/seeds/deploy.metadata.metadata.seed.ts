@@ -25,7 +25,7 @@ context('deploy metadata --metadata NUTs [name: %REPO_NAME%]', () => {
     const args = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
     await testkit.deploy({ args });
     if (REPO.gitUrl.includes('dreamhouse')) {
-      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse', cli: 'sfdx' });
+      await testkit.assignPermissionSet({ args: '--permsetname dreamhouse' });
     }
   });
 
@@ -56,7 +56,7 @@ context('deploy metadata --metadata NUTs [name: %REPO_NAME%]', () => {
     });
 
     it('should not deploy metadata outside of a package directory', async () => {
-      await testkit.createApexClass({ args: '--outputdir NotAPackage --classname ShouldNotBeDeployed', cli: 'sfdx' });
+      await testkit.createApexClass({ args: '--outputdir NotAPackage --classname ShouldNotBeDeployed' });
       await testkit.deploy({ args: '--metadata ApexClass' });
       // this is a glob, so no need for path.join
       await testkit.expect.filesToNotBeDeployed(['NotAPackage/**/*']);
