@@ -8,15 +8,13 @@ import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 import { ux } from '@oclif/core';
-import { dim, underline, bold } from 'chalk';
+import { dim, underline } from 'chalk';
 import {
   CodeCoverageWarnings,
   DeployResult,
-  Failures,
   FileResponse,
   FileResponseFailure,
   RequestStatus,
-  Successes,
 } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
@@ -27,7 +25,6 @@ import {
   JUnitReporter,
   TestResult,
 } from '@salesforce/apex-node';
-import { StandardColors } from '@salesforce/sf-plugins-core';
 import { DeployResultJson, isSdrFailure, isSdrSuccess, TestLevel, Verbosity, Formatter } from '../utils/types';
 import {
   generateCoveredLines,
@@ -36,7 +33,16 @@ import {
   transformCoverageToApexCoverage,
   coverageOutput,
 } from '../utils/coverage';
-import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccessProps } from '../utils/output';
+import {
+  sortFileResponses,
+  asRelativePaths,
+  tableHeader,
+  getFileResponseSuccessProps,
+  sortTestResults,
+  error,
+  success,
+  check,
+} from '../utils/output';
 
 export class DeployResultFormatter implements Formatter<DeployResultJson> {
   private relativeFiles: FileResponse[];
@@ -375,22 +381,3 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     return 'normal';
   }
 }
-
-function sortTestResults<T extends Failures | Successes>(results: T[]): T[] {
-  return results.sort((a, b) => {
-    if (a.methodName === b.methodName) {
-      return a.name.localeCompare(b.name);
-    }
-    return a.methodName.localeCompare(b.methodName);
-  });
-}
-
-function error(message: string): string {
-  return StandardColors.error(bold(message));
-}
-
-function success(message: string): string {
-  return StandardColors.success(bold(message));
-}
-
-const check = StandardColors.success('✓');

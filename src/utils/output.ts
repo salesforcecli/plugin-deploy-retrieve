@@ -7,7 +7,14 @@
 
 import * as path from 'path';
 import { blue, bold } from 'chalk';
-import { FileResponse, FileResponseFailure, FileResponseSuccess } from '@salesforce/source-deploy-retrieve';
+import { StandardColors } from '@salesforce/sf-plugins-core';
+import {
+  FileResponse,
+  FileResponseFailure,
+  FileResponseSuccess,
+  Failures,
+  Successes,
+} from '@salesforce/source-deploy-retrieve';
 
 export function tableHeader(message: string): string {
   return blue(bold(message));
@@ -43,3 +50,22 @@ export const getFileResponseSuccessProps = (
   successes: FileResponseSuccess[]
 ): Array<Pick<FileResponseSuccess, 'filePath' | 'fullName' | 'state' | 'type'>> =>
   successes.map((s) => ({ filePath: s.filePath, fullName: s.fullName, type: s.type, state: s.state }));
+
+export function sortTestResults<T extends Failures | Successes>(results: T[]): T[] {
+  return results.sort((a, b) => {
+    if (a.methodName === b.methodName) {
+      return a.name.localeCompare(b.name);
+    }
+    return a.methodName.localeCompare(b.methodName);
+  });
+}
+
+export function error(message: string): string {
+  return StandardColors.error(bold(message));
+}
+
+export function success(message: string): string {
+  return StandardColors.success(bold(message));
+}
+
+export const check = StandardColors.success('✓');

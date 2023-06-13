@@ -276,11 +276,12 @@ export class Source extends SfCommand<DeleteSourceJson> {
   protected formatResult(): DeleteSourceJson {
     const formatterOptions = {
       verbose: this.flags.verbose ?? false,
+      testLevel: this.flags['test-level'],
     };
 
     this.deleteResultFormatter = this.mixedDeployDelete.deploy.length
       ? new DeployResultFormatter(this.deployResult, formatterOptions)
-      : new DeleteResultFormatter(this.deployResult);
+      : new DeleteResultFormatter(this.deployResult, formatterOptions);
 
     // Only display results to console when JSON flag is unset.
     if (!this.jsonEnabled()) {
