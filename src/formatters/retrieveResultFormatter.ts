@@ -53,7 +53,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       filePath: { header: 'Path' },
     };
     const title = 'Retrieved Source';
-    const options = { title: tableHeader(title) };
+    const options = { title: tableHeader(title), 'no-truncate': true };
     this.ux.log();
 
     this.ux.table(getFileResponseSuccessProps(successes), columns, options);
@@ -67,7 +67,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
         fullPath: { header: 'Converted Location' },
       };
       const title = 'Retrieved Packages';
-      const options = { title: tableHeader(title) };
+      const options = { title: tableHeader(title), 'no-truncate': true };
       this.ux.log();
       this.ux.table(packages, columns, options);
     }

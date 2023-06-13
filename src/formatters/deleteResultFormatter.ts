@@ -98,7 +98,8 @@ export class DeleteResultFormatter implements Formatter<DeleteSourceJson> {
           fullName: { header: 'FULL NAME' },
           type: { header: 'TYPE' },
           filePath: { header: 'PROJECT PATH' },
-        }
+        },
+        { 'no-truncate': true }
       );
     } else {
       this.displayFailures();
@@ -195,7 +196,10 @@ export class DeleteResultFormatter implements Formatter<DeleteSourceJson> {
       fullName: { header: 'Name' },
       error: { header: 'Problem' },
     };
-    const options = { title: StandardColors.error(bold(`Component Failures [${failures.length}]`)) };
+    const options: ux.Table.table.Options = {
+      title: StandardColors.error(bold(`Component Failures [${failures.length}]`)),
+      'no-truncate': true,
+    };
     ux.log();
     ux.table(
       failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.problem })),

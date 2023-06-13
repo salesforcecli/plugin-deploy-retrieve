@@ -1,3 +1,12 @@
+## [1.11.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.10...1.11.11) (2023-06-12)
+
+
+### Bug Fixes
+
+* don't truncate at PDR level ([120a691](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/120a691f939b632a1515993e27551790471098b0))
+
+
+
 ## [1.11.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.9...1.11.10) (2023-06-08)
 
 

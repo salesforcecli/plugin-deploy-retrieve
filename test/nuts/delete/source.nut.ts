@@ -167,7 +167,7 @@ describe('project delete source NUTs', () => {
     const query = () =>
       JSON.parse(
         exec(
-          `sfdx force:data:soql:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
+          `sf data:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
           { silent: true }
         )
       ) as { result: { records: Array<{ IsNameObsolete: boolean }> } };
