@@ -14,7 +14,7 @@ import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResul
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployResultJson, TestLevel } from '../../../utils/types';
-import { executeDeploy, resolveApi, determineExitCode } from '../../../utils/deploy';
+import { executeDeploy, resolveApi, determineExitCode, validateTests } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { ConfigVars } from '../../../configMeta';
 import { fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
@@ -120,6 +120,11 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
 
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, api] = await Promise.all([this.parse(DeployMetadataValidate), resolveApi(this.configAggregator)]);
+
+    if (!validateTests(flags['test-level'], flags.tests)) {
+      throw messages.createError('error.NoTestsSpecified');
+    }
+
     const username = flags['target-org'].getUsername();
 
     // eslint-disable-next-line @typescript-eslint/require-await

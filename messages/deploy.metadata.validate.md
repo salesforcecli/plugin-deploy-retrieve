@@ -128,3 +128,7 @@ Run "%s project deploy quick --job-id %s" to execute this deploy
 
 Failed to validate the deployment (%s). Due To:
 %s
+
+# error.NoTestsSpecified
+
+You must specify tests using the --tests flag if the --test-level flag is set to RunSpecifiedTests.
