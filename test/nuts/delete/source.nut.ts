@@ -141,7 +141,7 @@ describe('project delete source NUTs', () => {
     expect(fs.existsSync(pathToClass)).to.be.false;
   });
 
-  it.only('should source:delete an ApexClass only if a specific test pass', async () => {
+  it('should source:delete an ApexClass only if a specific test pass', async () => {
     const { apexName, pathToClass } = createApexClass();
     const response = execCmd<DeleteSourceJson>(
       `project:delete:source --json --no-prompt --metadata ApexClass:${apexName} --test-level RunSpecifiedTests --tests GeocodingServiceTest`,
