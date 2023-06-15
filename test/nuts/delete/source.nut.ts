@@ -13,6 +13,7 @@ import { SourceTestkit } from '@salesforce/source-testkit';
 import { exec } from 'shelljs';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 import { AuthInfo, Connection } from '@salesforce/core';
+import { ensureArray } from '@salesforce/ts-types';
 import { DeleteSourceJson } from '../../../src/utils/types';
 
 const isNameObsolete = async (username: string, memberType: string, memberName: string): Promise<boolean> => {
@@ -136,6 +137,22 @@ describe('project delete source NUTs', () => {
         ensureExitCode: 0,
       }
     ).jsonOutput?.result;
+    expect(response?.deletedSource).to.have.length(2);
+    expect(fs.existsSync(pathToClass)).to.be.false;
+  });
+
+  it.only('should source:delete an ApexClass only if a specific test pass', async () => {
+    const { apexName, pathToClass } = createApexClass();
+    const response = execCmd<DeleteSourceJson>(
+      `project:delete:source --json --no-prompt --metadata ApexClass:${apexName} --test-level RunSpecifiedTests --tests GeocodingServiceTest`,
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput?.result;
+
+    expect(response?.runTestsEnabled).to.be.true;
+    expect(ensureArray(response?.details.runTestResult?.failures).length).to.equal(0);
+    expect(ensureArray(response?.details.runTestResult?.successes).length).to.be.greaterThanOrEqual(1);
     expect(response?.deletedSource).to.have.length(2);
     expect(fs.existsSync(pathToClass)).to.be.false;
   });
