@@ -91,6 +91,7 @@ export const zipFileFlag = Flags.custom<string>({
 export const testsFlag = Flags.string({
   char: 't',
   multiple: true,
+  dependsOn: ['test-level'],
   summary: commonFlagMessages.getMessage('flags.tests.summary'),
   description: commonFlagMessages.getMessage('flags.tests.description'),
   // the old version allowed comma separated values, and the change is confusing enough to deserve a warning

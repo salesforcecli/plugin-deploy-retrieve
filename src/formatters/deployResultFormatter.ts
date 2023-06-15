@@ -4,20 +4,10 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
 import { ux } from '@oclif/core';
-import { dim, underline, bold } from 'chalk';
-import {
-  CodeCoverageWarnings,
-  DeployResult,
-  Failures,
-  FileResponse,
-  FileResponseFailure,
-  RequestStatus,
-  Successes,
-} from '@salesforce/source-deploy-retrieve';
+import { DeployResult, FileResponse, FileResponseFailure, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
 import {
@@ -27,22 +17,19 @@ import {
   JUnitReporter,
   TestResult,
 } from '@salesforce/apex-node';
-import { StandardColors } from '@salesforce/sf-plugins-core';
 import { DeployResultJson, isSdrFailure, isSdrSuccess, TestLevel, Verbosity, Formatter } from '../utils/types';
 import {
   generateCoveredLines,
   getCoverageFormattersOptions,
   mapTestResults,
   transformCoverageToApexCoverage,
-  coverageOutput,
 } from '../utils/coverage';
-import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccessProps } from '../utils/output';
+import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccessProps, error } from '../utils/output';
+import { TestResultsFormatter } from '../formatters/testResultsFormatter';
 
-export class DeployResultFormatter implements Formatter<DeployResultJson> {
+export class DeployResultFormatter extends TestResultsFormatter implements Formatter<DeployResultJson> {
   private relativeFiles: FileResponse[];
   private absoluteFiles: FileResponse[];
-  private testLevel: TestLevel | undefined;
-  private verbosity: Verbosity;
   private coverageOptions: CoverageReporterOptions;
   private resultsDir: string;
   private readonly junit: boolean | undefined;
@@ -59,6 +46,7 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
       'target-org': Org;
     }>
   ) {
+    super(result, flags);
     this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
     this.relativeFiles = asRelativePaths(this.absoluteFiles);
     this.testLevel = this.flags['test-level'];
@@ -109,6 +97,12 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
     this.displayTestResults();
     this.maybeCreateRequestedReports();
     this.displayReplacements();
+  }
+
+  public determineVerbosity(): Verbosity {
+    if (this.flags.verbose) return 'verbose';
+    if (this.flags.concise) return 'concise';
+    return 'normal';
   }
 
   private maybeCreateRequestedReports(): void {
@@ -295,107 +289,4 @@ export class DeployResultFormatter implements Formatter<DeployResultJson> {
 
     ux.table(getFileResponseSuccessProps(deletions), columns, options);
   }
-
-  private displayTestResults(): void {
-    if (this.testLevel === TestLevel.NoTestRun || !this.result.response.runTestsEnabled) {
-      ux.log();
-      return;
-    }
-
-    this.displayVerboseTestFailures();
-
-    if (this.verbosity === 'verbose') {
-      this.displayVerboseTestSuccesses();
-      this.displayVerboseTestCoverage();
-    }
-
-    ux.log();
-    ux.log(tableHeader('Test Results Summary'));
-    ux.log(`Passing: ${this.result.response.numberTestsCompleted ?? 0}`);
-    ux.log(`Failing: ${this.result.response.numberTestErrors ?? 0}`);
-    ux.log(`Total: ${this.result.response.numberTestsTotal ?? 0}`);
-    const time = this.result.response.details.runTestResult?.totalTime ?? 0;
-    if (time) ux.log(`Time: ${time}`);
-    // I think the type might be wrong in SDR
-    ensureArray(this.result.response.details.runTestResult?.codeCoverageWarnings).map(
-      (warning: CodeCoverageWarnings & { name?: string }) =>
-        ux.warn(`${warning.name ? `${warning.name} - ` : ''}${warning.message}`)
-    );
-  }
-
-  private displayVerboseTestSuccesses(): void {
-    const successes = ensureArray(this.result.response.details.runTestResult?.successes);
-    if (successes.length > 0) {
-      const testSuccesses = sortTestResults(successes);
-      ux.log();
-      ux.log(success(`Test Success [${successes.length}]`));
-      for (const test of testSuccesses) {
-        const testName = underline(`${test.name}.${test.methodName}`);
-        ux.log(`${check} ${testName}`);
-      }
-    }
-  }
-
-  private displayVerboseTestFailures(): void {
-    if (!this.result.response.numberTestErrors) return;
-    const failures = ensureArray(this.result.response.details.runTestResult?.failures);
-    const failureCount = this.result.response.details.runTestResult?.numFailures;
-    const testFailures = sortTestResults(failures);
-    ux.log();
-    ux.log(error(`Test Failures [${failureCount}]`));
-    for (const test of testFailures) {
-      const testName = underline(`${test.name}.${test.methodName}`);
-      ux.log(`• ${testName}`);
-      ux.log(`  ${dim('message')}: ${test.message}`);
-      if (test.stackTrace) {
-        const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
-        ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
-      }
-      ux.log();
-    }
-  }
-
-  private displayVerboseTestCoverage(): void {
-    const codeCoverage = ensureArray(this.result.response.details.runTestResult?.codeCoverage);
-    if (codeCoverage.length) {
-      const coverage = codeCoverage.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1));
-      ux.log();
-      ux.log(tableHeader('Apex Code Coverage'));
-
-      ux.table(
-        coverage.map(coverageOutput),
-        {
-          name: { header: 'Name' },
-          numLocations: { header: '% Covered' },
-          lineNotCovered: { header: 'Uncovered Lines' },
-        },
-        { 'no-truncate': true }
-      );
-    }
-  }
-
-  private determineVerbosity(): Verbosity {
-    if (this.flags.verbose) return 'verbose';
-    if (this.flags.concise) return 'concise';
-    return 'normal';
-  }
 }
-
-function sortTestResults<T extends Failures | Successes>(results: T[]): T[] {
-  return results.sort((a, b) => {
-    if (a.methodName === b.methodName) {
-      return a.name.localeCompare(b.name);
-    }
-    return a.methodName.localeCompare(b.methodName);
-  });
-}
-
-function error(message: string): string {
-  return StandardColors.error(bold(message));
-}
-
-function success(message: string): string {
-  return StandardColors.success(bold(message));
-}
-
-const check = StandardColors.success('✓');

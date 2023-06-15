@@ -34,13 +34,14 @@ import {
 import * as chalk from 'chalk';
 import { DeleteSourceJson, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
-import { resolveApi } from '../../../utils/deploy';
+import { resolveApi, validateTests } from '../../../utils/deploy';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployCache } from '../../../utils/deployCache';
-import { testLevelFlag } from '../../../utils/flags';
+import { testLevelFlag, testsFlag } from '../../../utils/flags';
 const fsPromises = fs.promises;
+const testFlags = 'Test';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
@@ -71,12 +72,17 @@ export class Source extends SfCommand<DeleteSourceJson> {
       description: messages.getMessage('flags.wait.description'),
       summary: messages.getMessage('flags.wait.summary'),
     }),
+    tests: {
+      ...testsFlag,
+      helpGroup: testFlags,
+      char: undefined,
+    },
     'test-level': testLevelFlag({
       aliases: ['testlevel'],
       deprecateAliases: true,
+      helpGroup: testFlags,
       description: messages.getMessage('flags.test-Level.description'),
       summary: messages.getMessage('flags.test-Level.summary'),
-      options: ['NoTestRun', 'RunLocalTests', 'RunAllTestsInOrg'],
     }),
     'no-prompt': Flags.boolean({
       char: 'r',
@@ -153,6 +159,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
     if (this.flags['track-source']) {
       this.tracking = await SourceTracking.create({ org: this.org, project: this.project });
     }
+
+    if (!validateTests(this.flags['test-level'], this.flags.tests)) {
+      throw messages.createError('error.NoTestsSpecified');
+    }
   }
 
   protected async delete(): Promise<void> {
@@ -226,6 +236,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       apiOptions: {
         rest: this.isRest,
         checkOnly: this.flags['check-only'] ?? false,
+        ...(this.flags.tests ? { runTests: this.flags.tests } : {}),
         ...(this.flags['test-level'] ? { testLevel: this.flags['test-level'] } : {}),
       },
     });
@@ -270,11 +281,12 @@ export class Source extends SfCommand<DeleteSourceJson> {
   protected formatResult(): DeleteSourceJson {
     const formatterOptions = {
       verbose: this.flags.verbose ?? false,
+      testLevel: this.flags['test-level'],
     };
 
     this.deleteResultFormatter = this.mixedDeployDelete.deploy.length
       ? new DeployResultFormatter(this.deployResult, formatterOptions)
-      : new DeleteResultFormatter(this.deployResult);
+      : new DeleteResultFormatter(this.deployResult, formatterOptions);
 
     // Only display results to console when JSON flag is unset.
     if (!this.jsonEnabled()) {

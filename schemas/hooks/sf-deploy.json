@@ -13,9 +13,7 @@
           "description": "Deployables are individual pieces that can be deployed on their own. For example, each package in a salesforce project is considered a deployable that can be deployed on its own."
         }
       },
-      "required": [
-        "deployables"
-      ],
+      "required": ["deployables"],
       "additionalProperties": false
     },
     "DeployablePackage": {
@@ -25,9 +23,7 @@
           "$ref": "#/definitions/NamedPackageDir"
         }
       },
-      "required": [
-        "pkg"
-      ],
+      "required": ["pkg"],
       "additionalProperties": false
     },
     "NamedPackageDir": {
@@ -91,11 +87,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "fullPath",
-        "name",
-        "path"
-      ]
+      "required": ["fullPath", "name", "path"]
     },
     "PackageDirDependency": {
       "type": "object",
@@ -107,9 +99,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "package"
-      ],
+      "required": ["package"],
       "additionalProperties": {}
     }
   }

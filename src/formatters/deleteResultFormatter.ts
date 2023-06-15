@@ -10,11 +10,22 @@ import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-de
 import { ensureArray } from '@salesforce/kit';
 import { bold } from 'chalk';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import { DeleteSourceJson, Formatter } from '../utils/types';
+import { DeleteSourceJson, Formatter, TestLevel } from '../utils/types';
 import { sortFileResponses, asRelativePaths } from '../utils/output';
+import { TestResultsFormatter } from '../formatters/testResultsFormatter';
 
-export class DeleteResultFormatter implements Formatter<DeleteSourceJson> {
-  public constructor(private result: DeployResult) {}
+export class DeleteResultFormatter extends TestResultsFormatter implements Formatter<DeleteSourceJson> {
+  public constructor(
+    protected result: DeployResult,
+    protected flags: Partial<{
+      'test-level': TestLevel;
+      verbose: boolean;
+    }>
+  ) {
+    super(result, flags);
+    this.testLevel = flags['test-level'];
+    this.verbosity = this.determineVerbosity();
+  }
   /**
    * Get the JSON output from the DeployResult.
    *
@@ -31,6 +42,7 @@ export class DeleteResultFormatter implements Formatter<DeleteSourceJson> {
   }
 
   public display(): void {
+    this.displayTestResults();
     if ([0, 69].includes(process.exitCode ?? 0)) {
       const successes: FileResponse[] = [];
       const fileResponseSuccesses: Map<string, FileResponse> = new Map<string, FileResponse>();
