@@ -80,6 +80,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
     'test-level': testLevelFlag({
       aliases: ['testlevel'],
       deprecateAliases: true,
+      helpGroup: testFlags,
       description: messages.getMessage('flags.test-Level.description'),
       summary: messages.getMessage('flags.test-Level.summary'),
     }),
