@@ -1,3 +1,22 @@
+# [1.13.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.12.0...1.13.0) (2023-06-15)
+
+
+### Bug Fixes
+
+* consolidate formatters ([c55026d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c55026d328586be0d7ddc8b6fa5c0360c52f15d5))
+* **deploy validate:** improve flag validation ([3f1ec7c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3f1ec7c861c040aab5d3ccff5d915d5429b22d3c))
+* improve flag validation ([8b485da](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8b485da97a29eb6bba567228fe330e29e5374ee1))
+* improve flag validation 1 ([d81e995](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d81e9952540140f00073bebf6c83d740b2c979e4))
+* rerun CI ([6bc896d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6bc896db7f8d6acd08f670e2b24daadb7c4221d9))
+* show test results ([2cfa167](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2cfa16757ed44291ef1aa4aa6ad1f9fc15690595))
+
+
+### Features
+
+* allow to run specific tests on source delete ([adf38fa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/adf38faf122271e4bc2668ddd5fd3f4604ec8eaa))
+
+
+
 # [1.12.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.11.11...1.12.0) (2023-06-13)
 
 
