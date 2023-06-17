@@ -5,7 +5,7 @@
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
-    "@oclif/core": "^2.8.6",
+    "@oclif/core": "^2.8.7",
     "@salesforce/apex-node": "^1.6.2",
     "@salesforce/core": "^4.3.1",
     "@salesforce/kit": "^3.0.2",
