@@ -1,3 +1,12 @@
+## [1.13.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.13.0...1.13.1) (2023-06-17)
+
+
+### Bug Fixes
+
+* **deps:** bump @oclif/core from 2.8.6 to 2.8.7 ([2e42152](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2e42152a880ba8a2f8414d16bf6d99e98e874a71))
+
+
+
 # [1.13.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.12.0...1.13.0) (2023-06-15)
 
 
