@@ -1093,10 +1093,10 @@
     handlebars "^4.7.7"
     tslib "^2"
 
-"@salesforce/plugin-settings@^1.4.10":
-  version "1.4.12"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-settings/-/plugin-settings-1.4.12.tgz#2638cea162e7d5d129cd9c9e735dc7da88793091"
-  integrity sha512-yzVzmq+nM6bghs22PXggwQzQjw/ETMZGa690HfEKn/LuLOyJf14lFKGfnWlzVLCAfeM3u/WuzWUqi6Ec2LQ8Pw==
+"@salesforce/plugin-settings@^1.4.13":
+  version "1.4.13"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-settings/-/plugin-settings-1.4.13.tgz#71c48849ee67e27f6b2910ebe1afdb47951f54a6"
+  integrity sha512-SQ5VuStbNiwq9YDC+/BFTFBvhAKH4WZrMRlTCV8uVa5Rrsa3/ETOQigaT3dNUUFUCFSkCsqWRmCvyzosNm7x8w==
   dependencies:
     "@oclif/core" "^2.8.2"
     "@salesforce/core" "^4.0.1"
