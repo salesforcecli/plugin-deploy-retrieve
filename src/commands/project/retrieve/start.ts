@@ -18,6 +18,7 @@ import {
   ComponentSet,
   FileResponse,
   MetadataApiRetrieveStatus,
+  RegistryAccess,
 } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
@@ -163,24 +164,22 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const format: Format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) => {
-      this.log(
-        messages.getMessage('apiVersionMsgDetailed', [
-          'Retrieving',
-          apiData.manifestVersion,
-          flags['target-org'].getUsername(),
-          apiData.apiVersion,
-        ])
-      );
-    });
-
     this.spinner.start(messages.getMessage('spinner.start'));
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
       flags,
       format
     );
+    if (flags.manifest || flags.metadata) {
+      const access = new RegistryAccess();
+      if (wantsToRetrieveCustomFields(componentSetFromNonDeletes, access)) {
+        this.warn(messages.getMessage('wantsToRetrieveCustomFields'));
+        componentSetFromNonDeletes.add({
+          fullName: ComponentSet.WILDCARD,
+          type: access.getTypeByName('CustomObject'),
+        });
+      }
+    }
     const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName, resolvedTargetDir);
 
     this.spinner.status = messages.getMessage('spinner.sending');
@@ -188,6 +187,17 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
     if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
+      // eslint-disable-next-line @typescript-eslint/require-await
+      Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) => {
+        this.log(
+          messages.getMessage('apiVersionMsgDetailed', [
+            'Retrieving',
+            apiData.manifestVersion,
+            flags['target-org'].getUsername(),
+            apiData.apiVersion,
+          ])
+        );
+      });
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
       this.spinner.status = messages.getMessage('spinner.polling');
 
@@ -322,6 +332,19 @@ type RetrieveAndDeleteTargets = {
   fileResponsesFromDelete?: FileResponse[];
 };
 
+const wantsToRetrieveCustomFields = (cs: ComponentSet, registry: RegistryAccess): boolean => {
+  const hasCustomField = cs.has({
+    type: registry.getTypeByName('CustomField'),
+    fullName: ComponentSet.WILDCARD,
+  });
+
+  const hasCustomObject = cs.has({
+    type: registry.getTypeByName('CustomObject'),
+    fullName: ComponentSet.WILDCARD,
+  });
+  return hasCustomField && !hasCustomObject;
+};
+
 const buildRetrieveAndDeleteTargets = async (
   flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
   format: Format
@@ -350,6 +373,9 @@ const buildRetrieveAndDeleteTargets = async (
   } else {
     return {
       componentSetFromNonDeletes: await ComponentSetBuilder.build({
+        sourceapiversion: (
+          await SfProject.getInstance()?.resolveProjectConfig()
+        )?.sourceApiVersion as string | undefined,
         apiversion: flags['api-version'],
         sourcepath: flags['source-dir'],
         packagenames: flags['package-name'],

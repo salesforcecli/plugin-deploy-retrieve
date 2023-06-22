@@ -184,3 +184,7 @@ The retrieve target directory [%s] overlaps one of your package directories. Spe
 # apiVersionMsgDetailed
 
 %s v%s metadata from %s using the v%s SOAP API
+
+# wantsToRetrieveCustomFields
+
+Because you're retrieving one or more CustomFields, we're also retrieving the CustomObject to which it's associated.
