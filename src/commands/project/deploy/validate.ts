@@ -17,13 +17,15 @@ import { DeployResultJson, TestLevel } from '../../../utils/types';
 import { executeDeploy, resolveApi, determineExitCode, validateTests } from '../../../utils/deploy';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { ConfigVars } from '../../../configMeta';
-import { fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
+import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
 const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 const EXACTLY_ONE_FLAGS = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
+const destructiveFlags = 'Delete';
+const testFlags = 'Test';
 
 export default class DeployMetadataValidate extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -100,6 +102,33 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       defaultValue: 33,
       helpValue: '<minutes>',
       min: 1,
+    }),
+    'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
+    junit: Flags.boolean({
+      summary: messages.getMessage('flags.junit.summary'),
+      dependsOn: ['coverage-formatters'],
+      helpGroup: testFlags,
+    }),
+    'results-dir': Flags.directory({
+      dependsOn: ['coverage-formatters'],
+      summary: messages.getMessage('flags.results-dir.summary'),
+      helpGroup: testFlags,
+    }),
+    'purge-on-delete': Flags.boolean({
+      summary: messages.getMessage('flags.purge-on-delete.summary'),
+      dependsOn: ['manifest'],
+      relationships: [{ type: 'some', flags: ['pre-destructive-changes', 'post-destructive-changes'] }],
+      helpGroup: destructiveFlags,
+    }),
+    'pre-destructive-changes': Flags.file({
+      summary: messages.getMessage('flags.pre-destructive-changes.summary'),
+      dependsOn: ['manifest'],
+      helpGroup: destructiveFlags,
+    }),
+    'post-destructive-changes': Flags.file({
+      summary: messages.getMessage('flags.post-destructive-changes.summary'),
+      dependsOn: ['manifest'],
+      helpGroup: destructiveFlags,
     }),
   };
 
