@@ -40,6 +40,8 @@ describe('deploy metadata validate NUTs', () => {
 
   describe('destructive flags', () => {
     it('should validate deploy with destructive changes', async () => {
+      // to be able to validate a delete, the things we're deleting must be in the org
+      execCmd('project deploy start -d force-app -d my-app -d foo-bar');
       // create package.xml
       execCmd('project generate manifest -p force-app');
 
