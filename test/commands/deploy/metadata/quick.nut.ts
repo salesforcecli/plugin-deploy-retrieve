@@ -43,6 +43,23 @@ describe('deploy metadata quick NUTs', () => {
       assert(deploy);
       await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
     });
+
+    it.skip('should deploy previously validated deployment without specifying the flag', async () => {
+      const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+        args: '--source-dir force-app',
+        json: true,
+        exitCode: 0,
+      });
+      assert(validation);
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+
+      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+        json: true,
+        exitCode: 0,
+      });
+      assert(deploy);
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+    });
     it('should deploy previously validated deployment with metadata format', async () => {
       execCmd('project:convert:source --source-dir force-app --output-dir metadata');
       const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {

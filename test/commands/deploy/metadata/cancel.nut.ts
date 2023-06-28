@@ -64,6 +64,31 @@ describe('deploy metadata cancel NUTs', () => {
         expect(cancel.jsonOutput.name).to.equal('CannotCancelDeployError');
       }
     });
+
+    it.skip('should cancel most recently started deployment without specifying the flag', () => {
+      const first = execCmd<DeployResultJson>(
+        'deploy:metadata --source-dir force-app --async --ignore-conflicts --json',
+        {
+          ensureExitCode: 0,
+        }
+      ).jsonOutput?.result;
+      assert(first);
+      assert(first.id);
+
+      const cacheBefore = readDeployCache(session.dir);
+      expect(cacheBefore).to.have.property(first.id);
+
+      const cancel = execCmd<DeployResultJson>('deploy:metadata:cancel --json');
+      assert(cancel.jsonOutput);
+      if (cancel.jsonOutput.status === 0) {
+        assert(cancel.jsonOutput.result);
+        assertSuccessfulCancel(session.dir, first, cancel.jsonOutput.result);
+      } else {
+        // the deploy likely already finished
+        expect(cancel.jsonOutput.exitCode).to.equal(1);
+        expect(cancel.jsonOutput.name).to.equal('CannotCancelDeployError');
+      }
+    });
   });
 
   describe('--job-id', () => {

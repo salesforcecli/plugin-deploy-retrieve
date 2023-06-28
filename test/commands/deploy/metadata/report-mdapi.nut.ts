@@ -44,6 +44,21 @@ describe('deploy metadata report NUTs with source-dir', () => {
       assert(deploy?.result);
       expect(deploy.result.success).to.equal(true);
     });
+
+    it.skip('should report most recently started deployment without specifying the flag', async () => {
+      await testkit.execute<DeployResultJson>('project deploy start', {
+        args: '--metadata-dir mdapiOut --async',
+        json: true,
+        exitCode: 0,
+      });
+
+      const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
+        json: true,
+        exitCode: 0,
+      });
+      assert(deploy?.result);
+      expect(deploy.result.success).to.equal(true);
+    });
   });
 
   describe('--job-id', () => {
