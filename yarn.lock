@@ -752,7 +752,7 @@
     supports-color "^8.1.1"
     tslib "^2"
 
-"@oclif/core@^2.8.0", "@oclif/core@^2.8.2", "@oclif/core@^2.8.4", "@oclif/core@^2.8.5", "@oclif/core@^2.8.6", "@oclif/core@^2.8.7":
+"@oclif/core@^2.8.0", "@oclif/core@^2.8.2", "@oclif/core@^2.8.4", "@oclif/core@^2.8.5", "@oclif/core@^2.8.7":
   version "2.8.7"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-2.8.7.tgz#e3fb73477cfb9e72c89bc68701d04953c084c0e8"
   integrity sha512-WTZUFgANYGyHQOmGc2YsczEdqdlG2/ZEfqksHnuYbz3egozpka/R9LrFwNfWPZETi9ydzcjDWwJKUGQmJG3ixA==
@@ -996,7 +996,7 @@
     jsonwebtoken "9.0.0"
     ts-retry-promise "^0.7.0"
 
-"@salesforce/core@^4.0.1", "@salesforce/core@^4.1.0", "@salesforce/core@^4.1.3", "@salesforce/core@^4.2.1", "@salesforce/core@^4.2.2", "@salesforce/core@^4.3.0", "@salesforce/core@^4.3.1", "@salesforce/core@^4.3.5":
+"@salesforce/core@^4.0.1", "@salesforce/core@^4.1.0", "@salesforce/core@^4.1.3", "@salesforce/core@^4.2.1", "@salesforce/core@^4.2.2", "@salesforce/core@^4.3.1", "@salesforce/core@^4.3.2", "@salesforce/core@^4.3.5":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-4.3.5.tgz#6b17141301923b5cd9423e08a7c2172084beca6b"
   integrity sha512-OpelT9syDjEab4jCF82jzTzRJfAoTqj+jfQjzh0MwYMgsS4wGTtjUILZqqE82Cq/W4ByADjlclHcOd3gE9XVMQ==
@@ -1156,13 +1156,13 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.5.1.tgz#2d1bfdcf593caaa04cd4b3e6fe621097ff7f28fe"
   integrity sha512-MRqU+tn8w5IFvZ0Lm9YKLgxYxr2MQMI+fXXsTrwfUnijsps+ybF9IOTu6MOMxxl2vCUkO8XDjA435wXlWSLI6g==
 
-"@salesforce/sf-plugins-core@^3.0.2", "@salesforce/sf-plugins-core@^3.0.4", "@salesforce/sf-plugins-core@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-3.1.0.tgz#3b620225630428d7789d3dae218ad15c37ba4a22"
-  integrity sha512-uGVkwDNVFDe8vMIZmHVDk88DumZJRadADbI2zq97RwSg9Y38nctbzd0vJpGWT7XVjRn6zF9srgjLS8iSIeFr5A==
+"@salesforce/sf-plugins-core@^3.0.2", "@salesforce/sf-plugins-core@^3.0.4", "@salesforce/sf-plugins-core@^3.1.0", "@salesforce/sf-plugins-core@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-3.1.3.tgz#be0a86db430f1223eff8b889a20d334c5df0f04e"
+  integrity sha512-XmpEshATw5uoh6QkdjZcnluGo42v39KLp2b5MPJYhwaiyxpfttb3pofM00LLM74VJWnraODTYX3fEmvDJerWGA==
   dependencies:
-    "@oclif/core" "^2.8.6"
-    "@salesforce/core" "^4.3.0"
+    "@oclif/core" "^2.8.7"
+    "@salesforce/core" "^4.3.2"
     "@salesforce/kit" "^3.0.3"
     "@salesforce/ts-types" "^2.0.2"
     chalk "^4"
