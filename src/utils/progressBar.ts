@@ -23,7 +23,7 @@ export class DeployProgress extends Progress {
     barIncompleteChar: '\u2591',
     linewrap: true,
     // only set the value if explicitly set to false, otherwise let the progress bar decide
-    noTTYOutput: env.getBoolean(EnvironmentVariable.SF_USE_PROGRESS_BAR, true) === false ? true : undefined,
+    noTTYOutput: env.getBoolean(EnvironmentVariable.SF_USE_PROGRESS_BAR, true),
   };
 
   public constructor(private deploy: MetadataApiDeploy, jsonEnabled = false) {
