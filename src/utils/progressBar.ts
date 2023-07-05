@@ -13,17 +13,20 @@ import { Progress } from '@salesforce/sf-plugins-core';
 Messages.importMessagesDirectory(__dirname);
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
+const showBar = Boolean(
+  process.env.TERM !== 'dumb' && process.stdin.isTTY && env.getBoolean(EnvironmentVariable.SF_USE_PROGRESS_BAR, true)
+);
+
 export class DeployProgress extends Progress {
   private static OPTIONS = {
     title: 'Status',
-    format: `%s: {status} ${
-      env.getBoolean(EnvironmentVariable.SF_USE_PROGRESS_BAR, true) ? '| {bar} ' : ''
-    }| {value}/{total} Components (Errors:{errorCount}) {testInfo}`,
+    format: `%s: {status} ${showBar ? '| {bar} ' : ''}| {value}/{total} Components (Errors:{errorCount}) {testInfo}`,
     barCompleteChar: '\u2588',
     barIncompleteChar: '\u2591',
     linewrap: true,
-    // only set the value if explicitly set to false, otherwise let the progress bar decide
-    noTTYOutput: env.getBoolean(EnvironmentVariable.SF_USE_PROGRESS_BAR, true),
+    // people really like to get text output in CI systems
+    // they won't get the "bar" but will get the remaining template bits this way
+    noTTYOutput: true,
   };
 
   public constructor(private deploy: MetadataApiDeploy, jsonEnabled = false) {
