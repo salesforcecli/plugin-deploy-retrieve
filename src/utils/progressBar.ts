@@ -22,7 +22,7 @@ export class DeployProgress extends Progress {
     barCompleteChar: '\u2588',
     barIncompleteChar: '\u2591',
     linewrap: true,
-    // only set the value if explicitly set to false, otherwise let the progress bar decide
+    // Always show progress bar in PDR commands unless explicitly set to false
     noTTYOutput: env.getBoolean(EnvironmentVariable.SF_USE_PROGRESS_BAR, true),
   };
 
