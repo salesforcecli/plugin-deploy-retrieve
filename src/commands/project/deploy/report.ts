@@ -43,11 +43,15 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
     'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
-    junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary'), helpGroup: testFlags }),
-    'results-dir': Flags.directory({
-      dependsOn: ['junit', 'coverage-formatters'],
+    junit: Flags.boolean({
+      summary: messages.getMessage('flags.junit.summary'),
+      dependsOn: ['coverage-formatters'],
       helpGroup: testFlags,
+    }),
+    'results-dir': Flags.directory({
+      dependsOn: ['coverage-formatters'],
       summary: messages.getMessage('flags.results-dir.summary'),
+      helpGroup: testFlags,
     }),
   };
 
