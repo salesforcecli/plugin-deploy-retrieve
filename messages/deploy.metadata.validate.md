@@ -132,3 +132,23 @@ Failed to validate the deployment (%s). Due To:
 # error.NoTestsSpecified
 
 You must specify tests using the --tests flag if the --test-level flag is set to RunSpecifiedTests.
+
+# flags.pre-destructive-changes.summary
+
+File path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy
+
+# flags.post-destructive-changes.summary
+
+File path for a manifest (destructiveChangesPost.xml) of components to delete after the deploy.
+
+# flags.purge-on-delete.summary
+
+Specify that deleted components in the destructive changes manifest file are immediately eligible for deletion rather than being stored in the Recycle Bin.
+
+# flags.junit.summary
+
+Output JUnit test results.
+
+# flags.results-dir.summary
+
+Output directory for code coverage and JUnit results; defaults to the deploy ID.

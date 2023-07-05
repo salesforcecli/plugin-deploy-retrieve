@@ -17,6 +17,7 @@ import { coverageFormattersFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.report');
+const testFlags = 'Test';
 
 export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -41,11 +42,15 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.use-most-recent.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
-    'coverage-formatters': coverageFormattersFlag,
-    junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary') }),
+    'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
+    junit: Flags.boolean({
+      summary: messages.getMessage('flags.junit.summary'),
+      helpGroup: testFlags,
+    }),
     'results-dir': Flags.directory({
-      dependsOn: ['junit', 'coverage-formatters'],
+      relationships: [{ type: 'some', flags: ['coverage-formatters', 'junit'] }],
       summary: messages.getMessage('flags.results-dir.summary'),
+      helpGroup: testFlags,
     }),
   };
 
@@ -67,6 +72,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
 
     const formatter = new DeployReportResultFormatter(result, {
       ...deployOpts,
+      ...flags,
       ...{ 'target-org': org },
     });
 
