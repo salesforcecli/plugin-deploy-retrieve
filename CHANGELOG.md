@@ -1,3 +1,12 @@
+## [1.14.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.0...1.14.1) (2023-07-06)
+
+
+### Bug Fixes
+
+* default to showing the progress bar ([#681](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/681)) ([d5195ea](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d5195ea3250837632941be813e46aaf0e2ff9e9a))
+
+
+
 # [1.14.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.13.5...1.14.0) (2023-07-05)
 
 
