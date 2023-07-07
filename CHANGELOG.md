@@ -1,3 +1,13 @@
+## [1.14.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.2...1.14.3) (2023-07-07)
+
+
+### Bug Fixes
+
+* project not required for canceling ([16dc313](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/16dc31357883bc9df9ba12a7f58235182cab17fa))
+* remove building component set for canceling deploys ([0410bba](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0410bbab3fc16556283d27265edde1cce0f3f6f0))
+
+
+
 ## [1.14.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.1...1.14.2) (2023-07-06)
 
 
