@@ -1187,6 +1187,25 @@
     proxy-agent "^6.2.1"
     unzipper "0.10.14"
 
+"@salesforce/source-deploy-retrieve@^9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-9.3.2.tgz#4079f30aec10dbdebdf9bf0fcd96d438e7a0ec6b"
+  integrity sha512-gXegsllkuY7QqURph8jH0SgYHc7VrM6+8Uk78Kt6GSNyhyq5L5F0obtTr49MIpsRtjowJGssBmDYOF0n4HqPWg==
+  dependencies:
+    "@salesforce/core" "^4.3.1"
+    "@salesforce/kit" "^3.0.3"
+    "@salesforce/ts-types" "^2.0.3"
+    fast-levenshtein "^3.0.0"
+    fast-xml-parser "^4.2.5"
+    got "^11.8.6"
+    graceful-fs "^4.2.11"
+    ignore "^5.2.4"
+    jszip "^3.10.1"
+    mime "2.6.0"
+    minimatch "^5.1.6"
+    proxy-agent "^6.2.1"
+    unzipper "0.10.14"
+
 "@salesforce/source-testkit@^2.1.2":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.1.4.tgz#9520a4df09c2c5f4204ba1c17bd08d5f66f548cf"
@@ -1203,7 +1222,7 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^4.1.0", "@salesforce/source-tracking@^4.2.1":
+"@salesforce/source-tracking@^4.1.0":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.2.1.tgz#a37c8334e7e19f602b8c5102a89952a9f99f22e0"
   integrity sha512-7luIL35fw2bpgm/kDMKhspSgROZZZwhCL7spy1pde3qg0Wnnva70DeQ+v2CF5slBLhfRKQ9F+EnEMPJQ6fVttA==
@@ -1212,6 +1231,19 @@
     "@salesforce/kit" "^3.0.3"
     "@salesforce/source-deploy-retrieve" "^9.2.2"
     fast-xml-parser "^4.2.4"
+    graceful-fs "^4.2.11"
+    isomorphic-git "1.23.0"
+    ts-retry-promise "^0.7.0"
+
+"@salesforce/source-tracking@^4.2.5":
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.2.5.tgz#b58e325ee98bb4fd59d7a36bb4728e111259d2a6"
+  integrity sha512-FWspU5k2bGeu+rJLjJGSMk2fAjtV279XdQv3v67NlcKxQB8EuTg6g3dUTyx3EU0KOnSEAWgqak+nCqL0mYlgxg==
+  dependencies:
+    "@salesforce/core" "^4.3.5"
+    "@salesforce/kit" "^3.0.3"
+    "@salesforce/source-deploy-retrieve" "^9.3.2"
+    fast-xml-parser "^4.2.5"
     graceful-fs "^4.2.11"
     isomorphic-git "1.23.0"
     ts-retry-promise "^0.7.0"
@@ -3660,7 +3692,7 @@ fast-levenshtein@^3.0.0:
   dependencies:
     fastest-levenshtein "^1.0.7"
 
-fast-xml-parser@^4.2.4:
+fast-xml-parser@^4.2.4, fast-xml-parser@^4.2.5:
   version "4.2.5"
   resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.2.5.tgz#a6747a09296a6cb34f2ae634019bf1738f3b421f"
   integrity sha512-B9/wizE4WngqQftFPmdaMYlXoJlJOYxGQOanC77fq9k8+Z0v5dDSVh+3glErdIROP//s/jgb7ZuxKfB8nVyo0g==

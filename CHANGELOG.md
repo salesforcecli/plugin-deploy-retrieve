@@ -1,3 +1,22 @@
+## [1.14.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.1...1.14.2) (2023-07-06)
+
+
+### Bug Fixes
+
+* bump SDR to 9.3.2 for latest registry ([5904cee](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5904ceed1141d704903cfb7dcbf6bcba174f3897))
+* bump STL to latest so SDR versions match ([dd3a92d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/dd3a92d0305551a0d6dafe0aca9e4b3d95f16d7d))
+
+
+
+## [1.14.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.0...1.14.1) (2023-07-06)
+
+
+### Bug Fixes
+
+* default to showing the progress bar ([#681](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/681)) ([d5195ea](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d5195ea3250837632941be813e46aaf0e2ff9e9a))
+
+
+
 # [1.14.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.13.5...1.14.0) (2023-07-05)
 
 
