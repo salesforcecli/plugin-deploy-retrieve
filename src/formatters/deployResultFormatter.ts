@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'path';
+import { EOL } from 'node:os';
 import * as fs from 'fs';
 import { ux } from '@oclif/core';
 import { DeployResult, FileResponse, FileResponseFailure, RequestStatus } from '@salesforce/source-deploy-retrieve';
@@ -107,17 +108,35 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
 
   private maybeCreateRequestedReports(): void {
     // only generate reports if test results are presented
-    if (this.result.response?.numberTestsTotal) {
+    if (
+      (!this.result.response?.numberTestsTotal && !this.flags['test-level']) ||
+      this.flags['test-level'] === 'NoTestRun'
+    ) {
+      let testsWarn = '';
+
       if (this.coverageOptions.reportFormats?.length) {
-        ux.log(
-          `Code Coverage formats, [${this.flags['coverage-formatters']?.join(', ')}], written to ${this.resultsDir}/`
-        );
-        this.createCoverageReport('no-map');
+        testsWarn += `\`--coverage-formatters\` was specified but no tests ran.${EOL}`;
       }
       if (this.junit) {
-        ux.log(`Junit results written to ${this.resultsDir}/junit/junit.xml`);
-        this.createJunitResults();
+        testsWarn += `\`--junit\` was specified but no tests ran.${EOL}`;
       }
+
+      testsWarn +=
+        'You can ensure tests run by specifying `--test-level` to `RunSpecifiedTests`, `RunLocalTests` or `RunAllTestsInOrg`.';
+      ux.warn(testsWarn);
+      return;
+    }
+
+    if (this.coverageOptions.reportFormats?.length) {
+      ux.log(
+        `Code Coverage formats, [${this.flags['coverage-formatters']?.join(', ')}], written to ${this.resultsDir}/`
+      );
+      this.createCoverageReport('no-map');
+    }
+
+    if (this.junit) {
+      ux.log(`Junit results written to ${this.resultsDir}/junit/junit.xml`);
+      this.createJunitResults();
     }
   }
 
