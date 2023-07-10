@@ -122,7 +122,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       }
 
       testsWarn +=
-        'You can ensure tests run by specifying `--test-level` to `RunSpecifiedTests`, `RunLocalTests` or `RunAllTestsInOrg`.';
+        'You can ensure tests run by specifying `--test-level` and setting it to `RunSpecifiedTests`, `RunLocalTests` or `RunAllTestsInOrg`.';
       ux.warn(testsWarn);
       return;
     }
