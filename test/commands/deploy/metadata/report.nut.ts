@@ -5,8 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import * as fs from 'fs';
+import * as path from 'path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, isObject } from '@salesforce/ts-types';
+import { expect } from 'chai';
 import { DeployResultJson } from '../../../../src/utils/types';
 
 describe('deploy metadata report NUTs with source-dir', () => {
@@ -39,6 +42,21 @@ describe('deploy metadata report NUTs with source-dir', () => {
       assert(isObject(deploy));
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
+
+    it.skip('should report most recently started deployment without specifying the flag', async () => {
+      await testkit.execute<DeployResultJson>('deploy:metadata', {
+        args: '--source-dir force-app --async',
+        json: true,
+        exitCode: 0,
+      });
+
+      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
+        json: true,
+        exitCode: 0,
+      });
+      assert(isObject(deploy));
+      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+    });
   });
 
   describe('--job-id', () => {
@@ -53,6 +71,30 @@ describe('deploy metadata report NUTs with source-dir', () => {
         json: true,
         exitCode: 0,
       });
+      assert(isObject(deploy));
+      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+    });
+  });
+
+  describe('test flags', () => {
+    it('should override the --output-dir', async () => {
+      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
+        args: '--source-dir force-app --async --ignore-conflicts --test-level RunAllTestsInOrg --coverage-formatters html --junit --results-dir test-output',
+        json: true,
+        exitCode: 0,
+      });
+      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
+        args: `--job-id ${first?.result.id} --coverage-formatters html --coverage-formatters text --junit --results-dir test-output-override`,
+        json: true,
+        exitCode: 0,
+      });
+      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override'))).to.be.true;
+      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'coverage'))).to.be.true;
+      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'coverage', 'html'))).to.be.true;
+      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'coverage', 'text.txt'))).to.be.true;
+      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'junit'))).to.be.true;
+      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'junit', 'junit.xml'))).to.be.true;
+      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output'))).to.be.false;
       assert(isObject(deploy));
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });

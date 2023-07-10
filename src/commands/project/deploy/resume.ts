@@ -20,6 +20,8 @@ import { coverageFormattersFlag } from '../../../utils/flags';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.resume');
 
+const testFlags = 'Test';
+
 export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
@@ -61,11 +63,15 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       helpValue: '<minutes>',
       min: 1,
     }),
-    'coverage-formatters': coverageFormattersFlag,
-    junit: Flags.boolean({ summary: messages.getMessage('flags.junit.summary') }),
+    'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
+    junit: Flags.boolean({
+      summary: messages.getMessage('flags.junit.summary'),
+      helpGroup: testFlags,
+    }),
     'results-dir': Flags.directory({
-      dependsOn: ['junit', 'coverage-formatters'],
+      relationships: [{ type: 'some', flags: ['coverage-formatters', 'junit'] }],
       summary: messages.getMessage('flags.results-dir.summary'),
+      helpGroup: testFlags,
     }),
   };
 

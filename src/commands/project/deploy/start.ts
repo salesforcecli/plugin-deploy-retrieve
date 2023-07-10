@@ -154,11 +154,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
     junit: Flags.boolean({
       summary: messages.getMessage('flags.junit.summary'),
-      dependsOn: ['coverage-formatters'],
       helpGroup: testFlags,
     }),
     'results-dir': Flags.directory({
-      dependsOn: ['coverage-formatters'],
+      relationships: [{ type: 'some', flags: ['coverage-formatters', 'junit'] }],
       summary: messages.getMessage('flags.results-dir.summary'),
       helpGroup: testFlags,
     }),
