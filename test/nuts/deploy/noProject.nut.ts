@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { join } from 'path';
+import * as path from 'path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { DeployResultJson } from '../../../src/utils/types';
@@ -14,17 +14,21 @@ describe('deploy mdapi format without project', () => {
   let session: TestSession;
   before(async () => {
     session = await TestSession.create({
-      devhubAuthStrategy: 'AUTO',
+      project: { gitClone: 'https://github.com/trailheadapps/dreamhouse-lwc' },
       scratchOrgs: [
         {
+          alias: 'deployNoProject',
           edition: 'developer',
+          setDefault: true,
+          config: path.join('config', 'project-scratch-def.json'),
         },
       ],
+      devhubAuthStrategy: 'AUTO',
     });
   });
 
   it('can deploy mdapi format folder without a project', () => {
-    const metadataDir = join('test', 'nuts', 'deploy', 'mdapiOut');
+    const metadataDir = path.join('test', 'nuts', 'deploy', 'mdapiOut');
     const result = execCmd<DeployResultJson>(
       `project:deploy:start -o deployNoProject --metadata-dir ${metadataDir} --json`,
       {
@@ -35,7 +39,7 @@ describe('deploy mdapi format without project', () => {
   });
 
   it('can deploy zipped mdapi without a project', () => {
-    const zip = join('test', 'nuts', 'deploy', 'mdapiOut.zip');
+    const zip = path.join('test', 'nuts', 'deploy', 'mdapiOut.zip');
     const result = execCmd<DeployResultJson>(`project:deploy:start -o deployNoProject --metadata-dir ${zip} --json`, {
       ensureExitCode: 0,
     }).jsonOutput?.result;
