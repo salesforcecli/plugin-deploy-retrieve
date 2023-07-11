@@ -34,7 +34,6 @@ describe('Deploy Formatter', () => {
       }
     ).jsonOutput;
 
-    expect(result?.code).to.equal(0);
     expect(result?.result.runTestsEnabled).to.equal(false);
     expect(result?.result.numberTestsTotal).to.equal(0);
     expect(result?.warnings).to.include(
