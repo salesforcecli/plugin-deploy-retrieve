@@ -17,6 +17,7 @@ describe('deploy mdapi format without project', () => {
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
         {
+          alias: 'deployNoProject',
           edition: 'developer',
         },
       ],
