@@ -128,15 +128,6 @@ describe('project retrieve start', () => {
     expect(retrieveStub.firstCall.args[0]).to.deep.equal(expectedRetrieveArgs);
   };
 
-  // Ensure Lifecycle hooks are called properly
-  // const ensureHookArgs = () => {
-  //   const failureMsg = 'Lifecycle.emit() should be called for preretrieve and postretrieve';
-  //   expect(lifecycleEmitStub.calledTwice, failureMsg).to.equal(true);
-  //   expect(lifecycleEmitStub.firstCall.args[0]).to.equal('preretrieve');
-  //   expect(lifecycleEmitStub.firstCall.args[1]).to.deep.equal([exampleSourceComponent]);
-  //   expect(lifecycleEmitStub.secondCall.args[0]).to.equal('postretrieve');
-  // };
-
   it('should pass along sourcepath', async () => {
     const sourcepath = ['somepath'];
     const result = await RetrieveMetadata.run(['--source-dir', sourcepath[0], '--json']);

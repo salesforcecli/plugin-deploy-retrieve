@@ -29,7 +29,7 @@ import { Interfaces } from '@oclif/core';
 import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags';
 import { RetrieveResultFormatter } from '../../../formatters/retrieveResultFormatter';
 import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter';
-import { getPackageDirs } from '../../../utils/project';
+import { getOptionalProject, getPackageDirs } from '../../../utils/project';
 import { RetrieveResultJson } from '../../../utils/types';
 import { writeConflictTable } from '../../../utils/conflicts';
 import { promisesQueue } from '../../../utils/promiseQueue';
@@ -374,7 +374,7 @@ const buildRetrieveAndDeleteTargets = async (
     return {
       componentSetFromNonDeletes: await ComponentSetBuilder.build({
         sourceapiversion: (
-          await SfProject.getInstance()?.resolveProjectConfig()
+          await (await getOptionalProject())?.resolveProjectConfig()
         )?.sourceApiVersion as string | undefined,
         apiversion: flags['api-version'],
         sourcepath: flags['source-dir'],
