@@ -1,3 +1,12 @@
+## [1.14.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.3...1.14.4) (2023-07-11)
+
+
+### Bug Fixes
+
+* **deps:** bump semver from 5.7.1 to 5.7.2 ([7fc1c04](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7fc1c04d01e164d6e3f06134074978f596cf8de0))
+
+
+
 ## [1.14.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.2...1.14.3) (2023-07-07)
 
 
