@@ -28,7 +28,7 @@ describe('Deploy Formatter', () => {
 
   it('shows warn if codecov report is requested but no tests ran', () => {
     const result = execCmd<DeployResultJson>(
-      'project deploy start --source-dir force-app/main/default/classes --test-level NoTestRun --coverage-formatters html --json',
+      'project deploy start --source-dir force-app --test-level NoTestRun --coverage-formatters html --json',
       {
         ensureExitCode: 0,
       }
