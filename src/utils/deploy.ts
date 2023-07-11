@@ -201,11 +201,10 @@ export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Pr
   if (!deploy.id) {
     throw new SfError('The deploy id is not available.');
   }
-  const componentSet = await buildComponentSet({ ...opts });
   await DeployCache.set(deploy.id, { ...opts });
 
   await deploy.cancel();
-  return poll(org, deploy.id, opts.wait ?? Duration.minutes(33), componentSet);
+  return poll(org, deploy.id, opts.wait ?? Duration.minutes(33));
 }
 
 export async function cancelDeployAsync(opts: Partial<DeployOptions>, id: string): Promise<{ id: string }> {

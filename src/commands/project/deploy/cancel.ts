@@ -22,7 +22,6 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
-  public static readonly requiresProject = true;
   public static readonly aliases = ['deploy:metadata:cancel'];
   public static readonly deprecateAliases = true;
 

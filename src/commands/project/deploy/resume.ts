@@ -26,7 +26,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
   public static readonly examples = messages.getMessages('examples');
-  public static readonly requiresProject = true;
   public static readonly aliases = ['deploy:metadata:resume'];
   public static readonly deprecateAliases = true;
 
@@ -93,7 +92,17 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const wait = flags.wait ?? Duration.minutes(deployOpts.wait);
     const { deploy } = await executeDeploy(
       // there will always be conflicts on a resume if anything deployed--the changes on the server are not synced to local
-      { ...deployOpts, wait, 'dry-run': false, 'ignore-conflicts': true },
+      {
+        ...deployOpts,
+        wait,
+        'dry-run': false,
+        'ignore-conflicts': true,
+        // TODO: isMdapi is generated from 'metadata-dir' flag, but we don't have that flag here
+        // change the cache value to actually cache the metadata-dir, and if there's a value, it isMdapi
+        // deployCache~L38, so to tell the executeDeploy method it's ok to not have a project, we spoof a metadata-dir
+        // in deploy~L140, it checks the if the id is present, so this metadata-dir value is never _really_ used
+        'metadata-dir': deployOpts.isMdapi ? { type: 'file', path: 'testing' } : undefined,
+      },
       this.config.bin,
       this.project,
       jobId
