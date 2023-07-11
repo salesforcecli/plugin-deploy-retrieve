@@ -1,3 +1,12 @@
+# [1.15.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.4...1.15.0) (2023-07-11)
+
+
+### Features
+
+* allow `project deploy <validate | quick | resume>` to run outside a project ([#691](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/691)) ([b253c65](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b253c65f8f852052b0e0cbd3100acbda8a177021))
+
+
+
 ## [1.14.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.3...1.14.4) (2023-07-11)
 
 
