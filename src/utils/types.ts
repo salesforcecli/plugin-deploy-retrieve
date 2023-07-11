@@ -96,7 +96,7 @@ export type RetrieveResultJson =
   | MetadataRetrieveResultJson;
 
 export type Formatter<T> = {
-  getJson: () => T;
+  getJson: () => Promise<T>;
   display: () => void;
 };
 

@@ -132,14 +132,15 @@ export class Mdapi extends SfCommand<ConvertMdapiJson> {
     }
   }
 
-  protected formatResult(): ConvertMdapiJson {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  protected async formatResult(): Promise<ConvertMdapiJson> {
     if (!this.convertResult) {
       throw new SfError('No results to format');
     }
     const formatter = new MetadataConvertResultFormatter(this.convertResult);
 
     if (!this.jsonEnabled()) {
-      formatter.display();
+      await formatter.display();
     }
     return formatter.getJson();
   }

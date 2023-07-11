@@ -13,7 +13,8 @@ export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJso
   private convertResults!: ConvertMdapiJson;
   public constructor(private result: ConvertResult) {}
 
-  public getJson(): ConvertMdapiJson {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getJson(): Promise<ConvertMdapiJson> {
     this.convertResults = [];
     this.result?.converted?.forEach((component) => {
       if (component.xml) {
@@ -37,8 +38,8 @@ export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJso
     return this.convertResults;
   }
 
-  public display(): void {
-    const convertData = this.getJson();
+  public async display(): Promise<void> {
+    const convertData = await this.getJson();
     if (convertData?.length) {
       ux.table(
         convertData.map((entry) => ({

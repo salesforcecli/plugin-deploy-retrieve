@@ -11,7 +11,8 @@ import { DeployResultJson, Formatter } from '../utils/types';
 export class DeployCancelResultFormatter implements Formatter<DeployResultJson> {
   public constructor(protected result: DeployResult) {}
 
-  public getJson(): DeployResultJson {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getJson(): Promise<DeployResultJson> {
     return { ...this.result.response, files: this.result.getFileResponses() ?? [] };
   }
 

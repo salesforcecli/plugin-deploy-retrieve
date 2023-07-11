@@ -15,7 +15,8 @@ export const deployAsyncMessages = Messages.loadMessages('@salesforce/plugin-dep
 export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployResultJson> {
   public constructor(private id: string, private bin: string) {}
 
-  public getJson(): DeployResultJson {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getJson(): Promise<DeployResultJson> {
     return { id: this.id, done: false, status: 'Queued', files: [] };
   }
 

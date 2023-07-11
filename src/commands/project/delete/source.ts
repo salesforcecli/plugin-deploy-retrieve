@@ -278,7 +278,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
     }
   }
 
-  protected formatResult(): DeleteSourceJson {
+  protected async formatResult(): Promise<DeleteSourceJson> {
     const formatterOptions = {
       verbose: this.flags.verbose ?? false,
       testLevel: this.flags['test-level'],
@@ -295,7 +295,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
     if (this.mixedDeployDelete.deploy.length && !this.aborted) {
       // override JSON output when we actually deployed
-      const json = this.deleteResultFormatter.getJson() as DeleteSourceJson;
+      const json = (await this.deleteResultFormatter.getJson()) as DeleteSourceJson;
       json.deletedSource = this.mixedDeployDelete.delete; // to match toolbelt json output
       json.outboundFiles = []; // to match toolbelt version
       json.deletes = json.deploys; // to match toolbelt version
@@ -314,7 +314,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       } as unknown as DeleteSourceJson;
     }
 
-    return this.deleteResultFormatter.getJson() as DeleteSourceJson;
+    return (await this.deleteResultFormatter.getJson()) as DeleteSourceJson;
   }
 
   private async maybeUpdateTracking(): Promise<void> {

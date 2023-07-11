@@ -158,7 +158,7 @@ export class Source extends SfCommand<ConvertResultJson> {
     }
   }
 
-  protected formatResult(): ConvertResultJson {
+  protected async formatResult(): Promise<ConvertResultJson> {
     const formatter = new SourceConvertResultFormatter(this.convertResult);
 
     if (!this.jsonEnabled()) {

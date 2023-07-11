@@ -25,7 +25,8 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
     this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
   }
 
-  public getJson(): MetadataRetrieveResultJson {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getJson(): Promise<MetadataRetrieveResultJson> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { zipFile, ...responseWithoutZipFile } = this.result.response;
     return { ...responseWithoutZipFile, zipFilePath: this.zipFilePath, files: this.files };
