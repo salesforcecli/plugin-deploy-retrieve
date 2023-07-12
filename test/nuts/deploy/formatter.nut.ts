@@ -17,7 +17,7 @@ describe('Deploy Formatter', () => {
   before(async () => {
     testkit = await TestSession.create({
       project: { gitClone: 'https://github.com/trailheadapps/dreamhouse-lwc' },
-      scratchOrgs: [{ alias: 'test', setDefault: true, config: path.join('config', 'project-scratch-def.json') }],
+      scratchOrgs: [{ setDefault: true, config: path.join('config', 'project-scratch-def.json') }],
       devhubAuthStrategy: 'AUTO',
     });
   });
