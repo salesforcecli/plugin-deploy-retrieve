@@ -48,6 +48,11 @@ describe('deploy mdapi format without tracking', () => {
   });
 
   after(async () => {
+    // workaround for weird lstat bug on windows
+    await Promise.all([
+      fs.rm(join(session.project.dir, 'mdapiOut.zip')),
+      fs.rm(join(session.project.dir, 'mdapiOut'), { recursive: true }),
+    ]);
     await session?.clean();
   });
 });
