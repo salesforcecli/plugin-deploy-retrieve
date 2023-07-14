@@ -15,7 +15,10 @@ describe('deploy mdapi format without tracking', () => {
   before(async () => {
     session = await TestSession.create({
       devhubAuthStrategy: 'AUTO',
-      project: { name: 'mdapiDeployNoTracking' },
+      project: {
+        name: 'mdapiDeployNoTracking',
+        sourceDir: join(process.cwd(), 'test', 'nuts', 'deploy', 'mdapiSource'),
+      },
       scratchOrgs: [
         {
           edition: 'developer',
@@ -27,16 +30,14 @@ describe('deploy mdapi format without tracking', () => {
   });
 
   it('can deploy mdapi format folder without a project', () => {
-    const metadataDir = join('test', 'nuts', 'deploy', 'mdapiOut');
-    const result = execCmd<DeployResultJson>(`project:deploy:start --metadata-dir ${metadataDir} --json`, {
+    const result = execCmd<DeployResultJson>('project:deploy:start --metadata-dir mdapiOut --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     expect(result?.files).to.not.be.empty;
   });
 
   it('can deploy zipped mdapi without a project', () => {
-    const zip = join('test', 'nuts', 'deploy', 'mdapiOut.zip');
-    const result = execCmd<DeployResultJson>(`project:deploy:start --metadata-dir ${zip} --json`, {
+    const result = execCmd<DeployResultJson>('project:deploy:start --metadata-dir mdapiOut.zip --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     expect(result?.files).to.not.be.empty;
