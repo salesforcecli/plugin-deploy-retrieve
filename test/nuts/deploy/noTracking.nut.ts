@@ -6,7 +6,6 @@
  */
 
 import { join } from 'path';
-import * as fs from 'fs-extra';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { DeployResultJson } from '../../../src/utils/types';
@@ -25,14 +24,10 @@ describe('deploy mdapi format without tracking', () => {
         },
       ],
     });
-    await Promise.all([
-      fs.copy(join('test', 'nuts', 'deploy', 'mdapiOut.zip'), join(session.project.dir, 'mdapiOut.zip')),
-      fs.copy(join('test', 'nuts', 'deploy', 'mdapiOut'), join(session.project.dir, 'mdapiOut')),
-    ]);
   });
 
   it('can deploy mdapi format folder without a project', () => {
-    const metadataDir = 'mdapiOut';
+    const metadataDir = join('test', 'nuts', 'deploy', 'mdapiOut');
     const result = execCmd<DeployResultJson>(`project:deploy:start --metadata-dir ${metadataDir} --json`, {
       ensureExitCode: 0,
     }).jsonOutput?.result;
@@ -40,7 +35,7 @@ describe('deploy mdapi format without tracking', () => {
   });
 
   it('can deploy zipped mdapi without a project', () => {
-    const zip = 'mdapiOut.zip';
+    const zip = join('test', 'nuts', 'deploy', 'mdapiOut.zip');
     const result = execCmd<DeployResultJson>(`project:deploy:start --metadata-dir ${zip} --json`, {
       ensureExitCode: 0,
     }).jsonOutput?.result;
@@ -48,11 +43,6 @@ describe('deploy mdapi format without tracking', () => {
   });
 
   after(async () => {
-    // workaround for weird lstat bug on windows
-    await Promise.all([
-      fs.rm(join(session.project.dir, 'mdapiOut.zip')),
-      fs.rm(join(session.project.dir, 'mdapiOut'), { recursive: true }),
-    ]);
     await session?.clean();
   });
 });
