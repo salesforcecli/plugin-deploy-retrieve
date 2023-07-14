@@ -1,3 +1,12 @@
+## [1.15.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.0...1.15.1) (2023-07-14)
+
+
+### Bug Fixes
+
+* throw if delete request is canceled ([3bd96ca](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3bd96caa55af2ed17fd62550c1e6edeeee2d1c85))
+
+
+
 # [1.15.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.4...1.15.0) (2023-07-11)
 
 
