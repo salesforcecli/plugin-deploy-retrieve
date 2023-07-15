@@ -1,3 +1,12 @@
+## [1.15.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.2...1.15.3) (2023-07-15)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/core from 4.3.5 to 4.3.10 ([cad1ba0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/cad1ba026a0eee727a503aca89c756a22f74a612))
+
+
+
 ## [1.15.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.1...1.15.2) (2023-07-14)
 
 
