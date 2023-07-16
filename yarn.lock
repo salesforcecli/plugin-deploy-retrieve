@@ -1028,10 +1028,10 @@
   resolved "https://registry.yarnpkg.com/@salesforce/dev-config/-/dev-config-4.0.1.tgz#662ffaa4409713553aaf68eed93e7d2429c3ff0e"
   integrity sha512-0zMjXG4Vjlu/mB7zbuKSXfXiP7CEZBwsPtYqNgburk/wZIU9KcMspLwVBDUxmUj9ltRksD9o1ubRUblN5M3Z0g==
 
-"@salesforce/dev-scripts@^5.4.2":
-  version "5.4.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/dev-scripts/-/dev-scripts-5.4.2.tgz#77aacf9a4743fe951d9de9cbc9524a70bb46054e"
-  integrity sha512-D54yF+NDDa+50A28YyvG8aO5t3tIMIIZ7Q+ewWmUXdpFhqUfwq1k6/Y2tZy+rE9Z8fwWB2DQSD9dhaZavxOgrw==
+"@salesforce/dev-scripts@^5.4.3":
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/dev-scripts/-/dev-scripts-5.4.3.tgz#e17dba5be40570f7148ee9175e26384eede1a62a"
+  integrity sha512-Qkyht70ZDQGx7zNgZeZep93eG538A7g1J7Ov+ogGCG7a3ds0ehKFscjvR5t0TKQhL8ojWEjKYr44IX4SfBKOyQ==
   dependencies:
     "@commitlint/cli" "^17.1.2"
     "@commitlint/config-conventional" "^17.1.0"
@@ -1173,7 +1173,7 @@
     chalk "^4"
     inquirer "^8.2.5"
 
-"@salesforce/source-deploy-retrieve@^9.1.0", "@salesforce/source-deploy-retrieve@^9.2.2", "@salesforce/source-deploy-retrieve@^9.3.2", "@salesforce/source-deploy-retrieve@^9.3.3", "@salesforce/source-deploy-retrieve@^9.4.0":
+"@salesforce/source-deploy-retrieve@^9.1.0", "@salesforce/source-deploy-retrieve@^9.3.2", "@salesforce/source-deploy-retrieve@^9.3.3", "@salesforce/source-deploy-retrieve@^9.4.0":
   version "9.4.0"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-9.4.0.tgz#964eec969be118cbe4a6a8692f9e2bb0b09bd7ff"
   integrity sha512-U3rSvqlwF5FhnR1/jgNDT2BtZwSweH1KUBxxHnGRQ5s+VTFcuChZ1A6hkmwZzMPCUPjRg9XJbm74A7NUqy73Zw==
@@ -1208,20 +1208,7 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^4.1.0":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.2.1.tgz#a37c8334e7e19f602b8c5102a89952a9f99f22e0"
-  integrity sha512-7luIL35fw2bpgm/kDMKhspSgROZZZwhCL7spy1pde3qg0Wnnva70DeQ+v2CF5slBLhfRKQ9F+EnEMPJQ6fVttA==
-  dependencies:
-    "@salesforce/core" "^4.3.1"
-    "@salesforce/kit" "^3.0.3"
-    "@salesforce/source-deploy-retrieve" "^9.2.2"
-    fast-xml-parser "^4.2.4"
-    graceful-fs "^4.2.11"
-    isomorphic-git "1.23.0"
-    ts-retry-promise "^0.7.0"
-
-"@salesforce/source-tracking@^4.2.5":
+"@salesforce/source-tracking@^4.1.0", "@salesforce/source-tracking@^4.2.5":
   version "4.2.5"
   resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.2.5.tgz#b58e325ee98bb4fd59d7a36bb4728e111259d2a6"
   integrity sha512-FWspU5k2bGeu+rJLjJGSMk2fAjtV279XdQv3v67NlcKxQB8EuTg6g3dUTyx3EU0KOnSEAWgqak+nCqL0mYlgxg==
@@ -1784,12 +1771,7 @@ acorn-walk@^8.1.1, acorn-walk@^8.2.0:
   resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"
   integrity sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==
 
-acorn@^8.4.1, acorn@^8.7.0:
-  version "8.8.2"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.2.tgz#1b2f25db02af965399b9776b0c2c391276d37c4a"
-  integrity sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==
-
-acorn@^8.9.0:
+acorn@^8.4.1, acorn@^8.7.0, acorn@^8.9.0:
   version "8.10.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.10.0.tgz#8be5b3907a67221a81ab23c7889c4c5526b62ec5"
   integrity sha512-F0SAmZ8iUtS//m8DmCTA0jlh6TDKkHQyK6xc6V4KDTyZKA9dnvX9/3sRTVQrWm79glUAZbnmmNcdYwUIHWVybw==
@@ -3683,7 +3665,7 @@ fast-levenshtein@^3.0.0:
   dependencies:
     fastest-levenshtein "^1.0.7"
 
-fast-xml-parser@^4.2.4, fast-xml-parser@^4.2.5:
+fast-xml-parser@^4.2.5:
   version "4.2.5"
   resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.2.5.tgz#a6747a09296a6cb34f2ae634019bf1738f3b421f"
   integrity sha512-B9/wizE4WngqQftFPmdaMYlXoJlJOYxGQOanC77fq9k8+Z0v5dDSVh+3glErdIROP//s/jgb7ZuxKfB8nVyo0g==
