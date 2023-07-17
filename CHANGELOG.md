@@ -1,3 +1,12 @@
+# [1.16.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.5...1.16.0) (2023-07-17)
+
+
+### Features
+
+* add deployId for output json of failed validate ([0caa3f1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0caa3f13cd0be55cc08b0d7173251aa74b4f7965))
+
+
+
 ## [1.15.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.4...1.15.5) (2023-07-17)
 
 
