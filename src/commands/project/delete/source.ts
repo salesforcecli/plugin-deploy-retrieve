@@ -224,7 +224,9 @@ export class Source extends SfCommand<DeleteSourceJson> {
     }
 
     this.aborted = !(await this.handlePrompt());
-    if (this.aborted) return;
+    if (this.aborted) {
+      throw messages.createError('prompt.delete.cancel');
+    }
 
     // fire predeploy event for the delete
     await Lifecycle.getInstance().emit('predeploy', this.components);

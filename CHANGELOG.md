@@ -1,3 +1,27 @@
+## [1.15.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.3...1.15.4) (2023-07-15)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve from 9.3.3 to 9.4.0 ([277835a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/277835ad09c0d2815abba1a36fe9db45aadf73d7))
+
+## [1.15.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.2...1.15.3) (2023-07-15)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 4.3.5 to 4.3.10 ([cad1ba0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/cad1ba026a0eee727a503aca89c756a22f74a612))
+
+## [1.15.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.1...1.15.2) (2023-07-14)
+
+### Bug Fixes
+
+- emit sourceApi message, set it on cs, add UTs ([#669](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/669)) ([6e07d1a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6e07d1a6cf9865e4d50ab141e5b6389a4cb1247f))
+
+## [1.15.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.0...1.15.1) (2023-07-14)
+
+### Bug Fixes
+
+- throw if delete request is canceled ([3bd96ca](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3bd96caa55af2ed17fd62550c1e6edeeee2d1c85))
+
 # [1.15.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.14.4...1.15.0) (2023-07-11)
 
 ### Features
