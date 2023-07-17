@@ -31,7 +31,8 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
    *
    * @returns a JSON formatted result matching the provided type.
    */
-  public getJson(): DeleteSourceJson {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getJson(): Promise<DeleteSourceJson> {
     return {
       ...this.result.response,
       deletedSource: this.result.getFileResponses() ?? [],

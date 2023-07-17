@@ -22,7 +22,8 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
     this.files = (this.result.getFileResponses() ?? []).concat(deleteResponses);
   }
 
-  public getJson(): RetrieveResultJson {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getJson(): Promise<RetrieveResultJson> {
     const { zipFile, ...responseWithoutZip } = this.result.response;
     return { ...responseWithoutZip, files: this.files };
   }

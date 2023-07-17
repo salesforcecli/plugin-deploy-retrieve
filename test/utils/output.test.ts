@@ -83,7 +83,7 @@ describe('deployResultFormatter', () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const junitStub = sandbox.stub(formatter, 'createJunitResults');
-        formatter.getJson();
+        await formatter.getJson();
         expect(coverageReportStub.calledOnce).to.equal(true);
         expect(junitStub.calledOnce).to.equal(true);
       });
@@ -108,9 +108,9 @@ describe('deployResultFormatter', () => {
     } as DeployResult;
 
     describe('json', () => {
-      it('shows replacements when not concise', () => {
+      it('shows replacements when not concise', async () => {
         const formatter = new DeployResultFormatter(deployResultSuccessWithReplacements, { verbose: true });
-        const json = formatter.getJson();
+        const json = await formatter.getJson();
         assert('replacements' in json && json.replacements);
         expect(json.replacements).to.deep.equal({ foo: ['bar', 'baz'] });
       });

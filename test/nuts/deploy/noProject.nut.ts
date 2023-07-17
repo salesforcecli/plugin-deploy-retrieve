@@ -17,6 +17,7 @@ describe('deploy mdapi format without project', () => {
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
         {
+          alias: 'deployNoProject',
           edition: 'developer',
         },
       ],
@@ -24,7 +25,7 @@ describe('deploy mdapi format without project', () => {
   });
 
   it('can deploy mdapi format folder without a project', () => {
-    const metadataDir = join('test', 'nuts', 'deploy', 'mdapiOut');
+    const metadataDir = join(process.cwd(), 'test', 'nuts', 'deploy', 'mdapiSource', 'mdapiOut');
     const result = execCmd<DeployResultJson>(
       `project:deploy:start -o deployNoProject --metadata-dir ${metadataDir} --json`,
       {
@@ -35,7 +36,7 @@ describe('deploy mdapi format without project', () => {
   });
 
   it('can deploy zipped mdapi without a project', () => {
-    const zip = join('test', 'nuts', 'deploy', 'mdapiOut.zip');
+    const zip = join(process.cwd(), 'test', 'nuts', 'deploy', 'mdapiSource', 'mdapiOut.zip');
     const result = execCmd<DeployResultJson>(`project:deploy:start -o deployNoProject --metadata-dir ${zip} --json`, {
       ensureExitCode: 0,
     }).jsonOutput?.result;

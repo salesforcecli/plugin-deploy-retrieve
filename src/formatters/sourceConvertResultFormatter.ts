@@ -15,7 +15,8 @@ export const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-
 
 export class SourceConvertResultFormatter implements Formatter<ConvertResultJson> {
   public constructor(private result: ConvertResult) {}
-  public getJson(): ConvertResultJson {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getJson(): Promise<ConvertResultJson> {
     if (!this.result.packagePath) {
       throw new SfError('Convert result contains no packagePath');
     }
