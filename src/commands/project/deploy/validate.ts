@@ -207,20 +207,22 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
       this.log(messages.getMessage('info.suggestedQuickDeploy', [this.config.bin, deploy.id]));
     } else {
-      throw messages.createError('error.FailedValidation', [
-        deploy.id,
-        [
-          // I think the type might be wrong in SDR
-          ...ensureArray(result.response.details.runTestResult?.codeCoverageWarnings).map(
-            (warning: CodeCoverageWarnings & { name?: string }) =>
-              `${warning.name ? `${warning.name} - ` : ''}${warning.message}`
-          ),
-          result.response.errorMessage,
-          result.response.numberComponentErrors ? `${result.response.numberComponentErrors} component error(s)` : '',
-        ]
-          .join(os.EOL)
-          .trim(),
-      ]);
+      throw messages
+        .createError('error.FailedValidation', [
+          deploy.id,
+          [
+            // I think the type might be wrong in SDR
+            ...ensureArray(result.response.details.runTestResult?.codeCoverageWarnings).map(
+              (warning: CodeCoverageWarnings & { name?: string }) =>
+                `${warning.name ? `${warning.name} - ` : ''}${warning.message}`
+            ),
+            result.response.errorMessage,
+            result.response.numberComponentErrors ? `${result.response.numberComponentErrors} component error(s)` : '',
+          ]
+            .join(os.EOL)
+            .trim(),
+        ])
+        .setData({ deployId: deploy.id });
     }
 
     return formatter.getJson();
