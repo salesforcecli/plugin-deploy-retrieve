@@ -1,3 +1,12 @@
+## [1.16.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.0...1.16.1) (2023-07-19)
+
+
+### Bug Fixes
+
+* **deps:** bump word-wrap from 1.2.3 to 1.2.4 ([124cf25](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/124cf25e0eecb48194078941b19edb0fb2d6ff36))
+
+
+
 # [1.16.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.15.5...1.16.0) (2023-07-17)
 
 
