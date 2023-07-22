@@ -1001,10 +1001,10 @@
     jsonwebtoken "9.0.0"
     ts-retry-promise "^0.7.0"
 
-"@salesforce/core@^4.0.1", "@salesforce/core@^4.1.0", "@salesforce/core@^4.2.1", "@salesforce/core@^4.3.1", "@salesforce/core@^4.3.10", "@salesforce/core@^4.3.2", "@salesforce/core@^4.3.5", "@salesforce/core@^4.3.6", "@salesforce/core@^4.3.7":
-  version "4.3.10"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-4.3.10.tgz#d3ada1411c41fbd182fbfbe6a7ab4cf5bc6afb9f"
-  integrity sha512-xWwn9cSMXVSGobcROajVWNcEZ4QY3KbaSyZe7swXJtulJ26CB1Fv3QJB8RxStrj0XaXwt8m1nuiBwh03DTvCKg==
+"@salesforce/core@^4.0.1", "@salesforce/core@^4.1.0", "@salesforce/core@^4.2.1", "@salesforce/core@^4.3.1", "@salesforce/core@^4.3.10", "@salesforce/core@^4.3.11", "@salesforce/core@^4.3.2", "@salesforce/core@^4.3.6", "@salesforce/core@^4.3.7":
+  version "4.3.11"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-4.3.11.tgz#3fde6affd77f56ee1915b4a2d594ea424ce84817"
+  integrity sha512-rjrS0VoDlNaB4RYKLNZQ8+7QayWh5yTV79apCU9fYe0fR1D1p5tb+GAXe4B7AaOReQ8JOQhPBRMx1uzF3Lqn4A==
   dependencies:
     "@salesforce/bunyan" "^2.0.0"
     "@salesforce/kit" "^3.0.4"
@@ -1018,7 +1018,7 @@
     form-data "^4.0.0"
     js2xmlparser "^4.0.1"
     jsforce "^2.0.0-beta.27"
-    jsonwebtoken "9.0.0"
+    jsonwebtoken "9.0.1"
     jszip "3.10.1"
     proper-lockfile "^4.1.2"
     ts-retry-promise "^0.7.0"
@@ -1173,14 +1173,14 @@
     chalk "^4"
     inquirer "^8.2.5"
 
-"@salesforce/source-deploy-retrieve@^9.1.0", "@salesforce/source-deploy-retrieve@^9.3.2", "@salesforce/source-deploy-retrieve@^9.3.3", "@salesforce/source-deploy-retrieve@^9.4.0":
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-9.4.0.tgz#964eec969be118cbe4a6a8692f9e2bb0b09bd7ff"
-  integrity sha512-U3rSvqlwF5FhnR1/jgNDT2BtZwSweH1KUBxxHnGRQ5s+VTFcuChZ1A6hkmwZzMPCUPjRg9XJbm74A7NUqy73Zw==
+"@salesforce/source-deploy-retrieve@^9.1.0", "@salesforce/source-deploy-retrieve@^9.3.3", "@salesforce/source-deploy-retrieve@^9.4.0", "@salesforce/source-deploy-retrieve@^9.4.2":
+  version "9.4.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-9.4.2.tgz#11f259cb716626e80f9e94689c5453f36c3262eb"
+  integrity sha512-uGgdMOhgzvD1Ga+ADAvkOF1beKmuf/2Er3GQQBuzy7ULY5OD+z6l+yQPZZTQqiveJrdrJkMjIpNtUwWDc+4e8A==
   dependencies:
     "@salesforce/core" "^4.3.1"
     "@salesforce/kit" "^3.0.4"
-    "@salesforce/ts-types" "^2.0.3"
+    "@salesforce/ts-types" "^2.0.5"
     fast-levenshtein "^3.0.0"
     fast-xml-parser "^4.2.5"
     got "^11.8.6"
@@ -1189,7 +1189,7 @@
     jszip "^3.10.1"
     mime "2.6.0"
     minimatch "^5.1.6"
-    proxy-agent "^6.2.1"
+    proxy-agent "^6.2.2"
     unzipper "0.10.14"
 
 "@salesforce/source-testkit@^2.1.16":
@@ -1208,14 +1208,14 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^4.1.0", "@salesforce/source-tracking@^4.2.5":
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.2.5.tgz#b58e325ee98bb4fd59d7a36bb4728e111259d2a6"
-  integrity sha512-FWspU5k2bGeu+rJLjJGSMk2fAjtV279XdQv3v67NlcKxQB8EuTg6g3dUTyx3EU0KOnSEAWgqak+nCqL0mYlgxg==
+"@salesforce/source-tracking@^4.1.0", "@salesforce/source-tracking@^4.2.7":
+  version "4.2.7"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.2.7.tgz#aa1ad0e6aba8ebefa410da697fc83cbb15432074"
+  integrity sha512-MYKGhj1ppPmRHeNSsN53t8t5NeIbKVoxUNx8uh9PnzZH46V3R5d1f27cBXLsa57c8zr3ptKqLzgKFc8RJ+YO7A==
   dependencies:
-    "@salesforce/core" "^4.3.5"
-    "@salesforce/kit" "^3.0.3"
-    "@salesforce/source-deploy-retrieve" "^9.3.2"
+    "@salesforce/core" "^4.3.11"
+    "@salesforce/kit" "^3.0.6"
+    "@salesforce/source-deploy-retrieve" "^9.4.2"
     fast-xml-parser "^4.2.5"
     graceful-fs "^4.2.11"
     isomorphic-git "1.23.0"
@@ -1253,7 +1253,7 @@
   dependencies:
     tslib "^2.5.0"
 
-"@salesforce/ts-types@^2.0.2", "@salesforce/ts-types@^2.0.3", "@salesforce/ts-types@^2.0.4", "@salesforce/ts-types@^2.0.5":
+"@salesforce/ts-types@^2.0.2", "@salesforce/ts-types@^2.0.4", "@salesforce/ts-types@^2.0.5":
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@salesforce/ts-types/-/ts-types-2.0.5.tgz#5471236522588e08c094fc3fda27761e6ec935fa"
   integrity sha512-X91De9ZK/X86lYcFAzoAt/pPeY6Lf+G7LyAJRx3FuYpdc+nocvniUnnJGXwSmyKMMxW2NifvQgST7FTZLZ5REA==
@@ -1450,6 +1450,11 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
+
+"@tootallnate/quickjs-emscripten@^0.23.0":
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/@tootallnate/quickjs-emscripten/-/quickjs-emscripten-0.23.0.tgz#db4ecfd499a9765ab24002c3b696d02e6d32a12c"
+  integrity sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
@@ -2064,7 +2069,7 @@ assertion-error@^1.1.0:
   resolved "https://registry.yarnpkg.com/assertion-error/-/assertion-error-1.1.0.tgz#e60b6b0e8f301bd97e5375215bda406c85118c0b"
   integrity sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==
 
-ast-types@^0.13.2:
+ast-types@^0.13.2, ast-types@^0.13.4:
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/ast-types/-/ast-types-0.13.4.tgz#ee0d77b343263965ecc3fb62da16e7222b2b6782"
   integrity sha512-x1FCFnFifvYDDzTaLII71vG5uvDwgtmDTEVWAxrgeiR8VjMONcCXJx7E+USjDtHlwFmt9MysbqgF9b9Vjr6w+w==
@@ -3100,6 +3105,15 @@ degenerator@^4.0.1:
     esprima "^4.0.0"
     vm2 "^3.9.17"
 
+degenerator@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/degenerator/-/degenerator-5.0.1.tgz#9403bf297c6dad9a1ece409b37db27954f91f2f5"
+  integrity sha512-TllpMR/t0M5sqCXfj85i4XaAzxmS5tVA16dqvdkMwGmzI+dXLXnw3J+3Vdv7VKw+ThlTMboK6i9rnZ6Nntj5CQ==
+  dependencies:
+    ast-types "^0.13.4"
+    escodegen "^2.1.0"
+    esprima "^4.0.1"
+
 delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
@@ -3367,6 +3381,17 @@ escodegen@^1.8.1:
     estraverse "^4.2.0"
     esutils "^2.0.2"
     optionator "^0.8.1"
+  optionalDependencies:
+    source-map "~0.6.1"
+
+escodegen@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/escodegen/-/escodegen-2.1.0.tgz#ba93bbb7a43986d29d6041f99f5262da773e2e17"
+  integrity sha512-2NlIDTwUWJN0mRPQOdtQBzbUHvdGY2P1VXSyU83Q3xKxM7WHX2Ql8dKq782Q9TgQUNOLEzEYu9bzLNj1q88I5w==
+  dependencies:
+    esprima "^4.0.1"
+    estraverse "^5.2.0"
+    esutils "^2.0.2"
   optionalDependencies:
     source-map "~0.6.1"
 
@@ -4602,7 +4627,7 @@ interpret@^1.0.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
 
-ip@^1.1.5:
+ip@^1.1.5, ip@^1.1.8:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ip/-/ip-1.1.8.tgz#ae05948f6b075435ed3307acce04629da8cdbf48"
   integrity sha512-PuExPYUiu6qMBQb4l06ecm6T6ujzhmh+MeJcW9wa89PoAz5pvd4zPgN5WJV104mb6S2T1AwNIAaB70JNrLQWhg==
@@ -5137,6 +5162,16 @@ jsonwebtoken@9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-9.0.0.tgz#d0faf9ba1cc3a56255fe49c0961a67e520c1926d"
   integrity sha512-tuGfYXxkQGDPnLJ7SibiQgVgeDgfbPq2k2ICcbgqW8WxWLBAxKQM/ZCu/IT8SOSwmaYl4dpTFCW5xZv7YbbWUw==
+  dependencies:
+    jws "^3.2.2"
+    lodash "^4.17.21"
+    ms "^2.1.1"
+    semver "^7.3.8"
+
+jsonwebtoken@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-9.0.1.tgz#81d8c901c112c24e497a55daf6b2be1225b40145"
+  integrity sha512-K8wx7eJ5TPvEjuiVSkv167EVboBDv9PZdDoF7BgeQnBLVvZWW9clr2PsQHVJDTKaEIH5JBIwHujGcHp7GgI2eg==
   dependencies:
     jws "^3.2.2"
     lodash "^4.17.21"
@@ -6527,6 +6562,20 @@ pac-proxy-agent@^6.0.3:
     pac-resolver "^6.0.1"
     socks-proxy-agent "^8.0.1"
 
+pac-proxy-agent@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pac-proxy-agent/-/pac-proxy-agent-7.0.0.tgz#db42120c64292685dafaf2bd921e223c56bfb13b"
+  integrity sha512-t4tRAMx0uphnZrio0S0Jw9zg3oDbz1zVhQ/Vy18FjLfP1XOLNUEjaVxYCYRI6NS+BsMBXKIzV6cTLOkO9AtywA==
+  dependencies:
+    "@tootallnate/quickjs-emscripten" "^0.23.0"
+    agent-base "^7.0.2"
+    debug "^4.3.4"
+    get-uri "^6.0.1"
+    http-proxy-agent "^7.0.0"
+    https-proxy-agent "^7.0.0"
+    pac-resolver "^7.0.0"
+    socks-proxy-agent "^8.0.1"
+
 pac-resolver@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/pac-resolver/-/pac-resolver-5.0.1.tgz#c91efa3a9af9f669104fa2f51102839d01cde8e7"
@@ -6543,6 +6592,15 @@ pac-resolver@^6.0.1:
   dependencies:
     degenerator "^4.0.1"
     ip "^1.1.5"
+    netmask "^2.0.2"
+
+pac-resolver@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pac-resolver/-/pac-resolver-7.0.0.tgz#79376f1ca26baf245b96b34c339d79bff25e900c"
+  integrity sha512-Fd9lT9vJbHYRACT8OhCbZBbxr6KRSawSovFpy8nDGshaK99S/EBhVIHp9+crhxrsZOuvLpgL1n23iyPg6Rl2hg==
+  dependencies:
+    degenerator "^5.0.0"
+    ip "^1.1.8"
     netmask "^2.0.2"
 
 package-hash@^4.0.0:
@@ -6883,6 +6941,20 @@ proxy-agent@^6.2.1:
     https-proxy-agent "^7.0.0"
     lru-cache "^7.14.1"
     pac-proxy-agent "^6.0.3"
+    proxy-from-env "^1.1.0"
+    socks-proxy-agent "^8.0.1"
+
+proxy-agent@^6.2.2:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/proxy-agent/-/proxy-agent-6.3.0.tgz#72f7bb20eb06049db79f7f86c49342c34f9ba08d"
+  integrity sha512-0LdR757eTj/JfuU7TL2YCuAZnxWXu3tkJbg4Oq3geW/qFNT/32T0sp2HnZ9O0lMR4q3vwAt0+xCA8SR0WAD0og==
+  dependencies:
+    agent-base "^7.0.2"
+    debug "^4.3.4"
+    http-proxy-agent "^7.0.0"
+    https-proxy-agent "^7.0.0"
+    lru-cache "^7.14.1"
+    pac-proxy-agent "^7.0.0"
     proxy-from-env "^1.1.0"
     socks-proxy-agent "^8.0.1"
 
