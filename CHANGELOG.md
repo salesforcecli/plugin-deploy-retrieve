@@ -1,3 +1,12 @@
+## [1.16.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.1...1.16.2) (2023-07-22)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/kit from 3.0.5 to 3.0.6 ([63633d6](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/63633d61f6769480416ad186add5c7b3a91dd7fa))
+
+
+
 ## [1.16.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.0...1.16.1) (2023-07-19)
 
 
