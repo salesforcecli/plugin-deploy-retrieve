@@ -1,3 +1,12 @@
+## [1.16.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.3...1.16.4) (2023-07-29)
+
+
+### Bug Fixes
+
+* **deps:** bump @salesforce/sf-plugins-core from 3.1.3 to 3.1.12 ([742c8c7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/742c8c75a83304f49778dcdc6e20bb4f9514eb22))
+
+
+
 ## [1.16.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.2...1.16.3) (2023-07-22)
 
 
