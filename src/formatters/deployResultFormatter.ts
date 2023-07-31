@@ -72,9 +72,12 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         testsWarn += `\`--junit\` was specified but no tests ran.${EOL}`;
       }
 
-      testsWarn +=
-        'You can ensure tests run by specifying `--test-level` and setting it to `RunSpecifiedTests`, `RunLocalTests` or `RunAllTestsInOrg`.';
-      await Lifecycle.getInstance().emitWarning(testsWarn);
+      // only emit warning if --coverage-formatters or --junit flags were passed
+      if (testsWarn.length > 0) {
+        testsWarn +=
+          'You can ensure tests run by specifying `--test-level` and setting it to `RunSpecifiedTests`, `RunLocalTests` or `RunAllTestsInOrg`.';
+        await Lifecycle.getInstance().emitWarning(testsWarn);
+      }
     }
 
     if (this.coverageOptions.reportFormats?.length) {
