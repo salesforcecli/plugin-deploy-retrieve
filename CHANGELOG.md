@@ -1,3 +1,12 @@
+## [1.16.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.4...1.16.5) (2023-08-01)
+
+
+### Bug Fixes
+
+* omit test warn if no reports are requested ([#716](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/716)) ([d9ec670](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d9ec670fada2e810965f49b160baeb9801440c2f))
+
+
+
 ## [1.16.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.3...1.16.4) (2023-07-29)
 
 
