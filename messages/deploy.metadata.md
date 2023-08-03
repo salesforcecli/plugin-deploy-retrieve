@@ -35,6 +35,11 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
       <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass
 
+- Deploy specific Apex classes that match a pattern:
+
+      <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
+      this will deploy all Apex classes, that exist locally, that start with MyApex
+
 - Deploy all custom objects and Apex classes (both examples are equivalent):
 
       <%= config.bin %> <%= command.id %> --metadata CustomObject ApexClass
@@ -74,7 +79,7 @@ Overrides your default org.
 
 # flags.metadata.summary
 
-Metadata component names to deploy.
+Metadata component names to deploy. Can be specified with a quoted _, e.g. 'ApexClass:MyClass_'
 
 # flags.test-level.summary
 
