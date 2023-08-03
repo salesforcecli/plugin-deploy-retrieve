@@ -35,7 +35,7 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
   <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass
 
-- Retrieve specific Apex classes that match a pattern; in this example, retrieve Apex classes whose names contain the string `MyApex`:
+- Retrieve specific Apex classes that match a pattern; in this example, retrieve Apex classes whose names contain the string "MyApex":
 
       <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
 

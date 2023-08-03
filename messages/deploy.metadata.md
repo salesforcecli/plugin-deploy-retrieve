@@ -35,7 +35,7 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
       <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass
 
-- Deploy specific Apex classes that match a pattern; in this example, deploy Apex classes whose names contain the string `MyApex`:
+- Deploy specific Apex classes that match a pattern; in this example, deploy Apex classes whose names contain the string "MyApex":
 
       <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
 
