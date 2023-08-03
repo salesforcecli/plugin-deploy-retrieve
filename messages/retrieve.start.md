@@ -37,7 +37,7 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 - Retrieve specific Apex classes that match a pattern; in this example, retrieve Apex classes whose names contain the string `MyApex`:
 
-      <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex\*'
+      <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
 
 - Retrieve all custom objects and Apex classes (both examples are equivalent):
 
@@ -91,7 +91,7 @@ If you specify this parameter, don’t specify --metadata or --source-dir.
 
 # flags.metadata.summary
 
-Metadata component names to retrieve. Wildcards (\*) supported as long as you use quotes, such as 'ApexClass:MyClass\*'
+Metadata component names to retrieve. Wildcards ( _ ) supported as long as you use quotes, such as 'ApexClass:MyClass_'
 
 # flags.package-name.summary
 
