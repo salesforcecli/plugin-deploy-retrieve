@@ -223,5 +223,5 @@ export default class Deploy extends SfCommand<void> {
   }
 }
 
-const writeJson = async (filename: string, data: Record<string, Deployer.Options>): Promise<void> =>
+export const writeJson = async (filename: string, data: Record<string, Deployer.Options>): Promise<void> =>
   writeFile(filename, JSON.stringify(data, null, 2));
