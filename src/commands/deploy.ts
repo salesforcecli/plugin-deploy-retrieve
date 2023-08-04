@@ -7,9 +7,10 @@
 /* eslint-disable class-methods-use-this */
 
 import { EOL } from 'os';
+import { writeFile, readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { Hook } from '@oclif/core';
 import { Messages } from '@salesforce/core';
-import { writeJson, pathExists, writeFile, readFile } from 'fs-extra';
 import { Env, parseJsonMap } from '@salesforce/kit';
 import {
   Deployable,
@@ -121,14 +122,16 @@ export default class Deploy extends SfCommand<void> {
    * If the deploy file exists, we do not want the command to be interactive. But if the file
    * does not exist then we want to force the command to be interactive.
    */
+  // this used to be async when it was using fs-extra.  Presered public api
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async isInteractive(interactive: boolean): Promise<boolean> {
     if (interactive) return true;
-    const deployFileExists = await pathExists(DEPLOY_OPTIONS_FILE);
+    const deployFileExists = existsSync(DEPLOY_OPTIONS_FILE);
     return deployFileExists ? false : true;
   }
 
   public async readOptions(): Promise<Record<string, Deployer.Options>> {
-    if (await pathExists(DEPLOY_OPTIONS_FILE)) {
+    if (existsSync(DEPLOY_OPTIONS_FILE)) {
       return parseJsonMap<Record<string, Deployer.Options>>(await readFile(DEPLOY_OPTIONS_FILE, 'utf8'));
     } else {
       return {};
@@ -145,8 +148,10 @@ export default class Deploy extends SfCommand<void> {
     exec(`git commit -am "Add ${DEPLOY_OPTIONS_FILE} to .gitignore"`, { silent: true });
   }
 
+  // this used to be async when it was using fs-extra.  Presered public api
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async shouldCommit(): Promise<boolean> {
-    return (await pathExists('.git')) && (await pathExists('functions'));
+    return existsSync('.git') && existsSync('functions');
   }
 
   public async askToSave(): Promise<boolean> {
@@ -217,3 +222,6 @@ export default class Deploy extends SfCommand<void> {
     }
   }
 }
+
+const writeJson = async (filename: string, data: Record<string, Deployer.Options>): Promise<void> =>
+  writeFile(filename, JSON.stringify(data, null, 2));
