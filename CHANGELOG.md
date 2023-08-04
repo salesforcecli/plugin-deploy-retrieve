@@ -1,3 +1,12 @@
+# [1.17.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.5...1.17.0) (2023-08-04)
+
+
+### Features
+
+* remove fs-extra ([2a2e086](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2a2e086beb77fc7501bbd12edf5f30fef4609ae9))
+
+
+
 ## [1.16.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.4...1.16.5) (2023-08-01)
 
 
