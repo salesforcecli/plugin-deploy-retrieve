@@ -1,3 +1,12 @@
+## [1.17.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.0...1.17.1) (2023-08-07)
+
+
+### Bug Fixes
+
+* **deps:** core 5 ([9c023b7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9c023b79911973571bfacc2686e2b209438ea11f))
+
+
+
 # [1.17.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.16.5...1.17.0) (2023-08-04)
 
 
