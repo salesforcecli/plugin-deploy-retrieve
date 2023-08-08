@@ -1,3 +1,12 @@
+## [1.17.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.1...1.17.2) (2023-08-08)
+
+
+### Bug Fixes
+
+* **deps:** bump apex-node ([#726](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/726)) ([729e916](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/729e916ac14ec4eaa874ebf32aeb6755503f98ba))
+
+
+
 ## [1.17.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.0...1.17.1) (2023-08-07)
 
 
