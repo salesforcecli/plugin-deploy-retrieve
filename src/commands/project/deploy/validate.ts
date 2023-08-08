@@ -26,6 +26,8 @@ const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve
 const EXACTLY_ONE_FLAGS = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 const destructiveFlags = 'Delete';
 const testFlags = 'Test';
+const sourceFormatFlags = 'Source Format';
+const mdapiFormatFlags = 'Metadata API Format';
 
 export default class DeployMetadataValidate extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -53,12 +55,14 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       description: messages.getMessage('flags.manifest.description'),
       summary: messages.getMessage('flags.manifest.summary'),
       exactlyOne: EXACTLY_ONE_FLAGS,
+      helpGroup: sourceFormatFlags,
     }),
     metadata: Flags.string({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
       multiple: true,
       exactlyOne: EXACTLY_ONE_FLAGS,
+      helpGroup: sourceFormatFlags,
     }),
     'source-dir': Flags.string({
       char: 'd',
@@ -66,15 +70,18 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       summary: messages.getMessage('flags.source-dir.summary'),
       multiple: true,
       exactlyOne: EXACTLY_ONE_FLAGS,
+      helpGroup: sourceFormatFlags,
     }),
     'metadata-dir': fileOrDirFlag({
       summary: messages.getMessage('flags.metadata-dir.summary'),
       exactlyOne: EXACTLY_ONE_FLAGS,
       exists: true,
+      helpGroup: mdapiFormatFlags,
     }),
     'single-package': Flags.boolean({
       summary: messages.getMessage('flags.single-package.summary'),
       dependsOn: ['metadata-dir'],
+      helpGroup: mdapiFormatFlags,
     }),
     'target-org': Flags.requiredOrg({
       char: 'o',
@@ -82,12 +89,13 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       summary: messages.getMessage('flags.target-org.summary'),
       required: true,
     }),
-    tests: testsFlag,
+    tests: { ...testsFlag, helpGroup: testFlags },
     'test-level': testLevelFlag({
       options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],
       default: TestLevel.RunLocalTests,
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
+      helpGroup: testFlags,
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
