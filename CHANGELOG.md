@@ -1,3 +1,12 @@
+## [1.17.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.2...1.17.3) (2023-08-09)
+
+
+### Bug Fixes
+
+* group flags in validate the same as in "start" ([daad7a7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/daad7a7ee4f66e0e13102be4dbedaee05b689f94))
+
+
+
 ## [1.17.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.1...1.17.2) (2023-08-08)
 
 
