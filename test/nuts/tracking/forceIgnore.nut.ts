@@ -28,6 +28,7 @@ describe('forceignore changes', () => {
     session = await TestSession.create({
       project: {
         name: 'forceIgnoreTest',
+        apiVersion: '58.0',
       },
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
