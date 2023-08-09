@@ -103,7 +103,7 @@ describe('forceignore changes', () => {
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
 
       // add a file in the local source
-      shell.exec(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir}`, {
+      shell.exec(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
         cwd: session.project.dir,
         silent: true,
       });
