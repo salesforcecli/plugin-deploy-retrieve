@@ -31,7 +31,9 @@ describe('project deploy start --destructive NUTs', () => {
     // create and deploy an ApexClass that can be deleted without dependency issues
     const output = path.join('force-app', 'main', 'default', 'classes');
     const pathToClass = path.join(testkit.projectDir, output, `${apexName}.cls`);
-    execCmd(`force:apex:class:create --classname ${apexName} --outputdir ${output}`, { ensureExitCode: 0 });
+    execCmd(`force:apex:class:create --classname ${apexName} --outputdir ${output} --api-version 58.0`, {
+      ensureExitCode: 0,
+    });
     execCmd(`project:deploy:start -m ApexClass:${apexName}`, { ensureExitCode: 0 });
     return { apexName, output, pathToClass };
   };

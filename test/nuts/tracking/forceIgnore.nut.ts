@@ -28,6 +28,7 @@ describe('forceignore changes', () => {
     session = await TestSession.create({
       project: {
         name: 'forceIgnoreTest',
+        apiVersion: '58.0',
       },
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
@@ -40,7 +41,10 @@ describe('forceignore changes', () => {
       ],
     });
 
-    execCmd(`force:apex:class:create -n IgnoreTest --outputdir ${classdir}`, { cli: 'sfdx', ensureExitCode: 0 });
+    execCmd(`force:apex:class:create -n IgnoreTest --outputdir ${classdir} --api-version 58.0`, {
+      cli: 'sfdx',
+      ensureExitCode: 0,
+    });
     originalForceIgnore = await fs.promises.readFile(path.join(session.project.dir, '.forceignore'), 'utf8');
     conn = await Connection.create({
       authInfo: await AuthInfo.create({
@@ -103,7 +107,7 @@ describe('forceignore changes', () => {
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
 
       // add a file in the local source
-      shell.exec(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir}`, {
+      shell.exec(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
         cwd: session.project.dir,
         silent: true,
       });
