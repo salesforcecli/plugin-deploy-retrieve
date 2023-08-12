@@ -22,7 +22,7 @@
     "@salesforce/dev-config": "^4.0.1",
     "@salesforce/dev-scripts": "^5.7.0",
     "@salesforce/plugin-command-reference": "^3.0.25",
-    "@salesforce/plugin-settings": "^1.4.24",
+    "@salesforce/plugin-settings": "^1.4.25",
     "@salesforce/plugin-source": "^2.10.30",
     "@salesforce/plugin-templates": "^55.5.9",
     "@salesforce/plugin-user": "^2.3.28",
