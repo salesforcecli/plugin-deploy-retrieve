@@ -1,3 +1,12 @@
+## [1.17.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.4...1.17.5) (2023-08-12)
+
+
+### Bug Fixes
+
+* update partial bundle delete tests for Dreamhouse source changes ([995b639](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/995b6395ce4d5f811ebf25f77667986521fb068b))
+
+
+
 ## [1.17.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.3...1.17.4) (2023-08-10)
 
 
