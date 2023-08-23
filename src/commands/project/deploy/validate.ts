@@ -8,6 +8,7 @@ import * as os from 'os';
 import { bold } from 'chalk';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { CodeCoverageWarnings, DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { ensureArray } from '@salesforce/kit';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
@@ -106,7 +107,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       summary: messages.getMessage('flags.wait.summary'),
       description: messages.getMessage('flags.wait.description'),
       unit: 'minutes',
-      defaultValue: 33,
+      default: Duration.minutes(33),
       helpValue: '<minutes>',
       min: 1,
     }),
