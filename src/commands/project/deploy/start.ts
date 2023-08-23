@@ -7,6 +7,7 @@
 import { bold } from 'chalk';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { DeployVersionData } from '@salesforce/source-deploy-retrieve';
+import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
@@ -130,7 +131,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.wait.summary'),
       description: messages.getMessage('flags.wait.description'),
       unit: 'minutes',
-      defaultValue: 33,
+      default: Duration.minutes(33),
       helpValue: '<minutes>',
       min: 1,
       exclusive: ['async'],
