@@ -1,3 +1,12 @@
+## [1.17.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.5...1.17.6) (2023-08-23)
+
+
+### Bug Fixes
+
+* change wait default value definition ([#737](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/737)) ([003e774](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/003e77456f1042c2bfe263ace1ac78b43c292c53))
+
+
+
 ## [1.17.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.4...1.17.5) (2023-08-12)
 
 
