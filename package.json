@@ -115,7 +115,7 @@
             "description": "Commands to delete metadata from a Salesforce org."
           },
           "generate": {
-            "description": "Commands to create a manifest file."
+            "description": "Commands to create file artifacts, such as a project or manifest file."
           },
           "reset": {
             "description": "Commands to reset the source tracking state."
