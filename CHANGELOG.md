@@ -1,3 +1,12 @@
+## [1.17.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.6...1.17.7) (2023-08-31)
+
+
+### Bug Fixes
+
+* update prompt help for generate topic ([#742](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/742)) ([1a9f172](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1a9f1727138aa60cd531ed57123b9ca2a2f0a6ec))
+
+
+
 ## [1.17.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.5...1.17.6) (2023-08-23)
 
 
