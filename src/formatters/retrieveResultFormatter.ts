@@ -6,8 +6,9 @@
  */
 import * as path from 'path';
 import { Ux } from '@salesforce/sf-plugins-core';
-import { FileResponse, RetrieveResult } from '@salesforce/source-deploy-retrieve';
+import { FileResponse, RetrieveMessage, RetrieveResult } from '@salesforce/source-deploy-retrieve';
 import { NamedPackageDir, SfProject } from '@salesforce/core';
+import { ensureArray } from '@salesforce/kit';
 import { Formatter, isSdrSuccess, RetrieveResultJson } from '../utils/types';
 import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccessProps } from '../utils/output';
 
@@ -44,20 +45,28 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
         // a retrieve didn't happen, probably because everything was ignored or there were no remote changes to retrieve
         this.ux.log('Nothing retrieved');
       }
-      return;
+    } else {
+      const columns = {
+        state: { header: 'State' },
+        fullName: { header: 'Name' },
+        type: { header: 'Type' },
+        filePath: { header: 'Path' },
+      };
+      const options = { title: tableHeader('Retrieved Source'), 'no-truncate': true };
+      this.ux.log();
+
+      this.ux.table(getFileResponseSuccessProps(successes), columns, options);
     }
 
-    const columns = {
-      state: { header: 'State' },
-      fullName: { header: 'Name' },
-      type: { header: 'Type' },
-      filePath: { header: 'Path' },
-    };
-    const title = 'Retrieved Source';
-    const options = { title: tableHeader(title), 'no-truncate': true };
-    this.ux.log();
-
-    this.ux.table(getFileResponseSuccessProps(successes), columns, options);
+    const warnings = getWarnings(this.result);
+    if (warnings.length) {
+      this.ux.log();
+      this.ux.table(
+        warnings,
+        { fileName: { header: 'File' }, problem: { header: 'Problem' } },
+        { 'no-truncate': true, title: tableHeader('Warnings') }
+      );
+    }
   }
 
   private async displayPackages(): Promise<void> {
@@ -82,3 +91,5 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
     });
   }
 }
+
+const getWarnings = (result: RetrieveResult): RetrieveMessage[] => ensureArray(result?.response?.messages ?? []);
