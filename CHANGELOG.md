@@ -1,3 +1,12 @@
+## [1.17.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.8...1.17.9) (2023-09-08)
+
+
+### Bug Fixes
+
+* show retrieve warnings in a table ([3f34340](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3f34340eaa800ad0019a87599646d6f91529b16f))
+
+
+
 ## [1.17.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.7...1.17.8) (2023-09-02)
 
 
