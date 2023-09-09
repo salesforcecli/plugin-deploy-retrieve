@@ -1121,7 +1121,7 @@
     chalk "^4"
     inquirer "^8.2.5"
 
-"@salesforce/source-deploy-retrieve@^9.7.10", "@salesforce/source-deploy-retrieve@^9.7.2":
+"@salesforce/source-deploy-retrieve@^9.7.10", "@salesforce/source-deploy-retrieve@^9.7.2", "@salesforce/source-deploy-retrieve@^9.7.8":
   version "9.7.10"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-9.7.10.tgz#ce500519acebcab92edf947230dafbd883b53624"
   integrity sha512-QbMrFq0V3YpHuI0Ad5kmltfs/ocMfms/NUpHr+pWZ5dbeXg7BcQWo3MgrfonzG5AWfSQ9YQs4AjJdQB0CeK+lw==
@@ -1156,14 +1156,14 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^4.2.10":
-  version "4.2.10"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.2.10.tgz#98a757a2a514355ed104c1d34aacab0b0fab6d06"
-  integrity sha512-rxnDhAgDn+IHu7Z5SYzEakqoV25F/ES+rGEGVgVWX6+r7IF3IcWpMy659wQoSwQwTyXwmFfNykTD5TD/Vo+mzA==
+"@salesforce/source-tracking@^4.2.10", "@salesforce/source-tracking@^4.2.12":
+  version "4.2.12"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.2.12.tgz#91250ac48f70985c8529d601fd9237d7b5193269"
+  integrity sha512-hxN4rMmyOmZoUJTy5fyg33ovhKc0ffCqX6j0EqAX90gHO4OQqNMWvweogbzX7h8nkFyNv+ZLyDeJBAdMnTgnWw==
   dependencies:
     "@salesforce/core" "^5.2.0"
     "@salesforce/kit" "^3.0.9"
-    "@salesforce/source-deploy-retrieve" "^9.7.2"
+    "@salesforce/source-deploy-retrieve" "^9.7.8"
     "@salesforce/ts-types" "^2.0.6"
     fast-xml-parser "^4.2.5"
     graceful-fs "^4.2.11"
