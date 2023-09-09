@@ -10,7 +10,7 @@
     "@salesforce/core": "^5.2.5",
     "@salesforce/kit": "^3.0.9",
     "@salesforce/sf-plugins-core": "^3.1.20",
-    "@salesforce/source-deploy-retrieve": "^9.7.2",
+    "@salesforce/source-deploy-retrieve": "^9.7.10",
     "@salesforce/source-tracking": "^4.2.10",
     "chalk": "^4.1.2",
     "shelljs": "^0.8.5",
