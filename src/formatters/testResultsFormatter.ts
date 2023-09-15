@@ -7,7 +7,13 @@
 import * as os from 'os';
 import { ux } from '@oclif/core';
 import { dim, underline } from 'chalk';
-import { CodeCoverageWarnings, DeployResult, Failures, Successes } from '@salesforce/source-deploy-retrieve';
+import {
+  CodeCoverage,
+  CodeCoverageWarnings,
+  DeployResult,
+  Failures,
+  Successes,
+} from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
 import { TestLevel, Verbosity } from '../utils/types';
 import { tableHeader, error, success, check } from '../utils/output';
@@ -38,7 +44,7 @@ export class TestResultsFormatter {
 
     if (this.verbosity === 'verbose') {
       this.displayVerboseTestSuccesses();
-      this.displayVerboseTestCoverage();
+      displayVerboseTestCoverage(this.result.response.details.runTestResult?.codeCoverage);
     }
 
     ux.log();
@@ -60,28 +66,12 @@ export class TestResultsFormatter {
     return 'normal';
   }
 
-  private displayVerboseTestCoverage(): void {
-    const codeCoverage = ensureArray(this.result.response.details.runTestResult?.codeCoverage);
-    if (codeCoverage.length) {
-      const coverage = codeCoverage.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1));
-      ux.log();
-      ux.log(tableHeader('Apex Code Coverage'));
-
-      ux.table(coverage.map(coverageOutput), {
-        name: { header: 'Name' },
-        numLocations: { header: '% Covered' },
-        lineNotCovered: { header: 'Uncovered Lines' },
-      });
-    }
-  }
-
   private displayVerboseTestSuccesses(): void {
-    const successes = ensureArray(this.result.response.details.runTestResult?.successes);
+    const successes = ensureArray(this.result.response.details.runTestResult?.successes).sort(testResultSort);
     if (successes.length > 0) {
-      const testSuccesses = sortTestResults(successes);
       ux.log();
       ux.log(success(`Test Success [${successes.length}]`));
-      for (const test of testSuccesses) {
+      for (const test of successes) {
         const testName = underline(`${test.name}.${test.methodName}`);
         ux.log(`${check} ${testName}`);
       }
@@ -90,12 +80,11 @@ export class TestResultsFormatter {
 
   private displayVerboseTestFailures(): void {
     if (!this.result.response.numberTestErrors) return;
-    const failures = ensureArray(this.result.response.details.runTestResult?.failures);
+    const failures = ensureArray(this.result.response.details.runTestResult?.failures).sort(testResultSort);
     const failureCount = this.result.response.details.runTestResult?.numFailures;
-    const testFailures = sortTestResults(failures);
     ux.log();
     ux.log(error(`Test Failures [${failureCount}]`));
-    for (const test of testFailures) {
+    for (const test of failures) {
       const testName = underline(`${test.name}.${test.methodName}`);
       ux.log(`• ${testName}`);
       ux.log(`  ${dim('message')}: ${test.message}`);
@@ -108,11 +97,25 @@ export class TestResultsFormatter {
   }
 }
 
-function sortTestResults<T extends Failures | Successes>(results: T[]): T[] {
-  return results.sort((a, b) => {
-    if (a.methodName === b.methodName) {
-      return a.name.localeCompare(b.name);
-    }
-    return a.methodName.localeCompare(b.methodName);
-  });
-}
+/**
+ * Display the table if there is at least one coverage item in the result
+ */
+const displayVerboseTestCoverage = (coverage?: CodeCoverage | CodeCoverage[]): void => {
+  const codeCoverage = ensureArray(coverage);
+  if (codeCoverage.length) {
+    ux.log();
+    ux.log(tableHeader('Apex Code Coverage'));
+
+    ux.table(codeCoverage.sort(coverageSort).map(coverageOutput), {
+      name: { header: 'Name' },
+      coveragePercent: { header: '% Covered' },
+      lineNotCovered: { header: 'Uncovered Lines' },
+    });
+  }
+};
+
+const testResultSort = <T extends Successes | Failures>(a: T, b: T): number =>
+  a.methodName === b.methodName ? a.name.localeCompare(b.name) : a.methodName.localeCompare(b.methodName);
+
+const coverageSort = (a: CodeCoverage, b: CodeCoverage): number =>
+  a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1;
