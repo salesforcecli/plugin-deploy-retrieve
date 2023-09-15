@@ -6,7 +6,6 @@
  */
 
 import { Messages } from '@salesforce/core';
-import * as chalk from 'chalk';
 import { SourceTracking } from '@salesforce/source-tracking';
 import {
   Flags,
@@ -14,6 +13,7 @@ import {
   orgApiVersionFlagWithDeprecations,
   requiredOrgFlagWithDeprecations,
   SfCommand,
+  StandardColors,
 } from '@salesforce/sf-plugins-core';
 
 Messages.importMessagesDirectory(__dirname);
@@ -53,7 +53,7 @@ export class ResetTracking extends SfCommand<ResetTrackingResult> {
   public async run(): Promise<ResetTrackingResult> {
     const { flags } = await this.parse(ResetTracking);
 
-    if (flags['no-prompt'] || (await this.confirm(chalk.dim(messages.getMessage('promptMessage'))))) {
+    if (flags['no-prompt'] || (await this.confirm(StandardColors.info(messages.getMessage('promptMessage'))))) {
       const sourceTracking = await SourceTracking.create({
         project: this.project,
         org: flags['target-org'],

@@ -5,10 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { ux } from '@oclif/core';
-import * as chalk from 'chalk';
 import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
-import { bold } from 'chalk';
+import { bold, blue } from 'chalk';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { DeleteSourceJson, Formatter, TestLevel } from '../utils/types';
 import { sortFileResponses, asRelativePaths } from '../utils/output';
@@ -76,7 +75,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
       }
 
       ux.log('');
-      ux.styledHeader(chalk.blue('Deleted Source'));
+      ux.styledHeader(blue('Deleted Source'));
       ux.table(
         successes.map((entry) => ({
           fullName: entry.fullName,
