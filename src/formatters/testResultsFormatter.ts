@@ -12,6 +12,8 @@ import {
   CodeCoverageWarnings,
   DeployResult,
   Failures,
+  MetadataApiDeployStatus,
+  RunTestResult,
   Successes,
 } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
@@ -40,10 +42,10 @@ export class TestResultsFormatter {
       return;
     }
 
-    this.displayVerboseTestFailures();
+    displayVerboseTestFailures(this.result.response);
 
     if (this.verbosity === 'verbose') {
-      this.displayVerboseTestSuccesses();
+      displayVerboseTestSuccesses(this.result.response.details.runTestResult?.successes);
       displayVerboseTestCoverage(this.result.response.details.runTestResult?.codeCoverage);
     }
 
@@ -65,37 +67,38 @@ export class TestResultsFormatter {
     if (this.flags.verbose) return 'verbose';
     return 'normal';
   }
-
-  private displayVerboseTestSuccesses(): void {
-    const successes = ensureArray(this.result.response.details.runTestResult?.successes).sort(testResultSort);
-    if (successes.length > 0) {
-      ux.log();
-      ux.log(success(`Test Success [${successes.length}]`));
-      for (const test of successes) {
-        const testName = underline(`${test.name}.${test.methodName}`);
-        ux.log(`${check} ${testName}`);
-      }
-    }
-  }
-
-  private displayVerboseTestFailures(): void {
-    if (!this.result.response.numberTestErrors) return;
-    const failures = ensureArray(this.result.response.details.runTestResult?.failures).sort(testResultSort);
-    const failureCount = this.result.response.details.runTestResult?.numFailures;
-    ux.log();
-    ux.log(error(`Test Failures [${failureCount}]`));
-    for (const test of failures) {
-      const testName = underline(`${test.name}.${test.methodName}`);
-      ux.log(`• ${testName}`);
-      ux.log(`  ${dim('message')}: ${test.message}`);
-      if (test.stackTrace) {
-        const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
-        ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
-      }
-      ux.log();
-    }
-  }
 }
+
+const displayVerboseTestSuccesses = (resultSuccesses: RunTestResult['successes']): void => {
+  const successes = ensureArray(resultSuccesses).sort(testResultSort);
+  if (successes.length > 0) {
+    ux.log();
+    ux.log(success(`Test Success [${successes.length}]`));
+    for (const test of successes) {
+      const testName = underline(`${test.name}.${test.methodName}`);
+      ux.log(`${check} ${testName}`);
+    }
+  }
+};
+
+/** display the Test failures if there are any testErrors in the mdapi deploy response */
+const displayVerboseTestFailures = (response: MetadataApiDeployStatus): void => {
+  if (!response.numberTestErrors) return;
+  const failures = ensureArray(response.details.runTestResult?.failures).sort(testResultSort);
+  const failureCount = response.details.runTestResult?.numFailures;
+  ux.log();
+  ux.log(error(`Test Failures [${failureCount}]`));
+  for (const test of failures) {
+    const testName = underline(`${test.name}.${test.methodName}`);
+    ux.log(`• ${testName}`);
+    ux.log(`  ${dim('message')}: ${test.message}`);
+    if (test.stackTrace) {
+      const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
+      ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
+    }
+    ux.log();
+  }
+};
 
 /**
  * Display the table if there is at least one coverage item in the result
@@ -109,7 +112,7 @@ const displayVerboseTestCoverage = (coverage?: CodeCoverage | CodeCoverage[]): v
     ux.table(codeCoverage.sort(coverageSort).map(coverageOutput), {
       name: { header: 'Name' },
       coveragePercent: { header: '% Covered' },
-      lineNotCovered: { header: 'Uncovered Lines' },
+      linesNotCovered: { header: 'Uncovered Lines' },
     });
   }
 };

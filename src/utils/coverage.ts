@@ -94,10 +94,10 @@ export const transformCoverageToApexCoverage = (mdCoverage: CodeCoverage[]): Ape
 
 export const coverageOutput = (
   cov: CodeCoverage
-): Pick<CodeCoverage, 'name'> & { coveragePercent: string; lineNotCovered: string } => ({
+): Pick<CodeCoverage, 'name'> & { coveragePercent: string; linesNotCovered: string } => ({
   name: cov.name,
   coveragePercent: formatPercent(getCoveragePct(cov)),
-  lineNotCovered: cov.locationsNotCovered
+  linesNotCovered: cov.locationsNotCovered
     ? ensureArray(cov.locationsNotCovered)
         .map((location) => location.line)
         .join(',')
@@ -109,7 +109,7 @@ const color = (percent: number): Chalk =>
 
 const formatPercent = (percent: number): string => color(percent)(`${percent}%`);
 
-const getCoveragePct = (cov: CodeCoverage): number => {
+export const getCoveragePct = (cov: CodeCoverage): number => {
   const [lineCount, uncoveredLineCount] = getCoverageNumbers(cov);
   const coverageDecimal = parseFloat(((lineCount - uncoveredLineCount) / lineCount).toFixed(2));
 

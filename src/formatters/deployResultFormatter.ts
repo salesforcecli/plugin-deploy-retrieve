@@ -22,6 +22,7 @@ import { DeployResultJson, isSdrFailure, isSdrSuccess, TestLevel, Verbosity, For
 import {
   generateCoveredLines,
   getCoverageFormattersOptions,
+  getCoverageNumbers,
   mapTestResults,
   transformCoverageToApexCoverage,
 } from '../utils/coverage';
@@ -63,20 +64,17 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       (!this.result.response?.numberTestsTotal && !this.flags['test-level']) ||
       this.flags['test-level'] === 'NoTestRun'
     ) {
-      let testsWarn = '';
-
-      if (this.coverageOptions.reportFormats?.length) {
-        testsWarn += `\`--coverage-formatters\` was specified but no tests ran.${EOL}`;
-      }
-      if (this.junit) {
-        testsWarn += `\`--junit\` was specified but no tests ran.${EOL}`;
-      }
+      const testsWarn = (
+        this.coverageOptions.reportFormats?.length ? ['`--coverage-formatters` was specified but no tests ran.'] : []
+      )
+        .concat(this.junit ? ['`--junit` was specified but no tests ran.'] : [])
+        .concat([
+          'You can ensure tests run by specifying `--test-level` and setting it to `RunSpecifiedTests`, `RunLocalTests` or `RunAllTestsInOrg`.',
+        ]);
 
       // only emit warning if --coverage-formatters or --junit flags were passed
-      if (testsWarn.length > 0) {
-        testsWarn +=
-          'You can ensure tests run by specifying `--test-level` and setting it to `RunSpecifiedTests`, `RunLocalTests` or `RunAllTestsInOrg`.';
-        await Lifecycle.getInstance().emitWarning(testsWarn);
+      if (testsWarn.length > 1) {
+        await Lifecycle.getInstance().emitWarning(testsWarn.join(EOL));
       }
     }
 
@@ -185,10 +183,9 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         ...mapTestResults(ensureArray(runTestResult.failures)),
       ],
       codecoverage: ensureArray(runTestResult?.codeCoverage).map((cov): CodeCoverageResult => {
-        const numLinesUncovered = parseInt(cov.numLocationsNotCovered, 10);
         const [uncoveredLines, coveredLines] = generateCoveredLines(cov);
-        const numLocationsNum = parseInt(cov.numLocations, 10);
-        const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
+        const [numLocationsNum, numLinesUncovered] = getCoverageNumbers(cov);
+
         return {
           // TODO: fix this type in SDR?
           type: cov.type as 'ApexClass' | 'ApexTrigger',
@@ -200,7 +197,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
           uncoveredLines,
           percentage:
             numLocationsNum > 0
-              ? (((numLocationsNum - numLocationsNotCovered) / numLocationsNum) * 100).toFixed() + '%'
+              ? (((numLocationsNum - numLinesUncovered) / numLocationsNum) * 100).toFixed() + '%'
               : '',
         };
       }),
