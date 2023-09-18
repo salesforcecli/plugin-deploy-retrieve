@@ -106,8 +106,9 @@ export const isSourceComponent = (sc: unknown): sc is SourceComponent & { xml: s
   'fullName' in sc &&
   'type' in sc &&
   'xml' in sc &&
-  typeof sc.xml === 'string' &&
-  typeof sc.fullName === 'string';
+  typeof sc.fullName === 'string' &&
+  typeof sc.type === 'string' &&
+  typeof sc.xml === 'string';
 
 export const isSdrFailure = (fileResponse: FileResponse): fileResponse is FileResponseFailure =>
   fileResponse.state === ComponentStatus.Failed;
