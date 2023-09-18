@@ -101,8 +101,19 @@ export type Formatter<T> = {
 };
 
 /** validates source component with fullname, type, and xml props */
-export const isSourceComponent = (sc: unknown): sc is SourceComponent & { xml: string } =>
-  isObject(sc) && 'fullName' in sc && 'type' in sc && 'xml' in sc;
+export const isSourceComponent = (sc: unknown): sc is SourceComponent =>
+  isObject(sc) &&
+  'type' in sc &&
+  typeof sc.type === 'object' &&
+  sc.type !== null &&
+  'name' in sc.type &&
+  typeof sc.type.name === 'string' &&
+  'fullName' in sc &&
+  // (typeof sc.fullName === 'string' || typeof sc.fullName === 'function');
+  typeof sc.fullName === 'string';
+
+export const isSourceComponentWithXml = (sc: unknown): sc is SourceComponent & { xml: string } =>
+  isSourceComponent(sc) && 'xml' in sc && typeof sc.xml === 'string';
 
 export const isSdrFailure = (fileResponse: FileResponse): fileResponse is FileResponseFailure =>
   fileResponse.state === ComponentStatus.Failed;
