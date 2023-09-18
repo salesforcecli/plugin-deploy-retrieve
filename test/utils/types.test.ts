@@ -6,8 +6,7 @@
  */
 
 import { expect } from 'chai';
-import { SourceComponent } from '@salesforce/source-deploy-retrieve';
-import { RegistryAccess } from '@salesforce/source-deploy-retrieve';
+import { SourceComponent, RegistryAccess } from '@salesforce/source-deploy-retrieve';
 import { isSourceComponent } from '../../src/utils/types';
 
 describe('isSourceComponent (type guard)', () => {
