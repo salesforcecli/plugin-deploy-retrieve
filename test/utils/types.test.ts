@@ -5,19 +5,28 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { expect } from 'chai';
+import { expect, config } from 'chai';
 import { SourceComponent, RegistryAccess } from '@salesforce/source-deploy-retrieve';
-import { isSourceComponent } from '../../src/utils/types';
+import { isSourceComponent, isSourceComponentWithXml } from '../../src/utils/types';
+
+config.truncateThreshold = 0;
+
+const reg = new RegistryAccess();
+const type = reg.getTypeByName('ApexClass');
 
 describe('isSourceComponent (type guard)', () => {
   describe('good', () => {
     it('full, correct definition', () => {
-      expect({ fullName: 'foo', type: 'fooType', xml: 'fooXml', content: 'fooContent' }).to.satisfy(isSourceComponent);
+      expect({ fullName: 'foo', type, xml: 'fooXml', content: 'fooContent' }).to.satisfy(isSourceComponent);
     });
     it('SC constructed with xml', () => {
-      const reg = new RegistryAccess();
-      const type = reg.getTypeByName('ApexClass');
-      expect(new SourceComponent({ name: 'foo', type, xml: 'classes/foo.cls' })).to.not.satisfy(isSourceComponent);
+      expect(new SourceComponent({ name: 'foo', type, xml: 'classes/foo.cls' })).to.satisfy(isSourceComponent);
+    });
+    it('SC constructed with no xml', () => {
+      const sc = new SourceComponent({ name: 'foo', type });
+      // console.log(sc);
+      // console.log(typeof sc.fullName);
+      expect(sc).to.satisfy(isSourceComponent);
     });
   });
   describe('bad', () => {
@@ -27,16 +36,37 @@ describe('isSourceComponent (type guard)', () => {
     it('empty object', () => {
       expect({}).to.not.satisfy(isSourceComponent);
     });
-    it('object.xml is undefined', () => {
-      expect({ fullName: 'foo', type: 'fooType', content: 'fooContent' }).to.not.satisfy(isSourceComponent);
-    });
+
     it('object.type is set to undefined', () => {
       expect({ fullName: 'foo', type: undefined, xml: 'fooXml' }).to.not.satisfy(isSourceComponent);
     });
+  });
+});
+
+describe('isSourceComponentWithXml (type guard)', () => {
+  describe('good', () => {
+    it('full, correct definition', () => {
+      expect({ fullName: 'foo', type, xml: 'fooXml', content: 'fooContent' }).to.satisfy(isSourceComponentWithXml);
+    });
+    it('SC constructed with xml', () => {
+      expect(new SourceComponent({ name: 'foo', type, xml: 'classes/foo.cls' })).to.satisfy(isSourceComponentWithXml);
+    });
+  });
+  describe('bad', () => {
+    it('object is undefined', () => {
+      expect(undefined).to.not.satisfy(isSourceComponentWithXml);
+    });
+    it('empty object', () => {
+      expect({}).to.not.satisfy(isSourceComponentWithXml);
+    });
+    it('object.xml is undefined', () => {
+      expect({ fullName: 'foo', type: 'fooType', content: 'fooContent' }).to.not.satisfy(isSourceComponentWithXml);
+    });
+    it('object.type is set to undefined', () => {
+      expect({ fullName: 'foo', type: undefined, xml: 'fooXml' }).to.not.satisfy(isSourceComponentWithXml);
+    });
     it('SC constructed with no xml', () => {
-      const reg = new RegistryAccess();
-      const type = reg.getTypeByName('ApexClass');
-      expect(new SourceComponent({ name: 'foo', type })).to.not.satisfy(isSourceComponent);
+      expect(new SourceComponent({ name: 'foo', type })).to.not.satisfy(isSourceComponentWithXml);
     });
   });
 });

@@ -21,7 +21,7 @@ import {
 import { filePathsFromMetadataComponent } from '@salesforce/source-deploy-retrieve/lib/src/utils/filePathGenerator';
 
 import { SourceTracking } from '@salesforce/source-tracking';
-import { isSourceComponent } from './types';
+import { isSourceComponentWithXml } from './types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'previewMessages');
@@ -64,7 +64,7 @@ const resolvePaths = (filenames: string[]): Array<Pick<PreviewFile, 'type' | 'fu
         return undefined;
       }
     })
-    .filter(isSourceComponent)
+    .filter(isSourceComponentWithXml)
     .map((sc) => ({ fullName: sc.fullName, type: sc.type.name, path: ensureAbsolutePath(sc.xml) }));
   // dedupe by xml path
   return Array.from(new Map(sourceComponents.map((sc) => [sc.path, sc])).values());
