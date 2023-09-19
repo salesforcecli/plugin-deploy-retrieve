@@ -101,9 +101,9 @@
   {
     "command": "project:deploy:report",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["coverage-formatters", "job-id", "json", "junit", "results-dir", "use-most-recent"],
+    "flags": ["coverage-formatters", "job-id", "json", "junit", "results-dir", "target-org", "use-most-recent", "wait"],
     "alias": ["deploy:metadata:report"],
-    "flagChars": ["i", "r"],
+    "flagChars": ["i", "o", "r", "w"],
     "flagAliases": []
   },
   {

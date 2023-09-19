@@ -12,13 +12,16 @@ import { assert, isObject } from '@salesforce/ts-types';
 import { expect } from 'chai';
 import { DeployResultJson } from '../../../../src/utils/types';
 
-describe('deploy metadata report NUTs with source-dir', () => {
+describe('[project deploy report] NUTs with source-dir', () => {
   let testkit: SourceTestkit;
+
+  const orgAlias = 'reportTestOrg2';
 
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
       nut: __filename,
+      scratchOrgs: [{ duration: 1, alias: orgAlias, config: path.join('config', 'project-scratch-def.json') }],
     });
   });
 
@@ -28,29 +31,14 @@ describe('deploy metadata report NUTs with source-dir', () => {
 
   describe('--use-most-recent', () => {
     it('should report most recently started deployment', async () => {
-      await testkit.execute<DeployResultJson>('deploy:metadata', {
+      await testkit.execute<DeployResultJson>('project deploy start', {
         args: '--source-dir force-app --async',
         json: true,
         exitCode: 0,
       });
 
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
+      const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
         args: '--use-most-recent',
-        json: true,
-        exitCode: 0,
-      });
-      assert(isObject(deploy));
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
-    });
-
-    it.skip('should report most recently started deployment without specifying the flag', async () => {
-      await testkit.execute<DeployResultJson>('deploy:metadata', {
-        args: '--source-dir force-app --async',
-        json: true,
-        exitCode: 0,
-      });
-
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
         json: true,
         exitCode: 0,
       });
@@ -61,12 +49,12 @@ describe('deploy metadata report NUTs with source-dir', () => {
 
   describe('--job-id', () => {
     it('should report the provided job id', async () => {
-      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
+      const first = await testkit.execute<DeployResultJson>('project deploy start', {
         args: '--source-dir force-app --async --ignore-conflicts',
         json: true,
         exitCode: 0,
       });
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
+      const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
         args: `--job-id ${first?.result.id}`,
         json: true,
         exitCode: 0,
@@ -74,17 +62,38 @@ describe('deploy metadata report NUTs with source-dir', () => {
       assert(isObject(deploy));
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
+
+    it('should report from specified target-org and job-id without deploy cache', async () => {
+      const first = await testkit.execute<DeployResultJson>('project deploy start', {
+        args: `--source-dir force-app --async --target-org ${orgAlias}`,
+        json: true,
+        exitCode: 0,
+      });
+
+      // delete the cache file so we can verify that reporting just with job-id and org works
+      const deployCacheFilePath = path.resolve(testkit.projectDir, path.join('..', '.sf', 'deploy-cache.json'));
+      fs.unlinkSync(deployCacheFilePath);
+      assert(!fs.existsSync(deployCacheFilePath));
+
+      const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
+        args: `--job-id ${first?.result.id} --target-org ${orgAlias} --wait 9`,
+        json: true,
+        exitCode: 0,
+      });
+      assert(isObject(deploy));
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+    });
   });
 
   describe('test flags', () => {
     it('should override the --output-dir', async () => {
-      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
+      const first = await testkit.execute<DeployResultJson>('project deploy start', {
         args: '--source-dir force-app --async --ignore-conflicts --test-level RunAllTestsInOrg --coverage-formatters html --junit --results-dir test-output',
         json: true,
         exitCode: 0,
       });
-      const deploy = await testkit.execute<DeployResultJson>('deploy:metadata:report', {
-        args: `--job-id ${first?.result.id} --coverage-formatters html --coverage-formatters text --junit --results-dir test-output-override`,
+      const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
+        args: `--job-id ${first?.result.id} --coverage-formatters html --coverage-formatters text --junit --results-dir test-output-override --wait 9`,
         json: true,
         exitCode: 0,
       });
