@@ -83,34 +83,38 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataQuick), DeployCache.create()]);
 
+    // This is the ID of the validation request
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
     const deployOpts = cache.get(jobId) ?? ({} as DeployOptions);
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
     const api = await resolveApi(this.configAggregator);
 
-    await org.getConnection(flags['api-version']).metadata.deployRecentValidation({ id: jobId, rest: api === 'REST' });
-    this.log(`Deploy ID: ${bold(jobId)}`);
+    // This is the ID of the deploy (of the validated metadata)
+    const deployId = await org
+      .getConnection(flags['api-version'])
+      .metadata.deployRecentValidation({ id: jobId, rest: api === 'REST' });
+    this.log(`Deploy ID: ${bold(deployId)}`);
 
     if (flags.async) {
-      const asyncFormatter = new AsyncDeployResultFormatter(jobId, this.config.bin);
+      const asyncFormatter = new AsyncDeployResultFormatter(deployId, this.config.bin);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
     }
 
-    const result = await poll(org, jobId, flags.wait);
+    const result = await poll(org, deployId, flags.wait);
     const formatter = new DeployResultFormatter(result, flags);
 
     if (!this.jsonEnabled()) formatter.display();
 
-    await DeployCache.update(jobId, { status: result.response.status });
+    await DeployCache.update(deployId, { status: result.response.status });
 
     process.exitCode = determineExitCode(result);
     if (result.response.status === RequestStatus.Succeeded) {
       this.log();
-      this.logSuccess(messages.getMessage('info.QuickDeploySuccess', [jobId]));
+      this.logSuccess(messages.getMessage('info.QuickDeploySuccess', [deployId]));
     } else {
-      this.log(messages.getMessage('error.QuickDeployFailure', [jobId, result.response.status]));
+      this.log(messages.getMessage('error.QuickDeployFailure', [deployId, result.response.status]));
     }
 
     return formatter.getJson();

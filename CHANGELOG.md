@@ -1,3 +1,15 @@
+## [1.17.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.15...1.17.16) (2023-09-18)
+
+### Bug Fixes
+
+- disallow undefined xml ([#757](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/757)) ([42d9409](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/42d9409a7b46e5e6dd5f466a2e1235d83aabe152))
+
+## [1.17.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.14...1.17.15) (2023-09-18)
+
+### Bug Fixes
+
+- display deploy ID not validation ID ([#748](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/748)) ([6797b6d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6797b6d02cf2c9ab9ccac3b8c1483b4834cfa1b5))
+
 ## [1.17.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.13...1.17.14) (2023-09-16)
 
 ### Bug Fixes
