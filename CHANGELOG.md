@@ -1,3 +1,9 @@
+# [1.18.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.16...1.18.0) (2023-09-19)
+
+### Features
+
+- color nuances for test coverage % ([#756](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/756)) ([b7af57a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b7af57a9798abc08aac24f22b906455822105ecc))
+
 ## [1.17.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.15...1.17.16) (2023-09-18)
 
 ### Bug Fixes
