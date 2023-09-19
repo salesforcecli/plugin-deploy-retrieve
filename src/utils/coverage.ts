@@ -18,6 +18,7 @@ import {
 import { Successes, Failures, CodeCoverage } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
 import { StandardColors } from '@salesforce/sf-plugins-core';
+import { Chalk } from 'chalk';
 
 export const mapTestResults = <T extends Failures | Successes>(testResults: T[]): ApexTestResultData[] =>
   testResults.map((testResult) => ({
@@ -37,11 +38,10 @@ export const mapTestResults = <T extends Failures | Successes>(testResults: T[])
   }));
 
 export const generateCoveredLines = (cov: CodeCoverage): [number[], number[]] => {
-  const numCovered = parseInt(cov.numLocations, 10);
-  const numUncovered = parseInt(cov.numLocationsNotCovered, 10);
+  const [lineCount, uncoveredLineCount] = getCoverageNumbers(cov);
   const uncoveredLines = ensureArray(cov.locationsNotCovered).map((location) => parseInt(location.line, 10));
   const minLineNumber = uncoveredLines.length ? Math.min(...uncoveredLines) : 1;
-  const lines = [...Array(numCovered + numUncovered).keys()].map((i) => i + minLineNumber);
+  const lines = [...Array(lineCount + uncoveredLineCount).keys()].map((i) => i + minLineNumber);
   const coveredLines = lines.filter((line) => !uncoveredLines.includes(line));
   return [uncoveredLines, coveredLines];
 };
@@ -72,53 +72,52 @@ export const getCoverageFormattersOptions = (formatters: string[] = []): Coverag
 };
 
 export const transformCoverageToApexCoverage = (mdCoverage: CodeCoverage[]): ApexCodeCoverageAggregate => {
-  const apexCoverage = mdCoverage.map((cov) => {
-    const numCovered = parseInt(cov.numLocations, 10);
-    const numUncovered = parseInt(cov.numLocationsNotCovered, 10);
+  const apexCoverage = mdCoverage.map((cov): ApexCodeCoverageAggregateRecord => {
+    const [NumLinesCovered, NumLinesUncovered] = getCoverageNumbers(cov);
     const [uncoveredLines, coveredLines] = generateCoveredLines(cov);
 
-    const ac: ApexCodeCoverageAggregateRecord = {
+    return {
       ApexClassOrTrigger: {
         Id: cov.id,
         Name: cov.name,
       },
-      NumLinesCovered: numCovered,
-      NumLinesUncovered: numUncovered,
+      NumLinesCovered,
+      NumLinesUncovered,
       Coverage: {
         coveredLines,
         uncoveredLines,
       },
     };
-    return ac;
   });
   return { done: true, totalSize: apexCoverage.length, records: apexCoverage };
 };
 
 export const coverageOutput = (
   cov: CodeCoverage
-): Pick<CodeCoverage, 'name' | 'numLocations'> & { lineNotCovered: string } => {
-  const numLocationsNum = parseInt(cov.numLocations, 10);
-  const numLocationsNotCovered: number = parseInt(cov.numLocationsNotCovered, 10);
-  const color = numLocationsNotCovered > 0 ? StandardColors.error : StandardColors.success;
+): Pick<CodeCoverage, 'name'> & { coveragePercent: string; linesNotCovered: string } => ({
+  name: cov.name,
+  coveragePercent: formatPercent(getCoveragePct(cov)),
+  linesNotCovered: cov.locationsNotCovered
+    ? ensureArray(cov.locationsNotCovered)
+        .map((location) => location.line)
+        .join(',')
+    : '',
+});
 
-  let pctCovered = 100;
-  const coverageDecimal: number = parseFloat(((numLocationsNum - numLocationsNotCovered) / numLocationsNum).toFixed(2));
-  if (numLocationsNum > 0) {
-    pctCovered = coverageDecimal * 100;
-  }
-  // cov.numLocations = color(`${pctCovered}%`);
-  const base = {
-    name: cov.name,
-    numLocations: color(`${pctCovered}%`),
-  };
+const color = (percent: number): Chalk =>
+  percent >= 90 ? StandardColors.success : percent >= 75 ? StandardColors.warning : StandardColors.error;
 
-  if (!cov.locationsNotCovered) {
-    return { ...base, lineNotCovered: '' };
-  }
-  const locations = ensureArray(cov.locationsNotCovered);
+const formatPercent = (percent: number): string => color(percent)(`${percent}%`);
 
-  return {
-    ...base,
-    lineNotCovered: locations.map((location) => location.line).join(','),
-  };
+export const getCoveragePct = (cov: CodeCoverage): number => {
+  const [lineCount, uncoveredLineCount] = getCoverageNumbers(cov);
+  const coverageDecimal = parseFloat(((lineCount - uncoveredLineCount) / lineCount).toFixed(2));
+
+  return lineCount > 0 ? coverageDecimal * 100 : 100;
 };
+
+/** returns the number of total line for which coverage should apply, and the total uncovered line  */
+export const getCoverageNumbers = (cov: CodeCoverage): [lineCount: number, uncoveredLineCount: number] => [
+  parseInt(cov.numLocations, 10),
+  parseInt(cov.numLocationsNotCovered, 10),
+];
