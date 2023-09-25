@@ -1,12 +1,14 @@
 # summary
 
-Check the status of a deploy operation.
+Check or poll for the status of a deploy operation.
 
 # description
 
 Deploy operations include standard deploys, quick deploys, deploy validations, and deploy cancellations.
 
 Run this command by either passing it a job ID or specifying the --use-most-recent flag to use the job ID of the most recent deploy operation.
+
+Note that this command will not update source tracking information.
 
 # examples
 
@@ -17,6 +19,10 @@ Run this command by either passing it a job ID or specifying the --use-most-rece
 - Check the status of the most recent deploy operation:
 
       <%= config.bin %> <%= command.id %> --use-most-recent
+
+- Poll for the status using a job ID and target org:
+
+      <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2 --target-org me@my.org --wait 30
 
 # flags.job-id.summary
 

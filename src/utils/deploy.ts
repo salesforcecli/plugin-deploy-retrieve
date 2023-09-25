@@ -5,15 +5,14 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { ConfigAggregator, Messages, Org, PollingClient, SfError, SfProject, StatusResult } from '@salesforce/core';
+import { ConfigAggregator, Messages, Org, SfError, SfProject } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
-import { AnyJson, Nullable } from '@salesforce/ts-types';
+import { Nullable } from '@salesforce/ts-types';
 import {
   ComponentSet,
   ComponentSetBuilder,
   DeployResult,
   MetadataApiDeploy,
-  MetadataApiDeployStatus,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SourceTracking } from '@salesforce/source-tracking';
@@ -204,7 +203,10 @@ export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Pr
   await DeployCache.set(deploy.id, { ...opts });
 
   await deploy.cancel();
-  return poll(org, deploy.id, opts.wait ?? Duration.minutes(33));
+  return deploy.pollStatus({
+    frequency: Duration.milliseconds(500),
+    timeout: opts.wait ?? Duration.minutes(33),
+  });
 }
 
 export async function cancelDeployAsync(opts: Partial<DeployOptions>, id: string): Promise<{ id: string }> {
@@ -216,28 +218,6 @@ export async function cancelDeployAsync(opts: Partial<DeployOptions>, id: string
     throw new SfError('The deploy id is not available.');
   }
   return { id: deploy.id };
-}
-
-export async function poll(org: Org, id: string, wait: Duration, componentSet?: ComponentSet): Promise<DeployResult> {
-  const report = async (): Promise<DeployResult> => {
-    const res = await org.getConnection().metadata.checkDeployStatus(id, true);
-    const deployStatus = res as MetadataApiDeployStatus;
-    return new DeployResult(deployStatus, componentSet);
-  };
-
-  const opts: PollingClient.Options = {
-    frequency: Duration.milliseconds(1000),
-    timeout: wait,
-    poll: async (): Promise<StatusResult> => {
-      const deployResult = await report();
-      return {
-        completed: deployResult.response.done,
-        payload: deployResult as unknown as AnyJson,
-      };
-    },
-  };
-  const pollingClient = await PollingClient.create(opts);
-  return pollingClient.subscribe();
 }
 
 export function determineExitCode(result: DeployResult, async = false): number {

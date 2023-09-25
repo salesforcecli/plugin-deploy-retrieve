@@ -8,9 +8,9 @@
 import { bold } from 'chalk';
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { DeployOptions, determineExitCode, poll, resolveApi } from '../../../utils/deploy';
+import { DeployOptions, determineExitCode, resolveApi } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
@@ -90,10 +90,15 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
     const api = await resolveApi(this.configAggregator);
 
+    const mdapiDeploy = new MetadataApiDeploy({
+      usernameOrConnection: org.getConnection(flags['api-version']),
+      id: jobId,
+      apiOptions: {
+        rest: api === 'REST',
+      },
+    });
     // This is the ID of the deploy (of the validated metadata)
-    const deployId = await org
-      .getConnection(flags['api-version'])
-      .metadata.deployRecentValidation({ id: jobId, rest: api === 'REST' });
+    const deployId = await mdapiDeploy.deployRecentValidation(api === 'REST');
     this.log(`Deploy ID: ${bold(deployId)}`);
 
     if (flags.async) {
@@ -102,7 +107,10 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       return asyncFormatter.getJson();
     }
 
-    const result = await poll(org, deployId, flags.wait);
+    const result = await mdapiDeploy.pollStatus({
+      frequency: Duration.seconds(1),
+      timeout: flags.wait,
+    });
     const formatter = new DeployResultFormatter(result, flags);
 
     if (!this.jsonEnabled()) formatter.display();
