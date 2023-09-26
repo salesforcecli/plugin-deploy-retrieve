@@ -1,10 +1,10 @@
 # summary
 
-Resume watching a deploy operation and update source tracking upon completion as necessary.
+Resume watching a deploy operation and update source tracking when the deploy completes.
 
 # description
 
-Use this command to resume watching a deploy operation if the original command times out or you specified the --async flag. Deploy operations include standard deploys, quick deploys, deploy validations, and deploy cancellations. This command doesn't resume the original operation itself, because the operation always continues after you've started it, regardless of whether you're watching it or not. Upon completion, source tracking information will be updated as necessary.
+Use this command to resume watching a deploy operation if the original command times out or you specified the --async flag. Deploy operations include standard deploys, quick deploys, deploy validations, and deploy cancellations. This command doesn't resume the original operation itself, because the operation always continues after you've started it, regardless of whether you're watching it or not. When the deploy completes, source tracking information is updated as needed.
 
 Run this command by either passing it a job ID or specifying the --use-most-recent flag to use the job ID of the most recent deploy operation.
 
@@ -59,7 +59,7 @@ Show concise output of the deploy operation result.
 
 # warning.DeployNotResumable
 
-Job ID %s is not resumable since it already completed with status: %s. Displaying results...
+Job ID %s is not resumable because it already completed with status: %s. Displaying results...
 
 # flags.junit.summary
 

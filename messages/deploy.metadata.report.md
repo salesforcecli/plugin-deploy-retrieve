@@ -6,7 +6,7 @@ Check or poll for the status of a deploy operation.
 
 Deploy operations include standard deploys, quick deploys, deploy validations, and deploy cancellations.
 
-Run this command by either passing it a job ID or specifying the --use-most-recent flag to use the job ID of the most recent deploy operation.
+Run this command by either passing it a job ID or specifying the --use-most-recent flag to use the job ID of the most recent deploy operation.  If you specify the --wait flag, the command polls for the status every second until the timeout of --wait minutes.  If you don't specify the --wait flag, the command simply checks and displays the status of the deploy; the command doesn't poll for the status. 
 
 This command doesn't update source tracking information.
 
