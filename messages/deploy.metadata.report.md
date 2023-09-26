@@ -8,6 +8,8 @@ Deploy operations include standard deploys, quick deploys, deploy validations, a
 
 Run this command by either passing it a job ID or specifying the --use-most-recent flag to use the job ID of the most recent deploy operation.  If you specify the --wait flag, the command polls for the status every second until the timeout of --wait minutes.  If you don't specify the --wait flag, the command simply checks and displays the status of the deploy; the command doesn't poll for the status. 
 
+You typically don't specify the --target-org flag because the cached job already references the org to which you deployed.  But if you run this command on a computer different than the one from which you deployed, then you must specify the --target-org and it must point to the same org. 
+
 This command doesn't update source tracking information.
 
 # examples
