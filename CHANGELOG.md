@@ -1,3 +1,9 @@
+## [1.18.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.0...1.18.1) (2023-09-26)
+
+### Bug Fixes
+
+- support resuming completed deployments ([a9908fb](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a9908fb88df2afbd13c213c5cc69b570b3c5657d))
+
 # [1.18.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.17.16...1.18.0) (2023-09-19)
 
 ### Features
