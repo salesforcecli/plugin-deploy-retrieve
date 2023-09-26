@@ -74,7 +74,6 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
     const deployOpts = cache.get(jobId) ?? {};
-    const waitDuration = flags['wait'];
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
 
     // if we're using mdapi we won't have a component set
@@ -85,12 +84,18 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
         try {
           this.project = await SfProject.resolve();
           const sourcepath = this.project.getUniquePackageDirectories().map((pDir) => pDir.fullPath);
-          componentSet = await buildComponentSet({ 'source-dir': sourcepath, wait: waitDuration });
+          componentSet = await buildComponentSet({
+            'source-dir': sourcepath,
+            wait: flags['wait'].quantity > 0 ? flags['wait'] : undefined,
+          });
         } catch (err) {
           // ignore the error. this was just to get improved command output.
         }
       } else {
-        componentSet = await buildComponentSet({ ...deployOpts, wait: waitDuration });
+        componentSet = await buildComponentSet({
+          ...deployOpts,
+          wait: flags['wait'].quantity > 0 ? flags['wait'] : undefined,
+        });
       }
     }
     const mdapiDeploy = new MetadataApiDeploy({
@@ -117,11 +122,11 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     };
 
     let result: DeployResult;
-    if (waitDuration) {
+    if (flags.wait.quantity > 0) {
       // poll for deploy results
       try {
         new DeployProgress(mdapiDeploy, this.jsonEnabled()).start();
-        result = await mdapiDeploy.pollStatus(500, waitDuration.seconds);
+        result = await mdapiDeploy.pollStatus(500, flags.wait.seconds);
       } catch (error) {
         if (error instanceof Error && error.message.includes('The client has timed out')) {
           this.debug('[project deploy report] polling timed out. Requesting status...');
