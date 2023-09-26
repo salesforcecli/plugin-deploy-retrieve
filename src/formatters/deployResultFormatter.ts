@@ -45,7 +45,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       junit: boolean;
       'results-dir': string;
       'target-org': Org;
-      wait: Duration;
+      wait: Duration | number;
     }>
   ) {
     super(result, flags);

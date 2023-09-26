@@ -7,6 +7,7 @@
 import { ux } from '@oclif/core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { StandardColors } from '@salesforce/sf-plugins-core';
+import { Duration } from '@salesforce/kit';
 import { tableHeader } from '../utils/output';
 import { DeployResultFormatter } from './deployResultFormatter';
 
@@ -38,8 +39,9 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
       if (key === 'target-org') {
         return result.concat({ key: 'target-org', value: this.flags['target-org']?.getUsername() });
       }
-      if (key === 'wait') {
-        return result.concat({ key: 'wait', value: `${this.flags['wait']?.quantity} minutes` });
+      if (key === 'wait' && this.flags['wait']) {
+        const wait = this.flags['wait'] instanceof Duration ? this.flags['wait'].quantity : this.flags['wait'];
+        return result.concat({ key: 'wait', value: `${wait} minutes` });
       }
       return result.concat({ key, value });
     }, []);
