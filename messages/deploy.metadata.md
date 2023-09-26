@@ -78,7 +78,7 @@ Overrides your default org.
 
 # flags.metadata.summary
 
-Metadata component names to deploy. Wildcards ( * ) supported as long as you use quotes, such as 'ApexClass:MyClass*'
+Metadata component names to deploy. Wildcards ( _ ) supported as long as you use quotes, such as 'ApexClass:MyClass_'
 
 # flags.test-level.summary
 
@@ -218,6 +218,15 @@ No local changes to deploy.
 # error.nothingToDeploy.Actions
 
 - To see conflicts and ignored files, run "%s project deploy preview" with any of the manifest, directory, or metadata flags.
+
+# error.InvalidDeployId
+
+Invalid deploy ID: %s for org: %s
+
+# error.InvalidDeployId.actions
+
+- Ensure the deploy ID is correct.
+- Ensure the target-org username or alias is correct.
 
 # flags.junit.summary
 

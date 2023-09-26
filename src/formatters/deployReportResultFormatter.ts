@@ -32,9 +32,15 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
     ux.table(response, { key: {}, value: {} }, { title: tableHeader('Deploy Info'), 'no-truncate': true });
 
     const opts = Object.entries(this.flags).reduce<Array<{ key: string; value: unknown }>>((result, [key, value]) => {
-      if (key === 'timestamp') return result;
-      if (key === 'target-org')
+      if (key === 'timestamp') {
+        return result;
+      }
+      if (key === 'target-org') {
         return result.concat({ key: 'target-org', value: this.flags['target-org']?.getUsername() });
+      }
+      if (key === 'wait') {
+        return result.concat({ key: 'wait', value: `${this.flags['wait']?.quantity} minutes` });
+      }
       return result.concat({ key, value });
     }, []);
     ux.log();

@@ -10,7 +10,7 @@ import * as fs from 'fs';
 import { ux } from '@oclif/core';
 import { DeployResult, FileResponse, FileResponseFailure, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError, Lifecycle } from '@salesforce/core';
-import { ensureArray } from '@salesforce/kit';
+import { Duration, ensureArray } from '@salesforce/kit';
 import {
   CodeCoverageResult,
   CoverageReporter,
@@ -45,6 +45,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       junit: boolean;
       'results-dir': string;
       'target-org': Org;
+      wait: Duration;
     }>
   ) {
     super(result, flags);

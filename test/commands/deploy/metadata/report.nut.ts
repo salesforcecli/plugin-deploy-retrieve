@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import { unlinkSync, existsSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, isObject } from '@salesforce/ts-types';
 import { expect } from 'chai';
@@ -21,7 +21,7 @@ describe('[project deploy report] NUTs with source-dir', () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
       nut: __filename,
-      scratchOrgs: [{ duration: 1, alias: orgAlias, config: path.join('config', 'project-scratch-def.json') }],
+      scratchOrgs: [{ duration: 1, alias: orgAlias, config: join('config', 'project-scratch-def.json') }],
     });
   });
 
@@ -71,9 +71,9 @@ describe('[project deploy report] NUTs with source-dir', () => {
       });
 
       // delete the cache file so we can verify that reporting just with job-id and org works
-      const deployCacheFilePath = path.resolve(testkit.projectDir, path.join('..', '.sf', 'deploy-cache.json'));
-      fs.unlinkSync(deployCacheFilePath);
-      assert(!fs.existsSync(deployCacheFilePath));
+      const deployCacheFilePath = resolve(testkit.projectDir, join('..', '.sf', 'deploy-cache.json'));
+      unlinkSync(deployCacheFilePath);
+      assert(!existsSync(deployCacheFilePath));
 
       const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
         args: `--job-id ${first?.result.id} --target-org ${orgAlias} --wait 9`,
@@ -97,13 +97,13 @@ describe('[project deploy report] NUTs with source-dir', () => {
         json: true,
         exitCode: 0,
       });
-      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override'))).to.be.true;
-      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'coverage'))).to.be.true;
-      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'coverage', 'html'))).to.be.true;
-      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'coverage', 'text.txt'))).to.be.true;
-      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'junit'))).to.be.true;
-      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output-override', 'junit', 'junit.xml'))).to.be.true;
-      expect(fs.existsSync(path.join(testkit.projectDir, 'test-output'))).to.be.false;
+      expect(existsSync(join(testkit.projectDir, 'test-output-override'))).to.be.true;
+      expect(existsSync(join(testkit.projectDir, 'test-output-override', 'coverage'))).to.be.true;
+      expect(existsSync(join(testkit.projectDir, 'test-output-override', 'coverage', 'html'))).to.be.true;
+      expect(existsSync(join(testkit.projectDir, 'test-output-override', 'coverage', 'text.txt'))).to.be.true;
+      expect(existsSync(join(testkit.projectDir, 'test-output-override', 'junit'))).to.be.true;
+      expect(existsSync(join(testkit.projectDir, 'test-output-override', 'junit', 'junit.xml'))).to.be.true;
+      expect(existsSync(join(testkit.projectDir, 'test-output'))).to.be.false;
       assert(isObject(deploy));
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });

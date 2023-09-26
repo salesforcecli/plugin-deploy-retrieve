@@ -8,7 +8,7 @@
 import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
-import { buildComponentSet, DeployOptions } from '../../../utils/deploy';
+import { buildComponentSet } from '../../../utils/deploy';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployCache } from '../../../utils/deployCache';
 import { DeployReportResultFormatter } from '../../../formatters/deployReportResultFormatter';
@@ -73,7 +73,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataReport), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
-    const deployOpts = cache.get(jobId) ?? ({} as DeployOptions & { isMdapi: boolean });
+    const deployOpts = cache.get(jobId) ?? {};
     const waitDuration = flags['wait'];
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
 
@@ -105,8 +105,15 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     });
 
     const getDeployResult = async (): Promise<DeployResult> => {
-      const deployStatus = await mdapiDeploy.checkStatus();
-      return new DeployResult(deployStatus, componentSet);
+      try {
+        const deployStatus = await mdapiDeploy.checkStatus();
+        return new DeployResult(deployStatus, componentSet);
+      } catch (error) {
+        if (error instanceof Error && error.name === 'sf:INVALID_CROSS_REFERENCE_KEY') {
+          throw deployMessages.createError('error.InvalidDeployId', [jobId, org.getUsername()]);
+        }
+        throw error;
+      }
     };
 
     let result: DeployResult;
