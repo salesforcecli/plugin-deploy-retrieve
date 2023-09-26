@@ -84,18 +84,12 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
         try {
           this.project = await SfProject.resolve();
           const sourcepath = this.project.getUniquePackageDirectories().map((pDir) => pDir.fullPath);
-          componentSet = await buildComponentSet({
-            'source-dir': sourcepath,
-            wait: flags['wait'].quantity > 0 ? flags['wait'] : undefined,
-          });
+          componentSet = await buildComponentSet({ 'source-dir': sourcepath, wait: flags['wait'] });
         } catch (err) {
           // ignore the error. this was just to get improved command output.
         }
       } else {
-        componentSet = await buildComponentSet({
-          ...deployOpts,
-          wait: flags['wait'].quantity > 0 ? flags['wait'] : undefined,
-        });
+        componentSet = await buildComponentSet({ ...deployOpts, wait: flags['wait'] });
       }
     }
     const mdapiDeploy = new MetadataApiDeploy({
