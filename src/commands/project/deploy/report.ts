@@ -8,6 +8,7 @@
 import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
+import { Duration } from '@salesforce/kit';
 import { buildComponentSet } from '../../../utils/deploy';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployCache } from '../../../utils/deployCache';
@@ -57,15 +58,14 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.results-dir.summary'),
       helpGroup: testFlags,
     }),
-    // we want to allow undefined for a simple check deploy status
-    // eslint-disable-next-line sf-plugin/flag-min-max-default
     wait: Flags.duration({
       char: 'w',
       summary: deployMessages.getMessage('flags.wait.summary'),
       description: deployMessages.getMessage('flags.wait.description'),
       unit: 'minutes',
       helpValue: '<minutes>',
-      min: 1,
+      min: 0,
+      default: new Duration(0, Duration.Unit.MINUTES),
     }),
   };
 
