@@ -8,7 +8,7 @@ Deploy operations include standard deploys, quick deploys, deploy validations, a
 
 Run this command by either passing it a job ID or specifying the --use-most-recent flag to use the job ID of the most recent deploy operation.
 
-Note that this command will not update source tracking information.
+This command doesn't update source tracking information.
 
 # examples
 
