@@ -219,6 +219,15 @@ No local changes to deploy.
 
 - To see conflicts and ignored files, run "%s project deploy preview" with any of the manifest, directory, or metadata flags.
 
+# error.InvalidDeployId
+
+Invalid deploy ID: %s for org: %s
+
+# error.InvalidDeployId.actions
+
+- Ensure the deploy ID is correct.
+- Ensure the target-org username or alias is correct.
+
 # flags.junit.summary
 
 Output JUnit test results.

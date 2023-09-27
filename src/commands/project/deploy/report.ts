@@ -5,11 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Messages, Org } from '@salesforce/core';
-import { Duration } from '@salesforce/kit';
+import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
-import { DeployResult, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
+import { ComponentSet, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { buildComponentSet } from '../../../utils/deploy';
+import { DeployProgress } from '../../../utils/progressBar';
 import { DeployCache } from '../../../utils/deployCache';
 import { DeployReportResultFormatter } from '../../../formatters/deployReportResultFormatter';
 import { DeployResultJson } from '../../../utils/types';
@@ -17,6 +17,7 @@ import { coverageFormattersFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.report');
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 const testFlags = 'Test';
 
 export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
@@ -27,6 +28,11 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
   public static readonly deprecateAliases = true;
 
   public static readonly flags = {
+    'target-org': Flags.optionalOrg({
+      char: 'o',
+      description: deployMessages.getMessage('flags.target-org.description'),
+      summary: deployMessages.getMessage('flags.target-org.summary'),
+    }),
     'job-id': Flags.salesforceId({
       char: 'i',
       startsWith: '0Af',
@@ -51,23 +57,84 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.results-dir.summary'),
       helpGroup: testFlags,
     }),
+    // we want to allow undefined for a simple check deploy status
+    // eslint-disable-next-line sf-plugin/flag-min-max-default
+    wait: Flags.duration({
+      char: 'w',
+      summary: deployMessages.getMessage('flags.wait.summary'),
+      description: deployMessages.getMessage('flags.wait.description'),
+      unit: 'minutes',
+      helpValue: '<minutes>',
+      min: 1,
+    }),
   };
 
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataReport), DeployCache.create()]);
-    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
+    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
-    const deployOpts = cache.get(jobId);
-    const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
-    const [deployStatus, componentSet] = await Promise.all([
-      // we'll use whatever the org supports since we can't specify the org
+    const deployOpts = cache.get(jobId) ?? {};
+    const wait = flags['wait'];
+    const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
+
+    // if we're using mdapi we won't have a component set
+    let componentSet = new ComponentSet();
+    if (!deployOpts.isMdapi) {
+      if (!cache.get(jobId)) {
+        // If the cache file isn't there, use the project package directories for the CompSet
+        try {
+          this.project = await SfProject.resolve();
+          const sourcepath = this.project.getUniquePackageDirectories().map((pDir) => pDir.fullPath);
+          componentSet = await buildComponentSet({ 'source-dir': sourcepath, wait });
+        } catch (err) {
+          // ignore the error. this was just to get improved command output.
+        }
+      } else {
+        componentSet = await buildComponentSet({ ...deployOpts, wait });
+      }
+    }
+    const mdapiDeploy = new MetadataApiDeploy({
+      // setting an API version here won't matter since we're just checking deploy status
       // eslint-disable-next-line sf-plugin/get-connection-with-version
-      org.getConnection().metadata.checkDeployStatus(jobId, true),
-      // if we're using mdapi, we won't have a component set
-      deployOpts.isMdapi ? undefined : buildComponentSet({ ...deployOpts, wait: Duration.minutes(deployOpts.wait) }),
-    ]);
+      usernameOrConnection: org.getConnection(),
+      id: jobId,
+      components: componentSet,
+      apiOptions: {
+        rest: deployOpts.api === 'REST',
+      },
+    });
 
-    const result = new DeployResult(deployStatus as MetadataApiDeployStatus, componentSet);
+    const getDeployResult = async (): Promise<DeployResult> => {
+      try {
+        const deployStatus = await mdapiDeploy.checkStatus();
+        return new DeployResult(deployStatus, componentSet);
+      } catch (error) {
+        if (error instanceof Error && error.name === 'sf:INVALID_CROSS_REFERENCE_KEY') {
+          throw deployMessages.createError('error.InvalidDeployId', [jobId, org.getUsername()]);
+        }
+        throw error;
+      }
+    };
+
+    let result: DeployResult;
+    if (wait) {
+      // poll for deploy results
+      try {
+        new DeployProgress(mdapiDeploy, this.jsonEnabled()).start();
+        result = await mdapiDeploy.pollStatus(500, wait.seconds);
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('The client has timed out')) {
+          this.debug('[project deploy report] polling timed out. Requesting status...');
+        } else {
+          throw error;
+        }
+      } finally {
+        result = await getDeployResult();
+      }
+    } else {
+      // check the deploy status
+      result = await getDeployResult();
+    }
 
     const formatter = new DeployReportResultFormatter(result, {
       ...deployOpts,
