@@ -1,3 +1,11 @@
+## [1.18.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.1...1.18.2) (2023-09-27)
+
+### Bug Fixes
+
+- adds target-org and wait support to deploy report command ([89057b6](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/89057b6305a23fe51d37fb3d5737d0c8b50158e3))
+- better error reporting and more tests ([dd488a3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/dd488a330b8eb0815ce6ab6f295f0c02bf8a76e4))
+- fixed handling of wait in the formatter ([e9ca2fe](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e9ca2fedc93ffe2da86b67507b6554e35ef05d3c))
+
 ## [1.18.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.0...1.18.1) (2023-09-26)
 
 ### Bug Fixes
