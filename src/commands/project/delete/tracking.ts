@@ -29,7 +29,7 @@ export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
   public static readonly summary = messages.getMessage('deleteSummary');
   public static readonly description = messages.getMessage('deleteDescription');
   public static readonly requiresProject = true;
-  public static readonly examples = [];
+  public static readonly examples = messages.getMessages('deleteExample');
 
   public static readonly flags = {
     'api-version': orgApiVersionFlagWithDeprecations,
