@@ -1,3 +1,9 @@
+## [1.18.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.2...1.18.3) (2023-09-28)
+
+### Bug Fixes
+
+- **deps:** bump get-func-name from 2.0.0 to 2.0.2 ([9f6e623](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9f6e62327440074a977369bb94053edcbb5e5bd3))
+
 ## [1.18.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.1...1.18.2) (2023-09-27)
 
 ### Bug Fixes
