@@ -1,3 +1,9 @@
+## [1.18.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.3...1.18.4) (2023-09-29)
+
+### Bug Fixes
+
+- add examples to project reset|delete tracking ([8733444](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8733444ac21a40581f2894c1f41e8431fc29b180))
+
 ## [1.18.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.2...1.18.3) (2023-09-28)
 
 ### Bug Fixes
