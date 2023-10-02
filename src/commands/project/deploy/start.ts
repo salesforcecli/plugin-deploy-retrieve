@@ -207,7 +207,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       this.log(
         messages.getMessage('apiVersionMsgDetailed', [
           action,
-          apiData.manifestVersion,
+          flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
           username,
           apiData.apiVersion,
           apiData.webService,
