@@ -13,6 +13,7 @@ import {
   ComponentSetBuilder,
   DeployResult,
   MetadataApiDeploy,
+  MetadataApiDeployOptions,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SourceTracking } from '@salesforce/source-tracking';
@@ -119,21 +120,14 @@ export async function executeDeploy(
   id?: string,
   throwOnEmpty = false
 ): Promise<{ deploy?: MetadataApiDeploy; componentSet?: ComponentSet }> {
-  const apiOptions = {
-    checkOnly: opts['dry-run'] ?? false,
-    ignoreWarnings: opts['ignore-warnings'] ?? false,
-    rest: opts.api === 'REST',
-    rollbackOnError: !opts['ignore-errors'] || false,
-    ...(opts.tests ? { runTests: opts.tests } : {}),
-    ...(opts['test-level'] ? { testLevel: opts['test-level'] } : {}),
-    purgeOnDelete: opts['purge-on-delete'] ?? false,
-  };
+  const apiOptions = buildApiOptions(opts);
 
   let deploy: MetadataApiDeploy | undefined;
   let componentSet: ComponentSet | undefined;
 
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
-  const usernameOrConnection = org.getConnection();
+  // for mdapi deploys, use the passed in api-version.
+  const usernameOrConnection = org.getConnection(opts['metadata-dir'] ? opts['api-version'] : undefined);
 
   if (opts['metadata-dir']) {
     if (id) {
@@ -233,3 +227,14 @@ export const isNotResumable = (status?: RequestStatus): boolean =>
   [RequestStatus.Succeeded, RequestStatus.Failed, RequestStatus.SucceededPartial, RequestStatus.Canceled].includes(
     status
   );
+
+/** apply some defaults to the DeployOptions object  */
+const buildApiOptions = (opts: Partial<DeployOptions>): MetadataApiDeployOptions['apiOptions'] => ({
+  checkOnly: opts['dry-run'] ?? false,
+  ignoreWarnings: opts['ignore-warnings'] ?? false,
+  rest: opts.api === 'REST',
+  rollbackOnError: !opts['ignore-errors'] || false,
+  ...(opts.tests ? { runTests: opts.tests } : {}),
+  ...(opts['test-level'] ? { testLevel: opts['test-level'] } : {}),
+  purgeOnDelete: opts['purge-on-delete'] ?? false,
+});

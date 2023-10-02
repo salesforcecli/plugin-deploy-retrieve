@@ -168,7 +168,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       this.log(
         deployMessages.getMessage('apiVersionMsgDetailed', [
           'Validating Deployment of',
-          apiData.manifestVersion,
+          flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
           username,
           apiData.apiVersion,
           apiData.webService,

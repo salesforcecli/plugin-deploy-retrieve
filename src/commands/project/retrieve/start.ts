@@ -192,7 +192,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         this.log(
           messages.getMessage('apiVersionMsgDetailed', [
             'Retrieving',
-            apiData.manifestVersion,
+            `v${apiData.manifestVersion}`,
             flags['target-org'].getUsername(),
             apiData.apiVersion,
           ])
