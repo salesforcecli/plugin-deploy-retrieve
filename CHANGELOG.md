@@ -1,3 +1,9 @@
+## [1.18.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.4...1.18.5) (2023-10-02)
+
+### Bug Fixes
+
+- api version for mdapi deploys ([77671bf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/77671bfb738226a237a18f915854f8f607dd81c0))
+
 ## [1.18.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.3...1.18.4) (2023-09-29)
 
 ### Bug Fixes
