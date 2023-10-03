@@ -1,3 +1,11 @@
+## [1.18.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.5...1.18.6) (2023-10-03)
+
+### Bug Fixes
+
+- double v in metadata version for retrieve ([131f975](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/131f97547490b54f57708f708df097cb9bbe440c))
+- underscores again ([598f229](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/598f2290f910ddbe57036229670c9e5ae0d78dcb))
+- use backticks for help to maintain underscore ([ae5f8bc](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ae5f8bc82239270b0fae4e0b693257876bc2e96b))
+
 ## [1.18.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.4...1.18.5) (2023-10-02)
 
 ### Bug Fixes
