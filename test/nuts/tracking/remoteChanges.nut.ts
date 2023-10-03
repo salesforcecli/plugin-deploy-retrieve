@@ -183,11 +183,11 @@ describe('remote changes', () => {
   });
 
   describe('remote changes: add', () => {
-    const className = 'CreatedClass';
+    const className = 'Class1';
     it('adds on the server', async () => {
       const createResult = await conn.tooling.create('ApexClass', {
         Name: className,
-        Body: 'public class CreatedClass {}',
+        Body: `public class ${className} {}`,
         Status: 'Active',
       });
       if (!Array.isArray(createResult) && createResult.success) {
@@ -253,6 +253,60 @@ describe('remote changes', () => {
         expect(result.toDeploy).to.deep.equal([]);
         expect(result.toDelete).to.deep.equal([]);
       });
+    });
+  });
+
+  describe('remote changes: apiVersoin', () => {
+    let originalProject: { sourceApiVersion: string };
+    let originalProjectSourceApiVersion: string;
+    before(async () => {
+      originalProject = JSON.parse(
+        await fs.promises.readFile(path.join(session.project.dir, 'sfdx-project.json'), 'utf8')
+      ) as {
+        sourceApiVersion: string;
+      };
+      originalProjectSourceApiVersion = originalProject.sourceApiVersion;
+    });
+
+    it('adds on the server', async () => {
+      const className = 'Class2';
+      const createResult = await conn.tooling.create('ApexClass', {
+        Name: className,
+        Body: `public class ${className} {}`,
+        Status: 'Active',
+      });
+      if (!Array.isArray(createResult) && createResult.success) {
+        expect(createResult.id).to.be.a('string');
+      }
+    });
+    it('can pull the update using current project apiVersion', () => {
+      const result = execCmd<RetrieveResultJson>('project:retrieve:start', { ensureExitCode: 0 }).shellOutput;
+      expect(result).to.include(`v${originalProjectSourceApiVersion} metadata`);
+    });
+
+    it('adds on the server', async () => {
+      const className = 'Class3';
+      const createResult = await conn.tooling.create('ApexClass', {
+        Name: className,
+        Body: `public class ${className} {}`,
+        Status: 'Active',
+      });
+      if (!Array.isArray(createResult) && createResult.success) {
+        expect(createResult.id).to.be.a('string');
+      }
+    });
+
+    it('can pull the update using a lower apiVersion', async () => {
+      const newApiVersion = originalProjectSourceApiVersion
+        .split('.')
+        .map((v, i) => (i === 0 ? (parseInt(v, 10) - 1).toString() : v))
+        .join('.');
+      await fs.promises.writeFile(
+        path.join(session.project.dir, 'sfdx-project.json'),
+        JSON.stringify({ ...originalProject, sourceApiVersion: newApiVersion })
+      );
+      const result = execCmd<RetrieveResultJson>('project:retrieve:start', { ensureExitCode: 0 }).shellOutput;
+      expect(result).to.include(`v${newApiVersion} metadata`);
     });
   });
 
