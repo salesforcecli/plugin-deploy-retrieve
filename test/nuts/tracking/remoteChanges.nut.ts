@@ -256,7 +256,7 @@ describe('remote changes', () => {
     });
   });
 
-  describe('remote changes: apiVersoin', () => {
+  describe('remote changes: apiVersion', () => {
     let originalProject: { sourceApiVersion: string };
     let originalProjectSourceApiVersion: string;
     before(async () => {
