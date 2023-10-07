@@ -1,3 +1,9 @@
+## [1.18.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.6...1.18.7) (2023-10-07)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 5.3.3 to 5.3.5 ([e5f6062](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e5f60624fb1ee7aff5aecea23ad80630c35e35d8))
+
 ## [1.18.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.5...1.18.6) (2023-10-03)
 
 ### Bug Fixes
