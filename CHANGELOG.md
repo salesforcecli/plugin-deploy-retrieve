@@ -1,3 +1,9 @@
+# [1.19.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.7...1.19.0) (2023-10-09)
+
+### Features
+
+- col, line numbers on mdapi deploy errors ([#771](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/771)) ([dd27b0d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/dd27b0d8247302fbb98607fa3bef723ec7fe692c))
+
 ## [1.18.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.6...1.18.7) (2023-10-07)
 
 ### Bug Fixes
