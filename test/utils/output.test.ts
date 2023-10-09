@@ -34,11 +34,7 @@ describe('deployResultFormatter', () => {
         {
           error: 'This component has some problems',
           fullName: 'ProductController',
-          problemType: 'Error',
-        },
-        {
-          error: 'This component has some problems',
-          fullName: 'ProductController',
+          loc: '27:18',
           problemType: 'Error',
         },
       ]);

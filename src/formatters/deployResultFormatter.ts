@@ -8,9 +8,9 @@ import * as path from 'path';
 import { EOL } from 'node:os';
 import * as fs from 'fs';
 import { ux } from '@oclif/core';
-import { DeployResult, FileResponse, FileResponseFailure, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError, Lifecycle } from '@salesforce/core';
-import { Duration, ensureArray } from '@salesforce/kit';
+import { Duration, ensureArray, sortBy } from '@salesforce/kit';
 import {
   CodeCoverageResult,
   CoverageReporter,
@@ -264,28 +264,23 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     if (this.result.response.status === RequestStatus.Succeeded) return;
 
     const failures = this.relativeFiles.filter(isSdrFailure);
-    // .push returns a number, so push here
-    failures.push(
-      ...ensureArray(this.result.response.details.componentFailures).map(
-        (fail) =>
-          ({
-            problemType: fail.problemType,
-            fullName: fail.fullName,
-            error: fail.problem,
-          } as FileResponseFailure)
-      )
-    );
     if (!failures.length) return;
 
     const columns = {
       problemType: { header: 'Type' },
       fullName: { header: 'Name' },
       error: { header: 'Problem' },
+      loc: { header: 'Line:Column' },
     };
     const options = { title: error(`Component Failures [${failures.length}]`), 'no-truncate': true };
     ux.log();
     ux.table(
-      failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.error })),
+      sortBy(failures, ['problemType', 'fullName', 'lineNumber', 'columnNumber', 'error']).map((f) => ({
+        problemType: f.problemType,
+        fullName: f.fullName,
+        error: f.error,
+        loc: f.lineNumber ? `${f.lineNumber}:${f.columnNumber}` : '',
+      })),
       columns,
       options
     );
