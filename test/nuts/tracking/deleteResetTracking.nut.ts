@@ -36,7 +36,7 @@ describe('reset and clear tracking', () => {
   before(async () => {
     session = await TestSession.create({
       project: {
-        gitClone: 'https://github.com/trailheadapps/ebikes-lwc',
+        gitClone: 'https://github.com/trailheadapps/dreamhouse-lwc',
       },
       devhubAuthStrategy: 'AUTO',
       scratchOrgs: [
@@ -133,8 +133,10 @@ describe('reset and clear tracking', () => {
 
       revisions.map((revision) => {
         revision.serverRevisionCounter === lowestRevision
-          ? expect(revision.serverRevisionCounter).to.equal(revision.lastRetrievedFromServer)
-          : expect(revision.serverRevisionCounter).to.not.equal(revision.lastRetrievedFromServer);
+          ? expect(revision.serverRevisionCounter, JSON.stringify(revision)).to.equal(revision.lastRetrievedFromServer)
+          : expect(revision.serverRevisionCounter, JSON.stringify(revision)).to.not.equal(
+              revision.lastRetrievedFromServer
+            );
       });
     });
 
