@@ -1121,13 +1121,13 @@
     chalk "^4"
     inquirer "^8.2.5"
 
-"@salesforce/source-deploy-retrieve@^9.7.2", "@salesforce/source-deploy-retrieve@^9.7.20", "@salesforce/source-deploy-retrieve@^9.7.24":
-  version "9.7.24"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-9.7.24.tgz#6a200b830311b0db08a86026ece98c734d56f8c2"
-  integrity sha512-nkP9KgzuCoV6LtdDxgxt7KRnoQ6ZS12DJgXErCBXm7Swmr0dnbo1LhxrH05C4UFFe0JuvSta+u+Oor8jxSGaCQ==
+"@salesforce/source-deploy-retrieve@^9.7.2", "@salesforce/source-deploy-retrieve@^9.7.20", "@salesforce/source-deploy-retrieve@^9.7.27":
+  version "9.7.27"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-9.7.27.tgz#1d88eb237361bab62c3a4c683be178ca3cc77e4c"
+  integrity sha512-ot0TpibH8OZVOJpMo10TuZ6acqpV7T04qNCpEcjrcpGVolCahMzFtpiJ4TjBxL+MPY/efuWWBj3YELjy9hgFxw==
   dependencies:
     "@salesforce/core" "^5.3.1"
-    "@salesforce/kit" "^3.0.11"
+    "@salesforce/kit" "^3.0.13"
     "@salesforce/ts-types" "^2.0.7"
     fast-levenshtein "^3.0.0"
     fast-xml-parser "^4.3.2"
@@ -7461,14 +7461,7 @@ socks@^2.6.2, socks@^2.7.1:
     ip "^2.0.0"
     smart-buffer "^4.2.0"
 
-sonic-boom@^3.0.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/sonic-boom/-/sonic-boom-3.3.0.tgz#cffab6dafee3b2bcb88d08d589394198bee1838c"
-  integrity sha512-LYxp34KlZ1a2Jb8ZQgFCK3niIHzibdwtwNUWKg0qQRzsDoJ3Gfgkf8KdBTFU3SkejDEIlWwnSnpVdOZIhFMl/g==
-  dependencies:
-    atomic-sleep "^1.0.0"
-
-sonic-boom@^3.7.0:
+sonic-boom@^3.0.0, sonic-boom@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/sonic-boom/-/sonic-boom-3.7.0.tgz#b4b7b8049a912986f4a92c51d4660b721b11f2f2"
   integrity sha512-IudtNvSqA/ObjN97tfgNmOKyDOs4dNcg4cUUsHDebqsgb8wGBBwb31LIgShNO8fye0dFI52X1+tFoKKI6Rq1Gg==
