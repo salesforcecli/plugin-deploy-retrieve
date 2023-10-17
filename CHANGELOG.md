@@ -1,3 +1,9 @@
+## [1.19.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.19.0...1.19.1) (2023-10-17)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 5.3.5 to 5.3.9 ([a18c975](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a18c97521f81cc65586392059164cda30f69cf7f))
+
 # [1.19.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.18.7...1.19.0) (2023-10-09)
 
 ### Features
