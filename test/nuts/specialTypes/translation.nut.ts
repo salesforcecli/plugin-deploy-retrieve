@@ -38,6 +38,7 @@ describe('translations', () => {
   after(async () => {
     await session?.clean();
   });
+
   describe('tracking/push', () => {
     it('can deploy the whole project', async () => {
       execCmd('project deploy start --json', {
@@ -183,6 +184,53 @@ describe('translations', () => {
             ensureExitCode: 0,
           });
         });
+      });
+
+      it('will retrieve across MPDs', async () => {
+        // read the file before deleting it to restore it after this test
+        const objectTranslationMyAppPath = path.join(
+          session.project.dir,
+          'my-app',
+          'main',
+          'default',
+          'objectTranslations',
+          'customObject__c-es',
+          'customObject__c-es.objectTranslation-meta.xml'
+        );
+        const objectTranslationContent = await fs.promises.readFile(objectTranslationMyAppPath, 'utf8');
+
+        // delete the file
+        await fs.promises.unlink(objectTranslationMyAppPath);
+        execCmd('project retrieve start -m CustomObjectTranslation --json', { ensureExitCode: 0 });
+        expect(
+          fs.existsSync(
+            path.join(
+              session.project.dir,
+              'force-app',
+              'main',
+              'default',
+              'objectTranslations',
+              'customObject__c-es',
+              'customObject__c-es.objectTranslation-meta.xml'
+            )
+          )
+        ).to.be.true;
+
+        // if the assertions passed, let's delete the new file, and recreate the old
+        await Promise.all([
+          fs.promises.unlink(
+            path.join(
+              session.project.dir,
+              'force-app',
+              'main',
+              'default',
+              'objectTranslations',
+              'customObject__c-es',
+              'customObject__c-es.objectTranslation-meta.xml'
+            )
+          ),
+          fs.promises.writeFile(objectTranslationMyAppPath, objectTranslationContent),
+        ]);
       });
     });
   });
