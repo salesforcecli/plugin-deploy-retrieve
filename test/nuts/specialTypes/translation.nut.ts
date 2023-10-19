@@ -31,7 +31,7 @@ describe('translations', () => {
         },
       ],
     });
-    projectPath = path.join(session.project.dir, 'my-app', 'main', 'default');
+    projectPath = path.join(session.project.dir, 'force-app', 'main', 'default');
     translationPath = path.join(projectPath, 'objectTranslations', 'customObject__c-es');
   });
 
@@ -168,10 +168,10 @@ describe('translations', () => {
         });
 
         it('can retrieve COT from directory', async () => {
-          // the .objectTranslation is in force-app
+          // the .objectTranslation is in my-app
           const objectTranslationPath = path.join(
             session.project.dir,
-            'force-app',
+            'my-app',
             'main',
             'default',
             'objectTranslations',
