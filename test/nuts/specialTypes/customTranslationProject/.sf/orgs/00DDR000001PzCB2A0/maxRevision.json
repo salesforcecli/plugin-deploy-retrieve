@@ -1,0 +1,41 @@
+{
+  "sourceMembers": {
+    "CustomField__customObject__c.customField__c": {
+      "serverRevisionCounter": 2,
+      "lastRetrievedFromServer": 2,
+      "memberType": "CustomField",
+      "isNameObsolete": false
+    },
+    "Profile__Admin": {
+      "serverRevisionCounter": 6,
+      "lastRetrievedFromServer": 6,
+      "memberType": "Profile",
+      "isNameObsolete": false
+    },
+    "Layout__customObject__c-customObject Layout": {
+      "serverRevisionCounter": 4,
+      "lastRetrievedFromServer": 4,
+      "memberType": "Layout",
+      "isNameObsolete": false
+    },
+    "CustomObjectTranslation__customObject__c-es": {
+      "serverRevisionCounter": 8,
+      "lastRetrievedFromServer": 8,
+      "memberType": "CustomObjectTranslation",
+      "isNameObsolete": false
+    },
+    "CustomObject__customObject__c": {
+      "serverRevisionCounter": 3,
+      "lastRetrievedFromServer": 3,
+      "memberType": "CustomObject",
+      "isNameObsolete": false
+    },
+    "Translations__es": {
+      "serverRevisionCounter": 5,
+      "lastRetrievedFromServer": 5,
+      "memberType": "Translations",
+      "isNameObsolete": false
+    }
+  },
+  "serverMaxRevisionCounter": 8
+}

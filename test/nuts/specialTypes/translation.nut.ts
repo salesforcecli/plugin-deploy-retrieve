@@ -31,7 +31,7 @@ describe('translations', () => {
         },
       ],
     });
-    projectPath = path.join(session.project.dir, 'force-app', 'main', 'default');
+    projectPath = path.join(session.project.dir, 'my-app', 'main', 'default');
     translationPath = path.join(projectPath, 'objectTranslations', 'customObject__c-es');
   });
 
@@ -161,22 +161,27 @@ describe('translations', () => {
       });
 
       describe('individual type retrieves', () => {
-        it('can retrieve COT', async () => {
+        it('can retrieve COT from CFT', async () => {
           execCmd(`project retrieve start -d ${translationPath} --json`, {
             ensureExitCode: 0,
           });
         });
 
         it('can retrieve COT from directory', async () => {
-          execCmd(
-            `project retrieve start -d ${path.join(
-              translationPath,
-              'customObject__c-es.objectTranslation-meta.xml'
-            )} --json`,
-            {
-              ensureExitCode: 0,
-            }
+          // the .objectTranslation is in force-app
+          const objectTranslationPath = path.join(
+            session.project.dir,
+            'force-app',
+            'main',
+            'default',
+            'objectTranslations',
+            'customObject__c-es',
+            'customObject__c-es.objectTranslation-meta.xml'
           );
+
+          execCmd(`project retrieve start -d ${objectTranslationPath} --json`, {
+            ensureExitCode: 0,
+          });
         });
       });
     });
