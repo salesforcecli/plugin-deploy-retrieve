@@ -6,7 +6,7 @@
  */
 /* eslint-disable class-methods-use-this */
 
-import { EOL } from 'os';
+import { EOL } from 'node:os';
 import { writeFile, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { Hook } from '@oclif/core';

@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 import { ux } from '@oclif/core';
 import { ConvertResult } from '@salesforce/source-deploy-retrieve';
 import { SfError, Messages } from '@salesforce/core';

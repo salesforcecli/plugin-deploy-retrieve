@@ -4,9 +4,9 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'path';
+import * as path from 'node:path';
 import { EOL } from 'node:os';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { ux } from '@oclif/core';
 import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError, Lifecycle } from '@salesforce/core';
