@@ -131,7 +131,12 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   protected catch(error: SfCommand.Error): Promise<SfCommand.Error> {
     if (error.name.includes('INVALID_ID_FIELD')) {
       const err = messages.createError('error.CannotQuickDeploy');
-      return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
+      return super.catch({
+        ...error,
+        name: err.name,
+        message: err.message,
+        ...(typeof err.code === 'string' || typeof err.code === 'number' ? { code: err.code } : {}),
+      });
     }
     return super.catch(error);
   }

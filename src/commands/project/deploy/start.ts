@@ -274,7 +274,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
     if (error.message.includes('client has timed out')) {
       const err = messages.createError('error.ClientTimeout', [this.config.bin]);
-      return super.catch({ ...error, name: err.name, message: err.message, code: err.code });
+      return super.catch({
+        ...error,
+        name: err.name,
+        message: err.message,
+        ...(typeof err.code === 'string' || typeof err.code === 'number' ? { code: err.code } : {}),
+      });
     }
     return super.catch(error);
   }
