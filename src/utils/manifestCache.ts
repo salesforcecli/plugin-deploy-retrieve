@@ -4,9 +4,9 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'path';
-import { homedir } from 'os';
-import * as fs from 'fs';
+import * as path from 'node:path';
+import { homedir } from 'node:os';
+import * as fs from 'node:fs';
 import { ComponentSet } from '@salesforce/source-deploy-retrieve';
 import { Global } from '@salesforce/core';
 
