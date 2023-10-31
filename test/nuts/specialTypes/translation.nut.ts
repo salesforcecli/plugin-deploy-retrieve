@@ -15,6 +15,7 @@ describe('translations', () => {
   let session: TestSession;
   let projectPath: string;
   let translationPath: string;
+  let fieldTranslationPath: string;
 
   before(async () => {
     session = await TestSession.create({
@@ -31,8 +32,14 @@ describe('translations', () => {
         },
       ],
     });
-    projectPath = path.join(session.project.dir, 'force-app', 'main', 'default');
+    projectPath = path.join(session.project.dir, 'my-app', 'main', 'default');
     translationPath = path.join(projectPath, 'objectTranslations', 'customObject__c-es');
+    fieldTranslationPath = path.join(
+      projectPath,
+      'objectTranslations',
+      'customObject__c-es',
+      'customField__c.fieldTranslation-meta.xml'
+    );
   });
 
   after(async () => {
@@ -77,7 +84,7 @@ describe('translations', () => {
     });
 
     it('can generate manifest for translation types', async () => {
-      execCmd('force:source:manifest:create -p force-app --json', { ensureExitCode: 0 });
+      execCmd('force:source:manifest:create -p my-app --json', { ensureExitCode: 0 });
       expect(fs.existsSync(path.join(session.project.dir, 'package.xml'))).to.be.true;
     });
 
@@ -85,7 +92,7 @@ describe('translations', () => {
       const deployResults = execCmd<DeployResultJson>('project deploy start -x package.xml --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
-      expect(deployResults?.files.length).to.equal(7);
+      expect(deployResults?.files.length).to.equal(2);
     });
 
     it('retrieve without local metadata', async () => {
@@ -95,7 +102,7 @@ describe('translations', () => {
       const retrieveResults = execCmd<RetrieveResultJson>('project retrieve start -x package.xml --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
-      expect(retrieveResults?.files).to.have.length(7);
+      expect(retrieveResults?.files).to.have.length(2);
     });
   });
 
@@ -177,6 +184,35 @@ describe('translations', () => {
               ensureExitCode: 0,
             }
           );
+        });
+      });
+    });
+  });
+  describe('MPD', () => {
+    describe('deploy', () => {
+      it('can deploy the whole project', async () => {
+        execCmd('project deploy start -d force-app -d my-app --json', {
+          ensureExitCode: 0,
+        });
+      });
+    });
+
+    describe('retrieve', () => {
+      it('can retrieve the whole project', async () => {
+        execCmd('project retrieve start -d force-app -d my-app --json', {
+          ensureExitCode: 0,
+        });
+      });
+
+      describe('individual type retrieves', () => {
+        before(() => {
+          fs.unlinkSync(fieldTranslationPath);
+        });
+        it('will write the CFT with the COT, even when not in the default package', async () => {
+          execCmd(`project retrieve start -d ${translationPath} --json`, {
+            ensureExitCode: 0,
+          });
+          expect(fs.existsSync(fieldTranslationPath)).to.be.true;
         });
       });
     });
