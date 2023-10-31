@@ -6,7 +6,7 @@
  */
 /* eslint-disable class-methods-use-this */
 
-import { EOL } from 'os';
+import { EOL } from 'node:os';
 import { cyan, red } from 'chalk';
 import { Duration } from '@salesforce/kit';
 import {

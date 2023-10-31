@@ -4,8 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as fs from 'fs';
-import { resolve, extname } from 'path';
+import * as fs from 'node:fs';
+import { resolve, extname } from 'node:path';
 import { Flags } from '@oclif/core';
 import { Messages, Lifecycle } from '@salesforce/core';
 import { PathInfo, TestLevel, reportsFormatters } from './types';

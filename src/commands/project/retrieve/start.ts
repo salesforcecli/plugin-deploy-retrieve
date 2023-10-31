@@ -5,10 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { rm } from 'fs/promises';
-import { dirname, join, resolve } from 'path';
+import { rm } from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
 import {
   RetrieveResult,
