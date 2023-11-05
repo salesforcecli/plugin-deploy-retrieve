@@ -1083,18 +1083,18 @@
     proxy-agent "^6.3.0"
     tslib "^2"
 
-"@salesforce/plugin-templates@^55.5.11":
-  version "55.5.11"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-templates/-/plugin-templates-55.5.11.tgz#81cb19b1971afc57f3bafebe1c8976f939ed46e1"
-  integrity sha512-cnUNRYGWfXMJ/U3b0CjQS12snS21CAcVxSP9w2A1jV/WHZMcb5KVwUZ/6HTT1Iq/OGr8ze3KhC7rLmP9jaEorA==
+"@salesforce/plugin-templates@^55.5.17":
+  version "55.5.17"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-templates/-/plugin-templates-55.5.17.tgz#c290fb39611f2798433005f21a71b8144dcc2374"
+  integrity sha512-Jv44uswo3G9vm6gL5UvhLMnSXC/vPjVOWLQ3MWBxrh96T/7vrHny/4CXGT/BmPkVtbbvWyw1OVIuavyOzpbIHg==
   dependencies:
     "@oclif/core" "^2.15.0"
-    "@salesforce/core" "^5.2.6"
-    "@salesforce/sf-plugins-core" "^3.1.20"
+    "@salesforce/core" "^5.3.10"
+    "@salesforce/sf-plugins-core" "^3.1.23"
     "@salesforce/templates" "^59.0.1"
     tslib "^2"
     yeoman-environment "^3.19.3"
-    yeoman-generator "^5.9.0"
+    yeoman-generator "^5.10.0"
 
 "@salesforce/plugin-user@^2.3.32":
   version "2.3.32"
@@ -1118,7 +1118,7 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.6.1.tgz#7d1c071e1e509ca9d2d8a6e48ac7447dd67a534d"
   integrity sha512-eVy947ZMxCJReKJdgfddUIsBIbPTa/i8RwQGwxq4/ss38H5sLOAeSTaun9V7HpJ1hkpDznWKfgzYvjsst9K6ig==
 
-"@salesforce/sf-plugins-core@^3.1.14", "@salesforce/sf-plugins-core@^3.1.20", "@salesforce/sf-plugins-core@^3.1.22", "@salesforce/sf-plugins-core@^3.1.25", "@salesforce/sf-plugins-core@^3.1.28":
+"@salesforce/sf-plugins-core@^3.1.14", "@salesforce/sf-plugins-core@^3.1.20", "@salesforce/sf-plugins-core@^3.1.22", "@salesforce/sf-plugins-core@^3.1.23", "@salesforce/sf-plugins-core@^3.1.25", "@salesforce/sf-plugins-core@^3.1.28":
   version "3.1.28"
   resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-3.1.28.tgz#7714c5b1ce26052bb5cbc524c5990bc52eb601cd"
   integrity sha512-Z1fVS/pqLCX/3ESrjvtzyuvDFwXu8qxjqs5Gana0J7RKkhDL0f7w+pz3DR1/YfQPeHK8rk9pFDOKB3tOnXf9Lw==
@@ -8687,10 +8687,10 @@ yeoman-environment@^3.15.1, yeoman-environment@^3.19.3, yeoman-environment@^3.9.
     textextensions "^5.12.0"
     untildify "^4.0.0"
 
-yeoman-generator@^5.6.1, yeoman-generator@^5.8.0, yeoman-generator@^5.9.0:
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/yeoman-generator/-/yeoman-generator-5.9.0.tgz#a83c9e391b0b3442536da677bc204cfa3f81f2c7"
-  integrity sha512-sN1e01Db4fdd8P/n/yYvizfy77HdbwzvXmPxps9Gwz2D24slegrkSn+qyj+0nmZhtFwGX2i/cH29QDrvAFT9Aw==
+yeoman-generator@^5.10.0, yeoman-generator@^5.6.1, yeoman-generator@^5.8.0:
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/yeoman-generator/-/yeoman-generator-5.10.0.tgz#0dde5be9d815b01f77a7e77ee6f9047edcbeca04"
+  integrity sha512-iDUKykV7L4nDNzeYSedRmSeJ5eMYFucnKDi6KN1WNASXErgPepKqsQw55TgXPHnmpcyOh2Dd/LAZkyc+f0qaAw==
   dependencies:
     chalk "^4.1.0"
     dargs "^7.0.0"
