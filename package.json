@@ -30,7 +30,6 @@
     "@swc/core": "1.3.39",
     "cross-env": "^7.0.3",
     "eslint-plugin-sf-plugin": "^1.16.13",
-    "jsforce": "^2.0.0-beta.28",
     "oclif": "^3.16.0",
     "shx": "0.3.4",
     "ts-node": "^10.9.1",
