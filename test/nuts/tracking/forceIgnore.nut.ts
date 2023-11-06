@@ -8,7 +8,6 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { expect } from 'chai';
-import * as shell from 'shelljs';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
@@ -107,9 +106,10 @@ describe('forceignore changes', () => {
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
 
       // add a file in the local source
-      shell.exec(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
+      execCmd(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
         cwd: session.project.dir,
         silent: true,
+        cli: 'sf',
       });
       // another error when there's nothing to push
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {

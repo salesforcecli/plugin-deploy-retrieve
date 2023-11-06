@@ -10,7 +10,6 @@ import * as path from 'node:path';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { exec } from 'shelljs';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { ensureArray } from '@salesforce/ts-types';
@@ -184,16 +183,14 @@ describe('project delete source NUTs', () => {
   it('should source:delete a remote-only ApexClass from the org', async () => {
     const { apexName, pathToClass } = createApexClass();
     const query = () =>
-      JSON.parse(
-        exec(
-          `sf data:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
-          { silent: true }
-        )
-      ) as { result: { records: Array<{ IsNameObsolete: boolean }> } };
+      execCmd<{ records: Array<{ IsNameObsolete: boolean }> }>(
+        `sf data:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
+        { silent: true, cli: 'sf' }
+      );
 
-    let soql = query();
+    let soql = query().jsonOutput?.result;
     // the ApexClass is present in the org
-    expect(soql.result.records[0].IsNameObsolete).to.be.false;
+    expect(soql?.records[0].IsNameObsolete).to.be.false;
     await testkit.deleteGlobs(['force-app/main/default/classes/myApexClass.*']);
     const response = execCmd<DeleteSourceJson>(
       `project:delete:source --json --no-prompt --metadata ApexClass:${apexName}`,
@@ -204,9 +201,9 @@ describe('project delete source NUTs', () => {
     // remote only delete won't have an associated filepath
     expect(response?.deletedSource).to.have.length(0);
     expect(fs.existsSync(pathToClass)).to.be.false;
-    soql = query();
+    soql = query().jsonOutput?.result;
     // the apex class has been deleted in the org
-    expect(soql.result.records[0].IsNameObsolete).to.be.true;
+    expect(soql?.records[0].IsNameObsolete).to.be.true;
   });
 
   it('should NOT delete local files with --checkonly', () => {

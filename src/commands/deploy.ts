@@ -9,6 +9,7 @@
 import { EOL } from 'node:os';
 import { writeFile, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { exec } from 'node:child_process';
 import { Hook } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { Env, parseJsonMap } from '@salesforce/kit';
@@ -21,9 +22,7 @@ import {
   SfHook,
   Flags,
 } from '@salesforce/sf-plugins-core';
-import { exec } from 'shelljs';
 import { DeployerResult } from '@salesforce/sf-plugins-core/lib/deployer';
-
 Messages.importMessagesDirectory(__dirname);
 
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
@@ -144,8 +143,8 @@ export default class Deploy extends SfCommand<void> {
       const addition = `${EOL}${EOL}# Deploy Options${EOL}${DEPLOY_OPTIONS_FILE}${EOL}`;
       await writeFile('.gitignore', `${gitignore}${addition}`);
     }
-    exec('git add .gitignore', { silent: true });
-    exec(`git commit -am "Add ${DEPLOY_OPTIONS_FILE} to .gitignore"`, { silent: true });
+    exec('git add .gitignore');
+    exec(`git commit -am "Add ${DEPLOY_OPTIONS_FILE} to .gitignore"`);
   }
 
   // this used to be async when it was using fs-extra.  Presered public api
