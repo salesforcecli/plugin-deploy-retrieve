@@ -41,7 +41,7 @@ describe('forceignore changes', () => {
     });
 
     execCmd(`force:apex:class:create -n IgnoreTest --outputdir ${classdir} --api-version 58.0`, {
-      cli: 'sfdx',
+      cli: 'sf',
       ensureExitCode: 0,
     });
     originalForceIgnore = await fs.promises.readFile(path.join(session.project.dir, '.forceignore'), 'utf8');
@@ -106,7 +106,7 @@ describe('forceignore changes', () => {
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
 
       // add a file in the local source
-      execCmd(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
+      execCmd(`force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
         cwd: session.project.dir,
         silent: true,
         cli: 'sf',

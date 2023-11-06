@@ -20,10 +20,7 @@
     "@salesforce/cli-plugins-testkit": "^4.4.12",
     "@salesforce/dev-scripts": "^6.0.3",
     "@salesforce/plugin-command-reference": "^3.0.40",
-    "@salesforce/plugin-settings": "^1.4.37",
     "@salesforce/plugin-source": "^2.10.30",
-    "@salesforce/plugin-templates": "^55.5.17",
-    "@salesforce/plugin-user": "^2.3.32",
     "@salesforce/source-testkit": "^2.1.60",
     "@salesforce/ts-sinon": "1.4.15",
     "@salesforce/ts-types": "^2.0.8",
@@ -67,10 +64,7 @@
       "@oclif/plugin-command-snapshot",
       "@oclif/plugin-help",
       "@salesforce/plugin-command-reference",
-      "@salesforce/plugin-settings",
-      "@salesforce/plugin-source",
-      "@salesforce/plugin-user",
-      "@salesforce/plugin-templates"
+      "@salesforce/plugin-source"
     ],
     "topics": {
       "project": {
