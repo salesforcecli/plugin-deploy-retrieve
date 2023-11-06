@@ -8,7 +8,7 @@ import * as path from 'node:path';
 import { EOL } from 'node:os';
 import * as fs from 'node:fs';
 import { ux } from '@oclif/core';
-import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { ComponentStatus, DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError, Lifecycle } from '@salesforce/core';
 import { Duration, ensureArray, sortBy } from '@salesforce/kit';
 import {
@@ -63,7 +63,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     // only generate reports if test results are presented
     if (
       (!this.result.response?.numberTestsTotal && !this.flags['test-level']) ||
-      this.flags['test-level'] === 'NoTestRun'
+      this.flags['test-level'] === TestLevel['NoTestRun']
     ) {
       const testsWarn = (
         this.coverageOptions.reportFormats?.length ? ['`--coverage-formatters` was specified but no tests ran.'] : []
@@ -93,7 +93,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
           componentFailures: this.result.response.details.componentFailures,
           runTestResult: this.result.response.details.runTestResult,
         },
-        files: this.absoluteFiles.filter((f) => f.state === 'Failed'),
+        files: this.absoluteFiles.filter(isSdrFailure),
       };
     } else {
       return {
@@ -239,7 +239,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   }
 
   private displaySuccesses(): void {
-    const successes = this.relativeFiles.filter((f) => f.state !== 'Failed');
+    const successes = this.relativeFiles.filter(isSdrSuccess);
 
     if (!successes.length || this.result.response.status === RequestStatus.Failed) return;
 
@@ -287,7 +287,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   }
 
   private displayDeletes(): void {
-    const deletions = this.relativeFiles.filter(isSdrSuccess).filter((f) => f.state === 'Deleted');
+    const deletions = this.relativeFiles.filter(isSdrSuccess).filter((f) => f.state === ComponentStatus['Deleted']);
 
     if (!deletions.length) return;
 

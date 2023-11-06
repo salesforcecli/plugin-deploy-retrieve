@@ -19,6 +19,7 @@ import {
   FileResponse,
   MetadataApiRetrieveStatus,
   RegistryAccess,
+  RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
@@ -170,7 +171,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       flags,
       format
     );
-    if (flags.manifest || flags.metadata) {
+    if (Boolean(flags.manifest) || Boolean(flags.metadata)) {
       const access = new RegistryAccess();
       if (wantsToRetrieveCustomFields(componentSetFromNonDeletes, access)) {
         this.warn(messages.getMessage('wantsToRetrieveCustomFields'));
@@ -239,7 +240,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       // in the case where we didn't retrieve anything, check if we have any deletes
       if (
         !this.retrieveResult.response.status ||
-        this.retrieveResult.response.status === 'Succeeded' ||
+        this.retrieveResult.response.status === RequestStatus['Succeeded'] ||
         fileResponsesFromDelete.length !== 0
       ) {
         await formatter.display();

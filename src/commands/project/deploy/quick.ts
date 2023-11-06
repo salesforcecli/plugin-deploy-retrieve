@@ -15,7 +15,7 @@ import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
-import { DeployResultJson } from '../../../utils/types';
+import { API, DeployResultJson } from '../../../utils/types';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.quick');
@@ -94,11 +94,11 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       usernameOrConnection: org.getConnection(flags['api-version']),
       id: jobId,
       apiOptions: {
-        rest: api === 'REST',
+        rest: api === API['REST'],
       },
     });
     // This is the ID of the deploy (of the validated metadata)
-    const deployId = await mdapiDeploy.deployRecentValidation(api === 'REST');
+    const deployId = await mdapiDeploy.deployRecentValidation(api === API['REST']);
     this.log(`Deploy ID: ${bold(deployId)}`);
 
     if (flags.async) {

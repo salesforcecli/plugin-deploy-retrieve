@@ -11,7 +11,7 @@ import { expect, assert } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { DeployResultJson, RetrieveResultJson, isSdrFailure } from '../../../src/utils/types';
 import { PreviewResult } from '../../../src/utils/previewOutput';
 import { eBikesDeployResultCount } from './constants';
 const filterIgnored = (r: StatusResult): boolean => r.ignored !== true;
@@ -269,15 +269,12 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
         }).jsonOutput;
         assert(failure && 'status' in failure);
         expect(failure).to.have.property('status', 1);
-        expect(
-          failure.result.files.every((r) => r.type === 'ApexClass' && r.state === 'Failed' && r.problemType === 'Error')
-        ).to.equal(true);
-        failure.result.files.forEach((f) => {
-          if (f.state === 'Failed') {
-            expect(f.lineNumber).to.exist;
-            expect(f.columnNumber).to.exist;
-            expect(f.error).to.be.a('string');
-          }
+        const failureFiles = failure.result.files.filter(isSdrFailure);
+        expect(failureFiles.every((r) => r.type === 'ApexClass' && r.problemType === 'Error')).to.equal(true);
+        failureFiles.forEach((f) => {
+          expect(f.lineNumber).to.exist;
+          expect(f.columnNumber).to.exist;
+          expect(f.error).to.be.a('string');
         });
       });
       describe('classes that failed to deploy are still in local status', () => {

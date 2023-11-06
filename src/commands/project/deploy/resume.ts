@@ -12,7 +12,7 @@ import { DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retri
 import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
 import { DeployProgress } from '../../../utils/progressBar';
-import { DeployResultJson } from '../../../utils/types';
+import { API, DeployResultJson } from '../../../utils/types';
 import { buildComponentSet, determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy';
 import { DeployCache } from '../../../utils/deployCache';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
@@ -100,7 +100,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
         id: jobId,
         components: componentSet,
         apiOptions: {
-          rest: deployOpts.api === 'REST',
+          rest: deployOpts.api === API['REST'],
         },
       });
       const deployStatus = await mdapiDeploy.checkStatus();

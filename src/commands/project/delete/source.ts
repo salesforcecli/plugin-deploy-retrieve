@@ -32,7 +32,7 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import * as chalk from 'chalk';
-import { DeleteSourceJson, isSourceComponent } from '../../../utils/types';
+import { API, DeleteSourceJson, isSourceComponent } from '../../../utils/types';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
 import { resolveApi, validateTests } from '../../../utils/deploy';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
@@ -230,7 +230,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
     // fire predeploy event for the delete
     await Lifecycle.getInstance().emit('predeploy', this.components);
-    this.isRest = (await resolveApi()) === 'REST';
+    this.isRest = (await resolveApi()) === API['REST'];
     this.log(`*** Deleting with ${this.isRest ? 'REST' : 'SOAP'} API ***`);
 
     const deploy = await this.componentSet.deploy({

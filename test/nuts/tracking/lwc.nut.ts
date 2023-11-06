@@ -10,6 +10,7 @@ import * as fs from 'node:fs';
 import { assert, expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
+import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
 import { PreviewResult } from '../../../src/utils/previewOutput';
 import { DeployResultJson } from '../../../src/utils/types';
 
@@ -130,7 +131,7 @@ describe('lwc', () => {
     // expect(bundleMembers, JSON.stringify(bundleMembers)).to.have.length(4);
     // expect(bundleMembers.filter((r) => r.state === 'Deleted')).to.have.length(1);
     expect(bundleMembers, JSON.stringify(bundleMembers)).to.have.length(3);
-    expect(bundleMembers?.filter((r) => r.state === 'Changed')).to.have.length(3);
+    expect(bundleMembers?.filter((r) => r.state === ComponentStatus['Changed'])).to.have.length(3);
   });
 
   it('sees no local changes', () => {
@@ -181,7 +182,7 @@ describe('lwc', () => {
     const bundleMembers = result?.filter((r) => r.fullName === 'heroDetails');
     expect(bundleMembers).to.have.length(3);
     expect(
-      bundleMembers?.every((r) => r.state === 'Deleted'),
+      bundleMembers?.every((r) => r.state.toString() === 'Deleted'),
       JSON.stringify(bundleMembers, undefined, 2)
     ).to.be.true;
   });
