@@ -182,7 +182,7 @@ describe('lwc', () => {
     const bundleMembers = result?.filter((r) => r.fullName === 'heroDetails');
     expect(bundleMembers).to.have.length(3);
     expect(
-      bundleMembers?.every((r) => r.state.toString() === 'Deleted'),
+      bundleMembers?.every((r) => r.state === ComponentStatus['Deleted']),
       JSON.stringify(bundleMembers, undefined, 2)
     ).to.be.true;
   });
