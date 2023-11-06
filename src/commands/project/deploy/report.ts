@@ -12,7 +12,7 @@ import { buildComponentSet } from '../../../utils/deploy';
 import { DeployProgress } from '../../../utils/progressBar';
 import { DeployCache } from '../../../utils/deployCache';
 import { DeployReportResultFormatter } from '../../../formatters/deployReportResultFormatter';
-import { DeployResultJson } from '../../../utils/types';
+import { API, DeployResultJson } from '../../../utils/types';
 import { coverageFormattersFlag } from '../../../utils/flags';
 
 Messages.importMessagesDirectory(__dirname);
@@ -100,7 +100,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       id: jobId,
       components: componentSet,
       apiOptions: {
-        rest: deployOpts.api === 'REST',
+        rest: deployOpts.api === API['REST'],
       },
     });
 

@@ -154,7 +154,7 @@ export async function executeDeploy(
     });
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
-      if (opts['source-dir'] || opts.manifest || opts.metadata || throwOnEmpty) {
+      if (Boolean(opts['source-dir']) ?? Boolean(opts.manifest) ?? Boolean(opts.metadata) ?? throwOnEmpty) {
         // the user specified something to deploy, but there isn't anything
         throw new SfError(
           deployMessages.getMessage('error.nothingToDeploy'),
@@ -232,7 +232,7 @@ export const isNotResumable = (status?: RequestStatus): boolean =>
 const buildApiOptions = (opts: Partial<DeployOptions>): MetadataApiDeployOptions['apiOptions'] => ({
   checkOnly: opts['dry-run'] ?? false,
   ignoreWarnings: opts['ignore-warnings'] ?? false,
-  rest: opts.api === 'REST',
+  rest: opts.api === API['REST'],
   rollbackOnError: !opts['ignore-errors'] || false,
   ...(opts.tests ? { runTests: opts.tests } : {}),
   ...(opts['test-level'] ? { testLevel: opts['test-level'] } : {}),

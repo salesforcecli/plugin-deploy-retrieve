@@ -23,7 +23,7 @@ export default [
     description: messages.getMessage(ConfigVars.ORG_METADATA_REST_DEPLOY),
     hidden: true,
     input: {
-      validator: (value: ConfigValue): boolean => value != null && ['true', 'false'].includes(value.toString()),
+      validator: (value: ConfigValue): boolean => typeof value === 'string' && ['true', 'false'].includes(value),
       failedMessage: messages.getMessage('error.invalidBooleanConfigValue'),
     },
   },
