@@ -111,6 +111,12 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       helpValue: '<minutes>',
       min: 1,
     }),
+    'ignore-warnings': Flags.boolean({
+      char: 'g',
+      summary: deployMessages.getMessage('flags.ignore-warnings.summary'),
+      description: deployMessages.getMessage('flags.ignore-warnings.description'),
+      default: false,
+    }),
     'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
     junit: Flags.boolean({
       summary: messages.getMessage('flags.junit.summary'),

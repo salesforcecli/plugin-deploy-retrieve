@@ -67,5 +67,34 @@ describe('deploy metadata validate NUTs', () => {
       expect(deployPost?.result.numberComponentsDeployed).to.equal(12);
       expect(deployPost?.result.checkOnly).to.be.true;
     });
+
+    it('should validate deploy with destructive changes and --ignore-warnings', async () => {
+      // If you try to delete something in the org that isn't there, a warning is returned
+      // so this test tries to delete an apex class that isn't in the org.
+
+      execCmd('project deploy start -d force-app -d my-app -d foo-bar');
+      // create package.xml
+      execCmd('project generate manifest -p force-app');
+
+      const destroyXmlContents = `<?xml version="1.0" encoding="UTF-8"?>
+      <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+          <types>
+              <members>NonExistantClass</members>
+              <name>ApexClass</name>
+          </types>
+          <version>58.0</version>
+      </Package>`;
+      // create destroy.xml
+      await testkit.writeFile(path.join(testkit.projectDir, 'destroy.xml'), destroyXmlContents);
+
+      const deploy = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+        args: '--manifest package.xml --pre-destructive-changes destroy.xml --ignore-warnings',
+        json: true,
+        exitCode: 0,
+      });
+      expect(deploy?.result.success).to.be.true;
+      expect(deploy?.result.numberComponentsDeployed).to.equal(12);
+      expect(deploy?.result.checkOnly).to.be.true;
+    });
   });
 });
