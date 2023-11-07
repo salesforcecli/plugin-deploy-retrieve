@@ -39,7 +39,7 @@ describe('CustomLabels', () => {
       scratchOrgs: [{ setDefault: true, config: path.join('config', 'project-scratch-def.json') }],
       devhubAuthStrategy: 'AUTO',
     });
-    execCmd('force:source:deploy --sourcepath force-app', { ensureExitCode: 0 });
+    execCmd('project:deploy:start --source-dir force-app', { ensureExitCode: 0 });
   });
 
   after(async () => {
@@ -103,7 +103,7 @@ describe('project delete source NUTs', () => {
       ensureExitCode: 0,
       cli: 'sf',
     });
-    execCmd(`force:source:deploy -m ApexClass:${apexName}`, { ensureExitCode: 0 });
+    execCmd(`project:deploy:start -m ApexClass:${apexName}`, { ensureExitCode: 0 });
     return { apexName, output, pathToClass };
   };
 
@@ -112,7 +112,7 @@ describe('project delete source NUTs', () => {
       nut: __filename,
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
     });
-    execCmd('force:source:deploy --sourcepath force-app', { ensureExitCode: 0 });
+    execCmd('project:deploy:start --source-dir force-app', { ensureExitCode: 0 });
   });
 
   after(async () => {
@@ -239,7 +239,7 @@ describe('project delete source NUTs', () => {
     // use the brokerCard LWC
     const lwcPath = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc', 'brokerCard', 'helper.js');
     fs.writeFileSync(lwcPath, '//', { encoding: 'utf8' });
-    execCmd(`force:source:deploy -p ${lwcPath}`);
+    execCmd(`project:deploy:start --source-dir ${lwcPath}`, { cli: 'sf', ensureExitCode: 0 });
     const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(
       `project:delete:source -p ${lwcPath} --no-prompt --json`
     ).jsonOutput?.result;
@@ -259,7 +259,7 @@ describe('project delete source NUTs', () => {
     const lwcPath2 = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc', 'daysOnMarket', 'helper.js');
     fs.writeFileSync(lwcPath1, '//', { encoding: 'utf8' });
     fs.writeFileSync(lwcPath2, '//', { encoding: 'utf8' });
-    execCmd(`force:source:deploy -p ${lwcPath1},${lwcPath2}`);
+    execCmd(`project:deploy:start --source-dir ${lwcPath1} --source-dir ${lwcPath2}`);
     // delete both helper.js files at the same time
     const deleteResult = execCmd<{ deletedSource: FileResponse[] }>(
       // eslint-disable-next-line sf-plugin/no-execcmd-double-quotes
@@ -285,7 +285,7 @@ describe('project delete source NUTs', () => {
     const lwcPath = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc');
     const mylwcPath = path.join(lwcPath, 'mylwc');
     execCmd(`force:lightning:component:create -n mylwc --type lwc -d ${lwcPath}`, { cli: 'sf', ensureExitCode: 0 });
-    execCmd(`force:source:deploy -p ${mylwcPath}`);
+    execCmd(`project:deploy:start --source-dir ${mylwcPath}`);
     expect(await isNameObsolete(testkit.username, 'LightningComponentBundle', 'mylwc')).to.be.false;
     const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(
       `project:delete:source -p ${mylwcPath} --no-prompt --json`

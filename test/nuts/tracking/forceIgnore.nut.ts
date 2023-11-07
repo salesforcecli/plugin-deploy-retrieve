@@ -72,6 +72,7 @@ describe('forceignore changes', () => {
     it('shows the file in status as ignored', () => {
       const output = execCmd<StatusResult>('force:source:status --json', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(output, JSON.stringify(output)).to.deep.include({
         state: 'Local Add',
@@ -157,6 +158,7 @@ describe('forceignore changes', () => {
       // gets file into source tracking
       const statusOutput = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(statusOutput?.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
     });
