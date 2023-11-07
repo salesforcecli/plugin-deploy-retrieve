@@ -56,7 +56,7 @@ context('deploy metadata --metadata NUTs [name: %REPO_NAME%]', () => {
     });
 
     it('should not deploy metadata outside of a package directory', async () => {
-      await testkit.createApexClass({ args: '--outputdir NotAPackage --classname ShouldNotBeDeployed' });
+      await testkit.createApexClass({ args: '--outputdir NotAPackage --classname ShouldNotBeDeployed', cli: 'sf' });
       await testkit.deploy({ args: '--metadata ApexClass' });
       // this is a glob, so no need for path.join
       await testkit.expect.filesToNotBeDeployed(['NotAPackage/**/*']);
