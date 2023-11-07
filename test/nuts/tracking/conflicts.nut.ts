@@ -76,6 +76,7 @@ describe('conflict detection and resolution', () => {
     });
     const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
       ensureExitCode: 0,
+      cli: 'sf',
     }).jsonOutput?.result;
     expect(
       result?.filter((r) => r.type === 'CustomApplication'),
@@ -99,6 +100,7 @@ describe('conflict detection and resolution', () => {
   it('can see the conflict in status', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
+      cli: 'sf',
     }).jsonOutput?.result.filter((app) => app.type === 'CustomApplication');
     // json is not sorted.  This relies on the implementation of getConflicts()
     expect(result).to.deep.equal([

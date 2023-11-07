@@ -68,6 +68,7 @@ describe('remote changes', () => {
     it('sees no local changes (all were committed from deploy)', () => {
       const localResult = execCmd<StatusResult[]>('force:source:status --json --local', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(localResult?.filter(filterIgnored)).to.deep.equal([]);
     });
@@ -108,6 +109,7 @@ describe('remote changes', () => {
     it('sfdx can see the delete in status', () => {
       const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       // it shows up as one class on the server, but 2 files when pulled
       expect(
@@ -125,6 +127,7 @@ describe('remote changes', () => {
     it('sfdx does not see any change in local status', () => {
       const result = execCmd<StatusResult[]>('force:source:status --json --local', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(result?.filter(filterIgnored)).to.deep.equal([]);
     });
@@ -159,11 +162,13 @@ describe('remote changes', () => {
     it('sees correct local and remote status', () => {
       const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(remoteResult?.filter((r) => r.state.includes('Remote Deleted'))).to.deep.equal([]);
 
       const localStatus = execCmd<StatusResult[]>('force:source:status --json --local', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(localStatus?.filter(filterIgnored)).to.deep.equal([]);
     });
@@ -197,6 +202,7 @@ describe('remote changes', () => {
     it('can see the add in status', () => {
       const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(
         result?.some((r) => r.fullName === className),
@@ -224,6 +230,7 @@ describe('remote changes', () => {
       it('sfdx sees correct remote status', () => {
         const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
           ensureExitCode: 0,
+          cli: 'sf',
         }).jsonOutput?.result;
         expect(
           remoteResult?.filter((r) => r.fullName === className),
@@ -233,6 +240,7 @@ describe('remote changes', () => {
       it('sfdx sees correct local status', () => {
         const localStatus = execCmd<StatusResult[]>('force:source:status --json --local', {
           ensureExitCode: 0,
+          cli: 'sf',
         }).jsonOutput?.result;
         expect(localStatus?.filter(filterIgnored)).to.deep.equal([]);
       });
