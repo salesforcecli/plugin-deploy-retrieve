@@ -184,8 +184,8 @@ describe('project delete source NUTs', () => {
     const { apexName, pathToClass } = createApexClass();
     const query = () =>
       execCmd<{ records: Array<{ IsNameObsolete: boolean }> }>(
-        `sf data:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
-        { silent: true, cli: 'sf' }
+        `data:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
+        { silent: true, cli: 'sf', ensureExitCode: 0 }
       );
 
     let soql = query().jsonOutput?.result;

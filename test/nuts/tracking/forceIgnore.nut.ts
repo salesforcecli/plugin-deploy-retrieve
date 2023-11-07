@@ -125,6 +125,7 @@ describe('forceignore changes', () => {
       // verify file pushed in results
       const unIgnoredOutput = execCmd<DeployResultJson>('deploy:metadata --json', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result?.files;
 
       // all 4 files should have been pushed
