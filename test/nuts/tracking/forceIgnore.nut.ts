@@ -41,8 +41,8 @@ describe('forceignore changes', () => {
     });
 
     execCmd(`force:apex:class:create -n IgnoreTest --outputdir ${classdir} --api-version 58.0`, {
-      cli: 'sfdx',
       ensureExitCode: 0,
+      cli: 'sf',
     });
     originalForceIgnore = await fs.promises.readFile(path.join(session.project.dir, '.forceignore'), 'utf8');
     conn = await Connection.create({
@@ -106,7 +106,7 @@ describe('forceignore changes', () => {
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
 
       // add a file in the local source
-      execCmd(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
+      execCmd(`force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
         cwd: session.project.dir,
         silent: true,
         cli: 'sf',
@@ -125,7 +125,6 @@ describe('forceignore changes', () => {
       // verify file pushed in results
       const unIgnoredOutput = execCmd<DeployResultJson>('deploy:metadata --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput?.result?.files;
 
       // all 4 files should have been pushed

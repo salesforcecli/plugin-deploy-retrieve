@@ -101,6 +101,7 @@ describe('project delete source NUTs', () => {
     const pathToClass = path.join(testkit.projectDir, output, `${apexName}.cls`);
     execCmd(`force:apex:class:create --classname ${apexName} --outputdir ${output} --api-version 58.0`, {
       ensureExitCode: 0,
+      cli: 'sf',
     });
     execCmd(`force:source:deploy -m ApexClass:${apexName}`, { ensureExitCode: 0 });
     return { apexName, output, pathToClass };
@@ -283,7 +284,7 @@ describe('project delete source NUTs', () => {
   it('should delete an entire LWC', async () => {
     const lwcPath = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc');
     const mylwcPath = path.join(lwcPath, 'mylwc');
-    execCmd(`force:lightning:component:create -n mylwc --type lwc -d ${lwcPath}`);
+    execCmd(`force:lightning:component:create -n mylwc --type lwc -d ${lwcPath}`, { cli: 'sf', ensureExitCode: 0 });
     execCmd(`force:source:deploy -p ${mylwcPath}`);
     expect(await isNameObsolete(testkit.username, 'LightningComponentBundle', 'mylwc')).to.be.false;
     const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(

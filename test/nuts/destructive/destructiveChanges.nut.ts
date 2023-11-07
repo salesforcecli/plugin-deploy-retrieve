@@ -33,6 +33,7 @@ describe('project deploy start --destructive NUTs', () => {
     const pathToClass = path.join(testkit.projectDir, output, `${apexName}.cls`);
     execCmd(`force:apex:class:create --classname ${apexName} --outputdir ${output} --api-version 58.0`, {
       ensureExitCode: 0,
+      cli: 'sf',
     });
     execCmd(`project:deploy:start -m ApexClass:${apexName}`, { ensureExitCode: 0 });
     return { apexName, output, pathToClass };
