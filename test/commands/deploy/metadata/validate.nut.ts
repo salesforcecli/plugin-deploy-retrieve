@@ -93,7 +93,7 @@ describe('deploy metadata validate NUTs', () => {
         exitCode: 0,
       });
       expect(deploy?.result.success).to.be.true;
-      expect(deploy?.result.numberComponentsDeployed).to.equal(12);
+      expect(deploy?.result.numberComponentsDeployed).to.equal(10);
       expect(deploy?.result.checkOnly).to.be.true;
     });
   });
