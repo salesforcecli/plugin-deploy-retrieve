@@ -10,7 +10,6 @@ import * as path from 'node:path';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { exec } from 'shelljs';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { ensureArray } from '@salesforce/ts-types';
@@ -40,7 +39,7 @@ describe('CustomLabels', () => {
       scratchOrgs: [{ setDefault: true, config: path.join('config', 'project-scratch-def.json') }],
       devhubAuthStrategy: 'AUTO',
     });
-    execCmd('force:source:deploy --sourcepath force-app', { ensureExitCode: 0 });
+    execCmd('project:deploy:start --source-dir force-app', { ensureExitCode: 0 });
   });
 
   after(async () => {
@@ -102,8 +101,9 @@ describe('project delete source NUTs', () => {
     const pathToClass = path.join(testkit.projectDir, output, `${apexName}.cls`);
     execCmd(`force:apex:class:create --classname ${apexName} --outputdir ${output} --api-version 58.0`, {
       ensureExitCode: 0,
+      cli: 'sf',
     });
-    execCmd(`force:source:deploy -m ApexClass:${apexName}`, { ensureExitCode: 0 });
+    execCmd(`project:deploy:start -m ApexClass:${apexName}`, { ensureExitCode: 0 });
     return { apexName, output, pathToClass };
   };
 
@@ -112,7 +112,7 @@ describe('project delete source NUTs', () => {
       nut: __filename,
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
     });
-    execCmd('force:source:deploy --sourcepath force-app', { ensureExitCode: 0 });
+    execCmd('project:deploy:start --source-dir force-app', { ensureExitCode: 0 });
   });
 
   after(async () => {
@@ -184,16 +184,14 @@ describe('project delete source NUTs', () => {
   it('should source:delete a remote-only ApexClass from the org', async () => {
     const { apexName, pathToClass } = createApexClass();
     const query = () =>
-      JSON.parse(
-        exec(
-          `sf data:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
-          { silent: true }
-        )
-      ) as { result: { records: Array<{ IsNameObsolete: boolean }> } };
+      execCmd<{ records: Array<{ IsNameObsolete: boolean }> }>(
+        `data:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
+        { silent: true, cli: 'sf', ensureExitCode: 0 }
+      );
 
-    let soql = query();
+    let soql = query().jsonOutput?.result;
     // the ApexClass is present in the org
-    expect(soql.result.records[0].IsNameObsolete).to.be.false;
+    expect(soql?.records[0].IsNameObsolete).to.be.false;
     await testkit.deleteGlobs(['force-app/main/default/classes/myApexClass.*']);
     const response = execCmd<DeleteSourceJson>(
       `project:delete:source --json --no-prompt --metadata ApexClass:${apexName}`,
@@ -204,9 +202,9 @@ describe('project delete source NUTs', () => {
     // remote only delete won't have an associated filepath
     expect(response?.deletedSource).to.have.length(0);
     expect(fs.existsSync(pathToClass)).to.be.false;
-    soql = query();
+    soql = query().jsonOutput?.result;
     // the apex class has been deleted in the org
-    expect(soql.result.records[0].IsNameObsolete).to.be.true;
+    expect(soql?.records[0].IsNameObsolete).to.be.true;
   });
 
   it('should NOT delete local files with --checkonly', () => {
@@ -241,7 +239,7 @@ describe('project delete source NUTs', () => {
     // use the brokerCard LWC
     const lwcPath = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc', 'brokerCard', 'helper.js');
     fs.writeFileSync(lwcPath, '//', { encoding: 'utf8' });
-    execCmd(`force:source:deploy -p ${lwcPath}`);
+    execCmd(`project:deploy:start --source-dir ${lwcPath}`, { cli: 'sf', ensureExitCode: 0 });
     const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(
       `project:delete:source -p ${lwcPath} --no-prompt --json`
     ).jsonOutput?.result;
@@ -261,7 +259,7 @@ describe('project delete source NUTs', () => {
     const lwcPath2 = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc', 'daysOnMarket', 'helper.js');
     fs.writeFileSync(lwcPath1, '//', { encoding: 'utf8' });
     fs.writeFileSync(lwcPath2, '//', { encoding: 'utf8' });
-    execCmd(`force:source:deploy -p ${lwcPath1},${lwcPath2}`);
+    execCmd(`project:deploy:start --source-dir ${lwcPath1} --source-dir ${lwcPath2}`);
     // delete both helper.js files at the same time
     const deleteResult = execCmd<{ deletedSource: FileResponse[] }>(
       // eslint-disable-next-line sf-plugin/no-execcmd-double-quotes
@@ -286,8 +284,8 @@ describe('project delete source NUTs', () => {
   it('should delete an entire LWC', async () => {
     const lwcPath = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc');
     const mylwcPath = path.join(lwcPath, 'mylwc');
-    execCmd(`force:lightning:component:create -n mylwc --type lwc -d ${lwcPath}`);
-    execCmd(`force:source:deploy -p ${mylwcPath}`);
+    execCmd(`force:lightning:component:create -n mylwc --type lwc -d ${lwcPath}`, { cli: 'sf', ensureExitCode: 0 });
+    execCmd(`project:deploy:start --source-dir ${mylwcPath}`);
     expect(await isNameObsolete(testkit.username, 'LightningComponentBundle', 'mylwc')).to.be.false;
     const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(
       `project:delete:source -p ${mylwcPath} --no-prompt --json`

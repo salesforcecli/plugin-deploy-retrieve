@@ -7,8 +7,8 @@
 
 import * as path from 'node:path';
 import * as fs from 'node:fs';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { exec } from 'shelljs';
 import { expect } from 'chai';
 
 const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
@@ -78,7 +78,7 @@ describe('retrieve metadata NUTs', () => {
 
   describe('--package-name flag', () => {
     it('should retrieve an installed package', async () => {
-      exec(`sf force:package:install --noprompt --package ${ELECTRON.id} --wait 5 --json`, { silent: true });
+      execCmd(`force:package:install --noprompt --package ${ELECTRON.id} --wait 5 --json`, { silent: true, cli: 'sf' });
 
       await testkit.retrieve({ args: `--package-name "${ELECTRON.name}"` });
       await testkit.expect.packagesToBeRetrieved([ELECTRON.name]);

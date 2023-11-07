@@ -66,6 +66,7 @@ describe('reset and clear tracking', () => {
     it('runs status to start tracking', () => {
       const result = execCmd('force:source:status --json', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(result).to.have.length.greaterThan(100); // ebikes is big
     });
@@ -109,7 +110,7 @@ describe('reset and clear tracking', () => {
         }
       });
       // gets tracking files from server
-      execCmd('force:source:status --json --remote', { ensureExitCode: 0 });
+      execCmd('force:source:status --json --remote', { ensureExitCode: 0, cli: 'sf' });
       const revisions = await getRevisionsAsArray();
       const revisionFile = JSON.parse(
         await fs.promises.readFile(path.join(trackingFileFolder, 'maxRevision.json'), 'utf8')

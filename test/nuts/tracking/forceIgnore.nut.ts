@@ -8,7 +8,6 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { expect } from 'chai';
-import * as shell from 'shelljs';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
@@ -42,8 +41,8 @@ describe('forceignore changes', () => {
     });
 
     execCmd(`force:apex:class:create -n IgnoreTest --outputdir ${classdir} --api-version 58.0`, {
-      cli: 'sfdx',
       ensureExitCode: 0,
+      cli: 'sf',
     });
     originalForceIgnore = await fs.promises.readFile(path.join(session.project.dir, '.forceignore'), 'utf8');
     conn = await Connection.create({
@@ -73,6 +72,7 @@ describe('forceignore changes', () => {
     it('shows the file in status as ignored', () => {
       const output = execCmd<StatusResult>('force:source:status --json', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(output, JSON.stringify(output)).to.deep.include({
         state: 'Local Add',
@@ -107,9 +107,10 @@ describe('forceignore changes', () => {
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
 
       // add a file in the local source
-      shell.exec(`sfdx force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
+      execCmd(`force:apex:class:create -n UnIgnoreTest --outputdir ${classdir} --api-version 58.0`, {
         cwd: session.project.dir,
         silent: true,
+        cli: 'sf',
       });
       // another error when there's nothing to push
       const output = execCmd<DeployResultJson>('deploy:metadata --json', {
@@ -157,6 +158,7 @@ describe('forceignore changes', () => {
       // gets file into source tracking
       const statusOutput = execCmd<StatusResult[]>('force:source:status --json --remote', {
         ensureExitCode: 0,
+        cli: 'sf',
       }).jsonOutput?.result;
       expect(statusOutput?.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
     });

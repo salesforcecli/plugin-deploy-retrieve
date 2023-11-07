@@ -58,6 +58,7 @@ describe('lwc', () => {
     );
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
+      cli: 'sf',
     }).jsonOutput?.result;
     expect(result?.find((r) => r.filePath === cssPathRelative)).to.have.property('actualState', 'Changed');
   });
@@ -87,6 +88,7 @@ describe('lwc', () => {
   it('sfdx sees no local changes', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
+      cli: 'sf',
     })
       .jsonOutput?.result.filter((r) => r.origin === 'Local')
       .filter(filterIgnored);
@@ -106,6 +108,7 @@ describe('lwc', () => {
     await fs.promises.rm(cssPathAbsolute);
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
+      cli: 'sf',
     })
       .jsonOutput?.result.filter(filterIgnored)
       .find((r) => r.filePath === cssPathRelative);
@@ -137,6 +140,7 @@ describe('lwc', () => {
   it('sees no local changes', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
+      cli: 'sf',
     })
       .jsonOutput?.result.filter((r) => r.origin === 'Local')
       .filter(filterIgnored);
@@ -167,6 +171,7 @@ describe('lwc', () => {
     );
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
+      cli: 'sf',
     }).jsonOutput?.result.filter((r) => r.origin === 'Local');
     assert(result);
     expect(result.filter(filterIgnored)).to.have.length(4);
@@ -190,6 +195,7 @@ describe('lwc', () => {
   it('sees no local changes', () => {
     const result = execCmd<StatusResult[]>('force:source:status --json', {
       ensureExitCode: 0,
+      cli: 'sf',
     })
       .jsonOutput?.result.filter((r) => r.origin === 'Local')
       .filter(filterIgnored);
