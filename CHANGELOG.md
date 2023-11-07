@@ -1,3 +1,9 @@
+# [1.20.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.19.3...1.20.0) (2023-11-07)
+
+### Features
+
+- no shelljs ([#800](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/800)) ([3ddbe62](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3ddbe624f9b679ab2459c099eefdb883a31c293e))
+
 ## [1.19.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.19.2...1.19.3) (2023-10-31)
 
 ### Bug Fixes
