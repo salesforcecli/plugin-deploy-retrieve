@@ -74,9 +74,6 @@
         "releaseNotesUrl": {
           "type": "string"
         },
-        "scopeProfiles": {
-          "type": "boolean"
-        },
         "uninstallScript": {
           "type": "string"
         },
