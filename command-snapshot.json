@@ -165,6 +165,7 @@
       "async",
       "concise",
       "coverage-formatters",
+      "ignore-warnings",
       "json",
       "junit",
       "manifest",
@@ -183,7 +184,7 @@
       "wait"
     ],
     "alias": ["deploy:metadata:validate"],
-    "flagChars": ["a", "d", "l", "m", "o", "t", "w", "x"],
+    "flagChars": ["a", "d", "g", "l", "m", "o", "t", "w", "x"],
     "flagAliases": []
   },
   {
