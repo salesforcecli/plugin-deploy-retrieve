@@ -1,3 +1,9 @@
+## [1.20.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.20.1...1.20.2) (2023-11-08)
+
+### Bug Fixes
+
+- import Messages directly in configMeta ([#804](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/804)) ([560b297](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/560b297060607fea4d2a55f5be52c637529a85be))
+
 ## [1.20.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.20.0...1.20.1) (2023-11-08)
 
 ### Bug Fixes
