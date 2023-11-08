@@ -5,8 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { ConfigValue, Messages } from '@salesforce/core';
+import type { ConfigValue } from '@salesforce/core';
 
+import { Messages } from '@salesforce/core/lib/messages';
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'config');
 
