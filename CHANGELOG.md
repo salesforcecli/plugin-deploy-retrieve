@@ -1,3 +1,10 @@
+## [1.20.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.20.0...1.20.1) (2023-11-08)
+
+### Bug Fixes
+
+- add ignore-warnings flag to deploy validate ([794c5e8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/794c5e8276e2b14d463fc4e6e440add9657406a4))
+- update the nut ([6ab0e4e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6ab0e4ea8cb1466f1089bc1cab05ad35b01b6d73))
+
 # [1.20.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.19.3...1.20.0) (2023-11-07)
 
 ### Features
