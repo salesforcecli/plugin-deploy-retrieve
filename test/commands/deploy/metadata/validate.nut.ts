@@ -95,6 +95,7 @@ describe('deploy metadata validate NUTs', () => {
       expect(deploy?.result.success).to.be.true;
       expect(deploy?.result.numberComponentsDeployed).to.equal(10);
       expect(deploy?.result.checkOnly).to.be.true;
+      expect(deploy?.result.ignoreWarnings).to.be.true;
     });
   });
 });
