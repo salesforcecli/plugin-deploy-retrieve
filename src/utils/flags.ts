@@ -71,6 +71,10 @@ export const ensuredDirFlag = Flags.custom<string>({
 export const testLevelFlag = Flags.custom<TestLevel>({
   char: 'l',
   parse: (input) => Promise.resolve(input as TestLevel),
+  // eslint-disable-next-line @typescript-eslint/require-await
+  default: async (context) => {
+    if (context.flags.tests) return TestLevel.RunSpecifiedTests;
+  },
   options: Object.values(TestLevel),
 });
 
@@ -91,7 +95,6 @@ export const zipFileFlag = Flags.custom<string>({
 export const testsFlag = Flags.string({
   char: 't',
   multiple: true,
-  dependsOn: ['test-level'],
   summary: commonFlagMessages.getMessage('flags.tests.summary'),
   description: commonFlagMessages.getMessage('flags.tests.description'),
   // the old version allowed comma separated values, and the change is confusing enough to deserve a warning
