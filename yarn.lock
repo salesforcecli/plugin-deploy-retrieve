@@ -1053,18 +1053,18 @@
     handlebars "^4.7.8"
     tslib "^2"
 
-"@salesforce/plugin-source@^2.10.46":
-  version "2.10.46"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.10.46.tgz#6f3d28776e2bf642b4c54faa603769c3b9d40072"
-  integrity sha512-qo6HH32aJ6spXNAwEqIhla32fPB2tEZyII8rauPpSidetREnUMZztC7x3XOYEWlvMxm6PqXkOorN1MhPTgys1A==
+"@salesforce/plugin-source@^2.11.0":
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-source/-/plugin-source-2.11.0.tgz#078d1f66378f1e73fafc34da005c44745adcbdac"
+  integrity sha512-sT0Tj1V0U7xqZ90OfS4jmigv8yLgPuTq5yYAGKnKhqYgsZ0afmR9Z6GBn2j439peaV+KElNjUEg1nLro3fWQpA==
   dependencies:
     "@oclif/core" "^2.15.0"
     "@salesforce/apex-node" "^2.1.0"
-    "@salesforce/core" "^5.3.10"
-    "@salesforce/kit" "^3.0.14"
+    "@salesforce/core" "^5.3.18"
+    "@salesforce/kit" "^3.0.15"
     "@salesforce/sf-plugins-core" "^3.1.25"
-    "@salesforce/source-deploy-retrieve" "^9.7.28"
-    "@salesforce/source-tracking" "^4.2.17"
+    "@salesforce/source-deploy-retrieve" "^9.8.4"
+    "@salesforce/source-tracking" "^4.3.0"
     chalk "^4.1.2"
     got "^11.8.6"
     proxy-agent "^6.3.1"
@@ -1092,7 +1092,7 @@
     chalk "^4"
     inquirer "^8.2.5"
 
-"@salesforce/source-deploy-retrieve@^9.7.28", "@salesforce/source-deploy-retrieve@^9.8.3", "@salesforce/source-deploy-retrieve@^9.8.4":
+"@salesforce/source-deploy-retrieve@^9.8.3", "@salesforce/source-deploy-retrieve@^9.8.4":
   version "9.8.4"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-9.8.4.tgz#e6d21d8f2e0b44fae242e31ef8b4f31991a07deb"
   integrity sha512-/g/WkUFCogCANnKkeHmQyXpAbIy+A2htEYliVaoxg3UccDqHCZd5Gmlk6Gwsd03YsLAt249bay5mAokD7y39sQ==
@@ -1126,7 +1126,7 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^4.2.17", "@salesforce/source-tracking@^4.3.0":
+"@salesforce/source-tracking@^4.3.0":
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-4.3.0.tgz#dc281b260d28f831042475468aa0b0350d7328a7"
   integrity sha512-1ysyxU7lLi2pQNgEQbLpfSciLhsYrYwVu+VEq+tCXzm0TfmyscT1a1vcyykOzztpWMtKNQW/HdJEaAPBPd9FVg==
