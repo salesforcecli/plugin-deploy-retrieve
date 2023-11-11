@@ -20,7 +20,7 @@
     "@salesforce/cli-plugins-testkit": "^5.0.2",
     "@salesforce/dev-scripts": "^6.0.3",
     "@salesforce/plugin-command-reference": "^3.0.46",
-    "@salesforce/plugin-source": "^2.10.46",
+    "@salesforce/plugin-source": "^2.11.0",
     "@salesforce/source-testkit": "^2.1.62",
     "@salesforce/ts-sinon": "1.4.15",
     "@salesforce/ts-types": "^2.0.8",
