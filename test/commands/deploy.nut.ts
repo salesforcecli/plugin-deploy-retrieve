@@ -7,9 +7,9 @@
 
 import * as path from 'node:path';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { writeJson } from '../../src/commands/deploy';
-import { TestLevel } from '../../src/utils/types';
-import { MetadataDeployer } from '../../src/utils/metadataDeployer';
+import { writeJson } from '../../src/commands/deploy.js';
+import { TestLevel } from '../../src/utils/types.js';
+import { MetadataDeployer } from '../../src/utils/metadataDeployer.js';
 
 describe('deploy NUTs', () => {
   let testkit: SourceTestkit;

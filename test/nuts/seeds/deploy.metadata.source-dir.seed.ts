@@ -8,8 +8,8 @@
 import * as path from 'node:path';
 import { assert } from 'chai';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { TEST_REPOS_MAP } from '../testMatrix';
-import { DeployResultJson } from '../../../src/utils/types';
+import { TEST_REPOS_MAP } from '../testMatrix.js';
+import { DeployResultJson } from '../../../src/utils/types.js';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');

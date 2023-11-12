@@ -5,17 +5,19 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Messages } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { cancelDeploy, cancelDeployAsync } from '../../../utils/deploy';
-import { DeployCache } from '../../../utils/deployCache';
-import { AsyncDeployCancelResultFormatter } from '../../../formatters/asyncDeployCancelResultFormatter';
-import { DeployCancelResultFormatter } from '../../../formatters/deployCancelResultFormatter';
-import { DeployResultJson } from '../../../utils/types';
+import { cancelDeploy, cancelDeployAsync } from '../../../utils/deploy.js';
+import { DeployCache } from '../../../utils/deployCache.js';
+import { AsyncDeployCancelResultFormatter } from '../../../formatters/asyncDeployCancelResultFormatter.js';
+import { DeployCancelResultFormatter } from '../../../formatters/deployCancelResultFormatter.js';
+import { DeployResultJson } from '../../../utils/types.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.cancel');
 
 export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {

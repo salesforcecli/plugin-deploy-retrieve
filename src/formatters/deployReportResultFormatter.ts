@@ -8,8 +8,8 @@ import { ux } from '@oclif/core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
-import { tableHeader } from '../utils/output';
-import { DeployResultFormatter } from './deployResultFormatter';
+import { tableHeader } from '../utils/output.js';
+import { DeployResultFormatter } from './deployResultFormatter.js';
 
 export class DeployReportResultFormatter extends DeployResultFormatter {
   public display(): void {

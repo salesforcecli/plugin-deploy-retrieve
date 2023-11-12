@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'node:path';
-
 import {
   ApexTestResultData,
   ApexTestResultOutcome,
@@ -18,7 +17,6 @@ import {
 import { Successes, Failures, CodeCoverage } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import { Chalk } from 'chalk';
 
 export const mapTestResults = <T extends Failures | Successes>(testResults: T[]): ApexTestResultData[] =>
   testResults.map((testResult) => ({
@@ -104,7 +102,7 @@ export const coverageOutput = (
     : '',
 });
 
-const color = (percent: number): Chalk =>
+const color = (percent: number): typeof StandardColors.success =>
   percent >= 90 ? StandardColors.success : percent >= 75 ? StandardColors.warning : StandardColors.error;
 
 const formatPercent = (percent: number): string => color(percent)(`${percent}%`);

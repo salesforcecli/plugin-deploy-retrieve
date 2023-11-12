@@ -8,7 +8,7 @@
 import { expect } from 'chai';
 import { ApexTestResultOutcome } from '@salesforce/apex-node';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import { coverageOutput, getCoveragePct, mapTestResults } from '../../src/utils/coverage';
+import { coverageOutput, getCoveragePct, mapTestResults } from '../../src/utils/coverage.js';
 
 // methods are mutating the object instead of returning new ones
 function getSampleTestResult() {

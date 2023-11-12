@@ -10,7 +10,7 @@ import { join, resolve } from 'node:path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, expect } from 'chai';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { DeployResultJson } from '../../../../src/utils/types';
+import { DeployResultJson } from '../../../../src/utils/types.js';
 
 describe('[project deploy report] NUTs with metadata-dir', () => {
   let testkit: SourceTestkit;

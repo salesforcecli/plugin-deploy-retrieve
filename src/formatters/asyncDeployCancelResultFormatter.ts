@@ -4,11 +4,12 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ux } from '@oclif/core';
 import { Messages } from '@salesforce/core';
-import { AsyncDeployResultJson, DeployResultJson, Formatter } from '../utils/types';
-
-Messages.importMessagesDirectory(__dirname);
+import { AsyncDeployResultJson, DeployResultJson, Formatter } from '../utils/types.js';
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 
 export const deployAsyncMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
 

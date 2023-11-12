@@ -7,7 +7,7 @@
 
 import { SfProject } from '@salesforce/core';
 import { SfHook } from '@salesforce/sf-plugins-core';
-import { MetadataDeployer } from '../utils/metadataDeployer';
+import { MetadataDeployer } from '../utils/metadataDeployer.js';
 
 const hook: SfHook.Deploy<MetadataDeployer> = async function () {
   const project = await SfProject.resolve();

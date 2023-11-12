@@ -6,7 +6,8 @@
  */
 
 import { dirname, resolve } from 'node:path';
-import * as fs from 'node:fs';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { Messages, SfError } from '@salesforce/core';
 import {
   ComponentSet,
@@ -22,10 +23,10 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
-import { ConvertMdapiJson } from '../../../utils/types';
-import { MetadataConvertResultFormatter } from '../../../formatters/metadataConvertResultFormatter';
+import { ConvertMdapiJson } from '../../../utils/types.js';
+import { MetadataConvertResultFormatter } from '../../../formatters/metadataConvertResultFormatter.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.mdapi');
 
 export interface EnsureFsFlagOptions {

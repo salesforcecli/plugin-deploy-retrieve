@@ -13,7 +13,7 @@ import { SourceTestkit } from '@salesforce/source-testkit';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { ensureArray } from '@salesforce/ts-types';
-import { DeleteSourceJson } from '../../../src/utils/types';
+import { DeleteSourceJson } from '../../../src/utils/types.js';
 
 const isNameObsolete = async (username: string, memberType: string, memberName: string): Promise<boolean> => {
   const connection = await Connection.create({

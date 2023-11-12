@@ -7,11 +7,11 @@
 
 import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { expect } from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { ConfigAggregator } from '@salesforce/core';
-import { determineExitCode, resolveApi, validateTests } from '../../src/utils/deploy';
-import { API, TestLevel } from '../../src/utils/types';
-import { ConfigVars } from '../../src/configMeta';
+import { determineExitCode, resolveApi, validateTests } from '../../src/utils/deploy.js';
+import { API, TestLevel } from '../../src/utils/types.js';
+import { ConfigVars } from '../../src/configMeta.js';
 
 describe('deploy utils', () => {
   describe('validateTests', () => {

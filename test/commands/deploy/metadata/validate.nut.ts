@@ -10,7 +10,7 @@ import { SourceTestkit } from '@salesforce/source-testkit';
 import { isObject } from '@salesforce/ts-types';
 import { assert, expect } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
-import { DeployResultJson } from '../../../../src/utils/types';
+import { DeployResultJson } from '../../../../src/utils/types.js';
 
 describe('deploy metadata validate NUTs', () => {
   let testkit: SourceTestkit;

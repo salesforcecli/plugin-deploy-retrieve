@@ -6,12 +6,12 @@
  */
 import * as path from 'node:path';
 import { assert, expect, config } from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { DeployResult } from '@salesforce/source-deploy-retrieve';
 import { ux } from '@oclif/core';
-import { getCoverageFormattersOptions } from '../../src/utils/coverage';
-import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter';
-import { getDeployResult } from './deployResponses';
+import { getCoverageFormattersOptions } from '../../src/utils/coverage.js';
+import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter.js';
+import { getDeployResult } from './deployResponses.js';
 
 config.truncateThreshold = 0;
 

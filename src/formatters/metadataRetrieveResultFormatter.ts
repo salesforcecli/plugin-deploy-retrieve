@@ -4,14 +4,15 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'node:path';
+import { join, parse, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ux } from '@oclif/core';
 import { FileResponse, RetrieveResult } from '@salesforce/source-deploy-retrieve';
 import { Messages } from '@salesforce/core';
-import { Formatter, MetadataRetrieveResultJson } from '../utils/types';
-import { sortFileResponses, asRelativePaths } from '../utils/output';
+import { Formatter, MetadataRetrieveResultJson } from '../utils/types.js';
+import { sortFileResponses, asRelativePaths } from '../utils/output.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 export const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 
 export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrieveResultJson> {
@@ -21,7 +22,7 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
     private result: RetrieveResult,
     private opts: { 'target-metadata-dir': string; 'zip-file-name': string; unzip: boolean }
   ) {
-    this.zipFilePath = path.join(opts['target-metadata-dir'], opts['zip-file-name']);
+    this.zipFilePath = join(opts['target-metadata-dir'], opts['zip-file-name']);
     this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
   }
 
@@ -36,7 +37,7 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
   public async display(): Promise<void> {
     ux.log(retrieveMessages.getMessage('info.WroteZipFile', [this.zipFilePath]));
     if (this.opts.unzip) {
-      const extractPath = path.join(this.opts['target-metadata-dir'], path.parse(this.opts['zip-file-name']).name);
+      const extractPath = join(this.opts['target-metadata-dir'], parse(this.opts['zip-file-name']).name);
       ux.log(retrieveMessages.getMessage('info.ExtractedZipFile', [this.zipFilePath, extractPath]));
     }
   }

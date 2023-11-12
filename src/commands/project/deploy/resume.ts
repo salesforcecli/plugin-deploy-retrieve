@@ -5,20 +5,22 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { bold } from 'chalk';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import chalk from 'chalk';
 import { EnvironmentVariable, Messages, Org, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
-import { DeployProgress } from '../../../utils/progressBar';
-import { API, DeployResultJson } from '../../../utils/types';
-import { buildComponentSet, determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy';
-import { DeployCache } from '../../../utils/deployCache';
-import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { coverageFormattersFlag } from '../../../utils/flags';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
+import { DeployProgress } from '../../../utils/progressBar.js';
+import { API, DeployResultJson } from '../../../utils/types.js';
+import { buildComponentSet, determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy.js';
+import { DeployCache } from '../../../utils/deployCache.js';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
+import { coverageFormattersFlag } from '../../../utils/flags.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.resume');
 
 const testFlags = 'Test';
@@ -63,7 +65,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       helpValue: '<minutes>',
       min: 1,
     }),
-    'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
+    'coverage-formatters': coverageFormattersFlag({ helpGroup: testFlags }),
     junit: Flags.boolean({
       summary: messages.getMessage('flags.junit.summary'),
       helpGroup: testFlags,
@@ -125,7 +127,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
         jobId
       );
 
-      this.log(`Deploy ID: ${bold(jobId)}`);
+      this.log(`Deploy ID: ${chalk.bold(jobId)}`);
       new DeployProgress(deploy, this.jsonEnabled()).start();
       result = await deploy.pollStatus(500, wait.seconds);
 

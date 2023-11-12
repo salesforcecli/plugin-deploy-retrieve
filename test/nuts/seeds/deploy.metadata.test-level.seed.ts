@@ -10,7 +10,7 @@ import * as path from 'node:path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, expect } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
-import { TEST_REPOS_MAP } from '../testMatrix';
+import { TEST_REPOS_MAP } from '../testMatrix.js';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');

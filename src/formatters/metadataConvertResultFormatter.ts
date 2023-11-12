@@ -7,7 +7,7 @@
 import * as path from 'node:path';
 import { ux } from '@oclif/core';
 import { ConvertResult } from '@salesforce/source-deploy-retrieve';
-import { Formatter, ConvertMdapiJson } from '../utils/types';
+import { Formatter, ConvertMdapiJson } from '../utils/types.js';
 
 export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJson> {
   private convertResults!: ConvertMdapiJson;

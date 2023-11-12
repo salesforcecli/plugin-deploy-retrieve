@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { expect } from 'chai';
-import { DEPLOY_STATUS_CODES_DESCRIPTIONS, DEPLOY_STATUS_CODES } from '../../src/utils/errorCodes';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS, DEPLOY_STATUS_CODES } from '../../src/utils/errorCodes.js';
 
 describe('error codes', () => {
   describe('help descriptions DEPLOY_STATUS_CODES_DESCRIPTIONS', () => {

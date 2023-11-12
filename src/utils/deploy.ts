@@ -5,6 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ConfigAggregator, Messages, Org, SfError, SfProject } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { Nullable } from '@salesforce/ts-types';
@@ -17,14 +19,14 @@ import {
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SourceTracking } from '@salesforce/source-tracking';
-import ConfigMeta, { ConfigVars } from '../configMeta';
-import { getPackageDirs, getSourceApiVersion } from './project';
-import { API, PathInfo, TestLevel } from './types';
-import { DEPLOY_STATUS_CODES } from './errorCodes';
-import { DeployCache } from './deployCache';
-import { writeManifest } from './manifestCache';
+import ConfigMeta, { ConfigVars } from '../configMeta.js';
+import { getPackageDirs, getSourceApiVersion } from './project.js';
+import { API, PathInfo, TestLevel } from './types.js';
+import { DEPLOY_STATUS_CODES } from './errorCodes.js';
+import { DeployCache } from './deployCache.js';
+import { writeManifest } from './manifestCache.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 export const cacheMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
 
 const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -79,7 +81,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
     /** localChangesAsComponentSet returned an array to support multiple sequential deploys.
      * `sf` chooses not to support this so we force one ComponentSet
      */
-    const cs = (await stl.localChangesAsComponentSet(false))?.[0] ?? new ComponentSet();
+    const cs = (await stl.localChangesAsComponentSet(false))[0] ?? new ComponentSet();
     // stl produces a cs with api version already set.  command might have specified a version.
     if (opts['api-version']) {
       cs.apiVersion = opts['api-version'];

@@ -8,7 +8,7 @@
 import * as path from 'node:path';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { DeployResultJson } from '../../../src/utils/types';
+import { DeployResultJson } from '../../../src/utils/types.js';
 
 describe('Nested LWCs', () => {
   let session: TestSession;

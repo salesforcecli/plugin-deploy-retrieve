@@ -8,7 +8,7 @@
 import { join } from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { DeployResultJson } from '../../../src/utils/types';
+import { DeployResultJson } from '../../../src/utils/types.js';
 
 describe('deploy mdapi format without project', () => {
   let session: TestSession;

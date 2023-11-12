@@ -7,7 +7,7 @@
 
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { RepoConfig, TEST_REPOS_MAP } from './testMatrix';
+import { RepoConfig, TEST_REPOS_MAP } from './testMatrix.js';
 
 const SEED_FILTER = process.env.PLUGIN_DEPLOY_RETRIEVE_SEED_FILTER ?? '';
 const SEED_EXCLUDE = process.env.PLUGIN_DEPLOY_RETRIEVE_SEED_EXCLUDE;

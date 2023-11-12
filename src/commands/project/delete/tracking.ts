@@ -5,8 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Messages } from '@salesforce/core';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { SourceTracking } from '@salesforce/source-tracking';
 import {
   Flags,
@@ -16,7 +18,7 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.tracking');
 
 export type DeleteTrackingResult = {
