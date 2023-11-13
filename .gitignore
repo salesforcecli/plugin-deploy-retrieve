@@ -47,3 +47,5 @@ oclif.manifest.json
 
 # ignore generated nut tests
 test/nuts/generated/
+
+oclif.lock

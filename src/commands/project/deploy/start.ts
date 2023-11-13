@@ -4,25 +4,27 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { bold } from 'chalk';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import chalk from 'chalk';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { DeployVersionData } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
-import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
-import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
-import { DeployProgress } from '../../../utils/progressBar';
-import { DeployResultJson, TestLevel } from '../../../utils/types';
-import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy';
-import { DeployCache } from '../../../utils/deployCache';
-import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { ConfigVars } from '../../../configMeta';
-import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
-import { writeConflictTable } from '../../../utils/conflicts';
-import { getOptionalProject } from '../../../utils/project';
+import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
+import { DeployProgress } from '../../../utils/progressBar.js';
+import { DeployResultJson, TestLevel } from '../../../utils/types.js';
+import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy.js';
+import { DeployCache } from '../../../utils/deployCache.js';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
+import { ConfigVars } from '../../../configMeta.js';
+import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
+import { writeConflictTable } from '../../../utils/conflicts.js';
+import { getOptionalProject } from '../../../utils/project.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
@@ -115,7 +117,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.target-org.summary'),
       required: true,
     }),
-    tests: { ...testsFlag, helpGroup: testFlags },
+    tests: testsFlag({ helpGroup: testFlags }),
     'test-level': testLevelFlag({
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
@@ -152,7 +154,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       dependsOn: ['manifest'],
       helpGroup: destructiveFlags,
     }),
-    'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
+    'coverage-formatters': coverageFormattersFlag({ helpGroup: testFlags }),
     junit: Flags.boolean({
       summary: messages.getMessage('flags.junit.summary'),
       helpGroup: testFlags,
@@ -233,7 +235,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${bold(deploy.id)}`);
+    this.log(`Deploy ID: ${chalk.bold(deploy.id)}`);
 
     if (flags.async) {
       if (flags['coverage-formatters']) {

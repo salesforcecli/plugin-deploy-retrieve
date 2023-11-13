@@ -4,14 +4,16 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Messages } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
 import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
-import { buildComponentSet } from '../../../utils/deploy';
-import { PreviewResult, printTables, compileResults, getConflictFiles } from '../../../utils/previewOutput';
+import { buildComponentSet } from '../../../utils/deploy.js';
+import { PreviewResult, printTables, compileResults, getConflictFiles } from '../../../utils/previewOutput.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.preview');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata'];

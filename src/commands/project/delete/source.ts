@@ -5,9 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import * as os from 'node:os';
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { Interfaces } from '@oclif/core';
 import { Lifecycle, Messages, Org, SfError } from '@salesforce/core';
 import {
@@ -31,19 +32,19 @@ import {
   requiredOrgFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
-import * as chalk from 'chalk';
-import { API, DeleteSourceJson, isSourceComponent } from '../../../utils/types';
-import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
-import { resolveApi, validateTests } from '../../../utils/deploy';
-import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
-import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter';
-import { DeployProgress } from '../../../utils/progressBar';
-import { DeployCache } from '../../../utils/deployCache';
-import { testLevelFlag, testsFlag } from '../../../utils/flags';
+import chalk from 'chalk';
+import { API, DeleteSourceJson, isSourceComponent } from '../../../utils/types.js';
+import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
+import { resolveApi, validateTests } from '../../../utils/deploy.js';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
+import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter.js';
+import { DeployProgress } from '../../../utils/progressBar.js';
+import { DeployCache } from '../../../utils/deployCache.js';
+import { testLevelFlag, testsFlag } from '../../../utils/flags.js';
 const fsPromises = fs.promises;
 const testFlags = 'Test';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(path.dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
 const xorFlags = ['metadata', 'source-dir'];
 export class Source extends SfCommand<DeleteSourceJson> {
@@ -72,11 +73,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
       description: messages.getMessage('flags.wait.description'),
       summary: messages.getMessage('flags.wait.summary'),
     }),
-    tests: {
-      ...testsFlag,
+    tests: testsFlag({
       helpGroup: testFlags,
       char: undefined,
-    },
+    }),
     'test-level': testLevelFlag({
       aliases: ['testlevel'],
       deprecateAliases: true,

@@ -9,7 +9,7 @@ import * as path from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert, expect } from 'chai';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
 
 describe('metadata types that go in folders', () => {
   let session: TestSession;

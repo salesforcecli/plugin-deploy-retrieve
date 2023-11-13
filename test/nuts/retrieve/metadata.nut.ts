@@ -7,6 +7,7 @@
 
 import * as path from 'node:path';
 import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
@@ -19,7 +20,7 @@ describe('retrieve metadata NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
     await testkit.addTestFiles();
     await testkit.deploy({ args: '--source-dir force-app', exitCode: 0 });

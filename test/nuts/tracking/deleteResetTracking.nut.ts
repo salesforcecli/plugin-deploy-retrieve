@@ -10,7 +10,7 @@ import * as fs from 'node:fs';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { AuthInfo, Connection } from '@salesforce/core';
-import { DeleteTrackingResult } from '../../../src/commands/project/delete/tracking';
+import { DeleteTrackingResult } from '../../../src/commands/project/delete/tracking.js';
 
 let session: TestSession;
 let orgId: string;

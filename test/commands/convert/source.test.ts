@@ -7,14 +7,14 @@
 
 import { join, resolve, sep } from 'node:path';
 import { ComponentSetBuilder, ComponentSetOptions, MetadataConverter } from '@salesforce/source-deploy-retrieve';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { expect } from 'chai';
 import { stubMethod } from '@salesforce/ts-sinon';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
-import * as oclifUtils from '@oclif/core/lib/util';
+import oclifUtils from '@oclif/core/lib/util/fs.js';
 import { SfProject } from '@salesforce/core';
-import { Source } from '../../../src/commands/project/convert/source';
+import { Source } from '../../../src/commands/project/convert/source.js';
 
 describe('project convert source', () => {
   const $$ = new TestContext();

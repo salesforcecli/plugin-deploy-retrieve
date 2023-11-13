@@ -7,11 +7,11 @@
 import { ux } from '@oclif/core';
 import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
-import { bold, blue } from 'chalk';
+import chalk from 'chalk';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import { DeleteSourceJson, Formatter, TestLevel } from '../utils/types';
-import { sortFileResponses, asRelativePaths } from '../utils/output';
-import { TestResultsFormatter } from '../formatters/testResultsFormatter';
+import { DeleteSourceJson, Formatter, TestLevel } from '../utils/types.js';
+import { sortFileResponses, asRelativePaths } from '../utils/output.js';
+import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
 
 export class DeleteResultFormatter extends TestResultsFormatter implements Formatter<DeleteSourceJson> {
   public constructor(
@@ -75,7 +75,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
       }
 
       ux.log('');
-      ux.styledHeader(blue('Deleted Source'));
+      ux.styledHeader(chalk.blue('Deleted Source'));
       ux.table(
         successes.map((entry) => ({
           fullName: entry.fullName,
@@ -106,7 +106,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
       error: { header: 'Problem' },
     };
     const options: ux.Table.table.Options = {
-      title: StandardColors.error(bold(`Component Failures [${failures.length}]`)),
+      title: StandardColors.error(chalk.bold(`Component Failures [${failures.length}]`)),
       'no-truncate': true,
     };
     ux.log();

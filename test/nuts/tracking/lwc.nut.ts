@@ -9,10 +9,10 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { assert, expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
+import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter.js';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
-import { PreviewResult } from '../../../src/utils/previewOutput';
-import { DeployResultJson } from '../../../src/utils/types';
+import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import { DeployResultJson } from '../../../src/utils/types.js';
 
 let session: TestSession;
 let cssPathAbsolute: string;

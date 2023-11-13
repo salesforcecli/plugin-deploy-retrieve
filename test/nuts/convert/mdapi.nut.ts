@@ -9,7 +9,7 @@ import * as path from 'node:path';
 import { expect, assert } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { ComponentSet, SourceComponent } from '@salesforce/source-deploy-retrieve';
-import { ConvertMdapiJson } from '../../../src/utils/types';
+import { ConvertMdapiJson } from '../../../src/utils/types.js';
 
 let session: TestSession;
 

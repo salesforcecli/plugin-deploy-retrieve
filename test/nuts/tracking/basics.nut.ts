@@ -10,14 +10,16 @@ import * as fs from 'node:fs';
 import { expect, assert } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
-import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter';
-import { DeployResultJson, RetrieveResultJson, isSdrFailure } from '../../../src/utils/types';
-import { PreviewResult } from '../../../src/utils/previewOutput';
-import { eBikesDeployResultCount } from './constants';
+import { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter.js';
+import { DeployResultJson, RetrieveResultJson, isSdrFailure } from '../../../src/utils/types.js';
+import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import { eBikesDeployResultCount } from './constants.js';
+
 const filterIgnored = (r: StatusResult): boolean => r.ignored !== true;
 
-let session: TestSession;
 describe('end-to-end-test for tracking with an org (single packageDir)', () => {
+  let session: TestSession;
+
   before(async () => {
     session = await TestSession.create({
       project: {

@@ -6,10 +6,11 @@
  */
 
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert } from 'chai';
-import { TEST_REPOS_MAP } from '../testMatrix';
-import { DeployResultJson } from '../../../src/utils/types';
+import { TEST_REPOS_MAP } from '../testMatrix.js';
+import { DeployResultJson } from '../../../src/utils/types.js';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
@@ -20,7 +21,7 @@ context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: REPO.gitUrl,
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
     // some deploys reference other metadata not included in the deploy, if it's not already in the org it will fail
     const args = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');

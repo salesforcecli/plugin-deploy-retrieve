@@ -29,7 +29,7 @@
 1.  Build and lint the code: `yarn build`
 1.  Create a branch off main for new work: `git checkout -b <branch_name>` _Suggestion: use branch_name format of initials/work-title_. For external contributors, please fork the main branch of the repo instead and PR the fork to the main branch.
 1.  Make code changes and build: `yarn build`
-1.  Run changed commands: `./bin/dev project:deploy:start --help`
+1.  Run changed commands: `./bin/dev.js project:deploy:start --help`
 1.  Write tests and run: `yarn test` (unit) and/or `yarn test:nuts` (NUTs)
 1.  Show all changed files: `git status`
 1.  Add all files to staging: `git add .`
@@ -93,7 +93,7 @@ If there are conflict errors in the tests then we need to make a similar modific
 
 ## Running Commands
 
-To run your modified plugin commands locally, use `./bin/dev` or `./bin/dev.cmd` file, which uses ts-node to execute the plugin's TypeScript commands.
+To run your modified plugin commands locally, use `./bin/dev.js` or `./bin/dev.cmd` file, which uses ts-node to execute the plugin's TypeScript commands.
 
 ```bash
 # Run using local dev file.

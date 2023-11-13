@@ -10,7 +10,7 @@ import { AuthInfo, Connection } from '@salesforce/core';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert } from '@salesforce/ts-types';
-import { DeployResultJson } from '../../../src/utils/types';
+import { DeployResultJson } from '../../../src/utils/types.js';
 
 let session: TestSession;
 let conn: Connection;

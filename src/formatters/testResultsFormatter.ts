@@ -6,7 +6,7 @@
  */
 import * as os from 'node:os';
 import { ux } from '@oclif/core';
-import { dim, underline } from 'chalk';
+import chalk from 'chalk';
 import {
   CodeCoverage,
   CodeCoverageWarnings,
@@ -17,9 +17,9 @@ import {
   Successes,
 } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
-import { TestLevel, Verbosity } from '../utils/types';
-import { tableHeader, error, success, check } from '../utils/output';
-import { coverageOutput } from '../utils/coverage';
+import { TestLevel, Verbosity } from '../utils/types.js';
+import { tableHeader, error, success, check } from '../utils/output.js';
+import { coverageOutput } from '../utils/coverage.js';
 
 export class TestResultsFormatter {
   public testLevel: TestLevel | undefined;
@@ -75,7 +75,7 @@ const displayVerboseTestSuccesses = (resultSuccesses: RunTestResult['successes']
     ux.log();
     ux.log(success(`Test Success [${successes.length}]`));
     for (const test of successes) {
-      const testName = underline(`${test.name}.${test.methodName}`);
+      const testName = chalk.underline(`${test.name}.${test.methodName}`);
       ux.log(`${check} ${testName}`);
     }
   }
@@ -89,12 +89,12 @@ const displayVerboseTestFailures = (response: MetadataApiDeployStatus): void => 
   ux.log();
   ux.log(error(`Test Failures [${failureCount}]`));
   for (const test of failures) {
-    const testName = underline(`${test.name}.${test.methodName}`);
+    const testName = chalk.underline(`${test.name}.${test.methodName}`);
     ux.log(`• ${testName}`);
-    ux.log(`  ${dim('message')}: ${test.message}`);
+    ux.log(`  ${chalk.dim('message')}: ${test.message}`);
     if (test.stackTrace) {
       const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
-      ux.log(`  ${dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
+      ux.log(`  ${chalk.dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
     }
     ux.log();
   }

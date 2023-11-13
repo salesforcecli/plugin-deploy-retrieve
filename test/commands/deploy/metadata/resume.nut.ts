@@ -6,13 +6,14 @@
  */
 
 import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
 import { strict as assert } from 'node:assert';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { DeployResultJson } from '../../../../src/utils/types';
-import { CachedOptions } from '../../../../src/utils/deploy';
+import { DeployResultJson } from '../../../../src/utils/types.js';
+import { CachedOptions } from '../../../../src/utils/deploy.js';
 
 function readDeployCache(projectDir: string): Record<string, CachedOptions> {
   // source-testkit doesn't expose the session, so we'll go up 1 level from the project to get to it
@@ -26,7 +27,7 @@ describe('[project deploy resume] NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
   });
 

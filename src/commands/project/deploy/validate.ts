@@ -5,22 +5,23 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as os from 'node:os';
-import { bold } from 'chalk';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import chalk from 'chalk';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { CodeCoverageWarnings, DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { Duration } from '@salesforce/kit';
+import { Duration, ensureArray } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { ensureArray } from '@salesforce/kit';
-import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
-import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
-import { DeployProgress } from '../../../utils/progressBar';
-import { DeployResultJson, TestLevel } from '../../../utils/types';
-import { executeDeploy, resolveApi, determineExitCode, validateTests } from '../../../utils/deploy';
-import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { ConfigVars } from '../../../configMeta';
-import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags';
+import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
+import { DeployProgress } from '../../../utils/progressBar.js';
+import { DeployResultJson, TestLevel } from '../../../utils/types.js';
+import { executeDeploy, resolveApi, determineExitCode, validateTests } from '../../../utils/deploy.js';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
+import { ConfigVars } from '../../../configMeta.js';
+import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.validate');
 const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
@@ -90,7 +91,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       summary: messages.getMessage('flags.target-org.summary'),
       required: true,
     }),
-    tests: { ...testsFlag, helpGroup: testFlags },
+    tests: testsFlag({ helpGroup: testFlags }),
     'test-level': testLevelFlag({
       options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],
       default: TestLevel.RunLocalTests,
@@ -117,7 +118,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       description: deployMessages.getMessage('flags.ignore-warnings.description'),
       default: false,
     }),
-    'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
+    'coverage-formatters': coverageFormattersFlag({ helpGroup: testFlags }),
     junit: Flags.boolean({
       summary: messages.getMessage('flags.junit.summary'),
       helpGroup: testFlags,
@@ -199,7 +200,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${bold(deploy.id)}`);
+    this.log(`Deploy ID: ${chalk.bold(deploy.id)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id, this.config.bin);
@@ -211,7 +212,9 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
 
     const result = await deploy.pollStatus(500, flags.wait?.seconds);
     process.exitCode = determineExitCode(result);
-    const formatter = new DeployResultFormatter(result, flags);
+    const formatter = new DeployResultFormatter(result, {
+      ...flags,
+    });
 
     if (!this.jsonEnabled()) {
       formatter.display();

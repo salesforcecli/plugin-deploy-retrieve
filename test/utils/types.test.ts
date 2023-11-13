@@ -7,7 +7,7 @@
 
 import { expect, config } from 'chai';
 import { SourceComponent, RegistryAccess } from '@salesforce/source-deploy-retrieve';
-import { isSourceComponent, isSourceComponentWithXml } from '../../src/utils/types';
+import { isSourceComponent, isSourceComponentWithXml } from '../../src/utils/types.js';
 
 config.truncateThreshold = 0;
 

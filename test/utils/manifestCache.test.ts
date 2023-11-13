@@ -7,8 +7,8 @@
 import * as fs from 'node:fs';
 import { expect } from 'chai';
 import { ComponentSet } from '@salesforce/source-deploy-retrieve';
-import * as sinon from 'sinon';
-import { writeManifest } from '../../src/utils/manifestCache';
+import sinon from 'sinon';
+import { writeManifest } from '../../src/utils/manifestCache.js';
 
 describe('manifest cache', () => {
   let sandbox: sinon.SinonSandbox;

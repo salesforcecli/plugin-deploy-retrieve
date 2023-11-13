@@ -4,13 +4,14 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ux } from '@oclif/core';
 import { ConvertResult } from '@salesforce/source-deploy-retrieve';
 import { SfError, Messages } from '@salesforce/core';
-import { ConvertResultJson, Formatter } from '../utils/types';
+import { ConvertResultJson, Formatter } from '../utils/types.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 export const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 export class SourceConvertResultFormatter implements Formatter<ConvertResultJson> {

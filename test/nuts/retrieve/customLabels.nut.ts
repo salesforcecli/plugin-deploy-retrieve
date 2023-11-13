@@ -11,7 +11,7 @@ import { expect } from 'chai';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
 
 let session: TestSession;
 

@@ -7,9 +7,9 @@
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert } from 'chai';
 import { beforeEach } from 'mocha';
-import { DeleteSourceJson, DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { DeleteSourceJson, DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
 
-import { DEBS_RELATIVE_PATH, FULL_NAMES, METADATA, TEST_SESSION_OPTIONS, TYPES } from './constants';
+import { DEBS_RELATIVE_PATH, FULL_NAMES, METADATA, TEST_SESSION_OPTIONS, TYPES } from './constants.js';
 import {
   assertAllDEBAndTheirDECounts,
   assertDECountOfSingleDEB,
@@ -21,7 +21,7 @@ import {
   createDocumentDetailPageAInLocal,
   deleteLocalSource,
   metadataToArray,
-} from './helper';
+} from './helper.js';
 
 describe('deb -- metadata option', () => {
   let session: TestSession;

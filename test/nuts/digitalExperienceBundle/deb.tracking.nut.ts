@@ -8,13 +8,10 @@ import * as fs from 'node:fs';
 import { join } from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert, expect } from 'chai';
-import { PreviewResult } from '../../../src/utils/previewOutput';
-import { DeleteTrackingResult } from '../../../src/commands/project/delete/tracking';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
-
-// import { SourceTrackingClearResult } from '../../../src/commands/force/source/tracking/clear';
-// import { PullResponse } from '../../../src/formatters/source/pullFormatter';
-import { FILE_RELATIVE_PATHS, TEST_SESSION_OPTIONS, TYPES } from './constants';
+import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import { DeleteTrackingResult } from '../../../src/commands/project/delete/tracking.js';
+import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
+import { FILE_RELATIVE_PATHS, TEST_SESSION_OPTIONS, TYPES } from './constants.js';
 import {
   assertAllDEBAndTheirDECounts,
   assertDEBMeta,
@@ -27,7 +24,7 @@ import {
   createDocumentDetailPageAInLocal,
   deleteDocumentDetailPageAInLocal,
   previewFileResponseToFileResponse,
-} from './helper';
+} from './helper.js';
 
 describe('deb -- tracking/push/pull', () => {
   let session: TestSession;

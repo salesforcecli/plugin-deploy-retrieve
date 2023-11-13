@@ -5,10 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, config } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
-import { DeployResultJson } from '../../../../src/utils/types';
+import { DeployResultJson } from '../../../../src/utils/types.js';
 config.truncateThreshold = 0;
 
 describe('deploy metadata quick NUTs', () => {
@@ -17,7 +18,7 @@ describe('deploy metadata quick NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
   });
 

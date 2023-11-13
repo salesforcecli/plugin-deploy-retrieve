@@ -18,16 +18,22 @@ import {
   JUnitReporter,
   TestResult,
 } from '@salesforce/apex-node';
-import { DeployResultJson, isSdrFailure, isSdrSuccess, TestLevel, Verbosity, Formatter } from '../utils/types';
+import { DeployResultJson, isSdrFailure, isSdrSuccess, TestLevel, Verbosity, Formatter } from '../utils/types.js';
 import {
   generateCoveredLines,
   getCoverageFormattersOptions,
   getCoverageNumbers,
   mapTestResults,
   transformCoverageToApexCoverage,
-} from '../utils/coverage';
-import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccessProps, error } from '../utils/output';
-import { TestResultsFormatter } from '../formatters/testResultsFormatter';
+} from '../utils/coverage.js';
+import {
+  sortFileResponses,
+  asRelativePaths,
+  tableHeader,
+  getFileResponseSuccessProps,
+  error,
+} from '../utils/output.js';
+import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
 
 export class DeployResultFormatter extends TestResultsFormatter implements Formatter<DeployResultJson> {
   private relativeFiles: FileResponse[];

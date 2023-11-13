@@ -6,6 +6,7 @@
  */
 
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { expect } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
@@ -47,7 +48,7 @@ describe('project deploy start --destructive NUTs', () => {
 
   before(async () => {
     testkit = await SourceTestkit.create({
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
     });
     execCmd('project:deploy:start --source-dir force-app', { ensureExitCode: 0 });

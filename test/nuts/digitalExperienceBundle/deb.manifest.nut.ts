@@ -9,8 +9,8 @@ import { join } from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert, expect } from 'chai';
 import { beforeEach } from 'mocha';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
-import { DEBS_RELATIVE_PATH, FULL_NAMES, METADATA, STORE, TEST_SESSION_OPTIONS, TYPES } from './constants';
+import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
+import { DEBS_RELATIVE_PATH, FULL_NAMES, METADATA, STORE, TEST_SESSION_OPTIONS, TYPES } from './constants.js';
 import {
   assertAllDEBAndTheirDECounts,
   assertDECountOfSingleDEB,
@@ -21,7 +21,7 @@ import {
   assertViewHome,
   createDocumentDetailPageAInLocal,
   deleteLocalSource,
-} from './helper';
+} from './helper.js';
 
 describe('deb -- manifest option', () => {
   let session: TestSession;
