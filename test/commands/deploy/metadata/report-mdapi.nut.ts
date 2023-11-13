@@ -7,6 +7,7 @@
 
 import { unlinkSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, expect } from 'chai';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
@@ -20,7 +21,7 @@ describe('[project deploy report] NUTs with metadata-dir', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
       scratchOrgs: [{ duration: 1, alias: orgAlias, config: join('config', 'project-scratch-def.json') }],
     });
     await testkit.convert({

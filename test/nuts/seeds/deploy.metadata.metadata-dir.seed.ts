@@ -6,6 +6,7 @@
  */
 
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { JsonMap } from '@salesforce/ts-types';
@@ -22,7 +23,7 @@ context('deploy metadata --metadata-dir NUTs [name: %REPO_NAME%]', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: REPO.gitUrl,
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
   });
 

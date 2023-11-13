@@ -6,6 +6,7 @@
  */
 
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { isObject } from '@salesforce/ts-types';
 import { assert, expect } from 'chai';
@@ -18,7 +19,7 @@ describe('deploy metadata validate NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
   });
 

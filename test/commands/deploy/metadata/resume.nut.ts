@@ -6,6 +6,7 @@
  */
 
 import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
 import { strict as assert } from 'node:assert';
 import { SourceTestkit } from '@salesforce/source-testkit';
@@ -26,7 +27,7 @@ describe('[project deploy resume] NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
   });
 

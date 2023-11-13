@@ -6,6 +6,7 @@
  */
 
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { writeJson } from '../../src/commands/deploy.js';
 import { TestLevel } from '../../src/utils/types.js';
@@ -17,7 +18,7 @@ describe('deploy NUTs', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
   });
 

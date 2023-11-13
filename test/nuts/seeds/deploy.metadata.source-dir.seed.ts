@@ -6,6 +6,7 @@
  */
 
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { assert } from 'chai';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { TEST_REPOS_MAP } from '../testMatrix.js';
@@ -20,7 +21,7 @@ context('deploy metadata --source-dir NUTs [name: %REPO_NAME%]', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: REPO.gitUrl,
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
   });
 
