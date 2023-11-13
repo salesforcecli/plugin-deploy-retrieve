@@ -72,10 +72,7 @@ export const ensuredDirFlag = Flags.custom<string>({
 export const testLevelFlag = Flags.custom<TestLevel>({
   char: 'l',
   parse: (input) => Promise.resolve(input as TestLevel),
-  // eslint-disable-next-line @typescript-eslint/require-await
-  default: async (context) => {
-    if (context.flags.tests) return TestLevel.RunSpecifiedTests;
-  },
+  default: async (context) => Promise.resolve(context.flags.tests ? TestLevel.RunSpecifiedTests : undefined),
   options: Object.values(TestLevel),
 });
 
