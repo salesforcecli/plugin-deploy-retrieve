@@ -97,7 +97,7 @@ FLAGS
   -p, --metadata-dir=<value>...  Root of directory or zip file of metadata formatted files to convert.
   -r, --root-dir=<value>         (required) Root directory that contains the Metadata API–formatted metadata.
   -x, --manifest=<value>         File path to manifest (package.xml) of metadata types to convert.
-  --api-version=<value>          Override the api version used for api requests made by this command
+      --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -141,7 +141,7 @@ FLAG DESCRIPTIONS
     If you specify this parameter, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/convert/mdapi.ts)_
+_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/convert/mdapi.ts)_
 
 ## `sf project convert source`
 
@@ -153,14 +153,14 @@ USAGE
     <value> | -m <value>]
 
 FLAGS
-  -d, --output-dir=<value>     [default: metadataPackage_1699692272222] Output directory to store the Metadata
+  -d, --output-dir=<value>     [default: metadataPackage_1699992830510] Output directory to store the Metadata
                                API–formatted files in.
   -m, --metadata=<value>...    Metadata component names to convert.
   -n, --package-name=<value>   Name of the package to associate with the metadata-formatted files.
   -p, --source-dir=<value>...  Paths to the local source files to convert.
   -r, --root-dir=<value>       Source directory other than the default package to convert.
   -x, --manifest=<value>       Path to the manifest (package.xml) file that specifies the metadata types to convert.
-  --api-version=<value>        API Version to use in the generated project's manifest. By default, will use the version
+      --api-version=<value>    API Version to use in the generated project's manifest. By default, will use the version
                                from sfdx-project.json
 
 GLOBAL FLAGS
@@ -213,7 +213,7 @@ FLAG DESCRIPTIONS
     Override the api version used for api requests made by this command
 ```
 
-_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/convert/source.ts)_
+_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/convert/source.ts)_
 
 ## `sf project delete source`
 
@@ -234,13 +234,13 @@ FLAGS
   -r, --no-prompt              Don't prompt for delete confirmation.
   -t, --track-source           If the delete succeeds, update the source tracking information.
   -w, --wait=<value>           [default: 33 minutes] Number of minutes to wait for the command to finish.
-  --api-version=<value>        Override the api version used for api requests made by this command
-  --verbose                    Verbose output of the delete result.
+      --api-version=<value>    Override the api version used for api requests made by this command
+      --verbose                Verbose output of the delete result.
 
 TEST FLAGS
   -l, --test-level=<option>  Deployment Apex testing level.
                              <options: NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg>
-  --tests=<value>...         Apex tests to run when --test-level is RunSpecifiedTests.
+      --tests=<value>...     Apex tests to run when --test-level is RunSpecifiedTests.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -351,7 +351,7 @@ FLAG DESCRIPTIONS
     - Separate the test names with spaces: --tests Test1 Test2 "Test With Space"
 ```
 
-_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/delete/source.ts)_
+_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/delete/source.ts)_
 
 ## `sf project delete tracking`
 
@@ -362,9 +362,9 @@ USAGE
   $ sf project delete tracking -o <value> [--json] [--api-version <value>] [-p]
 
 FLAGS
-  -o, --target-org=<value>  (required) Username or alias of the target org.
-  -p, --no-prompt           Don't prompt for source tracking override confirmation.
-  --api-version=<value>     Override the api version used for api requests made by this command
+  -o, --target-org=<value>   (required) Username or alias of the target org.
+  -p, --no-prompt            Don't prompt for source tracking override confirmation.
+      --api-version=<value>  Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -386,7 +386,7 @@ EXAMPLES
     $ sf project delete tracking --target-org my-scratch
 ```
 
-_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/delete/tracking.ts)_
+_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/delete/tracking.ts)_
 
 ## `sf project deploy cancel`
 
@@ -400,7 +400,7 @@ FLAGS
   -i, --job-id=<value>   Job ID of the deploy operation you want to cancel.
   -r, --use-most-recent  Use the job ID of the most recent deploy operation.
   -w, --wait=<minutes>   Number of minutes to wait for the command to complete and display results.
-  --async                Run the command asynchronously.
+      --async            Run the command asynchronously.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -456,7 +456,7 @@ FLAG DESCRIPTIONS
     project deploy report".
 ```
 
-_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/deploy/cancel.ts)_
+_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/deploy/cancel.ts)_
 
 ## `sf project deploy preview`
 
@@ -539,7 +539,7 @@ FLAG DESCRIPTIONS
     All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/deploy/preview.ts)_
+_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/deploy/preview.ts)_
 
 ## `sf project deploy quick`
 
@@ -557,9 +557,9 @@ FLAGS
   -r, --use-most-recent      Use the job ID of the most recently validated deployment.
   -w, --wait=<minutes>       [default: 33 minutes] Number of minutes to wait for the command to complete and display
                              results.
-  --async                    Run the command asynchronously.
-  --concise                  Show concise output of the deploy result.
-  --verbose                  Show verbose output of the deploy result.
+      --async                Run the command asynchronously.
+      --concise              Show concise output of the deploy result.
+      --verbose              Show verbose output of the deploy result.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -623,7 +623,7 @@ FLAG DESCRIPTIONS
     deploy report".
 ```
 
-_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/deploy/quick.ts)_
+_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/deploy/quick.ts)_
 
 ## `sf project deploy report`
 
@@ -718,7 +718,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/deploy/report.ts)_
+_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/deploy/report.ts)_
 
 ## `sf project deploy resume`
 
@@ -734,8 +734,8 @@ FLAGS
   -i, --job-id=<value>   Job ID of the deploy operation you want to resume.
   -r, --use-most-recent  Use the job ID of the most recent deploy operation.
   -w, --wait=<minutes>   Number of minutes to wait for the command to complete and display results.
-  --concise              Show concise output of the deploy operation result.
-  --verbose              Show verbose output of the deploy operation result.
+      --concise          Show concise output of the deploy operation result.
+      --verbose          Show verbose output of the deploy operation result.
 
 TEST FLAGS
   --coverage-formatters=<option>...  Format of the code coverage results.
@@ -802,7 +802,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/deploy/resume.ts)_
+_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/deploy/resume.ts)_
 
 ## `sf project deploy start`
 
@@ -825,10 +825,10 @@ FLAGS
   -r, --ignore-errors        Ignore any errors and don’t roll back deployment.
   -w, --wait=<minutes>       [default: 33 minutes] Number of minutes to wait for command to complete and display
                              results.
-  --async                    Run the command asynchronously.
-  --concise                  Show concise output of the deploy result.
-  --dry-run                  Validate deploy and run Apex tests but don’t save to the org.
-  --verbose                  Show verbose output of the deploy result.
+      --async                Run the command asynchronously.
+      --concise              Show concise output of the deploy result.
+      --dry-run              Validate deploy and run Apex tests but don’t save to the org.
+      --verbose              Show verbose output of the deploy result.
 
 SOURCE FORMAT FLAGS
   -d, --source-dir=<value>...  Path to the local source files to deploy.
@@ -837,14 +837,15 @@ SOURCE FORMAT FLAGS
   -x, --manifest=<value>       Full file path for manifest (package.xml) of components to deploy.
 
 TEST FLAGS
-  -l, --test-level=<option>          Deployment Apex testing level.
-                                     <options: NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg>
-  -t, --tests=<value>...             Apex tests to run when --test-level is RunSpecifiedTests.
-  --coverage-formatters=<option>...  Format of the code coverage results.
-                                     <options: clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|t
-                                     ext|text-summary>
-  --junit                            Output JUnit test results.
-  --results-dir=<value>              Output directory for code coverage and JUnit results; defaults to the deploy ID.
+  -l, --test-level=<option>              Deployment Apex testing level.
+                                         <options: NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg>
+  -t, --tests=<value>...                 Apex tests to run when --test-level is RunSpecifiedTests.
+      --coverage-formatters=<option>...  Format of the code coverage results.
+                                         <options: clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamci
+                                         ty|text|text-summary>
+      --junit                            Output JUnit test results.
+      --results-dir=<value>              Output directory for code coverage and JUnit results; defaults to the deploy
+                                         ID.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -1013,7 +1014,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/deploy/start.ts)_
+_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/deploy/start.ts)_
 
 ## `sf project deploy validate`
 
@@ -1033,9 +1034,9 @@ FLAGS
   -o, --target-org=<value>   (required) Login username or alias for the target org.
   -w, --wait=<minutes>       [default: 33 minutes] Number of minutes to wait for the command to complete and display
                              results.
-  --async                    Run the command asynchronously.
-  --concise                  Show concise output of the validation result.
-  --verbose                  Show verbose output of the validation result.
+      --async                Run the command asynchronously.
+      --concise              Show concise output of the validation result.
+      --verbose              Show verbose output of the validation result.
 
 SOURCE FORMAT FLAGS
   -d, --source-dir=<value>...  Path to the local source files to validate for deployment.
@@ -1043,14 +1044,15 @@ SOURCE FORMAT FLAGS
   -x, --manifest=<value>       Full file path for manifest (package.xml) of components to validate for deployment.
 
 TEST FLAGS
-  -l, --test-level=<option>          [default: RunLocalTests] Deployment Apex testing level.
-                                     <options: RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests>
-  -t, --tests=<value>...             Apex tests to run when --test-level is RunSpecifiedTests.
-  --coverage-formatters=<option>...  Format of the code coverage results.
-                                     <options: clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|t
-                                     ext|text-summary>
-  --junit                            Output JUnit test results.
-  --results-dir=<value>              Output directory for code coverage and JUnit results; defaults to the deploy ID.
+  -l, --test-level=<option>              [default: RunLocalTests] Deployment Apex testing level.
+                                         <options: RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests>
+  -t, --tests=<value>...                 Apex tests to run when --test-level is RunSpecifiedTests.
+      --coverage-formatters=<option>...  Format of the code coverage results.
+                                         <options: clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamci
+                                         ty|text|text-summary>
+      --junit                            Output JUnit test results.
+      --results-dir=<value>              Output directory for code coverage and JUnit results; defaults to the deploy
+                                         ID.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -1174,7 +1176,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/deploy/validate.ts)_
+_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/deploy/validate.ts)_
 
 ## `sf project generate manifest`
 
@@ -1195,8 +1197,8 @@ FLAGS
   -p, --source-dir=<value>...         Paths to the local source files to include in the manifest.
   -t, --type=<option>                 Type of manifest to create; the type determines the name of the created file.
                                       <options: pre|post|destroy|package>
-  --api-version=<value>               Override the api version used for api requests made by this command
-  --from-org=<value>                  Username or alias of the org that contains the metadata components from which to
+      --api-version=<value>           Override the api version used for api requests made by this command
+      --from-org=<value>              Username or alias of the org that contains the metadata components from which to
                                       build a manifest.
 
 GLOBAL FLAGS
@@ -1249,7 +1251,7 @@ EXAMPLES
     $ sf project generate manifest --from-org test@myorg.com --include-packages unlocked
 ```
 
-_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/generate/manifest.ts)_
+_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/generate/manifest.ts)_
 
 ## `sf project list ignored`
 
@@ -1290,7 +1292,7 @@ EXAMPLES
     $ sf project list ignored --source-dir package.xml
 ```
 
-_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/list/ignored.ts)_
+_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/list/ignored.ts)_
 
 ## `sf project reset tracking`
 
@@ -1301,10 +1303,10 @@ USAGE
   $ sf project reset tracking -o <value> [--json] [--api-version <value>] [-r <value>] [-p]
 
 FLAGS
-  -o, --target-org=<value>  (required) Username or alias of the target org.
-  -p, --no-prompt           Don't prompt for source tracking override confirmation.
-  -r, --revision=<value>    SourceMember revision counter number to reset to.
-  --api-version=<value>     Override the api version used for api requests made by this command
+  -o, --target-org=<value>   (required) Username or alias of the target org.
+  -p, --no-prompt            Don't prompt for source tracking override confirmation.
+  -r, --revision=<value>     SourceMember revision counter number to reset to.
+      --api-version=<value>  Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -1337,7 +1339,7 @@ EXAMPLES
     $ sf project reset tracking --revision 30
 ```
 
-_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/reset/tracking.ts)_
+_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/reset/tracking.ts)_
 
 ## `sf project retrieve preview`
 
@@ -1392,7 +1394,7 @@ FLAG DESCRIPTIONS
     Overrides your default org.
 ```
 
-_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/retrieve/preview.ts)_
+_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/retrieve/preview.ts)_
 
 ## `sf project retrieve start`
 
@@ -1420,8 +1422,8 @@ FLAGS
 METADATA API FORMAT FLAGS
   -t, --target-metadata-dir=<value>  Directory that will contain the retrieved metadata format files or ZIP.
   -z, --unzip                        Extract all files from the retrieved zip file.
-  --single-package                   Indicates that the zip file points to a directory structure for a single package.
-  --zip-file-name=<value>            File name to use for the retrieved zip file.
+      --single-package               Indicates that the zip file points to a directory structure for a single package.
+      --zip-file-name=<value>        File name to use for the retrieved zip file.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -1538,6 +1540,6 @@ FLAG DESCRIPTIONS
     If you specify this parameter, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.3/src/commands/project/retrieve/start.ts)_
+_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/1.20.4/src/commands/project/retrieve/start.ts)_
 
 <!-- commandsstop -->
