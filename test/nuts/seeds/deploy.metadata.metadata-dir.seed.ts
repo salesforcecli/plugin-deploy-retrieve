@@ -12,6 +12,7 @@ import { SourceTestkit } from '@salesforce/source-testkit';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { JsonMap } from '@salesforce/ts-types';
 import { assert } from 'chai';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { TEST_REPOS_MAP } from '../testMatrix.js';
 import { DeployResultJson } from '../../../src/utils/types.js';
 
@@ -46,8 +47,11 @@ context('deploy metadata --metadata-dir NUTs [name: %REPO_NAME%]', () => {
         // This is using the force:source:convert command from plugin-source. Once we have an
         // sf equivalent, we should switch it to use that.
         console.log('converting first paths: ', paths);
-
-        await testkit.convert({ args: `--sourcepath ${paths} --outputdir out` });
+        execCmd(`force:source:convert --sourcepath ${paths} --outputdir out`, {
+          ensureExitCode: 0,
+          cwd: testkit.projectDir,
+        });
+        // await testkit.convert({ args: `--sourcepath ${paths} --outputdir out` });
         console.log('converting done: ', paths);
         console.log('deploying using mdapi');
 
@@ -57,7 +61,6 @@ context('deploy metadata --metadata-dir NUTs [name: %REPO_NAME%]', () => {
         testkit.expect.toHavePropertyAndValue(deploy.result as unknown as JsonMap, 'status', RequestStatus.Succeeded);
       });
     }
-    console.log('done with deploys that should succeed');
     it('should throw an error if the directory does not exist', async () => {
       console.log('deploying a bad one');
       const deploy = await testkit.deploy({ args: '--metadata-dir DOES_NOT_EXIST', exitCode: 1 });
