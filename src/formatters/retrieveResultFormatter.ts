@@ -9,8 +9,8 @@ import { Ux } from '@salesforce/sf-plugins-core';
 import { FileResponse, RetrieveMessage, RetrieveResult } from '@salesforce/source-deploy-retrieve';
 import { NamedPackageDir, SfProject } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
-import { Formatter, isSdrSuccess, RetrieveResultJson } from '../utils/types';
-import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccessProps } from '../utils/output';
+import { Formatter, isSdrSuccess, RetrieveResultJson } from '../utils/types.js';
+import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccessProps } from '../utils/output.js';
 
 export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   private files: FileResponse[];

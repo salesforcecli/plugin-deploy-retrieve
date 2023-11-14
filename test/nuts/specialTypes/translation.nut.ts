@@ -8,8 +8,8 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { PreviewResult } from '../../../src/utils/previewOutput';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
 
 describe('translations', () => {
   let session: TestSession;

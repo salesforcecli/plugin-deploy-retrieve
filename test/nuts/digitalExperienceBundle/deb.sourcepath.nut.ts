@@ -7,7 +7,7 @@
 // import * as fs from 'fs';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert } from 'chai';
-import { DeleteSourceJson, DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { DeleteSourceJson, DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
 
 import {
   DEB_A_RELATIVE_PATH,
@@ -16,7 +16,7 @@ import {
   FULL_NAMES,
   TEST_SESSION_OPTIONS,
   TYPES,
-} from './constants';
+} from './constants.js';
 import {
   assertAllDEBAndTheirDECounts,
   assertDocumentDetailPageA,
@@ -25,7 +25,7 @@ import {
   assertViewHome,
   metadataToArray,
   createDocumentDetailPageAInLocal,
-} from './helper';
+} from './helper.js';
 
 describe('deb -- sourcepath option', () => {
   let session: TestSession;

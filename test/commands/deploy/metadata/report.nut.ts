@@ -7,10 +7,11 @@
 
 import { unlinkSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, isObject } from '@salesforce/ts-types';
 import { expect } from 'chai';
-import { DeployResultJson } from '../../../../src/utils/types';
+import { DeployResultJson } from '../../../../src/utils/types.js';
 
 describe('[project deploy report] NUTs with source-dir', () => {
   let testkit: SourceTestkit;
@@ -20,7 +21,7 @@ describe('[project deploy report] NUTs with source-dir', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: 'https://github.com/salesforcecli/sample-project-multiple-packages.git',
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
       scratchOrgs: [{ duration: 1, alias: orgAlias, config: join('config', 'project-scratch-def.json') }],
     });
   });

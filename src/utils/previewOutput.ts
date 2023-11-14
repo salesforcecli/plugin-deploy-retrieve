@@ -4,10 +4,11 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'node:path';
+import { isAbsolute, relative, resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ux } from '@oclif/core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import { bold, dim } from 'chalk';
+import chalk from 'chalk';
 import { Messages } from '@salesforce/core';
 import {
   ComponentSet,
@@ -18,12 +19,12 @@ import {
   MetadataType,
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
-import { filePathsFromMetadataComponent } from '@salesforce/source-deploy-retrieve/lib/src/utils/filePathGenerator';
+import { filePathsFromMetadataComponent } from '@salesforce/source-deploy-retrieve/lib/src/utils/filePathGenerator.js';
 
 import { SourceTracking } from '@salesforce/source-tracking';
-import { isSourceComponentWithXml } from './types';
+import { isSourceComponentWithXml } from './types.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'previewMessages');
 
 type BaseOperation = 'deploy' | 'retrieve';
@@ -48,7 +49,7 @@ export interface PreviewResult {
   toRetrieve: PreviewFile[];
 }
 
-const ensureAbsolutePath = (f: string): string => (path.isAbsolute(f) ? f : path.resolve(f));
+const ensureAbsolutePath = (f: string): string => (isAbsolute(f) ? f : resolve(f));
 
 // borrowed from STL populateFilesPaths.
 // TODO: this goes in SDR maybe?
@@ -134,9 +135,9 @@ export const compileResults = ({
     const someFile = c.xml ?? c.content;
     if (someFile) {
       return {
-        path: path.isAbsolute(someFile) ? someFile : path.resolve(someFile),
+        path: isAbsolute(someFile) ? someFile : resolve(someFile),
         // for cleaner output
-        projectRelativePath: path.relative(projectPath, someFile),
+        projectRelativePath: relative(projectPath, someFile),
       };
     }
     return {};
@@ -183,7 +184,7 @@ export const compileResults = ({
   const ignoredSourceComponents = resolvePaths([...(componentSet.forceIgnoredPaths ?? [])]).map(
     (resolved): PreviewFile => ({
       ...resolved,
-      ...(resolved.path ? { projectRelativePath: path.relative(projectPath, resolved.path) } : {}),
+      ...(resolved.path ? { projectRelativePath: relative(projectPath, resolved.path) } : {}),
       conflict: false,
       ignored: true,
     })
@@ -201,10 +202,10 @@ export const compileResults = ({
 const printDeployTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(dim(messages.getMessage('deploy.none')));
+    ux.log(chalk.dim(messages.getMessage('deploy.none')));
   } else {
     // not using table title property to avoid all the ASCII art
-    ux.log(StandardColors.success(bold(messages.getMessage('deploy.header', [files.length]))));
+    ux.log(StandardColors.success(chalk.bold(messages.getMessage('deploy.header', [files.length]))));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -212,10 +213,10 @@ const printDeployTable = (files: PreviewFile[]): void => {
 const printRetrieveTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(dim(messages.getMessage('retrieve.none')));
+    ux.log(chalk.dim(messages.getMessage('retrieve.none')));
   } else {
     // not using table title property to avoid all the ASCII art
-    ux.log(StandardColors.success(bold(messages.getMessage('retrieve.header', [files.length]))));
+    ux.log(StandardColors.success(chalk.bold(messages.getMessage('retrieve.header', [files.length]))));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -223,9 +224,9 @@ const printRetrieveTable = (files: PreviewFile[]): void => {
 const printDeleteTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(dim(messages.getMessage('delete.none')));
+    ux.log(chalk.dim(messages.getMessage('delete.none')));
   } else {
-    ux.log(StandardColors.warning(bold(messages.getMessage('delete.header', [files.length]))));
+    ux.log(StandardColors.warning(chalk.bold(messages.getMessage('delete.header', [files.length]))));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -233,9 +234,9 @@ const printDeleteTable = (files: PreviewFile[]): void => {
 const printConflictsTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(dim(messages.getMessage('conflicts.none')));
+    ux.log(chalk.dim(messages.getMessage('conflicts.none')));
   } else {
-    ux.log(StandardColors.error(bold(messages.getMessage('conflicts.header', [files.length]))));
+    ux.log(StandardColors.error(chalk.bold(messages.getMessage('conflicts.header', [files.length]))));
     ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };
@@ -243,9 +244,9 @@ const printConflictsTable = (files: PreviewFile[]): void => {
 export const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(dim(messages.getMessage('ignored.none')));
+    ux.log(chalk.dim(messages.getMessage('ignored.none')));
   } else {
-    ux.log(dim(messages.getMessage('ignored.header', [files.length, baseOperation])));
+    ux.log(chalk.dim(messages.getMessage('ignored.header', [files.length, baseOperation])));
     ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };
@@ -265,4 +266,4 @@ export const printTables = (result: PreviewResult, baseOperation: BaseOperation)
 export const getConflictFiles = async (stl?: SourceTracking, ignore = false): Promise<Set<string>> =>
   !stl || ignore
     ? new Set<string>()
-    : new Set((await stl.getConflicts()).flatMap((conflict) => (conflict.filenames ?? []).map((f) => path.resolve(f))));
+    : new Set((await stl.getConflicts()).flatMap((conflict) => (conflict.filenames ?? []).map((f) => resolve(f))));

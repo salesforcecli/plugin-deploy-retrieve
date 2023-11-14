@@ -5,17 +5,19 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
-import { buildComponentSet } from '../../../utils/deploy';
-import { DeployProgress } from '../../../utils/progressBar';
-import { DeployCache } from '../../../utils/deployCache';
-import { DeployReportResultFormatter } from '../../../formatters/deployReportResultFormatter';
-import { API, DeployResultJson } from '../../../utils/types';
-import { coverageFormattersFlag } from '../../../utils/flags';
+import { buildComponentSet } from '../../../utils/deploy.js';
+import { DeployProgress } from '../../../utils/progressBar.js';
+import { DeployCache } from '../../../utils/deployCache.js';
+import { DeployReportResultFormatter } from '../../../formatters/deployReportResultFormatter.js';
+import { API, DeployResultJson } from '../../../utils/types.js';
+import { coverageFormattersFlag } from '../../../utils/flags.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.report');
 const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 const testFlags = 'Test';
@@ -47,7 +49,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.use-most-recent.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
-    'coverage-formatters': { ...coverageFormattersFlag, helpGroup: testFlags },
+    'coverage-formatters': coverageFormattersFlag({ helpGroup: testFlags }),
     junit: Flags.boolean({
       summary: messages.getMessage('flags.junit.summary'),
       helpGroup: testFlags,

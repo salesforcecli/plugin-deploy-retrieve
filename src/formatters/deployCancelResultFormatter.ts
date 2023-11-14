@@ -6,7 +6,7 @@
  */
 import { ux } from '@oclif/core';
 import { DeployResult, RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { DeployResultJson, Formatter } from '../utils/types';
+import { DeployResultJson, Formatter } from '../utils/types.js';
 
 export class DeployCancelResultFormatter implements Formatter<DeployResultJson> {
   public constructor(protected result: DeployResult) {}

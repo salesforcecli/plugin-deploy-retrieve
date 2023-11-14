@@ -5,19 +5,21 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { bold } from 'chalk';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import chalk from 'chalk';
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { DeployOptions, determineExitCode, resolveApi } from '../../../utils/deploy';
-import { DeployCache } from '../../../utils/deployCache';
-import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes';
-import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter';
-import { DeployResultFormatter } from '../../../formatters/deployResultFormatter';
-import { API, DeployResultJson } from '../../../utils/types';
+import { DeployOptions, determineExitCode, resolveApi } from '../../../utils/deploy.js';
+import { DeployCache } from '../../../utils/deployCache.js';
+import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
+import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
+import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
+import { API, DeployResultJson } from '../../../utils/types.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.quick');
 
 export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
@@ -99,7 +101,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     });
     // This is the ID of the deploy (of the validated metadata)
     const deployId = await mdapiDeploy.deployRecentValidation(api === API['REST']);
-    this.log(`Deploy ID: ${bold(deployId)}`);
+    this.log(`Deploy ID: ${chalk.bold(deployId)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deployId, this.config.bin);

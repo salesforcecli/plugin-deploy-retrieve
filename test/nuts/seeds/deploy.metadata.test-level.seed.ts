@@ -7,10 +7,11 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, expect } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
-import { TEST_REPOS_MAP } from '../testMatrix';
+import { TEST_REPOS_MAP } from '../testMatrix.js';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
@@ -22,7 +23,7 @@ context('deploy metadata --test-level NUTs [name: %REPO_NAME%]', () => {
   before(async () => {
     testkit = await SourceTestkit.create({
       repository: REPO.gitUrl,
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
     });
 
     const args = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');

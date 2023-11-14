@@ -9,7 +9,7 @@
 import { expect } from 'chai';
 import { Hook } from '@oclif/core';
 import { Deployer } from '@salesforce/sf-plugins-core';
-import Deploy from '../../src/commands/deploy';
+import Deploy from '../../src/commands/deploy.js';
 import Result = Hook.Result;
 
 class TestDeploy extends Deploy {

@@ -8,7 +8,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types';
+import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
 
 describe('territories', () => {
   let session: TestSession;

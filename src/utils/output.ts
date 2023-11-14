@@ -6,12 +6,12 @@
  */
 
 import * as path from 'node:path';
-import { blue, bold } from 'chalk';
+import chalk from 'chalk';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { FileResponse, FileResponseFailure, FileResponseSuccess } from '@salesforce/source-deploy-retrieve';
 
 export function tableHeader(message: string): string {
-  return blue(bold(message));
+  return chalk.blue.bold(message);
 }
 
 export function asRelativePaths<T extends FileResponse | FileResponseSuccess | FileResponseFailure>(
@@ -46,11 +46,11 @@ export const getFileResponseSuccessProps = (
   successes.map((s) => ({ filePath: s.filePath, fullName: s.fullName, type: s.type, state: s.state }));
 
 export function error(message: string): string {
-  return StandardColors.error(bold(message));
+  return StandardColors.error(chalk.bold(message));
 }
 
 export function success(message: string): string {
-  return StandardColors.success(bold(message));
+  return StandardColors.success(chalk.bold(message));
 }
 
 export const check = StandardColors.success('✓');

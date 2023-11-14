@@ -6,8 +6,10 @@
  */
 /* eslint-disable class-methods-use-this */
 
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { EOL } from 'node:os';
-import { cyan, red } from 'chalk';
+import chalk from 'chalk';
 import { Duration } from '@salesforce/kit';
 import {
   AuthInfo,
@@ -21,12 +23,12 @@ import {
 } from '@salesforce/core';
 import { Deployable, Deployer, DeployerResult, generateTableChoices } from '@salesforce/sf-plugins-core';
 
-import { DeployResultFormatter } from '../formatters/deployResultFormatter';
-import { TestLevel } from './types';
-import { DeployProgress } from './progressBar';
-import { determineExitCode, executeDeploy, resolveApi } from './deploy';
+import { DeployResultFormatter } from '../formatters/deployResultFormatter.js';
+import { TestLevel } from './types.js';
+import { DeployProgress } from './progressBar.js';
+import { determineExitCode, executeDeploy, resolveApi } from './deploy.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
 
 type OrgAuthWithTimestamp = OrgAuthorization & { timestamp: Date };
@@ -123,7 +125,7 @@ export class MetadataDeployer extends Deployer {
 
   public async deploy<R extends DeployerResult>(): Promise<void | R> {
     const directories = this.deployables.map((d) => d.pkg.fullPath);
-    const name = this.deployables.map((p) => cyan.bold(p.getPath())).join(', ');
+    const name = this.deployables.map((p) => chalk.cyan.bold(p.getPath())).join(', ');
     const api = await resolveApi();
     this.log(`${EOL}Deploying ${name} to ${this.username} using ${api} API`);
 
@@ -176,7 +178,7 @@ export class MetadataDeployer extends Deployer {
             {
               name: 'continue',
               type: 'confirm',
-              message: red(messages.getMessage('warning.TargetOrgIsExpired', [aliasOrUsername])),
+              message: chalk.red(messages.getMessage('warning.TargetOrgIsExpired', [aliasOrUsername])),
             },
           ]);
           if (!continueAnswer.continue) {

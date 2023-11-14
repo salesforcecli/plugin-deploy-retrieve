@@ -9,6 +9,7 @@ import { rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 
 import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
 import {
   RetrieveResult,
@@ -27,15 +28,15 @@ import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking
 import { Duration } from '@salesforce/kit';
 import { Interfaces } from '@oclif/core';
 
-import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags';
-import { RetrieveResultFormatter } from '../../../formatters/retrieveResultFormatter';
-import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter';
-import { getOptionalProject, getPackageDirs } from '../../../utils/project';
-import { RetrieveResultJson } from '../../../utils/types';
-import { writeConflictTable } from '../../../utils/conflicts';
-import { promisesQueue } from '../../../utils/promiseQueue';
+import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags.js';
+import { RetrieveResultFormatter } from '../../../formatters/retrieveResultFormatter.js';
+import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter.js';
+import { getOptionalProject, getPackageDirs } from '../../../utils/project.js';
+import { RetrieveResultJson } from '../../../utils/types.js';
+import { writeConflictTable } from '../../../utils/conflicts.js';
+import { promisesQueue } from '../../../utils/promiseQueue.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 

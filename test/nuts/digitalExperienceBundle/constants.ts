@@ -6,9 +6,9 @@
  */
 
 import { join } from 'node:path';
-import { TestSessionOptions } from '@salesforce/cli-plugins-testkit/lib/testSession';
+import { TestSessionOptions } from '@salesforce/cli-plugins-testkit/lib/testSession.js';
 import { registry } from '@salesforce/source-deploy-retrieve';
-import { META_XML_SUFFIX } from '@salesforce/source-deploy-retrieve/lib/src/common';
+import { META_XML_SUFFIX } from '@salesforce/source-deploy-retrieve/lib/src/common/constants.js';
 import { assert } from 'chai';
 
 export const SOURCE_BASE_RELATIVE_PATH = join('force-app', 'main', 'default');

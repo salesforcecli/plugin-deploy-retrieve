@@ -7,8 +7,8 @@
 import { Global, TTLConfig } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { JsonMap } from '@salesforce/ts-types';
-import { DeployOptions, CachedOptions, cacheMessages } from './deploy';
-import { maybeDestroyManifest } from './manifestCache';
+import { DeployOptions, CachedOptions, cacheMessages } from './deploy.js';
+import { maybeDestroyManifest } from './manifestCache.js';
 
 export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
   public static getFileName(): string {

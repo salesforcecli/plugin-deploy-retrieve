@@ -5,8 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as path from 'node:path';
-import * as sinon from 'sinon';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   ComponentLike,
@@ -20,15 +21,15 @@ import {
 import { Messages, SfProject } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 import { stubSfCommandUx, stubSpinner, stubUx } from '@salesforce/sf-plugins-core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
-import * as oclifUtils from '@oclif/core/lib/util';
-import { RetrieveResultFormatter } from '../../../src/formatters/retrieveResultFormatter';
-import { getRetrieveResult } from '../../utils/retrieveResponse';
-import { RetrieveResultJson } from '../../../src/utils/types';
-import { exampleSourceComponent } from '../../utils/testConsts';
-import RetrieveMetadata from '../../../src/commands/project/retrieve/start';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import oclifUtils from '@oclif/core/lib/util/fs.js';
+import { RetrieveResultFormatter } from '../../../src/formatters/retrieveResultFormatter.js';
+import { getRetrieveResult } from '../../utils/retrieveResponse.js';
+import { RetrieveResultJson } from '../../../src/utils/types.js';
+import { exampleSourceComponent } from '../../utils/testConsts.js';
+import RetrieveMetadata from '../../../src/commands/project/retrieve/start.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 
 describe('project retrieve start', () => {
@@ -151,7 +152,7 @@ describe('project retrieve start', () => {
         metadataEntries: ['ApexClass:MyClass'],
       },
     });
-    ensureRetrieveArgs({ output: path.resolve(sourcepath[0]), format: 'source' });
+    ensureRetrieveArgs({ output: resolve(sourcepath[0]), format: 'source' });
     expect(renameStub.calledOnce).to.be.true;
   });
 

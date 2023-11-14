@@ -5,19 +5,19 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as fs from 'node:fs';
+import fs from 'node:fs';
 import * as path from 'node:path';
 import { assert, expect } from 'chai';
 import { Parser } from '@oclif/core';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import {
   testLevelFlag,
   fileOrDirFlag,
   ensuredDirFlag,
   zipFileFlag,
   DEFAULT_ZIP_FILE_NAME,
-} from '../../src/utils/flags';
-import { TestLevel } from '../../src/utils/types';
+} from '../../src/utils/flags.js';
+import { TestLevel } from '../../src/utils/types.js';
 
 const STAT = {
   // 'BigIntStats': atimeNs, mtimeNs, ctimeNs, birthtimeNs

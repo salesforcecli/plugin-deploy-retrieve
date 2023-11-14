@@ -6,7 +6,7 @@
  */
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { assert, expect } from 'chai';
 import { TestSession, TestProject, execCmd } from '@salesforce/cli-plugins-testkit';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
@@ -19,8 +19,8 @@ import {
   MetadataApiRetrieve,
   RetrieveSetOptions,
 } from '@salesforce/source-deploy-retrieve';
-import { RetrieveResultJson } from '../../../src/utils/types';
-import RetrieveMetadata from '../../../src/commands/project/retrieve/start';
+import { RetrieveResultJson } from '../../../src/utils/types.js';
+import RetrieveMetadata from '../../../src/commands/project/retrieve/start.js';
 
 describe('Partial Bundle Delete Retrieves', () => {
   let session: TestSession;

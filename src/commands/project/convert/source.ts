@@ -5,9 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { resolve } from 'node:path';
-import * as fs from 'node:fs';
-
+import { resolve, dirname } from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { Messages } from '@salesforce/core';
 import {
   ComponentSet,
@@ -15,7 +15,6 @@ import {
   ConvertResult,
   MetadataConverter,
 } from '@salesforce/source-deploy-retrieve';
-import { getString } from '@salesforce/ts-types';
 import {
   arrayWithDeprecation,
   Flags,
@@ -24,11 +23,11 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import { Interfaces } from '@oclif/core';
-import { getPackageDirs, getSourceApiVersion } from '../../../utils/project';
-import { SourceConvertResultFormatter } from '../../../formatters/sourceConvertResultFormatter';
-import { ConvertResultJson } from '../../../utils/types';
+import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
+import { SourceConvertResultFormatter } from '../../../formatters/sourceConvertResultFormatter.js';
+import { ConvertResultJson } from '../../../utils/types.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 export class Source extends SfCommand<ConvertResultJson> {
@@ -153,7 +152,7 @@ export class Source extends SfCommand<ConvertResultJson> {
   }
 
   protected resolveSuccess(): void {
-    if (!getString(this.convertResult, 'packagePath')) {
+    if (!this.convertResult.packagePath) {
       process.exitCode = 1;
     }
   }

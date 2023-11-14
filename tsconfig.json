@@ -1,14 +1,10 @@
 {
-  "extends": "@salesforce/dev-config/tsconfig-strict",
+  "extends": "@salesforce/dev-config/tsconfig-strict-esm",
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@salesforce/core": ["node_modules/@salesforce/core"],
-      "@salesforce/source-deploy-retrieve": ["node_modules/@salesforce/source-deploy-retrieve"]
-    }
+    "baseUrl": "."
   },
   "include": ["./src/**/*.ts"]
 }

@@ -9,7 +9,7 @@ import * as fs from 'node:fs';
 import { join } from 'node:path';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert, expect } from 'chai';
-import { RetrieveResultJson } from '../../../src/utils/types';
+import { RetrieveResultJson } from '../../../src/utils/types.js';
 
 const packageXml = `<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">

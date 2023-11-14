@@ -8,7 +8,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { ConvertResultJson } from '../../../src/utils/types';
+import { ConvertResultJson } from '../../../src/utils/types.js';
 
 let session: TestSession;
 

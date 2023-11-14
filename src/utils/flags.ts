@@ -5,12 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as fs from 'node:fs';
-import { resolve, extname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { resolve, extname, dirname } from 'node:path';
 import { Flags } from '@oclif/core';
 import { Messages, Lifecycle } from '@salesforce/core';
-import { PathInfo, TestLevel, reportsFormatters } from './types';
+import { PathInfo, TestLevel, reportsFormatters } from './types.js';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'validation');
 const commonFlagMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'commonFlags');
 
@@ -88,7 +89,7 @@ export const zipFileFlag = Flags.custom<string>({
   parse: async (input) => Promise.resolve(resolveZipFileName(input)),
 });
 
-export const testsFlag = Flags.string({
+export const testsFlag = Flags.custom({
   char: 't',
   multiple: true,
   dependsOn: ['test-level'],
@@ -102,7 +103,7 @@ export const testsFlag = Flags.string({
     ),
 });
 
-export const coverageFormattersFlag = Flags.string({
+export const coverageFormattersFlag = Flags.custom({
   multiple: true,
   summary: commonFlagMessages.getMessage('flags.coverage-formatters.summary'),
   description: commonFlagMessages.getMessage('flags.coverage-formatters.description'),

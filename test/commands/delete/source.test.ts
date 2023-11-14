@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import * as fs from 'node:fs';
-import * as sinon from 'sinon';
+import fs from 'node:fs';
+import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   ComponentSet,
@@ -17,13 +17,11 @@ import {
 import { Lifecycle, SfProject } from '@salesforce/core';
 import { fromStub, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { Config } from '@oclif/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup';
+import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
 import { SfCommand } from '@salesforce/sf-plugins-core';
-import { ComponentProperties } from '@salesforce/source-deploy-retrieve/lib/src/resolve/sourceComponent';
-import { Source } from '../../../src/commands/project/delete/source';
-import { DeployCache } from '../../../src/utils/deployCache';
-
-const fsPromises = fs.promises;
+import { ComponentProperties } from '@salesforce/source-deploy-retrieve/lib/src/resolve/sourceComponent.js';
+import { Source } from '../../../src/commands/project/delete/source.js';
+import { DeployCache } from '../../../src/utils/deployCache.js';
 
 export const exampleSourceComponent: ComponentProperties = {
   name: 'GeocodingService',
@@ -151,7 +149,7 @@ describe('project delete source', () => {
       onError: () => {},
     });
     stubMethod($$.SANDBOX, cmd, 'handlePrompt').returns(confirm);
-    fsUnlink = stubMethod($$.SANDBOX, fsPromises, 'unlink').resolves(true);
+    fsUnlink = stubMethod($$.SANDBOX, fs.promises, 'unlink').resolves(true);
     stubMethod($$.SANDBOX, DeployCache, 'update').resolves();
 
     return cmd.runIt();

@@ -6,6 +6,7 @@
  */
 
 import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
@@ -13,7 +14,7 @@ import { SourceTestkit } from '@salesforce/source-testkit';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { ensureArray } from '@salesforce/ts-types';
-import { DeleteSourceJson } from '../../../src/utils/types';
+import { DeleteSourceJson } from '../../../src/utils/types.js';
 
 const isNameObsolete = async (username: string, memberType: string, memberName: string): Promise<boolean> => {
   const connection = await Connection.create({
@@ -109,7 +110,7 @@ describe('project delete source NUTs', () => {
 
   before(async () => {
     testkit = await SourceTestkit.create({
-      nut: __filename,
+      nut: fileURLToPath(import.meta.url),
       repository: 'https://github.com/trailheadapps/dreamhouse-lwc.git',
     });
     execCmd('project:deploy:start --source-dir force-app', { ensureExitCode: 0 });
