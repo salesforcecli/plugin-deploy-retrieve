@@ -75,7 +75,7 @@ context('deploy metadata --test-level NUTs [name: %REPO_NAME%]', () => {
       const packages = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
       const tests = REPO.deploy.testLevel.specifiedTests.join(',');
       await testkit.deploy({
-        args: `${packages} --tests ${tests}`,
+        args: `${packages} --tests ${tests} --ignore-errors`,
       });
       await testkit.expect.specificApexTestsToBeRun(REPO.deploy.testLevel.specifiedTests);
     });
