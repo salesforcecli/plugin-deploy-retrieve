@@ -1,3 +1,9 @@
+## [2.1.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.0...2.1.1) (2023-11-15)
+
+### Bug Fixes
+
+- devScripts update ([#814](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/814)) + corev6 ([8bc4aa0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8bc4aa0ffdc4e13e770a7cb7ed1466759e43cb0e))
+
 # [2.1.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.0.1...2.1.0) (2023-11-15)
 
 ### Bug Fixes
