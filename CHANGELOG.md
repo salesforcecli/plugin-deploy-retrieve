@@ -1,3 +1,14 @@
+# [2.1.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.0.1...2.1.0) (2023-11-15)
+
+### Bug Fixes
+
+- default --test-level flag if --tests present ([9d9e04d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9d9e04d90be0af6dfed32cf1b688f31032c82cfe))
+- set ignore-errors for NUT ([5cc8ffa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5cc8ffa9f89b91abaebd4f64761d28c0cb687f09))
+
+### Features
+
+- default testlevel if tests are provided ([78101a9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/78101a92b6a32769d692d35b365d0c78add46cd0))
+
 ## [2.0.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.20.3...2.0.1) (2023-11-14)
 
 ## [1.20.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/1.20.2...1.20.3) (2023-11-11)
