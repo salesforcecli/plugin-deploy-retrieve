@@ -88,6 +88,26 @@
         },
         "versionNumber": {
           "type": "string"
+        },
+        "unpackagedMetadata": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": ["path"],
+          "additionalProperties": false
+        },
+        "seedMetadata": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": ["path"],
+          "additionalProperties": false
         }
       },
       "required": ["fullPath", "name", "path"]
