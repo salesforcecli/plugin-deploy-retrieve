@@ -70,6 +70,15 @@ context('deploy metadata --test-level NUTs [name: %REPO_NAME%]', () => {
       });
       await testkit.expect.specificApexTestsToBeRun(REPO.deploy.testLevel.specifiedTests);
     });
+
+    it('should set --test-level flag to (RunSpecifiedTests) if --tests flag is included', async () => {
+      const packages = testkit.packageNames.map((p) => `--source-dir ${p}`).join(' ');
+      const tests = REPO.deploy.testLevel.specifiedTests.join(',');
+      await testkit.deploy({
+        args: `${packages} --tests ${tests} --ignore-errors`,
+      });
+      await testkit.expect.specificApexTestsToBeRun(REPO.deploy.testLevel.specifiedTests);
+    });
   });
 
   describe('test result format', () => {

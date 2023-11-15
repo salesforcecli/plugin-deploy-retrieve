@@ -72,6 +72,7 @@ export const ensuredDirFlag = Flags.custom<string>({
 export const testLevelFlag = Flags.custom<TestLevel>({
   char: 'l',
   parse: (input) => Promise.resolve(input as TestLevel),
+  default: async (context) => Promise.resolve(context.flags.tests ? TestLevel.RunSpecifiedTests : undefined),
   options: Object.values(TestLevel),
 });
 
@@ -92,7 +93,6 @@ export const zipFileFlag = Flags.custom<string>({
 export const testsFlag = Flags.custom({
   char: 't',
   multiple: true,
-  dependsOn: ['test-level'],
   summary: commonFlagMessages.getMessage('flags.tests.summary'),
   description: commonFlagMessages.getMessage('flags.tests.description'),
   // the old version allowed comma separated values, and the change is confusing enough to deserve a warning
