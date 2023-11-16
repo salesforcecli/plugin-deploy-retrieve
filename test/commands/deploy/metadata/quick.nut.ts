@@ -82,7 +82,7 @@ describe('deploy metadata quick NUTs', () => {
   });
 
   describe('--job-id', () => {
-    it('should deploy previously validated deployment', async () => {
+    it('should deploy previously validated deployment (async)', async () => {
       const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
         args: '--source-dir force-app',
         json: true,
@@ -97,6 +97,26 @@ describe('deploy metadata quick NUTs', () => {
         exitCode: 0,
       });
       assert(deploy);
+      assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+    });
+
+    it('should deploy previously validated deployment (poll)', async () => {
+      const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+        args: '--source-dir force-app',
+        json: true,
+        exitCode: 0,
+      });
+      assert(validation);
+      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+
+      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+        args: `--job-id ${validation.result.id} --wait 20`,
+        json: true,
+        exitCode: 0,
+      });
+      assert(deploy);
+      assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
       await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
     });
 
