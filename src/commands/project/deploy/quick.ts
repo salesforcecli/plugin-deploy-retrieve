@@ -91,16 +91,13 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const deployOpts = cache.get(jobId) ?? ({} as DeployOptions);
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
     const api = await resolveApi(this.configAggregator);
+    const connection = org.getConnection(flags['api-version']);
 
-    const mdapiDeploy = new MetadataApiDeploy({
-      usernameOrConnection: org.getConnection(flags['api-version']),
-      id: jobId,
-      apiOptions: {
-        rest: api === API['REST'],
-      },
-    });
     // This is the ID of the deploy (of the validated metadata)
-    const deployId = await mdapiDeploy.deployRecentValidation(api === API['REST']);
+    const deployId = await connection.metadata.deployRecentValidation({
+      id: jobId,
+      rest: api === API['REST'],
+    });
     this.log(`Deploy ID: ${chalk.bold(deployId)}`);
 
     if (flags.async) {
@@ -109,6 +106,13 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       return asyncFormatter.getJson();
     }
 
+    const mdapiDeploy = new MetadataApiDeploy({
+      usernameOrConnection: connection,
+      id: deployId,
+      apiOptions: {
+        rest: api === API['REST'],
+      },
+    });
     const result = await mdapiDeploy.pollStatus({
       frequency: Duration.seconds(1),
       timeout: flags.wait,
