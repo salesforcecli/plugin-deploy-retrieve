@@ -1,3 +1,9 @@
+## [2.1.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.1...2.1.2) (2023-11-17)
+
+### Bug Fixes
+
+- quick deploy polling uses the new deploy ID ([#815](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/815)) ([217004a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/217004a0052fae499fd9450202614352c674e660))
+
 ## [2.1.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.0...2.1.1) (2023-11-15)
 
 ### Bug Fixes
