@@ -270,6 +270,21 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     if (this.result.response.status === RequestStatus.Succeeded) return;
 
     const failures = this.relativeFiles.filter(isSdrFailure);
+    const deployMessages = ensureArray(this.result.response.details?.componentFailures);
+    if (deployMessages.length > failures.length) {
+      // if there's additional failures in the API response, find the failure and add it to the output
+      deployMessages.map((deployMessage) => {
+        if (!failures.some((f) => f.type === deployMessage.componentType && f.fullName === deployMessage.fullName)) {
+          failures.push({
+            fullName: deployMessage.fullName,
+            type: deployMessage.componentType ?? 'UNKNOWN',
+            state: ComponentStatus.Failed,
+            error: deployMessage.problem ?? 'UNKNOWN',
+            problemType: deployMessage.problemType ?? 'Error',
+          });
+        }
+      });
+    }
     if (!failures.length) return;
 
     const columns = {
