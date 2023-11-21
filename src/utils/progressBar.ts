@@ -21,9 +21,7 @@ const showBar = Boolean(
 export class DeployProgress extends Progress {
   private static OPTIONS = {
     title: 'Status',
-    format: `%s: {status} ${
-      showBar ? '| {bar} ' : ''
-    }| {value}/{total} Components (Errors:{errorCount}) {testInfo} {trackingInfo}`,
+    format: `%s: {status} ${showBar ? '| {bar} ' : ''}| {value}/{total} Components{errorInfo}{testInfo}{trackingInfo}`,
     barCompleteChar: '\u2588',
     barIncompleteChar: '\u2591',
     linewrap: true,
@@ -65,25 +63,26 @@ export class DeployProgress extends Progress {
     const { remaining, original } = data;
     this.update(0, {
       status: 'Polling SourceMembers',
-      trackingInfo: `| SourceMembers: ${original - remaining}/${original}`,
+      trackingInfo: ` | Tracking: ${original - remaining}/${original}`,
     });
   }
 
   private updateProgress(data: MetadataApiDeployStatus): void {
     // the numCompTot. isn't computed right away, wait to start until we know how many we have
-    const errorCount = data.numberComponentErrors ?? 0;
     const testInfo = data.numberTestsTotal
-      ? `| ${data.numberTestsCompleted ?? 0}/${data.numberTestsTotal ?? 0} Tests (Errors:${data.numberTestErrors})`
+      ? ` | ${data.numberTestsCompleted ?? 0}/${data.numberTestsTotal ?? 0} Tests (Errors:${data.numberTestErrors})`
       : '';
+    const errorInfo = data.numberComponentErrors > 0 ? ` | Errors: ${data.numberComponentErrors}` : '';
+
     if (data.numberComponentsTotal) {
       this.setTotal(data.numberComponentsTotal);
       this.update(data.numberComponentsDeployed, {
-        errorCount,
+        errorInfo: data.numberComponentErrors > 0 ? ` | Errors: ${data.numberComponentErrors}` : '',
         status: mdTransferMessages.getMessage(data.status),
         testInfo,
       });
     } else {
-      this.update(0, { errorCount, testInfo, status: mdTransferMessages.getMessage(data.status) ?? 'Waiting' });
+      this.update(0, { errorInfo, testInfo, status: mdTransferMessages.getMessage(data.status) ?? 'Waiting' });
     }
   }
 }
