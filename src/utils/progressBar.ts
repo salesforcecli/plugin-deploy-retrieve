@@ -38,7 +38,7 @@ export class DeployProgress extends Progress {
   }
 
   public start(): void {
-    super.start(0, { status: 'Waiting', trackingInfo: '' }, DeployProgress.OPTIONS);
+    super.start(0, { status: 'Waiting', trackingInfo: '', testInfo: '' }, DeployProgress.OPTIONS);
 
     // for sourceMember polling events
     this.lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
