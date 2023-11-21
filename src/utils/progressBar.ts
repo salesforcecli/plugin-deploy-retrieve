@@ -70,7 +70,9 @@ export class DeployProgress extends Progress {
   private updateProgress(data: MetadataApiDeployStatus): void {
     // the numCompTot. isn't computed right away, wait to start until we know how many we have
     const testInfo = data.numberTestsTotal
-      ? ` | ${data.numberTestsCompleted ?? 0}/${data.numberTestsTotal ?? 0} Tests (Errors:${data.numberTestErrors})`
+      ? ` | ${data.numberTestsCompleted ?? 0}/${data.numberTestsTotal ?? 0} Tests${
+          data.numberTestErrors ? `(Errors:${data.numberTestErrors})` : ''
+        }`
       : '';
     const errorInfo = data.numberComponentErrors > 0 ? ` | Errors: ${data.numberComponentErrors}` : '';
 
