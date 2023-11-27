@@ -7,7 +7,7 @@
 import * as path from 'node:path';
 import { assert, expect, config } from 'chai';
 import sinon from 'sinon';
-import { DeployResult } from '@salesforce/source-deploy-retrieve';
+import { DeployMessage, DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
 import { ux } from '@oclif/core';
 import { getCoverageFormattersOptions } from '../../src/utils/coverage.js';
 import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter.js';
@@ -24,13 +24,81 @@ describe('deployResultFormatter', () => {
 
   describe('displayFailures', () => {
     const deployResultFailure = getDeployResult('failed');
-    const tableStub = sandbox.stub(ux, 'table');
+    let tableStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      tableStub = sandbox.stub(ux, 'table');
+    });
 
     it('prints file responses, and messages from server', () => {
       const formatter = new DeployResultFormatter(deployResultFailure, { verbose: true });
       formatter.display();
       expect(tableStub.callCount).to.equal(1);
       expect(tableStub.firstCall.args[0]).to.deep.equal([
+        {
+          error: 'This component has some problems',
+          fullName: 'ProductController',
+          loc: '27:18',
+          problemType: 'Error',
+        },
+      ]);
+    });
+
+    it('displays errors from the server not in file responses', () => {
+      const deployFailure = getDeployResult('failed');
+      const error1 = {
+        changed: false,
+        componentType: 'ApexClass',
+        created: false,
+        createdDate: '2021-04-27T22:18:07.000Z',
+        deleted: false,
+        fileName: 'classes/ProductController.cls',
+        fullName: 'ProductController',
+        success: false,
+        problemType: 'Error',
+        problem: 'This component has some problems',
+        lineNumber: '27',
+        columnNumber: '18',
+      } as DeployMessage;
+
+      // add package.xml error, which is different from a FileResponse error
+      const error2 = {
+        changed: false,
+        componentType: '',
+        created: false,
+        createdDate: '2023-11-17T21:18:36.000Z',
+        deleted: false,
+        fileName: 'package.xml',
+        fullName: 'Create_property',
+        problem:
+          "An object 'Create_property' of type Flow was named in package.xml, but was not found in zipped directory",
+        problemType: 'Error',
+        success: false,
+      } as DeployMessage;
+
+      deployFailure.response.details.componentFailures = [error1, error2];
+      sandbox.stub(deployFailure, 'getFileResponses').returns([
+        {
+          fullName: error1.fullName,
+          filePath: error1.fileName,
+          type: error1.componentType,
+          state: 'Failed',
+          lineNumber: error1.lineNumber,
+          columnNumber: error1.columnNumber,
+          error: error1.problem,
+          problemType: error1.problemType,
+        },
+      ] as FileResponse[]);
+      const formatter = new DeployResultFormatter(deployFailure, { verbose: true });
+      formatter.display();
+      expect(tableStub.callCount).to.equal(1);
+      expect(tableStub.firstCall.args[0]).to.deep.equal([
+        {
+          error: error2.problem,
+          fullName: error2.fullName,
+          loc: '',
+          problemType: error2.problemType,
+        },
         {
           error: 'This component has some problems',
           fullName: 'ProductController',
