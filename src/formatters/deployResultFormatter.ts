@@ -272,9 +272,11 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     const failures = this.relativeFiles.filter(isSdrFailure);
     const deployMessages = ensureArray(this.result.response.details?.componentFailures);
     if (deployMessages.length > failures.length) {
+      const failureKeySet = new Set(failures.map((f) => makeKey(f.type, f.fullName)));
       // if there's additional failures in the API response, find the failure and add it to the output
-      deployMessages.map((deployMessage) => {
-        if (!failures.some((f) => f.type === deployMessage.componentType && f.fullName === deployMessage.fullName)) {
+      deployMessages
+        .filter((m) => !m.componentType || !failureKeySet.has(makeKey(m.componentType, m.fullName)))
+        .map((deployMessage) => {
           failures.push({
             fullName: deployMessage.fullName,
             type: deployMessage.componentType ?? 'UNKNOWN',
@@ -282,8 +284,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
             error: deployMessage.problem ?? 'UNKNOWN',
             problemType: deployMessage.problemType ?? 'Error',
           });
-        }
-      });
+        });
     }
     if (!failures.length) return;
 
@@ -324,3 +325,5 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     ux.table(getFileResponseSuccessProps(deletions), columns, options);
   }
 }
+
+const makeKey = (type: string, name: string): string => `${type}#${name}`;

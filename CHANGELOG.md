@@ -1,3 +1,9 @@
+## [2.1.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.2...2.1.3) (2023-11-20)
+
+### Bug Fixes
+
+- also display errors from componentFailures ([#816](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/816)) ([7b4abbd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7b4abbd2a86a40aea3399dece26633d121e8f19a))
+
 ## [2.1.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.1...2.1.2) (2023-11-17)
 
 ### Bug Fixes
