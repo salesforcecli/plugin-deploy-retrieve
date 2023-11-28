@@ -267,7 +267,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   }
 
   protected catch(error: Error | SfError): Promise<SfCommand.Error> {
-    if (!this.jsonEnabled() && error instanceof SourceConflictError) {
+    if (!this.jsonEnabled() && error instanceof SourceConflictError && error.data) {
       writeConflictTable(error.data);
       // set the message and add plugin-specific actions
       return super.catch({

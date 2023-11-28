@@ -6,9 +6,10 @@
  */
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { envVars as env, EnvironmentVariable, Messages } from '@salesforce/core';
+import { envVars as env, EnvironmentVariable, Lifecycle, Messages } from '@salesforce/core';
 import { MetadataApiDeploy, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { Progress } from '@salesforce/sf-plugins-core';
+import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
 
 Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
@@ -20,7 +21,7 @@ const showBar = Boolean(
 export class DeployProgress extends Progress {
   private static OPTIONS = {
     title: 'Status',
-    format: `%s: {status} ${showBar ? '| {bar} ' : ''}| {value}/{total} Components (Errors:{errorCount}) {testInfo}`,
+    format: `%s: {status} ${showBar ? '| {bar} ' : ''}| {value}/{total} Components{errorInfo}{testInfo}{trackingInfo}`,
     barCompleteChar: '\u2588',
     barIncompleteChar: '\u2591',
     linewrap: true,
@@ -28,13 +29,19 @@ export class DeployProgress extends Progress {
     // they won't get the "bar" but will get the remaining template bits this way
     noTTYOutput: true,
   };
+  private lifecycle = Lifecycle.getInstance();
 
   public constructor(private deploy: MetadataApiDeploy, jsonEnabled = false) {
     super(!jsonEnabled);
   }
 
   public start(): void {
-    super.start(0, { status: 'Waiting' }, DeployProgress.OPTIONS);
+    super.start(0, { status: 'Waiting', trackingInfo: '', testInfo: '' }, DeployProgress.OPTIONS);
+
+    // for sourceMember polling events
+    this.lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
+      Promise.resolve(this.updateTrackingProgress(event))
+    );
 
     this.deploy.onUpdate((data) => this.updateProgress(data));
 
@@ -52,21 +59,32 @@ export class DeployProgress extends Progress {
     });
   }
 
+  private updateTrackingProgress(data: SourceMemberPollingEvent): void {
+    const { remaining, original } = data;
+    this.update(0, {
+      status: 'Polling SourceMembers',
+      trackingInfo: ` | Tracking: ${original - remaining}/${original}`,
+    });
+  }
+
   private updateProgress(data: MetadataApiDeployStatus): void {
     // the numCompTot. isn't computed right away, wait to start until we know how many we have
-    const errorCount = data.numberComponentErrors ?? 0;
-    const testInfo = `| ${data.numberTestsCompleted ?? 0}/${data.numberTestsTotal ?? 0} Tests (Errors:${
-      data.numberTestErrors
-    })`;
+    const testInfo = data.numberTestsTotal
+      ? ` | ${data.numberTestsCompleted ?? 0}/${data.numberTestsTotal ?? 0} Tests${
+          data.numberTestErrors ? `(Errors:${data.numberTestErrors})` : ''
+        }`
+      : '';
+    const errorInfo = data.numberComponentErrors > 0 ? ` | Errors: ${data.numberComponentErrors}` : '';
+
     if (data.numberComponentsTotal) {
       this.setTotal(data.numberComponentsTotal);
       this.update(data.numberComponentsDeployed, {
-        errorCount,
+        errorInfo: data.numberComponentErrors > 0 ? ` | Errors: ${data.numberComponentErrors}` : '',
         status: mdTransferMessages.getMessage(data.status),
         testInfo,
       });
     } else {
-      this.update(0, { errorCount, testInfo, status: mdTransferMessages.getMessage(data.status) ?? 'Waiting' });
+      this.update(0, { errorInfo, testInfo, status: mdTransferMessages.getMessage(data.status) ?? 'Waiting' });
     }
   }
 }
