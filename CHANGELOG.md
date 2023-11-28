@@ -1,3 +1,9 @@
+# [2.2.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.4...2.2.0) (2023-11-28)
+
+### Features
+
+- ui for tracking ([#819](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/819)) ([a340a5a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a340a5ab071e6b9b60c7549c810d1fc23dd274a3))
+
 ## [2.1.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.3...2.1.4) (2023-11-27)
 
 ### Bug Fixes
