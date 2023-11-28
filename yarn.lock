@@ -1200,15 +1200,15 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^5.0.0", "@salesforce/source-tracking@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-5.0.1.tgz#3b54b2ed8eee9c7bc8506ca9b1c0e88f961b435a"
-  integrity sha512-9ckOvid03/J5Lvq83aW7GIlLm9HtJ9NMLwalppDMvSd4T/lyWe8y4bxh4LKbqTC7fhzHMxet8yYTpzub0t+DPA==
+"@salesforce/source-tracking@^5.0.0", "@salesforce/source-tracking@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-5.1.0.tgz#c0d6336f0002a8c4abeae4ff3392de4adc169fd3"
+  integrity sha512-FTuDwLjERm1OR/xTy4a5oHThGOQvI0Rqs4ZqClQFUdgUKREcbxvO3UivSekgXA3az6nuSeNRmaTZGTC5gPjtKA==
   dependencies:
     "@oclif/core" "^3.10.8"
-    "@salesforce/core" "^6.1.3"
+    "@salesforce/core" "^6.2.0"
     "@salesforce/kit" "^3.0.15"
-    "@salesforce/source-deploy-retrieve" "^10.0.0"
+    "@salesforce/source-deploy-retrieve" "^10.0.2"
     "@salesforce/ts-types" "^2.0.9"
     fast-xml-parser "^4.2.5"
     graceful-fs "^4.2.11"
