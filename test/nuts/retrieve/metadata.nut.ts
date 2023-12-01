@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
+import { RetrieveResultJson } from '../../../src/utils/types.js';
 
 const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
 
@@ -56,6 +57,48 @@ describe('retrieve metadata NUTs', () => {
     it('should retrieve into the output-dir', async () => {
       await testkit.retrieve({ args: '--metadata ApexClass AuraDefinitionBundle --output-dir myOutput' });
       await testkit.expect.filesToBeRetrieved(['myOutput/classes/*', 'myOutput/aura/**/*']);
+    });
+
+    it('should retrieve ApexClasses from wildcard match', async () => {
+      const response = await testkit.retrieve({ args: '--metadata "ApexClass:Test*"' });
+      expect(response?.status).to.equal(0);
+      const result = response?.result as unknown as RetrieveResultJson;
+      expect(result.success).to.be.true;
+      expect(result.files.length).to.equal(4);
+      result.files.forEach((f) => {
+        expect(f.type).to.equal('ApexClass');
+        expect(['TestSampleDataController', 'TestPropertyController']).to.include(f.fullName);
+      });
+      await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/Test*']);
+    });
+
+    it('should retrieve ApexClasses from wildcard match without already existing in the project', async () => {
+      const forceAppDir = path.join(testkit.projectDir, 'force-app');
+      const forceAppDirTmp = path.join(testkit.projectDir, 'force-app-tmp');
+
+      try {
+        fs.cpSync(forceAppDir, forceAppDirTmp, { recursive: true });
+        fs.rmSync(forceAppDir, { recursive: true, force: true });
+        expect(fs.existsSync(forceAppDir)).to.be.false;
+        const defaultDir = path.join(forceAppDir, 'main', 'default');
+        fs.mkdirSync(defaultDir, { recursive: true });
+
+        const response = await testkit.retrieve({ args: '--metadata "ApexClass:Test*"' });
+        expect(response?.status).to.equal(0);
+        const result = response?.result as unknown as RetrieveResultJson;
+        expect(result.success).to.be.true;
+        expect(result.files.length).to.equal(4);
+        result.files.forEach((f) => {
+          expect(f.type).to.equal('ApexClass');
+          expect(['TestSampleDataController', 'TestPropertyController']).to.include(f.fullName);
+        });
+        await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/Test*']);
+      } finally {
+        if (fs.existsSync(forceAppDirTmp)) {
+          fs.cpSync(forceAppDirTmp, forceAppDir, { recursive: true });
+          fs.rmSync(forceAppDirTmp, { recursive: true, force: true });
+        }
+      }
     });
   });
 
