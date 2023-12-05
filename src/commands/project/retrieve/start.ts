@@ -373,7 +373,7 @@ const buildRetrieveAndDeleteTargets = async (
     }
     return result;
   } else {
-    const retrieveFromOrg = flags.metadata?.some(isWildcard) ? flags['target-org'].getUsername() : undefined;
+    const retrieveFromOrg = flags.metadata?.some(isRegexMatch) ? flags['target-org'].getUsername() : undefined;
 
     return {
       componentSetFromNonDeletes: await ComponentSetBuilder.build({
@@ -401,7 +401,7 @@ const buildRetrieveAndDeleteTargets = async (
               },
             }
           : {}),
-        org: retrieveFromOrg ? { username: retrieveFromOrg, exclude: [] } : undefined,
+        ...(retrieveFromOrg ? { org: { username: retrieveFromOrg, exclude: [] } } : {}),
       }),
     };
   }
@@ -440,7 +440,7 @@ const buildRetrieveOptions = async (
 });
 
 // check if we're retrieving metadata based on a pattern ...
-const isWildcard = (mdEntry: string): boolean => {
+const isRegexMatch = (mdEntry: string): boolean => {
   const mdName = mdEntry.split(':')[1];
   return mdName?.includes('*') && mdName?.length > 1 && !mdName?.includes('.*');
 };
