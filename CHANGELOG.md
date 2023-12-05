@@ -1,3 +1,21 @@
+## [2.2.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.1...2.2.2) (2023-12-02)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 5.0.3 to 5.0.5 ([de3e8f5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/de3e8f5b5f96a557bd7a3d56d8072500747f0952))
+
+## [2.2.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.0...2.2.1) (2023-12-02)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve from 10.0.2 to 10.0.3 ([34a913c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/34a913cf140ca6c51f07ea1a0eb85cad068da9b6))
+
+# [2.2.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.4...2.2.0) (2023-11-28)
+
+### Features
+
+- ui for tracking ([#819](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/819)) ([a340a5a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a340a5ab071e6b9b60c7549c810d1fc23dd274a3))
+
 ## [2.1.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.1.3...2.1.4) (2023-11-27)
 
 ### Bug Fixes
