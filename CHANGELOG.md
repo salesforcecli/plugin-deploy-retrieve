@@ -1,3 +1,9 @@
+## [2.2.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.2...2.2.3) (2023-12-05)
+
+### Bug Fixes
+
+- pass org data when building ComponentSet with wildcard metadata ([#824](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/824)) ([abf40f2](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/abf40f2152dbe63ba907410f19bf37a71cb18aa0))
+
 ## [2.2.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.1...2.2.2) (2023-12-02)
 
 ### Bug Fixes
