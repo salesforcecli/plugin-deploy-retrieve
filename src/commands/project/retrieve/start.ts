@@ -373,6 +373,8 @@ const buildRetrieveAndDeleteTargets = async (
     }
     return result;
   } else {
+    const retrieveFromOrg = flags.metadata?.some(isRegexMatch) ? flags['target-org'].getUsername() : undefined;
+
     return {
       componentSetFromNonDeletes: await ComponentSetBuilder.build({
         sourceapiversion: (
@@ -399,6 +401,7 @@ const buildRetrieveAndDeleteTargets = async (
               },
             }
           : {}),
+        ...(retrieveFromOrg ? { org: { username: retrieveFromOrg, exclude: [] } } : {}),
       }),
     };
   }
@@ -435,3 +438,9 @@ const buildRetrieveOptions = async (
         output: output ?? (await SfProject.resolve()).getDefaultPackage().fullPath,
       }),
 });
+
+// check if we're retrieving metadata based on a pattern ...
+const isRegexMatch = (mdEntry: string): boolean => {
+  const mdName = mdEntry.split(':')[1];
+  return mdName?.includes('*') && mdName?.length > 1 && !mdName?.includes('.*');
+};

@@ -169,6 +169,23 @@ describe('project retrieve start', () => {
     ensureRetrieveArgs({ format: 'source' });
   });
 
+  it('should pass along metadata and org for wildcard matching', async () => {
+    const metadata = ['ApexClass:MyC*'];
+    const result = await RetrieveMetadata.run(['--metadata', metadata[0], '--json']);
+    expect(result).to.deep.equal(expectedResults);
+    ensureCreateComponentSetArgs({
+      metadata: {
+        metadataEntries: metadata,
+        directoryPaths: [expectedDirectoryPath],
+      },
+      org: {
+        username: testOrg.username,
+        exclude: [],
+      },
+    });
+    ensureRetrieveArgs({ format: 'source' });
+  });
+
   it('should pass along manifest', async () => {
     const manifest = 'package.xml';
     const result = await RetrieveMetadata.run(['--manifest', manifest, '--json']);
