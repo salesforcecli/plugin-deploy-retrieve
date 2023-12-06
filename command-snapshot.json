@@ -234,7 +234,7 @@
   {
     "command": "project:retrieve:preview",
     "plugin": "@salesforce/plugin-deploy-retrieve",
-    "flags": ["ignore-conflicts", "json", "target-org"],
+    "flags": ["ignore-conflicts", "json", "target-org", "concise"],
     "alias": ["retrieve:metadata:preview"],
     "flagChars": ["c", "o"],
     "flagAliases": []

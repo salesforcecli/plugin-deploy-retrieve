@@ -40,6 +40,10 @@ This flag applies only to orgs that allow source tracking. It has no effect on o
 
 Omit ignored files.
 
+# flags.concise.description
+
+Show only the changes that will be retrieved; omits files that are forceignored.
+
 # flags.api-version.summary
 
 Target API version for the deploy.
