@@ -38,7 +38,6 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
     }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
-      description: messages.getMessage('flags.concise.description'),
       default: false,
     }),
   };
