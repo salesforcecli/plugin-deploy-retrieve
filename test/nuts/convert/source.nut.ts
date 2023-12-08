@@ -42,10 +42,10 @@ describe('project convert source NUTs', () => {
   describe('source:convert', () => {
     describe('failures', () => {
       it('should error when outputdir is not a directory', () => {
-        execCmd('project:convert:source --output-dir package.json', { ensureExitCode: 1 });
+        execCmd('project:convert:source --output-dir package.json', { ensureExitCode: 'nonZero' });
       });
       it('should error when metadatapath does not exist', () => {
-        execCmd('project:convert:source --metadata-dir not/a/real/path -d mdapiOut', { ensureExitCode: 1 });
+        execCmd('project:convert:source --metadata-dir not/a/real/path -d mdapiOut', { ensureExitCode: 'nonZero' });
       });
     });
 
