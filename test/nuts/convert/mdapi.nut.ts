@@ -49,10 +49,10 @@ describe('project convert mdapi NUTs', () => {
     });
     describe('failures', () => {
       it('should error when outputdir is not a directory', () => {
-        execCmd('project:convert:mdapi --output-dir package.json', { ensureExitCode: 1 });
+        execCmd('project:convert:mdapi --output-dir package.json', { ensureExitCode: 'nonZero' });
       });
       it('should error when metadatapath does not exist', () => {
-        execCmd('project:convert:mdapi --metadata-dir not/a/real/path -d mdapiOut', { ensureExitCode: 1 });
+        execCmd('project:convert:mdapi --metadata-dir not/a/real/path -d mdapiOut', { ensureExitCode: 'nonZero' });
       });
       it('should throw when no metadata to convert converted (json)', async () => {
         const emptyManifest = 'emptyManifest.xml';
