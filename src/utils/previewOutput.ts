@@ -251,7 +251,7 @@ export const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOpera
   }
 };
 
-export const printTables = (result: PreviewResult, baseOperation: BaseOperation): void => {
+export const printTables = (result: PreviewResult, baseOperation: BaseOperation, concise = false): void => {
   printConflictsTable(result.conflicts);
   printDeleteTable(result.toDelete);
   if (baseOperation === 'deploy') {
@@ -260,7 +260,9 @@ export const printTables = (result: PreviewResult, baseOperation: BaseOperation)
     printRetrieveTable(result.toRetrieve);
   }
 
-  printIgnoredTable(result.ignored, baseOperation);
+  if (!concise) {
+    printIgnoredTable(result.ignored, baseOperation);
+  }
 };
 
 export const getConflictFiles = async (stl?: SourceTracking, ignore = false): Promise<Set<string>> =>

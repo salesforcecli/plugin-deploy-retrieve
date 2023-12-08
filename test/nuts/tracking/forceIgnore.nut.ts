@@ -192,5 +192,14 @@ describe('forceignore changes', () => {
       }).jsonOutput?.result;
       expect(pullOutput?.files.length).to.equal(0);
     });
+
+    it('will not display ignored files with --concise', () => {
+      // gets file into source tracking
+      const output = execCmd<PreviewResult>('project:retrieve:preview --concise', {
+        ensureExitCode: 0,
+      }).shellOutput.stdout;
+      expect(output).to.not.include("These files won't retrieve because they're ignored by your .forceignore file.");
+      expect(output).to.not.include('ApexClass CreatedClass');
+    });
   });
 });

@@ -1,3 +1,9 @@
+## [2.2.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.3...2.2.4) (2023-12-08)
+
+### Bug Fixes
+
+- add concise flag to retrieve preview ([#831](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/831)) ([8a7dd82](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8a7dd82b7f045fd30e47ddfa46997fe9d57164c7))
+
 ## [2.2.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.2...2.2.3) (2023-12-05)
 
 ### Bug Fixes
