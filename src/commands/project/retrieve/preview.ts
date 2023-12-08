@@ -36,6 +36,10 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
       summary: messages.getMessage('flags.target-org.summary'),
       required: true,
     }),
+    concise: Flags.boolean({
+      summary: messages.getMessage('flags.concise.summary'),
+      default: false,
+    }),
   };
 
   public async run(): Promise<PreviewResult> {
@@ -65,7 +69,7 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
     });
 
     if (!this.jsonEnabled()) {
-      printTables(output, 'retrieve');
+      printTables(output, 'retrieve', flags.concise);
     }
     return output;
   }
