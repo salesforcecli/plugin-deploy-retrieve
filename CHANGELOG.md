@@ -1,3 +1,9 @@
+## [2.2.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.5...2.2.6) (2023-12-09)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 6.3.0 to 6.4.0 ([76a1f0f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/76a1f0fcf7204f881b64b21769c0cec1a7e3a2f7))
+
 ## [2.2.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.4...2.2.5) (2023-12-09)
 
 ### Bug Fixes
