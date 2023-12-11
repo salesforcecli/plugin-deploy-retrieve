@@ -20,7 +20,7 @@
     "@salesforce/dev-scripts": "^8.1.0",
     "@salesforce/plugin-command-reference": "^3.0.51",
     "@salesforce/plugin-source": "^2.11.4",
-    "@salesforce/source-testkit": "^2.1.69",
+    "@salesforce/source-testkit": "^2.1.73",
     "@salesforce/ts-sinon": "^1.4.19",
     "@salesforce/ts-types": "^2.0.9",
     "cross-env": "^7.0.3",

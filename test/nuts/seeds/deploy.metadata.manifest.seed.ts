@@ -57,7 +57,7 @@ context('deploy metadata --manifest NUTs [name: %REPO_NAME%]', () => {
     }
 
     it('should throw an error if the package.xml is not valid', async () => {
-      const deploy = await testkit.deploy({ args: '--manifest DOES_NOT_EXIST.xml', exitCode: 1 });
+      const deploy = await testkit.deploy({ args: '--manifest DOES_NOT_EXIST.xml', exitCode: 'nonZero' });
       assert(deploy);
       testkit.expect.errorToHaveName(deploy, 'Error');
       testkit.expect.errorToHaveMessage(deploy, 'No file found at DOES_NOT_EXIST.xml');
