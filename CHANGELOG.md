@@ -1,3 +1,9 @@
+## [2.2.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.6...2.2.7) (2023-12-15)
+
+### Bug Fixes
+
+- **deps:** ts-types as a real dep ([#843](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/843)) ([6da0f0b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6da0f0bfe8c5edf6b0688947f403366c55262291))
+
 ## [2.2.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.5...2.2.6) (2023-12-09)
 
 ### Bug Fixes
