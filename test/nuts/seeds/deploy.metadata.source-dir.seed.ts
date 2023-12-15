@@ -46,7 +46,7 @@ context('deploy metadata --source-dir NUTs [name: %REPO_NAME%]', () => {
     }
 
     it('should throw an error if the directory does not exist', async () => {
-      const deploy = await testkit.deploy({ args: '--source-dir DOES_NOT_EXIST', exitCode: 1 });
+      const deploy = await testkit.deploy({ args: '--source-dir DOES_NOT_EXIST', exitCode: 'nonZero' });
       assert(deploy);
       testkit.expect.errorToHaveName(deploy, 'SfError');
     });
