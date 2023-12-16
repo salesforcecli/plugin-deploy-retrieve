@@ -961,12 +961,12 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@salesforce/apex-node@^2.1.2", "@salesforce/apex-node@^2.1.6":
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-2.1.6.tgz#5f35adac32f1e08ebc17d2f9478d27b288df126c"
-  integrity sha512-96f5enG/1marlf/8ph5hK771uUnUTCa2Bg3Ypfmt9dxMGOQ1DaME+cEfuiLo64+srRgujZqpYKwi9uz3akMFLQ==
+"@salesforce/apex-node@^2.1.2", "@salesforce/apex-node@^2.1.7":
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-2.1.7.tgz#0785f2a1363fbeb636f5cef4904287e4ef057d88"
+  integrity sha512-2s29mbHNL0vXmbcfndkLbKEYclHHc7sj7ei2vscsR8/HdHGy3SsEfir1IU/Sqeqd79yxJdxMUfwmzVnRFR6WJA==
   dependencies:
-    "@salesforce/core" "^5.3.20"
+    "@salesforce/core" "^6.1.0"
     "@salesforce/kit" "^3.0.15"
     "@types/istanbul-reports" "^3.0.4"
     faye "1.4.0"
@@ -1015,10 +1015,10 @@
     semver "^7.5.4"
     ts-retry-promise "^0.7.1"
 
-"@salesforce/core@^6.1.3", "@salesforce/core@^6.2.2", "@salesforce/core@^6.4.0":
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-6.4.0.tgz#09e856194c8dad5bd0d86e271e84c3c47304f508"
-  integrity sha512-zbUuOll6RnaOyO6vHGjaO6mv2SBimu2JzInubBrbx+bgw5KFVT0y+OrN0gEhBPS94VoC9/N6ZRKve+vQ82zmmA==
+"@salesforce/core@^6.1.0", "@salesforce/core@^6.1.3", "@salesforce/core@^6.2.2", "@salesforce/core@^6.4.0":
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-6.4.1.tgz#27edd083b62ee96d6270b60da6dfb959bff1a0a5"
+  integrity sha512-Bn/Pox5JLeVBg35zgSmtNU+f9wdOaa7a/hmCIvQibci1dpKtLGUmSpdHibWR6zHag8ZoRkueea7zuqEjYzECyA==
   dependencies:
     "@salesforce/kit" "^3.0.15"
     "@salesforce/schemas" "^1.6.1"
