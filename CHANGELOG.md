@@ -1,3 +1,9 @@
+## [2.2.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.9...2.2.10) (2023-12-16)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 2.1.6 to 2.1.7 ([a93cb65](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a93cb652ba1a57674d874f85863ea40054219673))
+
 ## [2.2.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.8...2.2.9) (2023-12-16)
 
 ### Bug Fixes
