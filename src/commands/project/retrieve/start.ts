@@ -9,7 +9,7 @@ import { rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 
 import * as fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
+
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
 import {
   RetrieveResult,
@@ -36,7 +36,7 @@ import { RetrieveResultJson } from '../../../utils/types.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { promisesQueue } from '../../../utils/promiseQueue.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 

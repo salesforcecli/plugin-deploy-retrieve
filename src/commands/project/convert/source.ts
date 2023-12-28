@@ -5,9 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { resolve, dirname } from 'node:path';
+import { resolve } from 'node:path';
 import fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
+
 import { Messages } from '@salesforce/core';
 import {
   ComponentSet,
@@ -27,7 +27,7 @@ import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
 import { SourceConvertResultFormatter } from '../../../formatters/sourceConvertResultFormatter.js';
 import { ConvertResultJson } from '../../../utils/types.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 export class Source extends SfCommand<ConvertResultJson> {

@@ -10,8 +10,8 @@ import { EOL } from 'node:os';
 import { writeFile, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { exec } from 'node:child_process';
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+
+
 import { Hook } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { Env, parseJsonMap } from '@salesforce/kit';
@@ -26,7 +26,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { DeployerResult } from '@salesforce/sf-plugins-core/lib/deployer.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
 

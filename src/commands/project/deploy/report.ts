@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+
+
 import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
@@ -17,7 +17,7 @@ import { DeployReportResultFormatter } from '../../../formatters/deployReportRes
 import { API, DeployResultJson } from '../../../utils/types.js';
 import { coverageFormattersFlag } from '../../../utils/flags.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.report');
 const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 const testFlags = 'Test';

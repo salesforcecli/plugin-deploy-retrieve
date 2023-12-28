@@ -4,9 +4,9 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { join, dirname } from 'node:path';
+import { join } from 'node:path';
 import * as fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
+
 import { Messages, Org } from '@salesforce/core';
 import { ComponentSetBuilder } from '@salesforce/source-deploy-retrieve';
 import {
@@ -18,7 +18,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'manifest.generate');
 
 const manifestTypes = {

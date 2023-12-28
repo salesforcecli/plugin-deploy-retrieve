@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+
+
 import { ConfigAggregator, Messages, Org, SfError, SfProject } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { Nullable } from '@salesforce/ts-types';
@@ -26,7 +26,7 @@ import { DEPLOY_STATUS_CODES } from './errorCodes.js';
 import { DeployCache } from './deployCache.js';
 import { writeManifest } from './manifestCache.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 export const cacheMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
 
 const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');

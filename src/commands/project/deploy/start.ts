@@ -4,8 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+
+
 import chalk from 'chalk';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { DeployVersionData } from '@salesforce/source-deploy-retrieve';
@@ -24,7 +24,7 @@ import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from 
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { getOptionalProject } from '../../../utils/project.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
