@@ -6,8 +6,8 @@
  */
 /* eslint-disable class-methods-use-this */
 
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+
+
 import { EOL } from 'node:os';
 import chalk from 'chalk';
 import { Duration } from '@salesforce/kit';
@@ -28,7 +28,7 @@ import { TestLevel } from './types.js';
 import { DeployProgress } from './progressBar.js';
 import { determineExitCode, executeDeploy, resolveApi } from './deploy.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy');
 
 type OrgAuthWithTimestamp = OrgAuthorization & { timestamp: Date };

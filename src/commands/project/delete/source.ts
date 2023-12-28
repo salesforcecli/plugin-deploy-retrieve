@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { fileURLToPath } from 'node:url';
+
 import { Interfaces } from '@oclif/core';
 import { Lifecycle, Messages, Org, SfError } from '@salesforce/core';
 import {
@@ -44,7 +44,7 @@ import { testLevelFlag, testsFlag } from '../../../utils/flags.js';
 const fsPromises = fs.promises;
 const testFlags = 'Test';
 
-Messages.importMessagesDirectory(path.dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
 const xorFlags = ['metadata', 'source-dir'];
 export class Source extends SfCommand<DeleteSourceJson> {

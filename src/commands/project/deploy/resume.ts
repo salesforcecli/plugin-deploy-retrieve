@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+
+
 import chalk from 'chalk';
 import { EnvironmentVariable, Messages, Org, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
@@ -20,7 +20,7 @@ import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { coverageFormattersFlag } from '../../../utils/flags.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.resume');
 
 const testFlags = 'Test';

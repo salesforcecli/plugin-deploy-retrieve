@@ -4,15 +4,15 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { join, parse, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join, parse } from 'node:path';
+
 import { ux } from '@oclif/core';
 import { FileResponse, RetrieveResult } from '@salesforce/source-deploy-retrieve';
 import { Messages } from '@salesforce/core';
 import { Formatter, MetadataRetrieveResultJson } from '../utils/types.js';
 import { sortFileResponses, asRelativePaths } from '../utils/output.js';
 
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 export const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 
 export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrieveResultJson> {
