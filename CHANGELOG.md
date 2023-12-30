@@ -1,3 +1,9 @@
+## [2.2.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.11...2.2.12) (2023-12-30)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 5.0.10 to 5.0.13 ([46e18bc](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/46e18bcdb9f2527252701543c60a8d9c6d850268))
+
 ## [2.2.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.10...2.2.11) (2023-12-16)
 
 ### Bug Fixes
