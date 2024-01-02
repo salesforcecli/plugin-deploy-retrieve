@@ -13,7 +13,7 @@ import {
   MetadataApiDeployStatus,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
-import { cloneJson, ensureArray } from '@salesforce/kit';
+import { ensureArray } from '@salesforce/kit';
 
 const baseDeployResponse = {
   checkOnly: false,
@@ -85,8 +85,7 @@ export const getDeployResponse = (
   type: DeployResponseType,
   overrides?: Partial<MetadataApiDeployStatus>
 ): MetadataApiDeployStatus => {
-  // stringify --> parse to get a clone that doesn't affect the base deploy response
-  const response = JSON.parse(JSON.stringify({ ...baseDeployResponse, ...overrides })) as MetadataApiDeployStatus;
+  const response = structuredClone({ ...baseDeployResponse, ...overrides }) as MetadataApiDeployStatus;
 
   if (type === 'inProgress') {
     response.status = RequestStatus.InProgress;
@@ -104,9 +103,11 @@ export const getDeployResponse = (
   if (type === 'failed') {
     response.status = RequestStatus.Failed;
     response.success = false;
-    response.details.componentSuccesses = cloneJson(baseDeployResponse.details.componentSuccesses[0]) as DeployMessage;
+    response.details.componentSuccesses = structuredClone(
+      baseDeployResponse.details.componentSuccesses[0]
+    ) as DeployMessage;
     response.details.componentFailures = {
-      ...(cloneJson(baseDeployResponse.details.componentSuccesses[1]) as DeployMessage),
+      ...(structuredClone(baseDeployResponse.details.componentSuccesses[1]) as DeployMessage),
       success: false,
       problemType: 'Error',
       problem: 'This component has some problems',
@@ -119,8 +120,12 @@ export const getDeployResponse = (
   if (type === 'failedTest') {
     response.status = RequestStatus.Failed;
     response.success = false;
-    response.details.componentFailures = cloneJson(baseDeployResponse.details.componentSuccesses[1]) as DeployMessage;
-    response.details.componentSuccesses = cloneJson(baseDeployResponse.details.componentSuccesses[0]) as DeployMessage;
+    response.details.componentFailures = structuredClone(
+      baseDeployResponse.details.componentSuccesses[1]
+    ) as DeployMessage;
+    response.details.componentSuccesses = structuredClone(
+      baseDeployResponse.details.componentSuccesses[0]
+    ) as DeployMessage;
     response.details.componentFailures.success = 'false';
     delete response.details.componentFailures.id;
     response.details.componentFailures.problemType = 'Error';
@@ -163,8 +168,12 @@ export const getDeployResponse = (
   if (type === 'passedTest') {
     response.status = RequestStatus.Failed;
     response.success = false;
-    response.details.componentFailures = cloneJson(baseDeployResponse.details.componentSuccesses[1]) as DeployMessage;
-    response.details.componentSuccesses = cloneJson(baseDeployResponse.details.componentSuccesses[0]) as DeployMessage;
+    response.details.componentFailures = structuredClone(
+      baseDeployResponse.details.componentSuccesses[1]
+    ) as DeployMessage;
+    response.details.componentSuccesses = structuredClone(
+      baseDeployResponse.details.componentSuccesses[0]
+    ) as DeployMessage;
     response.details.componentFailures.success = 'false';
     delete response.details.componentFailures.id;
     response.details.componentFailures.problemType = 'Error';
@@ -203,8 +212,12 @@ export const getDeployResponse = (
   if (type === 'codeCoverageWarning') {
     response.status = RequestStatus.Failed;
     response.success = false;
-    response.details.componentFailures = cloneJson(baseDeployResponse.details.componentSuccesses[1]) as DeployMessage;
-    response.details.componentSuccesses = cloneJson(baseDeployResponse.details.componentSuccesses[0]) as DeployMessage;
+    response.details.componentFailures = structuredClone(
+      baseDeployResponse.details.componentSuccesses[1]
+    ) as DeployMessage;
+    response.details.componentSuccesses = structuredClone(
+      baseDeployResponse.details.componentSuccesses[0]
+    ) as DeployMessage;
     response.details.componentFailures.success = 'false';
     delete response.details.componentFailures.id;
     if (response.details.runTestResult) {
@@ -249,8 +262,12 @@ export const getDeployResponse = (
   if (type === 'passedAndFailedTest') {
     response.status = RequestStatus.Failed;
     response.success = false;
-    response.details.componentFailures = cloneJson(baseDeployResponse.details.componentSuccesses[1]) as DeployMessage;
-    response.details.componentSuccesses = cloneJson(baseDeployResponse.details.componentSuccesses[0]) as DeployMessage;
+    response.details.componentFailures = structuredClone(
+      baseDeployResponse.details.componentSuccesses[1]
+    ) as DeployMessage;
+    response.details.componentSuccesses = structuredClone(
+      baseDeployResponse.details.componentSuccesses[0]
+    ) as DeployMessage;
     response.details.componentFailures.success = 'false';
     delete response.details.componentFailures.id;
     response.details.componentFailures.problemType = 'Error';

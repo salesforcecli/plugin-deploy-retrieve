@@ -29,7 +29,7 @@ import { RetrieveResultJson } from '../../../src/utils/types.js';
 import { exampleSourceComponent } from '../../utils/testConsts.js';
 import RetrieveMetadata from '../../../src/commands/project/retrieve/start.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 
 describe('project retrieve start', () => {
