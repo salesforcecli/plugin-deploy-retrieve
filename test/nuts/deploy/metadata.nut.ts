@@ -10,7 +10,6 @@ import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect } from 'chai';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { SfError } from '@salesforce/core';
 import { DeployResultJson } from '../../../src/utils/types.js';
 
 const packageXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -39,10 +38,12 @@ describe('deploy metadata NUTs', () => {
   });
 
   it('should throw if component set is empty', async () => {
-    const response = await testkit.deploy({ args: '--manifest package.xml --dry-run' });
-    expect(response?.status).to.equal(1);
-    const result = response?.result as unknown as SfError;
-    expect(result.name).to.equal('NothingToDeploy');
+    try {
+      await testkit.deploy({ args: '--manifest package.xml --dry-run', json: true, exitCode: 1 });
+    } catch (e) {
+      const err = e as Error;
+      expect(err.name).to.equal('NothingToDeploy');
+    }
   });
 
   it('should deploy ApexClasses from wildcard match (single character)', async () => {
