@@ -39,7 +39,7 @@ describe('deploy metadata NUTs', () => {
   });
 
   it('should throw if component set is empty', async () => {
-    const response = await testkit.deploy({ args: '' });
+    const response = await testkit.deploy({ args: '--manifest package.xml --dry-run' });
     expect(response?.status).to.equal(1);
     const result = response?.result as unknown as SfError;
     expect(result.name).to.equal('NothingToDeploy');
