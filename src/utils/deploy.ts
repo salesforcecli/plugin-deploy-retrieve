@@ -5,8 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { ConfigAggregator, Messages, Org, SfError, SfProject } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { Nullable } from '@salesforce/ts-types';
@@ -26,7 +24,7 @@ import { DEPLOY_STATUS_CODES } from './errorCodes.js';
 import { DeployCache } from './deployCache.js';
 import { writeManifest } from './manifestCache.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 export const cacheMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'cache');
 
 const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -156,7 +154,7 @@ export async function executeDeploy(
     });
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
-      if (Boolean(opts['source-dir']) ?? Boolean(opts.manifest) ?? Boolean(opts.metadata) ?? throwOnEmpty) {
+      if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
         // the user specified something to deploy, but there isn't anything
         throw new SfError(
           deployMessages.getMessage('error.nothingToDeploy'),
