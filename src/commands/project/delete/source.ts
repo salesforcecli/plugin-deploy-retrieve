@@ -214,14 +214,14 @@ export class Source extends SfCommand<DeleteSourceJson> {
         this.components
           .filter((comp) => comp.type.strategies?.adapter === 'bundle')
           .filter(isSourceComponent)
-          .map((bundle: SourceComponent) => {
+          .flatMap((bundle: SourceComponent) =>
             sourcepaths.map((sourcepath) =>
               // walkContent returns absolute paths while sourcepath will usually be relative
               bundle.walkContent().some((content) => content.endsWith(sourcepath))
                 ? this.moveBundleToManifest(bundle, sourcepath)
-                : undefined
-            );
-          })
+                : []
+            )
+          )
       );
     }
 
