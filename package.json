@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-deploy-retrieve",
   "description": "deploy and retrieve commands for sf",
-  "version": "2.2.12",
+  "version": "3.0.0",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
@@ -56,9 +56,6 @@
     "commands": "./lib/commands",
     "topicSeparator": " ",
     "bin": "sf",
-    "hooks": {
-      "sf:deploy": "./lib/hooks/deploy"
-    },
     "configMeta": "./lib/configMeta",
     "devPlugins": [
       "@oclif/plugin-command-snapshot",
