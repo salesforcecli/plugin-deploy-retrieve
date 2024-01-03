@@ -5,13 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
 import { ux } from '@oclif/core';
 import { Messages } from '@salesforce/core';
 import { AsyncDeployResultJson, DeployResultJson, Formatter } from '../utils/types.js';
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
-
-export const deployAsyncMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
 
 export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployResultJson> {
   public constructor(private id: string, private bin: string) {}
@@ -22,6 +18,9 @@ export class AsyncDeployCancelResultFormatter implements Formatter<AsyncDeployRe
   }
 
   public display(): void {
+    Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
+    const deployAsyncMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.async');
+
     ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancelQueued'));
     ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.bin, this.id]));
     ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.bin, this.id]));

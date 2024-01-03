@@ -11,7 +11,7 @@ import { Flags } from '@oclif/core';
 import { Messages, Lifecycle } from '@salesforce/core';
 import { PathInfo, TestLevel, reportsFormatters } from './types.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'validation');
 const commonFlagMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'commonFlags');
 
@@ -109,12 +109,13 @@ export const coverageFormattersFlag = Flags.custom({
   description: commonFlagMessages.getMessage('flags.coverage-formatters.description'),
   options: reportsFormatters,
 });
+
 /**
  * use when the old version allowed comma separated values, and the change is confusing enough to deserve a warning
  * Put this as the parse function, like the testsFlag above
  *
  */
-export const commaWarningForMultipleFlags = async (input: string, warningText: string): Promise<string> => {
+const commaWarningForMultipleFlags = async (input: string, warningText: string): Promise<string> => {
   if (input.includes(',')) {
     await Lifecycle.getInstance().emitWarning(warningText);
   }
