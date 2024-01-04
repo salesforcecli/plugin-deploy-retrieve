@@ -1,3 +1,9 @@
+## [2.2.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.12...2.2.13) (2024-01-03)
+
+### Bug Fixes
+
+- return the promise array ([1917202](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1917202140b01ace72ca9523f9cd631bcef924b8))
+
 ## [2.2.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.11...2.2.12) (2023-12-30)
 
 ### Bug Fixes

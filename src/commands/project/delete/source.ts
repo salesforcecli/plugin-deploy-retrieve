@@ -44,7 +44,7 @@ import { testLevelFlag, testsFlag } from '../../../utils/flags.js';
 const fsPromises = fs.promises;
 const testFlags = 'Test';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
 const xorFlags = ['metadata', 'source-dir'];
 export class Source extends SfCommand<DeleteSourceJson> {
@@ -210,17 +210,19 @@ export class Source extends SfCommand<DeleteSourceJson> {
     if (sourcepaths) {
       // determine if user is trying to delete a single file from a bundle, which is actually just an fs delete operation
       // and then a constructive deploy on the "new" bundle
-      this.components
-        .filter((comp) => comp.type.strategies?.adapter === 'bundle')
-        .filter(isSourceComponent)
-        .map((bundle: SourceComponent) => {
-          sourcepaths.map(async (sourcepath) => {
-            // walkContent returns absolute paths while sourcepath will usually be relative
-            if (bundle.walkContent().find((content) => content.endsWith(sourcepath))) {
-              await this.moveBundleToManifest(bundle, sourcepath);
-            }
-          });
-        });
+      await Promise.all(
+        this.components
+          .filter((comp) => comp.type.strategies?.adapter === 'bundle')
+          .filter(isSourceComponent)
+          .flatMap((bundle: SourceComponent) =>
+            sourcepaths.map((sourcepath) =>
+              // walkContent returns absolute paths while sourcepath will usually be relative
+              bundle.walkContent().some((content) => content.endsWith(sourcepath))
+                ? this.moveBundleToManifest(bundle, sourcepath)
+                : []
+            )
+          )
+      );
     }
 
     this.aborted = !(await this.handlePrompt());
