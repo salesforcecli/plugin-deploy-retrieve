@@ -1,3 +1,9 @@
+## [2.2.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.13...2.2.14) (2024-01-05)
+
+### Bug Fixes
+
+- don't cast opts to boolean ([#862](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/862)) ([cbffe96](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/cbffe9634e2926f5626cb9be52be90d51a07cefa))
+
 ## [2.2.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.12...2.2.13) (2024-01-03)
 
 ### Bug Fixes
