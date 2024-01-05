@@ -5,13 +5,23 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { join } from 'node:path';
+import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { expect } from 'chai';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { DeployResultJson } from '../../../src/utils/types.js';
 
+const packageXml = `<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <version>59.0</version>
+</Package>
+`;
+
 describe('deploy metadata NUTs', () => {
   let testkit: SourceTestkit;
+  const packageFile = 'package.xml';
+  let xmlPath: string | undefined;
 
   before(async () => {
     testkit = await SourceTestkit.create({
@@ -19,10 +29,21 @@ describe('deploy metadata NUTs', () => {
       nut: fileURLToPath(import.meta.url),
     });
     await testkit.deploy({ args: '--source-dir force-app', exitCode: 0 });
+    xmlPath = join(testkit.projectDir, packageFile);
+    await fs.promises.writeFile(xmlPath, packageXml);
   });
 
   after(async () => {
     await testkit?.clean();
+  });
+
+  it('should throw if component set is empty', async () => {
+    try {
+      await testkit.deploy({ args: '--manifest package.xml --dry-run', json: true, exitCode: 1 });
+    } catch (e) {
+      const err = e as Error;
+      expect(err.name).to.equal('NothingToDeploy');
+    }
   });
 
   it('should deploy ApexClasses from wildcard match (single character)', async () => {
