@@ -5,8 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Messages } from '@salesforce/core';
 import chalk from 'chalk';
 import { SourceTracking } from '@salesforce/source-tracking';
@@ -18,7 +16,7 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.tracking');
 
 export type DeleteTrackingResult = {
@@ -49,9 +47,9 @@ export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
     const { flags } = await this.parse(DeleteTracking);
 
     let clearedFiles: string[] = [];
-    if (flags['no-prompt'] || (await this.confirm(chalk.dim(messages.getMessage('promptMessage'))))) {
+    if (flags['no-prompt'] || (await this.confirm({ message: chalk.dim(messages.getMessage('promptMessage')) }))) {
       const sourceTracking = await SourceTracking.create({
-        project: this.project,
+        project: this.project!,
         org: flags['target-org'],
       });
       clearedFiles = await Promise.all([sourceTracking.clearLocalTracking(), sourceTracking.clearRemoteTracking()]);

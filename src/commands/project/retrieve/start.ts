@@ -36,7 +36,7 @@ import { RetrieveResultJson } from '../../../utils/types.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { promisesQueue } from '../../../utils/promiseQueue.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
@@ -266,7 +266,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     return formatter.getJson();
   }
 
-  protected catch(error: Error | SfError): Promise<SfCommand.Error> {
+  protected catch(error: Error | SfError): Promise<never> {
     if (!this.jsonEnabled() && error instanceof SourceConflictError && error.data) {
       writeConflictTable(error.data);
       // set the message and add plugin-specific actions

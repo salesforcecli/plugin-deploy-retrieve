@@ -26,7 +26,7 @@ import { Interfaces } from '@oclif/core';
 import { ConvertMdapiJson } from '../../../utils/types.js';
 import { MetadataConvertResultFormatter } from '../../../formatters/metadataConvertResultFormatter.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.mdapi');
 
 export interface EnsureFsFlagOptions {
@@ -92,7 +92,7 @@ export class Mdapi extends SfCommand<ConvertMdapiJson> {
 
   protected async convert(): Promise<void> {
     const [outputDir] = await Promise.all([
-      resolveOutputDir(this.flags['output-dir'] ?? this.project.getDefaultPackage().path),
+      resolveOutputDir(this.flags['output-dir'] ?? this.project!.getDefaultPackage().path),
       resolveMetadataPaths(this.flags['metadata-dir'] ?? []),
     ]);
 

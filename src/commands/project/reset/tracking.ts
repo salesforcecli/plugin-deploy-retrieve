@@ -5,8 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Messages } from '@salesforce/core';
 import { SourceTracking } from '@salesforce/source-tracking';
 import {
@@ -18,7 +16,7 @@ import {
   StandardColors,
 } from '@salesforce/sf-plugins-core';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.tracking');
 
 export type ResetTrackingResult = {
@@ -55,9 +53,12 @@ export class ResetTracking extends SfCommand<ResetTrackingResult> {
   public async run(): Promise<ResetTrackingResult> {
     const { flags } = await this.parse(ResetTracking);
 
-    if (flags['no-prompt'] || (await this.confirm(StandardColors.info(messages.getMessage('promptMessage'))))) {
+    if (
+      flags['no-prompt'] ||
+      (await this.confirm({ message: StandardColors.info(messages.getMessage('promptMessage')) }))
+    ) {
       const sourceTracking = await SourceTracking.create({
-        project: this.project,
+        project: this.project!,
         org: flags['target-org'],
       });
 

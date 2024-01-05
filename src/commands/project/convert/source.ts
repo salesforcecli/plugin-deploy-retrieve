@@ -27,7 +27,7 @@ import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
 import { SourceConvertResultFormatter } from '../../../formatters/sourceConvertResultFormatter.js';
 import { ConvertResultJson } from '../../../utils/types.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 export class Source extends SfCommand<ConvertResultJson> {
@@ -112,7 +112,7 @@ export class Source extends SfCommand<ConvertResultJson> {
 
     // no options passed, convert the default package (usually force-app)
     if (!sourcepath && !metadata && !manifest && !rootdir) {
-      paths.push(this.project.getDefaultPackage().path);
+      paths.push(this.project!.getDefaultPackage().path);
     }
 
     this.componentSet = await ComponentSetBuilder.build({

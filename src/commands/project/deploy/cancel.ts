@@ -5,8 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Messages } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
@@ -17,7 +15,7 @@ import { AsyncDeployCancelResultFormatter } from '../../../formatters/asyncDeplo
 import { DeployCancelResultFormatter } from '../../../formatters/deployCancelResultFormatter.js';
 import { DeployResultJson } from '../../../utils/types.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.cancel');
 
 export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
@@ -96,7 +94,7 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
     }
   }
 
-  protected catch(error: SfCommand.Error): Promise<SfCommand.Error> {
+  protected catch(error: SfCommand.Error): Promise<never> {
     if (error.name.includes('INVALID_ID_FIELD')) {
       const err = messages.createError('error.CannotCancelDeploy');
       return super.catch({
