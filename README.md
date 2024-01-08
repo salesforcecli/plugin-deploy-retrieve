@@ -24,8 +24,6 @@ sf plugins:install plugin-deploy-retrieve@x.y.z
 8. Sign CLA (see [CLA](#cla) below).
 9. Send us a pull request when you are done. We'll review your code, suggest any needed changes, and merge it in.
 
-To add a new project command see the [contributing guide](CONTRIBUTING.md)
-
 ### CLA
 
 External contributors will be required to sign a Contributor's License

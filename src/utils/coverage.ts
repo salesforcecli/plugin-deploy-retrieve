@@ -14,7 +14,7 @@ import {
   ApexCodeCoverageAggregate,
   ApexCodeCoverageAggregateRecord,
 } from '@salesforce/apex-node';
-import { Successes, Failures, CodeCoverage } from '@salesforce/source-deploy-retrieve';
+import type { Successes, Failures, CodeCoverage } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 

@@ -5,8 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import chalk from 'chalk';
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
@@ -19,7 +17,7 @@ import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResul
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.quick');
 
 export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
@@ -134,7 +132,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     return formatter.getJson();
   }
 
-  protected catch(error: SfCommand.Error): Promise<SfCommand.Error> {
+  protected catch(error: SfCommand.Error): Promise<never> {
     if (error.name.includes('INVALID_ID_FIELD')) {
       const err = messages.createError('error.CannotQuickDeploy');
       return super.catch({

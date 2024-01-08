@@ -16,7 +16,7 @@ import {
   FileResponseSuccess,
 } from '@salesforce/source-deploy-retrieve';
 import { isObject } from '@salesforce/ts-types';
-import { DefaultReportOptions, CoverageReporterOptions } from '@salesforce/apex-node';
+import { DefaultReportOptions } from '@salesforce/apex-node';
 
 export const reportsFormatters = Object.keys(DefaultReportOptions);
 
@@ -56,18 +56,6 @@ export type ConvertMdapiJson = ConvertEntry[];
 export type ConvertResultJson = {
   location: string;
 };
-
-export interface DeleteFormatterOptions {
-  verbose?: boolean;
-  quiet?: boolean;
-  waitTime?: number;
-  concise?: boolean;
-  username?: string;
-  coverageOptions?: CoverageReporterOptions;
-  junitTestResults?: boolean;
-  resultsDir?: string;
-  testsRan?: boolean;
-}
 
 export type DeleteSourceJson = {
   deletedSource?: FileResponse[];

@@ -24,7 +24,7 @@ import { filePathsFromMetadataComponent } from '@salesforce/source-deploy-retrie
 import { SourceTracking } from '@salesforce/source-tracking';
 import { isSourceComponentWithXml } from './types.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'previewMessages');
 
 type BaseOperation = 'deploy' | 'retrieve';
@@ -241,7 +241,7 @@ const printConflictsTable = (files: PreviewFile[]): void => {
   }
 };
 
-export const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
+const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
   ux.log();
   if (files.length === 0) {
     ux.log(chalk.dim(messages.getMessage('ignored.none')));

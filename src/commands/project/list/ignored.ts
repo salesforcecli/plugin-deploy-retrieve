@@ -11,7 +11,7 @@ import { Messages, SfError } from '@salesforce/core';
 import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'list.ignored');
 
 export type SourceIgnoredResults = {
@@ -43,10 +43,10 @@ export class Ignored extends SfCommand<SourceIgnoredResults> {
   public async run(): Promise<SourceIgnoredResults> {
     const flags = (await this.parse(Ignored)).flags;
     try {
-      this.forceIgnore = ForceIgnore.findAndCreate(this.project.getPath());
+      this.forceIgnore = ForceIgnore.findAndCreate(this.project!.getPath());
       const sourcepaths = flags['source-dir']
         ? [flags['source-dir']]
-        : this.project.getUniquePackageDirectories().map((pDir) => pDir.path);
+        : this.project!.getUniquePackageDirectories().map((pDir) => pDir.path);
 
       const ignoredFiles = (await Promise.all(sourcepaths.map((sp) => this.statIgnored(sp.trim())))).flat();
 

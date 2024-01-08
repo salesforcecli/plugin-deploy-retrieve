@@ -5,14 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
 import { Messages } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
 import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
 import { PreviewResult, printTables, compileResults, getConflictFiles } from '../../../utils/previewOutput.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.metadata.preview');
 
 export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
@@ -47,11 +46,11 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
 
     const stl = await SourceTracking.create({
       org: flags['target-org'],
-      project: this.project,
+      project: this.project!,
       ignoreConflicts: flags['ignore-conflicts'],
     });
 
-    const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
+    const forceIgnore = ForceIgnore.findAndCreate(this.project!.getDefaultPackage().path);
 
     const [componentSet, filesWithConflicts, remoteDeletes] = await Promise.all([
       stl.remoteNonDeletesAsComponentSet(),
@@ -61,7 +60,7 @@ export default class RetrieveMetadataPreview extends SfCommand<PreviewResult> {
 
     const output = compileResults({
       componentSet,
-      projectPath: this.project.getPath(),
+      projectPath: this.project!.getPath(),
       filesWithConflicts,
       forceIgnore,
       baseOperation: 'retrieve',

@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
 import { Messages } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { SourceTracking } from '@salesforce/source-tracking';
@@ -13,7 +12,7 @@ import { ForceIgnore } from '@salesforce/source-deploy-retrieve';
 import { buildComponentSet } from '../../../utils/deploy.js';
 import { PreviewResult, printTables, compileResults, getConflictFiles } from '../../../utils/previewOutput.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.preview');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata'];
@@ -64,7 +63,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
   public async run(): Promise<PreviewResult> {
     const { flags } = await this.parse(DeployMetadataPreview);
     const deploySpecified = [flags.manifest, flags.metadata, flags['source-dir']].some((f) => f !== undefined);
-    const forceIgnore = ForceIgnore.findAndCreate(this.project.getDefaultPackage().path);
+    const forceIgnore = ForceIgnore.findAndCreate(this.project!.getDefaultPackage().path);
 
     // we'll need STL both to check conflicts and to get the list of local changes if no flags are provided
     const stl =
@@ -72,7 +71,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
         ? undefined
         : await SourceTracking.create({
             org: flags['target-org'],
-            project: this.project,
+            project: this.project!,
           });
 
     const [componentSet, filesWithConflicts] = await Promise.all([
@@ -82,7 +81,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
 
     const output = compileResults({
       componentSet,
-      projectPath: this.project.getPath(),
+      projectPath: this.project!.getPath(),
       filesWithConflicts,
       forceIgnore,
       baseOperation: 'deploy',

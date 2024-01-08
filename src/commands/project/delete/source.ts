@@ -157,7 +157,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
   protected async preChecks(): Promise<void> {
     if (this.flags['track-source']) {
-      this.tracking = await SourceTracking.create({ org: this.org, project: this.project });
+      this.tracking = await SourceTracking.create({ org: this.org, project: this.project! });
     }
 
     if (!validateTests(this.flags['test-level'], this.flags.tests)) {
@@ -471,7 +471,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
           ? messages.getMessage('areYouSureCheckOnly')
           : messages.getMessage('areYouSure')
       );
-      return this.confirm(message.join('\n'));
+      return this.confirm({ message: message.join('\n') });
     }
     return true;
   }
