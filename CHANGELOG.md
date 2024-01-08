@@ -1,3 +1,9 @@
+# [3.1.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.17...3.1.0) (2024-01-08)
+
+### Features
+
+- new inquirer ([#867](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/867)) ([742d48c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/742d48cd66211dd4fdcbd7d25332a3a1ca1f58ea))
+
 ## [2.2.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/2.2.16...2.2.17) (2024-01-06)
 
 ### Bug Fixes
