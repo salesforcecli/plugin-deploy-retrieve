@@ -193,13 +193,24 @@ describe('forceignore changes', () => {
       expect(pullOutput?.files.length).to.equal(0);
     });
 
-    it('will not display ignored files with --concise', () => {
+    it('will not display retrieved ignored files with --concise', () => {
       // gets file into source tracking
       const output = execCmd<PreviewResult>('project:retrieve:preview --concise', {
         ensureExitCode: 0,
       }).shellOutput.stdout;
       expect(output).to.not.include("These files won't retrieve because they're ignored by your .forceignore file.");
       expect(output).to.not.include('ApexClass CreatedClass');
+    });
+
+    it('will not display deployed ignored files with --concise', async () => {
+      const newForceIgnore = originalForceIgnore + '\n' + `${classdir}/IgnoreTest.cls*`;
+      await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
+
+      const output = execCmd<DeployResultJson>('deploy:metadata --json', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(output).to.not.include("These files won't deploy because they're ignored by your .forceignore file.");
+      expect(output?.status).to.equal('Nothing to deploy');
     });
   });
 });
