@@ -58,6 +58,10 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       summary: messages.getMessage('flags.target-org.summary'),
       required: true,
     }),
+    concise: Flags.boolean({
+      summary: messages.getMessage('flags.concise.summary'),
+      default: false,
+    }),
   };
 
   public async run(): Promise<PreviewResult> {
@@ -88,7 +92,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
     });
 
     if (!this.jsonEnabled()) {
-      printTables(output, 'deploy');
+      printTables(output, 'deploy', flags.concise);
     }
     return output;
   }
