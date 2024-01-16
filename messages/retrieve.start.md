@@ -195,11 +195,11 @@ Because you're retrieving one or more CustomFields, we're also retrieving the Cu
 
 # noSourceTracking
 
-Unable to track changes in source.
-This command expects the org to support source tracking, if it doesn't you need to specify the metadata to be retrieved.
+Unable to track changes in your source files.
+This command expects the org to support source tracking. If it doesn't, you must specify the metadata you want to retrieve. 
 
 # noSourceTracking.actions
 
-- Use `--source-dir`, `--manifest` or `--package-name` to retrieve in source format:
+- Use  the `--source-dir`, `--manifest` or `--package-name` flags to retrieve metadata in source format.
 
-- Use `--target-metadata-dir` to retrieve in metadata format to a directory
+- Use the `--target-metadata-dir` flag to retrieve metadata in metadata format to a directory.
