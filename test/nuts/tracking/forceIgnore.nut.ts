@@ -206,11 +206,13 @@ describe('forceignore changes', () => {
       const newForceIgnore = originalForceIgnore + '\n' + `${classdir}/IgnoreTest.cls*`;
       await fs.promises.writeFile(path.join(session.project.dir, '.forceignore'), newForceIgnore);
 
-      const output = execCmd<DeployResultJson>('deploy:metadata --json', {
+      const output = execCmd<DeployResultJson>(`project:deploy:preview -d ${classdir} --concise`, {
         ensureExitCode: 0,
-      }).jsonOutput?.result;
+      }).shellOutput.stdout;
+      expect(output).to.include('Will Deploy [1] files.');
+      expect(output).to.include('ApexClass UnIgnoreTest');
       expect(output).to.not.include("These files won't deploy because they're ignored by your .forceignore file.");
-      expect(output?.status).to.equal('Nothing to deploy');
+      expect(output).to.not.include('ApexClass IgnoreTest');
     });
   });
 });
