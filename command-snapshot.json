@@ -79,7 +79,7 @@
     "command": "project:deploy:preview",
     "flagAliases": [],
     "flagChars": ["c", "d", "m", "o", "x"],
-    "flags": ["ignore-conflicts", "json", "manifest", "metadata", "source-dir", "target-org"],
+    "flags": ["ignore-conflicts", "json", "manifest", "metadata", "source-dir", "target-org", "concise"],
     "plugin": "@salesforce/plugin-deploy-retrieve"
   },
   {
