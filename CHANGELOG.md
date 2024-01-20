@@ -1,3 +1,9 @@
+## [3.2.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.0...3.2.1) (2024-01-20)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 3.0.1 to 3.0.2 ([96e4981](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/96e49814a1f75f802b25fdbc6e8781401cd6c5f2))
+
 # [3.2.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.1.3...3.2.0) (2024-01-16)
 
 ### Bug Fixes
