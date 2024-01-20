@@ -1621,10 +1621,10 @@
     istanbul-reports "^3.1.6"
     jsforce "^2.0.0-beta.29"
 
-"@salesforce/apex-node@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-3.0.1.tgz#0374133b4c53393f47f342e29c0073f2f939ad35"
-  integrity sha512-zQKr4+vddu/OWH1RJSZBE0kflmyurGhUu34uR4PyI3F0mLEfkZPTTzMY8OsbsxtYRCd0oN1psL/t0xrjlF16DQ==
+"@salesforce/apex-node@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-3.0.2.tgz#fd4b9dc72b31baa732de39b106bb0bbed8c96949"
+  integrity sha512-lHa7XnQCivuwTtO0RBTqw+nZ4Qm4ymodqpNJwefFLk6KBEva9sMV9Ksj2x6kBGGbLyO6ZiJiUMSAN6Gcny60zg==
   dependencies:
     "@salesforce/core" "^6.1.0"
     "@salesforce/kit" "^3.0.15"
