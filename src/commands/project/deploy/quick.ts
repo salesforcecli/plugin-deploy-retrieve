@@ -6,11 +6,11 @@
  */
 
 import chalk from 'chalk';
-import { Messages, Org } from '@salesforce/core';
+import { Messages, Org, TTLConfig } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { DeployOptions, determineExitCode, resolveApi } from '../../../utils/deploy.js';
+import { CachedOptions, DeployOptions, determineExitCode, resolveApi } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
@@ -84,9 +84,24 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataQuick), DeployCache.create()]);
 
     // This is the ID of the validation request
-    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
+    let jobId: string;
+    let deployOpts: DeployOptions | TTLConfig.Entry<CachedOptions> = {} as DeployOptions;
+    try {
+      jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
+      deployOpts = cache.get(jobId) ?? ({} as DeployOptions);
+    } catch (e: unknown) {
+      const errName = e instanceof Error ? e.name : 'unknown';
+      if (errName === 'NoMatchingJobIdError' && flags['job-id']) {
+        // In this case there must be a target-org. If not, throw.
+        if (!flags['target-org']) {
+          throw messages.createError('error.NoTargetOrg');
+        }
+        jobId = flags['job-id'];
+      } else {
+        throw e;
+      }
+    }
 
-    const deployOpts = cache.get(jobId) ?? ({} as DeployOptions);
     const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
     const api = await resolveApi(this.configAggregator);
     const connection = org.getConnection(flags['api-version']);

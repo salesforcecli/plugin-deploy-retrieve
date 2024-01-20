@@ -72,7 +72,7 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
       if (match) {
         return match;
       }
-      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
+      throw cacheMessages.createError('error.NoMatchingJobId', [jobId]);
     } else {
       throw cacheMessages.createError('error.InvalidJobId', [jobId]);
     }
