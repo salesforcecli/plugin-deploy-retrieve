@@ -359,6 +359,13 @@ const buildRetrieveAndDeleteTargets = async (
     !flags['package-name']?.length;
 
   if (isChanges) {
+    if (!(await flags['target-org'].supportsSourceTracking())) {
+      throw new SfError(
+        messages.getMessage('noSourceTracking'),
+        'noSourceTracking',
+        messages.getMessages('noSourceTracking.actions')
+      );
+    }
     const stl = await SourceTracking.create({
       org: flags['target-org'],
       project: await SfProject.resolve(),
