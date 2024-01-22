@@ -76,7 +76,7 @@ This flag applies only to orgs that allow source tracking. It has no effect on o
 
 # flags.concise.summary
 
-Omit ignored files.
+Show only the changes that will be deployed; omits files that are forceignored.
 
 # flags.api-version.summary
 

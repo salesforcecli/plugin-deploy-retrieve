@@ -1,3 +1,37 @@
+## [3.2.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.3...3.2.4) (2024-01-21)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 7.1.1 to 7.1.3 ([2445627](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/244562790c783816051e4c5d540d0528280ad7ae))
+
+## [3.2.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.2...3.2.3) (2024-01-20)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 5.1.3 to 5.1.5 ([926286f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/926286fae90dfbd153a8341c27d3a92a0dcb4f23))
+
+## [3.2.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.1...3.2.2) (2024-01-20)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve ([add0425](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/add04254f30f726b12840892a1570829b18135f9))
+
+## [3.2.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.0...3.2.1) (2024-01-20)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 3.0.1 to 3.0.2 ([96e4981](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/96e49814a1f75f802b25fdbc6e8781401cd6c5f2))
+
+# [3.2.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.1.3...3.2.0) (2024-01-16)
+
+### Bug Fixes
+
+- correct test to match fix ([20cee7b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/20cee7b63921da59a9f3c5d359bd2060ce2b3f82))
+
+### Features
+
+- add concise flag to deploy preview ([6729b4d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6729b4db6f43a9a2940577baa4687b87c8c659db))
+
 ## [3.1.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.1.2...3.1.3) (2024-01-13)
 
 ### Bug Fixes
