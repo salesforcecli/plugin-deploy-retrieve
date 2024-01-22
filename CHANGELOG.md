@@ -1,3 +1,9 @@
+## [3.2.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.4...3.2.5) (2024-01-22)
+
+### Bug Fixes
+
+- **retrieve:** improve source-tracking err message ([#882](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/882)) ([e0aa271](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e0aa271acf1142ba6c1fe77a9f5d4943ae740ccf))
+
 ## [3.2.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.3...3.2.4) (2024-01-21)
 
 ### Bug Fixes
