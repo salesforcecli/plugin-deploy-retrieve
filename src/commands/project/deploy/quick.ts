@@ -6,11 +6,11 @@
  */
 
 import chalk from 'chalk';
-import { Messages, Org, TTLConfig } from '@salesforce/core';
+import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { CachedOptions, DeployOptions, determineExitCode, resolveApi } from '../../../utils/deploy.js';
+import { determineExitCode, resolveApi } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
@@ -84,27 +84,10 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataQuick), DeployCache.create()]);
 
     // This is the ID of the validation request
-    let jobId: string;
-    let deployOpts: DeployOptions | TTLConfig.Entry<CachedOptions> = {} as DeployOptions;
-    try {
-      jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
-      deployOpts = cache.get(jobId) ?? ({} as DeployOptions);
-    } catch (e: unknown) {
-      const errName = e instanceof Error ? e.name : 'unknown';
-      if (errName === 'NoMatchingJobIdError' && flags['job-id']) {
-        // In this case there must be a target-org. If not, throw.
-        if (!flags['target-org']) {
-          throw messages.createError('error.NoTargetOrg');
-        }
-        jobId = flags['job-id'];
-      } else {
-        throw e;
-      }
-    }
-
-    const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
+    const jobId = resolveJobId(cache, flags['use-most-recent'], flags['job-id']);
+    const targetOrg = await resolveTargetOrg(cache, jobId, flags['target-org']);
     const api = await resolveApi(this.configAggregator);
-    const connection = org.getConnection(flags['api-version']);
+    const connection = targetOrg.getConnection(flags['api-version']);
 
     // This is the ID of the deploy (of the validated metadata)
     const deployId = await connection.metadata.deployRecentValidation({
@@ -160,3 +143,30 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     return super.catch(error);
   }
 }
+
+// Resolve a job ID for a validated deploy using cache, most recent, or a job ID flag.
+const resolveJobId = (cache: DeployCache, useMostRecentFlag: boolean, jobIdFlag?: string): string => {
+  try {
+    return cache.resolveLatest(useMostRecentFlag, jobIdFlag, false);
+  } catch (e: unknown) {
+    const errName = e instanceof Error ? e.name : 'unknown';
+    if (errName === 'NoMatchingJobIdError' && jobIdFlag) {
+      return jobIdFlag; // Use the specified 15 char job ID
+    } else {
+      throw e;
+    }
+  }
+};
+
+// Resolve a target org using job ID in cache, or a target org flag.
+const resolveTargetOrg = async (cache: DeployCache, jobId: string, targetOrgFlag: Org): Promise<Org> => {
+  const aliasOrUsername = cache.get(jobId)?.['target-org'];
+  const targetOrg = aliasOrUsername ? await Org.create({ aliasOrUsername }) : targetOrgFlag;
+
+  // If we don't have a target org at this point, throw.
+  if (!targetOrg) {
+    throw messages.createError('error.NoTargetOrg');
+  }
+
+  return targetOrg;
+};
