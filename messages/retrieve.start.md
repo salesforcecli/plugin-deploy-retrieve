@@ -192,3 +192,14 @@ The retrieve target directory [%s] overlaps one of your package directories. Spe
 # wantsToRetrieveCustomFields
 
 Because you're retrieving one or more CustomFields, we're also retrieving the CustomObject to which it's associated.
+
+# noSourceTracking
+
+Unable to track changes in your source files.
+This command expects the org to support source tracking. If it doesn't, you must specify the metadata you want to retrieve. 
+
+# noSourceTracking.actions
+
+- Use  the `--source-dir`, `--manifest` or `--package-name` flags to retrieve metadata in source format.
+
+- Use the `--target-metadata-dir` flag to retrieve metadata in metadata format to a directory.
