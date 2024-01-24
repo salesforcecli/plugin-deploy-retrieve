@@ -1787,7 +1787,7 @@
     "@salesforce/ts-types" "^2.0.9"
     chalk "^5.3.0"
 
-"@salesforce/source-deploy-retrieve@^10.0.0", "@salesforce/source-deploy-retrieve@^10.2.10", "@salesforce/source-deploy-retrieve@^10.2.11", "@salesforce/source-deploy-retrieve@^10.2.12":
+"@salesforce/source-deploy-retrieve@^10.0.0", "@salesforce/source-deploy-retrieve@^10.2.10", "@salesforce/source-deploy-retrieve@^10.2.12":
   version "10.2.12"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-10.2.12.tgz#8311593f3be004530896d9264466b59ec64b0a76"
   integrity sha512-i12707TLzzJTdt7/lXLFatOwSKW1VK/ns13A8/6/6QHElT6nEvnoxP/bah3BAl9x/mKh7Sr8hD6+3ObnYqha4A==
@@ -1822,22 +1822,7 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^5.0.0":
-  version "5.1.5"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-5.1.5.tgz#a8ff65d738ed12ce585540d3efe4a8a4a65afafc"
-  integrity sha512-4uQGz6Vg213CLDCGVI8VIxsFVguShEMDV535YHV3YPK/Q3ls4z4eOBk8vOrFpItlHuKpfYYmAKKy16AFJMgk2w==
-  dependencies:
-    "@oclif/core" "^3.18.1"
-    "@salesforce/core" "^6.4.7"
-    "@salesforce/kit" "^3.0.15"
-    "@salesforce/source-deploy-retrieve" "^10.2.11"
-    "@salesforce/ts-types" "^2.0.9"
-    fast-xml-parser "^4.2.5"
-    graceful-fs "^4.2.11"
-    isomorphic-git "1.23.0"
-    ts-retry-promise "^0.7.0"
-
-"@salesforce/source-tracking@^5.1.7":
+"@salesforce/source-tracking@^5.0.0", "@salesforce/source-tracking@^5.1.7":
   version "5.1.7"
   resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-5.1.7.tgz#2bfc3e6c9bf0aabd7ba5644a69977dfd1fef84c3"
   integrity sha512-kkXWt4X+wxmYsLqG1OIWKgo3aFEg1f+1X6MBIHIrmjEmfMXIRiGX0dRyY+IjFl54w+CnOffNDQNsGSmnPImEYg==
@@ -9059,7 +9044,7 @@ ts-node@^10.8.1, ts-node@^10.9.2:
     v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
 
-ts-retry-promise@^0.7.0, ts-retry-promise@^0.7.1:
+ts-retry-promise@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ts-retry-promise/-/ts-retry-promise-0.7.1.tgz#176d6eee6415f07b6c7c286d3657355e284a6906"
   integrity sha512-NhHOCZ2AQORvH42hOPO5UZxShlcuiRtm7P2jIq2L2RY3PBxw2mLnUsEdHrIslVBFya1v5aZmrR55lWkzo13LrQ==
