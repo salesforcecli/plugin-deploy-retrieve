@@ -1787,10 +1787,10 @@
     "@salesforce/ts-types" "^2.0.9"
     chalk "^5.3.0"
 
-"@salesforce/source-deploy-retrieve@^10.0.0", "@salesforce/source-deploy-retrieve@^10.2.11", "@salesforce/source-deploy-retrieve@^10.2.12":
-  version "10.2.12"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-10.2.12.tgz#8311593f3be004530896d9264466b59ec64b0a76"
-  integrity sha512-i12707TLzzJTdt7/lXLFatOwSKW1VK/ns13A8/6/6QHElT6nEvnoxP/bah3BAl9x/mKh7Sr8hD6+3ObnYqha4A==
+"@salesforce/source-deploy-retrieve@^10.0.0", "@salesforce/source-deploy-retrieve@^10.2.11", "@salesforce/source-deploy-retrieve@^10.2.12", "@salesforce/source-deploy-retrieve@^10.2.13":
+  version "10.2.13"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-10.2.13.tgz#91a42143353cf38fe47a3e50e1c2548e4facd738"
+  integrity sha512-KreSALl+mr+Yd7AoG+e6CjtD0/2FT4IS6Zvs4R0bbK/blixONycwl+zGaLia2b0X2pvitUOszMouW6aM0SAgvQ==
   dependencies:
     "@salesforce/core" "^6.4.7"
     "@salesforce/kit" "^3.0.15"
