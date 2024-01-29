@@ -147,7 +147,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 /** Resolve a job ID for a validated deploy using cache, most recent, or a job ID flag. */
 const resolveJobId = (cache: DeployCache, useMostRecentFlag: boolean, jobIdFlag?: string): string => {
   try {
-    return cache.resolveLatest(useMostRecentFlag, jobIdFlag, false);
+    return cache.resolveLatest(useMostRecentFlag, jobIdFlag, true);
   } catch (e) {
     if (e instanceof Error && e.name === 'NoMatchingJobIdError' && jobIdFlag) {
       return jobIdFlag; // Use the specified 15 char job ID
@@ -158,8 +158,8 @@ const resolveJobId = (cache: DeployCache, useMostRecentFlag: boolean, jobIdFlag?
 
 /** Resolve a target org using job ID in cache, or a target org flag. */
 const resolveTargetOrg = async (cache: DeployCache, jobId: string, targetOrgFlag: Org): Promise<Org> => {
-  const aliasOrUsername = cache.get(jobId)?.['target-org'];
-  const targetOrg = aliasOrUsername ? await Org.create({ aliasOrUsername }) : targetOrgFlag;
+  const orgFromCache = cache.maybeGet(jobId)?.['target-org'];
+  const targetOrg = orgFromCache ? await Org.create({ aliasOrUsername: orgFromCache }) : targetOrgFlag;
 
   // If we don't have a target org at this point, throw.
   if (!targetOrg) {

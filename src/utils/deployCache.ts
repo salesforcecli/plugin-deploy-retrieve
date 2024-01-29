@@ -51,19 +51,24 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     await cache.write();
   }
 
-  public resolveLatest(useMostRecent: boolean, key: string | undefined, throwOnNotFound = true): string {
-    const keyFromLatest = useMostRecent ? this.getLatestKey() : key;
-    if (!keyFromLatest) throw cacheMessages.createError('error.NoRecentJobId');
+  public resolveLatest(useMostRecent: boolean, key: string | undefined, throwOnNotFound?: boolean): string {
+    const resolvedKey = useMostRecent ? this.getLatestKey() : key;
+    if (!resolvedKey) throw cacheMessages.createError('error.NoRecentJobId');
 
-    const jobId = this.resolveLongId(keyFromLatest);
+    const match = this.maybeGet(resolvedKey);
 
-    if (throwOnNotFound && !this.has(jobId)) {
-      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
+    if (throwOnNotFound === true && !match) {
+      throw cacheMessages.createError('error.NoMatchingJobId', [resolvedKey]);
     }
 
-    return jobId;
+    return resolvedKey;
   }
 
+  /**
+   * @deprecated.  Use maybeGet to handle both 15 and 18 char IDs
+   * returns 18-char ID unmodified, regardless of whether it's in cache or not
+   * returns 15-char ID if it matches a key in the cache, otherwise throws
+   */
   public resolveLongId(jobId: string): string {
     if (jobId.length === 18) {
       return jobId;
@@ -78,7 +83,27 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
     }
   }
 
+  /**
+   *
+   * @deprecated.  Use maybeGet because the typings are wrong in sfdx-core
+   */
   public get(jobId: string): TTLConfig.Entry<CachedOptions> {
     return super.get(this.resolveLongId(jobId));
+  }
+
+  /**
+   * works with 18 and 15-character IDs.
+   * Prefer 18 as that's how the cache is keyed.
+   * Returns undefined if no match is found.
+   */
+  public maybeGet(jobId: string): TTLConfig.Entry<CachedOptions> | undefined {
+    if (jobId.length === 18) {
+      return super.get(jobId);
+    }
+    if (jobId.length === 15) {
+      const match = this.keys().find((k) => k.startsWith(jobId));
+      return match ? super.get(match) : undefined;
+    }
+    throw cacheMessages.createError('error.InvalidJobId', [jobId]);
   }
 }
