@@ -1,3 +1,15 @@
+## [3.2.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.7...3.2.8) (2024-01-27)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 7.1.3 to 7.1.4 ([f0ede9d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f0ede9d6e8b62deef84100df14cd722843c7aa42))
+
+## [3.2.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.6...3.2.7) (2024-01-27)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve ([d4dc687](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d4dc68723b8f5f6bdabab358be759d243424ca38))
+
 ## [3.2.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.5...3.2.6) (2024-01-23)
 
 ### Bug Fixes
