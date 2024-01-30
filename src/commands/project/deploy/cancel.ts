@@ -63,7 +63,7 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
     // cancel don't care about your tracking conflicts
-    const deployOpts = { ...cache.get(jobId), 'ignore-conflicts': true };
+    const deployOpts = { ...cache.maybeGet(jobId), 'ignore-conflicts': true };
     // we may already know the job finished
     if (
       deployOpts.status &&
@@ -80,7 +80,7 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
       if (!this.jsonEnabled()) formatter.display();
       return formatter.getJson();
     } else {
-      const wait = flags.wait ?? Duration.minutes(deployOpts.wait);
+      const wait = flags.wait ?? Duration.minutes(deployOpts.wait ?? 33);
       const result = await cancelDeploy({ ...deployOpts, wait }, jobId);
       const formatter = new DeployCancelResultFormatter(result);
       if (!this.jsonEnabled()) formatter.display();

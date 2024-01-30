@@ -5,8 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import chalk from 'chalk';
 import { EnvironmentVariable, Messages, Org, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
@@ -20,7 +18,7 @@ import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { coverageFormattersFlag } from '../../../utils/flags.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.resume');
 
 const testFlags = 'Test';
@@ -83,10 +81,10 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataResume), DeployCache.create()]);
-    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
+    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], true);
 
     // if it was async before, then it should not be async now.
-    const deployOpts = { ...cache.get(jobId), async: false };
+    const deployOpts = { ...cache.maybeGet(jobId), async: false };
 
     let result: DeployResult;
 
@@ -108,7 +106,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       const deployStatus = await mdapiDeploy.checkStatus();
       result = new DeployResult(deployStatus, componentSet);
     } else {
-      const wait = flags.wait ?? Duration.minutes(deployOpts.wait);
+      const wait = flags.wait ?? Duration.minutes(deployOpts.wait ?? 33);
       const { deploy } = await executeDeploy(
         // there will always be conflicts on a resume if anything deployed--the changes on the server are not synced to local
         {
@@ -134,6 +132,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       if (!deploy.id) {
         throw new SfError('The deploy id is not available.');
       }
+
       cache.update(deploy.id, { status: result.response.status });
       await cache.write();
     }

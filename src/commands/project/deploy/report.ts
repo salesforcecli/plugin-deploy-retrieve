@@ -82,7 +82,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     // if we're using mdapi we won't have a component set
     let componentSet = new ComponentSet();
     if (!deployOpts?.isMdapi) {
-      if (!cache.get(jobId)) {
+      if (!cache.maybeGet(jobId)) {
         // If the cache file isn't there, use the project package directories for the CompSet
         try {
           this.project = await SfProject.resolve();
