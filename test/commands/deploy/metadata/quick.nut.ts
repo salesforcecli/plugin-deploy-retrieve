@@ -6,10 +6,13 @@
  */
 
 import { fileURLToPath } from 'node:url';
+import fs from 'node:fs';
+import path from 'node:path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, config } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { DeployResultJson } from '../../../../src/utils/types.js';
+
 config.truncateThreshold = 0;
 
 describe('deploy metadata quick NUTs', () => {
@@ -81,59 +84,160 @@ describe('deploy metadata quick NUTs', () => {
     });
   });
 
-  describe('--job-id', () => {
-    it('should deploy previously validated deployment (async)', async () => {
-      const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
-        args: '--source-dir force-app',
-        json: true,
-        exitCode: 0,
-      });
-      assert(validation);
-      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+  describe('using cache', () => {
+    describe('--job-id 18', () => {
+      it('should deploy previously validated deployment (async)', async () => {
+        const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+          args: '--source-dir force-app',
+          json: true,
+          exitCode: 0,
+        });
+        assert(validation);
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
 
-      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
-        args: `--job-id ${validation.result.id}`,
-        json: true,
-        exitCode: 0,
+        const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+          args: `--job-id ${validation.result.id}`,
+          json: true,
+          exitCode: 0,
+        });
+        assert(deploy);
+        assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
       });
-      assert(deploy);
-      assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
-      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+
+      it('should deploy previously validated deployment (poll)', async () => {
+        const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+          args: '--source-dir force-app',
+          json: true,
+          exitCode: 0,
+        });
+        assert(validation);
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+
+        const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+          args: `--job-id ${validation.result.id} --wait 20`,
+          json: true,
+          exitCode: 0,
+        });
+        assert(deploy);
+        assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+      });
+
+      it('should fail to deploy previously deployed deployment', async () => {
+        const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
+          args: '--source-dir force-app',
+          json: true,
+          exitCode: 0,
+        });
+        assert(first);
+        const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+          args: `--job-id ${first.result.id}`,
+          json: true,
+          exitCode: 1,
+        });
+        assert(deploy);
+        testkit.expect.errorToHaveName(deploy, 'CannotQuickDeployError');
+      });
     });
 
-    it('should deploy previously validated deployment (poll)', async () => {
-      const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
-        args: '--source-dir force-app',
-        json: true,
-        exitCode: 0,
-      });
-      assert(validation);
-      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+    describe('--job-id 15', () => {
+      it('should deploy previously validated deployment (async)', async () => {
+        const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+          args: '--source-dir force-app',
+          json: true,
+          exitCode: 0,
+        });
+        assert(validation);
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
 
-      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
-        args: `--job-id ${validation.result.id} --wait 20`,
-        json: true,
-        exitCode: 0,
+        const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+          args: `--job-id ${validation.result.id?.slice(0, 15)}`,
+          json: true,
+          exitCode: 0,
+        });
+        assert(deploy);
+        assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
       });
-      assert(deploy);
-      assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
-      await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+    });
+  });
+
+  describe('no cache using default org', () => {
+    describe('--job-id 18', () => {
+      it('should deploy previously validated deployment (async)', async () => {
+        const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+          args: '--source-dir force-app',
+          json: true,
+          exitCode: 0,
+        });
+        assert(validation);
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+
+        await fs.promises.rm(path.join(testkit.projectDir, '..', '.sf', 'deploy-cache.json'), {
+          recursive: true,
+          force: true,
+        });
+
+        const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+          args: `--job-id ${validation.result.id}`,
+          json: true,
+          exitCode: 0,
+        });
+        assert(deploy);
+        assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+      });
+
+      it('should deploy previously validated deployment (poll)', async () => {
+        const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+          args: '--source-dir force-app',
+          json: true,
+          exitCode: 0,
+        });
+        assert(validation);
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+
+        await fs.promises.rm(path.join(testkit.projectDir, '..', '.sf', 'deploy-cache.json'), {
+          recursive: true,
+          force: true,
+        });
+
+        const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+          args: `--job-id ${validation.result.id} --wait 20`,
+          json: true,
+          exitCode: 0,
+        });
+        assert(deploy);
+        assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+      });
     });
 
-    it('should fail to deploy previously deployed deployment', async () => {
-      const first = await testkit.execute<DeployResultJson>('deploy:metadata', {
-        args: '--source-dir force-app',
-        json: true,
-        exitCode: 0,
+    describe('--job-id 15', () => {
+      it('should deploy previously validated deployment (async)', async () => {
+        const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
+          args: '--source-dir force-app',
+          json: true,
+          exitCode: 0,
+        });
+        assert(validation);
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+
+        await fs.promises.rm(path.join(testkit.projectDir, '..', '.sf', 'deploy-cache.json'), {
+          recursive: true,
+          force: true,
+        });
+
+        const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
+          args: `--job-id ${validation.result.id?.slice(0, 15)}`,
+          json: true,
+          exitCode: 0,
+        });
+        assert(deploy);
+        assert(deploy.result.id !== validation.result.id, 'deploy result ID should not be the validation ID');
+        await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
       });
-      assert(first);
-      const deploy = await testkit.execute<DeployResultJson>('project:deploy:quick', {
-        args: `--job-id ${first.result.id}`,
-        json: true,
-        exitCode: 1,
-      });
-      assert(deploy);
-      testkit.expect.errorToHaveName(deploy, 'CannotQuickDeployError');
     });
   });
 });

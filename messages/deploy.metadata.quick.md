@@ -84,6 +84,10 @@ Job ID can't be used for quick deployment. Possible reasons include the deployme
 
 Deployment %s exited with status code: %s.
 
+# error.NoTargetOrg
+
+No target org found in cache, from a flag, or in the environment.
+
 # info.QuickDeploySuccess
 
 Successfully deployed (%s).

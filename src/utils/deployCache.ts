@@ -41,44 +41,82 @@ export class DeployCache extends TTLConfig<TTLConfig.Options, CachedOptions> {
 
   public static async unset(key: string): Promise<void> {
     const cache = await DeployCache.create();
-    cache.unset(key);
+    cache.unset(ensure18(key, cache));
     await Promise.all([cache.write(), maybeDestroyManifest(key)]);
   }
 
   public static async update(key: string, obj: JsonMap): Promise<void> {
     const cache = await DeployCache.create();
-    cache.update(key, obj);
+    cache.update(ensure18(key, cache), obj);
     await cache.write();
   }
 
-  public resolveLatest(useMostRecent: boolean, key: string | undefined, throwOnNotFound = true): string {
-    const keyFromLatest = useMostRecent ? this.getLatestKey() : key;
-    if (!keyFromLatest) throw cacheMessages.createError('error.NoRecentJobId');
-
-    const jobId = this.resolveLongId(keyFromLatest);
-
-    if (throwOnNotFound && !this.has(jobId)) {
-      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
-    }
-
-    return jobId;
+  public update(key: string, obj: JsonMap): void {
+    super.update(ensure18(key, this), obj);
   }
 
+  /** will return an 18 character ID if throwOnNotFound is true (because the cache can be used to shift 15 to 18) */
+  public resolveLatest(useMostRecent: boolean, key: string | undefined, throwOnNotFound?: boolean): string {
+    const resolvedKey = useMostRecent ? this.getLatestKey() : key;
+    if (!resolvedKey) throw cacheMessages.createError('error.NoRecentJobId');
+
+    const match = this.maybeGet(resolvedKey);
+
+    if (throwOnNotFound === true && !match) {
+      throw cacheMessages.createError('error.NoMatchingJobId', [resolvedKey]);
+    }
+
+    return throwOnNotFound ? ensure18(resolvedKey, this) : resolvedKey;
+  }
+
+  /**
+   * @deprecated.  Use maybeGet to handle both 15 and 18 char IDs
+   * returns 18-char ID unmodified, regardless of whether it's in cache or not
+   * returns 15-char ID if it matches a key in the cache, otherwise throws
+   */
   public resolveLongId(jobId: string): string {
-    if (jobId.length === 18) {
-      return jobId;
-    } else if (jobId.length === 15) {
-      const match = this.keys().find((k) => k.startsWith(jobId));
-      if (match) {
-        return match;
-      }
-      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
-    } else {
-      throw cacheMessages.createError('error.InvalidJobId', [jobId]);
-    }
+    return ensure18(jobId, this);
   }
 
+  /**
+   *
+   * @deprecated.  Use maybeGet because the typings are wrong in sfdx-core
+   */
   public get(jobId: string): TTLConfig.Entry<CachedOptions> {
     return super.get(this.resolveLongId(jobId));
   }
+
+  /**
+   * works with 18 and 15-character IDs.
+   * Prefer 18 as that's how the cache is keyed.
+   * Returns undefined if no match is found.
+   */
+  public maybeGet(jobId: string): TTLConfig.Entry<CachedOptions> | undefined {
+    if (jobId.length === 18) {
+      return super.get(jobId);
+    }
+    if (jobId.length === 15) {
+      const match = this.keys().find((k) => k.startsWith(jobId));
+      return match ? super.get(match) : undefined;
+    }
+    throw cacheMessages.createError('error.InvalidJobId', [jobId]);
+  }
 }
+
+/**
+ * if the jobId is 15 characters, use the cache to convert to 18
+ * will throw if the value is not in the cache
+ */
+const ensure18 = (jobId: string, cache: DeployCache): string => {
+  if (jobId.length === 18) {
+    return jobId;
+  } else if (jobId.length === 15) {
+    const match = cache.keys().find((k) => k.startsWith(jobId));
+    if (match) {
+      return match;
+    }
+    throw cacheMessages.createError('error.NoMatchingJobId', [jobId]);
+  } else {
+    throw cacheMessages.createError('error.InvalidJobId', [jobId]);
+  }
+};

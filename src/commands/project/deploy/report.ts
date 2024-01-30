@@ -5,8 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
@@ -17,7 +15,7 @@ import { DeployReportResultFormatter } from '../../../formatters/deployReportRes
 import { API, DeployResultJson } from '../../../utils/types.js';
 import { coverageFormattersFlag } from '../../../utils/flags.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.report');
 const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 const testFlags = 'Test';
@@ -75,14 +73,16 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataReport), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
-    const deployOpts = cache.get(jobId) ?? {};
+    const deployOpts = cache.maybeGet(jobId);
     const wait = flags['wait'];
-    const org = flags['target-org'] ?? (await Org.create({ aliasOrUsername: deployOpts['target-org'] }));
+    const org = deployOpts?.['target-org']
+      ? await Org.create({ aliasOrUsername: deployOpts['target-org'] })
+      : flags['target-org'];
 
     // if we're using mdapi we won't have a component set
     let componentSet = new ComponentSet();
-    if (!deployOpts.isMdapi) {
-      if (!cache.get(jobId)) {
+    if (!deployOpts?.isMdapi) {
+      if (!cache.maybeGet(jobId)) {
         // If the cache file isn't there, use the project package directories for the CompSet
         try {
           this.project = await SfProject.resolve();
@@ -102,7 +102,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       id: jobId,
       components: componentSet,
       apiOptions: {
-        rest: deployOpts.api === API['REST'],
+        rest: deployOpts?.api === API['REST'],
       },
     });
 
