@@ -1,3 +1,12 @@
+## [3.2.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.8...3.2.9) (2024-01-30)
+
+### Bug Fixes
+
+- another 15/18 edge case (yay, nuts!) ([380830e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/380830e1a10a03a0e5c98372d939172010741d64))
+- don't throw when 15 char job ID not in cache ([94d3ce3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/94d3ce3893ec7bcd6e2f2a743c841cf33971c88d))
+- handle 15-char not in cache but with org ([81151b5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81151b5636044123e2079cc906a7a57251d7d182))
+- refactor ID and org resolution ([94bf502](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/94bf5023f701c00c21ed12b8c243fea2b8172a70))
+
 ## [3.2.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.7...3.2.8) (2024-01-27)
 
 ### Bug Fixes
