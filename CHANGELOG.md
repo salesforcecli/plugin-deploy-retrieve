@@ -1,3 +1,9 @@
+## [3.2.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.13...3.2.14) (2024-02-12)
+
+### Bug Fixes
+
+- add doctor diagnostic test from plugin-source ([#901](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/901)) ([fa20f92](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fa20f92dba8bca65c9e9cc87854bd54ea2255201))
+
 ## [3.2.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.12...3.2.13) (2024-02-10)
 
 ### Bug Fixes
