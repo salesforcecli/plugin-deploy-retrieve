@@ -9,6 +9,7 @@
     "@salesforce/apex-node": "^3.0.2",
     "@salesforce/core": "^6.4.4",
     "@salesforce/kit": "^3.0.15",
+    "@salesforce/plugin-info": "^3.0.21",
     "@salesforce/sf-plugins-core": "^7.1.9",
     "@salesforce/source-deploy-retrieve": "^10.2.13",
     "@salesforce/source-tracking": "^5.1.11",
@@ -90,6 +91,9 @@
           }
         }
       }
+    },
+    "hooks": {
+      "sf-doctor-@salesforce/plugin-deploy-retrieve": "./lib/hooks/diagnostics"
     },
     "flexibleTaxonomy": true
   },
