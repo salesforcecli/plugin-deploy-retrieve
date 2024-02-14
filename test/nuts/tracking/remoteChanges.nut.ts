@@ -7,7 +7,7 @@
 
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { expect, assert } from 'chai';
+import { expect, assert, config } from 'chai';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
@@ -20,8 +20,11 @@ import { eBikesDeployResultCount } from './constants.js';
 let session: TestSession;
 let conn: Connection;
 
+config.truncateThreshold = 0;
+
 const filterIgnored = (r: StatusResult): boolean => r.ignored !== true;
 const noAudience = (pf: PreviewFile | FileResponse) => pf.type !== 'Audience';
+const noReportType = (pf: PreviewFile | FileResponse) => pf.type !== 'ReportType';
 
 describe('remote changes', () => {
   before(async () => {
@@ -142,9 +145,11 @@ describe('remote changes', () => {
         ?.result;
       assert(result);
       assert(Array.isArray(result.files));
+      const filteredResult = result.files.filter(noAudience).filter(noReportType);
       // the 2 files for the apexClass, and possibly one for the Profile (depending on whether it got created in time)
-      expect(result.files.filter(noAudience), JSON.stringify(result)).to.have.length.greaterThanOrEqual(2);
-      expect(result.files.filter(noAudience), JSON.stringify(result)).to.have.length.lessThanOrEqual(4);
+
+      expect(filteredResult).to.have.length.greaterThanOrEqual(2).and.lessThanOrEqual(4);
+
       result.files.filter((r) => r.fullName === 'TestOrderController').map((r) => expect(r.state).to.equal('Deleted'));
     });
     it('local file was deleted', () => {
