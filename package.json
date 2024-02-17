@@ -25,7 +25,7 @@
     "@salesforce/source-testkit": "^2.1.88",
     "@salesforce/ts-sinon": "^1.4.19",
     "cross-env": "^7.0.3",
-    "eslint-plugin-sf-plugin": "^1.17.2",
+    "eslint-plugin-sf-plugin": "^1.17.3",
     "oclif": "^4.4.2",
     "shx": "0.3.4",
     "ts-node": "^10.9.2",
