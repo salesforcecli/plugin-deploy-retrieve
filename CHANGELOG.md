@@ -1,3 +1,9 @@
+## [3.2.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.15...3.2.16) (2024-02-21)
+
+### Bug Fixes
+
+- **deps:** bump ip from 1.1.8 to 1.1.9 ([af4d8bf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/af4d8bf9c1efe0af76fe53f1be06dc1d82ac6760))
+
 ## [3.2.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.14...3.2.15) (2024-02-17)
 
 ### Bug Fixes
