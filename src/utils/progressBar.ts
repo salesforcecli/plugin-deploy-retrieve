@@ -84,7 +84,6 @@ export class DeployProgress extends Progress {
         testInfo,
       });
     } else {
-      ux.debug(`Deploy Progress Status (else): ${data.status}`);
       let status;
       try {
         status = mdTransferMessages.getMessage(data.status);

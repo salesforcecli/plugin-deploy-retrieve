@@ -10,7 +10,7 @@ In Progress
 
 Succeeded
 
-# Cancelled
+# Canceled
 
 Canceled
 
