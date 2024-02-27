@@ -1,3 +1,23 @@
+## [3.2.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.19...3.2.20) (2024-02-26)
+
+## [3.2.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.18...3.2.19) (2024-02-25)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve from 10.3.9 to 10.4.0 ([c6c0d8d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c6c0d8dcd37b2939c4862c1c9e84658449ed483a))
+
+## [3.2.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.17...3.2.18) (2024-02-24)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.0.25 to 3.0.27 ([04726c1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/04726c158b593847973b6e8d20c357e9f4415d07))
+
+## [3.2.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.16...3.2.17) (2024-02-24)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 3.19.1 to 3.19.6 ([0a87e2b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0a87e2bb3fff7a736807d9ffcdac06ebb41c28e9))
+
 ## [3.2.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.15...3.2.16) (2024-02-21)
 
 ### Bug Fixes
