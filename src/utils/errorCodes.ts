@@ -5,12 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
-
 import { Messages } from '@salesforce/core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'errorCodes');
 
 export const DEPLOY_STATUS_CODES = new Map<RequestStatus, number>([

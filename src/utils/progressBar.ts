@@ -5,13 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-
 import { envVars as env, EnvironmentVariable, Lifecycle, Messages } from '@salesforce/core';
 import { MetadataApiDeploy, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { Progress } from '@salesforce/sf-plugins-core';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
+import { ux } from '@oclif/core';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
 const showBar = Boolean(
@@ -84,7 +84,14 @@ export class DeployProgress extends Progress {
         testInfo,
       });
     } else {
-      this.update(0, { errorInfo, testInfo, status: mdTransferMessages.getMessage(data.status) ?? 'Waiting' });
+      let status;
+      try {
+        status = mdTransferMessages.getMessage(data.status);
+      } catch (e) {
+        ux.debug(`data.status message lookup failed for: ${data.status}`);
+        status = 'Waiting';
+      }
+      this.update(0, { errorInfo, testInfo, status });
     }
   }
 }

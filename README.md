@@ -151,7 +151,7 @@ USAGE
     <value> | -m <value>]
 
 FLAGS
-  -d, --output-dir=<value>     [default: metadataPackage_1708974940174] Output directory to store the Metadata
+  -d, --output-dir=<value>     [default: metadataPackage_1709056694984] Output directory to store the Metadata
                                API–formatted files in.
   -m, --metadata=<value>...    Metadata component names to convert.
   -n, --package-name=<value>   Name of the package to associate with the metadata-formatted files.
@@ -1534,7 +1534,9 @@ FLAG DESCRIPTIONS
     If the target directory matches one of the package directories in your sfdx-project.json file, the command fails.
     Running the command multiple times with the same target adds new files and overwrites existing files.
 
-  -w, --wait=<value>  Number of minutes to wait for the command to complete and display results to the terminal window.
+  -w, --wait=<value>
+
+    Number of minutes to wait for the command to complete and display results to the terminal window.
 
     If the command continues to run after the wait period, the CLI returns control of the terminal window to you.
 

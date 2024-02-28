@@ -18,7 +18,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'manifest.generate');
 
 const manifestTypes = {

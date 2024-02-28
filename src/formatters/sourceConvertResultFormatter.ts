@@ -11,7 +11,7 @@ import { ConvertResult } from '@salesforce/source-deploy-retrieve';
 import { SfError, Messages } from '@salesforce/core';
 import { ConvertResultJson, Formatter } from '../utils/types.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 export const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
 
 export class SourceConvertResultFormatter implements Formatter<ConvertResultJson> {

@@ -12,7 +12,7 @@ import { Messages } from '@salesforce/core';
 import { Formatter, MetadataRetrieveResultJson } from '../utils/types.js';
 import { sortFileResponses, asRelativePaths } from '../utils/output.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 export const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
 
 export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrieveResultJson> {
