@@ -1,3 +1,5 @@
+## [3.2.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.20...3.2.21) (2024-03-01)
+
 ## [3.2.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.19...3.2.20) (2024-02-26)
 
 ## [3.2.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.18...3.2.19) (2024-02-25)
