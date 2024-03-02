@@ -8,38 +8,38 @@ You must run this command from within a project.
 
 Metadata components are retrieved in source format by default. Retrieve them in metadata format by specifying the --target-metadata-dir flag, which retrieves the components into a ZIP file in the specified directory.
 
-If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "<%= config.bin %> org create scratch|sandbox" commands.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production orgs, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "<%= config.bin %> org create scratch|sandbox" commands.
 
 To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
 # examples
 
-- Retrieve remote changes from your default org:
+- Retrieve all remote changes from your default org:
 
   <%= config.bin %> <%= command.id %>
 
-- Retrieve the source files in a directory from an org with alias "my-scratch":
+- Retrieve the source files in the "force-app" directory from an org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --source-dir path/to/source --target-org my-scratch
+  <%= config.bin %> <%= command.id %> --source-dir force-app --target-org my-scratch
 
-- Retrieve a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
+- Retrieve all the Apex classes and custom objects whose source is in the "force-app" directory. The list views, layouts, etc, that are associated with the custom objects are also retrieved. Both examples are equivalent:
 
-  <%= config.bin %> <%= command.id %> --source-dir path/to/apex/classes/MyClass.cls path/to/source/objects
-  <%= config.bin %> <%= command.id %> --source-dir path/to/apex/classes/MyClass.cls --source-dir path/to/source/objects
+  <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes force-app/main/default/objects
+  <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes --source-dir force-app/main/default/objects
 
-- Retrieve all Apex classes:
+- Retrieve all Apex classes that are in all package directories defined in the "sfdx-project.json" file:
 
   <%= config.bin %> <%= command.id %> --metadata ApexClass
 
-- Retrieve a specific Apex class:
+- Retrieve a specific Apex class; ignore any conflicts between the local project and org (be careful with this flag, because it will overwrite the Apex class source files in your local project if there are conflicts!):
 
-  <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass
+  <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass --ignore-conflicts
 
 - Retrieve specific Apex classes that match a pattern; in this example, retrieve Apex classes whose names contain the string "MyApex":
 
       <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
 
-- Retrieve all custom objects and Apex classes (both examples are equivalent):
+- Retrieve all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
   <%= config.bin %> <%= command.id %> --metadata CustomObject ApexClass
   <%= config.bin %> <%= command.id %> --metadata CustomObject --metadata ApexClass
@@ -91,7 +91,7 @@ If you specify this parameter, don’t specify --metadata or --source-dir.
 
 # flags.metadata.summary
 
-Metadata component names to retrieve. Wildcards ( `*` ) supported as long as you use quotes, such as `ApexClass:MyClass*`
+Metadata component names to retrieve. Wildcards ("_") supported as long as you use quotes, such as "ApexClass:MyClass_".
 
 # flags.package-name.summary
 
@@ -196,10 +196,10 @@ Because you're retrieving one or more CustomFields, we're also retrieving the Cu
 # noSourceTracking
 
 Unable to track changes in your source files.
-This command expects the org to support source tracking. If it doesn't, you must specify the metadata you want to retrieve. 
+This command expects the org to support source tracking. If it doesn't, you must specify the metadata you want to retrieve.
 
 # noSourceTracking.actions
 
-- Use  the `--source-dir`, `--manifest` or `--package-name` flags to retrieve metadata in source format.
+- Use the `--source-dir`, `--manifest` or `--package-name` flags to retrieve metadata in source format.
 
 - Use the `--target-metadata-dir` flag to retrieve metadata in metadata format to a directory.

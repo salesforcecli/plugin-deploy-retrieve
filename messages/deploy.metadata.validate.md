@@ -16,13 +16,17 @@ To validate the deployment of multiple metadata components, either set multiple 
 
 - NOTE: These examples focus on validating large deployments. See the help for "<%= config.bin %> project deploy start" for examples of deploying smaller sets of metadata which you can also use to validate.
 
-- Validate the deployment of all source files in a directory to the default org:
+- Validate the deployment of all source files in the "force-app" directory to the default org:
 
-      <%= config.bin %> <%= command.id %> --source-dir path/to/source
+      <%= config.bin %> <%= command.id %> --source-dir force-app
+
+- Validate the deployment of all source files in two directories: "force-app" and "force-app-utils":
+
+      <%= config.bin %> <%= command.id %> --source-dir force-app --source-dir force-app-utils
 
 - Asynchronously validate the deployment and run all tests in the org with alias "my-prod-org"; command immediately returns the job ID:
 
-      <%= config.bin %> <%= command.id %> --source-dir path/to/source --async --test-level RunAllTestsInOrg --target-org my-prod-org
+      <%= config.bin %> <%= command.id %> --source-dir force-app --async --test-level RunAllTestsInOrg --target-org my-prod-org
 
 - Validate the deployment of all components listed in a manifest:
 
