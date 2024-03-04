@@ -1,3 +1,9 @@
+## [3.2.24](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.23...3.2.24) (2024-03-04)
+
+### Bug Fixes
+
+- improve messages ([f0d6ca1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f0d6ca1d3283d3b05f55cb3b0774394411862e03))
+
 ## [3.2.23](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.22...3.2.23) (2024-03-02)
 
 ### Bug Fixes
