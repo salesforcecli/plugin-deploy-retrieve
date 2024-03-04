@@ -1,3 +1,9 @@
+## [3.2.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.24...3.2.25) (2024-03-04)
+
+### Bug Fixes
+
+- sandbox note on validate and quick ([59508a0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/59508a03f7c6b4b8b64ae8fead769870109c7056))
+
 ## [3.2.24](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.23...3.2.24) (2024-03-04)
 
 ### Bug Fixes
