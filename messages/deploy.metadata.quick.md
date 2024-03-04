@@ -10,6 +10,8 @@ Executing this quick deploy command takes less time than a standard deploy becau
 
 This command doesn't support source-tracking. The source you deploy overwrites the corresponding metadata in your org. This command doesn’t attempt to merge your source with the versions in your org.
 
+Note: Don't use this command on sandboxes; the command is intended to be used on production orgs.  By default, sandboxes don't run tests during a deploy. Use `sf project deploy start` instead.
+
 # examples
 
 - Run a quick deploy to your default org using a job ID:

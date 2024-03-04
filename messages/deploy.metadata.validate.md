@@ -12,6 +12,8 @@ This command doesn't support source-tracking. When you quick deploy with the res
 
 To validate the deployment of multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
+Note: Don't use this command on sandboxes; the command is intended to be used on production orgs. By default, sandboxes don't run tests during a deploy.  If you want to validate a deployment with tests on a sandbox, use "sf project deploy start --dry-run --test-level RunLocalTests" instead.
+
 # examples
 
 - NOTE: These examples focus on validating large deployments. See the help for "<%= config.bin %> project deploy start" for examples of deploying smaller sets of metadata which you can also use to validate.
