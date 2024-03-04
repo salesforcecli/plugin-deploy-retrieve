@@ -91,7 +91,7 @@ If you specify this parameter, don’t specify --metadata or --source-dir.
 
 # flags.metadata.summary
 
-Metadata component names to retrieve. Wildcards ("*") supported as long as you use quotes, such as `ApexClass:MyClass*`.
+Metadata component names to retrieve. Wildcards (`*`) supported as long as you use quotes, such as `ApexClass:MyClass*`.
 
 # flags.package-name.summary
 

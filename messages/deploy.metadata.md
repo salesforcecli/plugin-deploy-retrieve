@@ -78,7 +78,7 @@ Overrides your default org.
 
 # flags.metadata.summary
 
-Metadata component names to deploy. Wildcards ("*" ) supported as long as you use quotes, such as `ApexClass:MyClass*`.
+Metadata component names to deploy. Wildcards (`*` ) supported as long as you use quotes, such as `ApexClass:MyClass*`.
 
 # flags.test-level.summary
 
