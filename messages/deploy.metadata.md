@@ -8,7 +8,7 @@ You must run this command from within a project.
 
 Metadata components are deployed in source format by default. Deploy them in metadata format by specifying the --metadata-dir flag, which specifies the root directory or ZIP file that contains the metadata formatted files you want to deploy.
 
-If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production org, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "<%= config.bin %> org create scratch|sandbox" commands.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production orgs, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "<%= config.bin %> org create scratch|sandbox" commands.
 
 To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
@@ -18,28 +18,28 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
       <%= config.bin %> <%= command.id %>
 
-- Deploy the source files in a directory to an org with alias "my-scratch":
+- Deploy all source files in the "force-app" directory to an org with alias "my-scratch"; show only concise output, in other words don't print a list of all the source that was deployed:
 
-      <%= config.bin %> <%= command.id %>  --source-dir path/to/source --target-org my-scratch
+      <%= config.bin %> <%= command.id %>  --source-dir force-app --target-org my-scratch --concise
 
-- Deploy a specific Apex class and the objects whose source is in a directory (both examples are equivalent):
+- Deploy all the Apex classes and custom objects that are in the "force-app" directory. The list views, layouts, etc, that are associated with the custom objects are also deployed. Both examples are equivalent:
 
-      <%= config.bin %> <%= command.id %> --source-dir path/to/apex/classes/MyClass.cls path/to/source/objects
-      <%= config.bin %> <%= command.id %> --source-dir path/to/apex/classes/MyClass.cls --source-dir path/to/source/objects
+      <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes force-app/main/default/objects
+      <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes --source-dir force-app/main/default/objects
 
-- Deploy all Apex classes:
+- Deploy all Apex classes that are in all package directories defined in the "sfdx-project.json" file:
 
       <%= config.bin %> <%= command.id %> --metadata ApexClass
 
-- Deploy a specific Apex class:
+- Deploy a specific Apex class; ignore any conflicts between the local project and org (be careful with this flag, because it will overwrite the Apex class in the org if there are conflicts!):
 
-      <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass
+      <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass --ignore-conflicts
 
-- Deploy specific Apex classes that match a pattern; in this example, deploy Apex classes whose names contain the string "MyApex":
+- Deploy specific Apex classes that match a pattern; in this example, deploy Apex classes whose names contain the string "MyApex". Also ignore any deployment warnings (again, be careful with this flag! You typically want to see the warnings):
 
-      <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
+      <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*' --ignore-warnings
 
-- Deploy all custom objects and Apex classes (both examples are equivalent):
+- Deploy all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
       <%= config.bin %> <%= command.id %> --metadata CustomObject ApexClass
       <%= config.bin %> <%= command.id %> --metadata CustomObject --metadata ApexClass
@@ -62,7 +62,7 @@ Login username or alias for the target org.
 
 # flags.pre-destructive-changes.summary
 
-File path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy
+File path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy.
 
 # flags.post-destructive-changes.summary
 
@@ -78,7 +78,7 @@ Overrides your default org.
 
 # flags.metadata.summary
 
-Metadata component names to deploy. Wildcards ( `*` ) supported as long as you use quotes, such as `ApexClass:MyClass*`
+Metadata component names to deploy. Wildcards (`*` ) supported as long as you use quotes, such as `ApexClass:MyClass*`.
 
 # flags.test-level.summary
 
@@ -142,7 +142,7 @@ Ignore any errors and don’t roll back deployment.
 
 # flags.ignore-errors.description
 
-When deploying to a production org, keep this flag set to false (default value). When set to true, components without errors are deployed and components with errors are skipped, and could result in an inconsistent production org.
+Never use this flag when deploying to a production org. If you specify it, components without errors are deployed and components with errors are skipped, and could result in an inconsistent production org.
 
 # flags.ignore-warnings.summary
 
@@ -150,7 +150,9 @@ Ignore warnings and allow a deployment to complete successfully.
 
 # flags.ignore-warnings.description
 
-If a warning occurs and this flag is set to true, the success status of the deployment is set to true. When this flag is set to false, success is set to false, and the warning is treated like an error.
+If you specify this flag, and a warning occurs, the success status of the deployment is set to true. If you don't specify this flag, and a warning occurs, then the success status is set to false, and the warning is treated like an error.
+
+This flag is useful in a CI environment and your deployment includes destructive changes; if you try to delete a component that doesn't exist in the org, you get a warning. In this case, to ensure that the command returns a success value of true, specify this flag.
 
 # flags.verbose.summary
 
