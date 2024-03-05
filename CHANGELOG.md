@@ -1,3 +1,9 @@
+## [3.2.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.26...3.2.27) (2024-03-05)
+
+### Bug Fixes
+
+- **deps:** bump stl and others ([#932](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/932)) ([0e0b4eb](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0e0b4ebc1136b3ad65a3e1723d2cc1e1b53b2f59))
+
 ## [3.2.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.25...3.2.26) (2024-03-05)
 
 ### Bug Fixes
