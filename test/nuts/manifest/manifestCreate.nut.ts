@@ -11,7 +11,7 @@ import { join } from 'node:path';
 import { TestSession } from '@salesforce/cli-plugins-testkit';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { Dictionary } from '@salesforce/ts-types';
-import { expect } from 'chai';
+import { config, expect } from 'chai';
 
 describe('project generate manifest', () => {
   let session: TestSession;
@@ -119,5 +119,27 @@ describe('project generate manifest', () => {
     const stats = fs.statSync(join(session.project.dir, manifestName));
     expect(stats.isFile()).to.be.true;
     expect(stats.size).to.be.greaterThan(100);
+  });
+
+  it('should produce the same manifest from an org every time', async () => {
+    config.truncateThreshold = 0;
+
+    execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-1.xml`, {
+      ensureExitCode: 0,
+    });
+    const manifest1 = fs.readFileSync(join(session.project.dir, 'org-metadata-1.xml'), 'utf-8');
+
+    execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-2.xml`, {
+      ensureExitCode: 0,
+    });
+    const manifest2 = fs.readFileSync(join(session.project.dir, 'org-metadata-2.xml'), 'utf-8');
+
+    execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-3.xml`, {
+      ensureExitCode: 0,
+    });
+    const manifest3 = fs.readFileSync(join(session.project.dir, 'org-metadata-3.xml'), 'utf-8');
+
+    expect(manifest1).to.equal(manifest2);
+    expect(manifest2).to.equal(manifest3);
   });
 });
