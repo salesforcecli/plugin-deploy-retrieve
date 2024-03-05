@@ -1,3 +1,9 @@
+## [3.2.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.25...3.2.26) (2024-03-05)
+
+### Bug Fixes
+
+- compare manifests generated from orgs ([#923](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/923)) ([cba446b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/cba446bc5da39740798e28f9384e7a990c978698))
+
 ## [3.2.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.24...3.2.25) (2024-03-04)
 
 ### Bug Fixes
