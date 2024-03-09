@@ -2176,16 +2176,16 @@
     handlebars "^4.7.8"
     tslib "^2"
 
-"@salesforce/plugin-info@^3.0.27":
-  version "3.0.27"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.0.27.tgz#54b587c917b0ad2b7e21e6d3c5f23f0a095f42ef"
-  integrity sha512-iQObYHBpik9WAQOmBH1Yxpdb/gI68AuJXbum4zi5auRx4CSZbey0vFOqjUHN5+vE4cFtFF9MA7vLKgirU5B/sw==
+"@salesforce/plugin-info@^3.0.28":
+  version "3.0.28"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.0.28.tgz#f9f7eb92f5c1587aec6f3dc4b56070e2dafb07e3"
+  integrity sha512-Sm2qhlNWAwSg/BYxKcRqvdpIUP6FynILl2/8emekJA52ApKw2b/SAHIWDozmxAqVJZseMqZnglKFuIId+qQhpg==
   dependencies:
     "@inquirer/input" "^2.0.0"
     "@oclif/core" "^3.19.1"
     "@salesforce/core" "^6.5.2"
     "@salesforce/kit" "^3.0.15"
-    "@salesforce/sf-plugins-core" "^7.1.9"
+    "@salesforce/sf-plugins-core" "^7.1.11"
     got "^13.0.0"
     marked "^4.3.0"
     marked-terminal "^4.2.0"
@@ -2233,7 +2233,7 @@
     chalk "^4"
     inquirer "^8.2.5"
 
-"@salesforce/sf-plugins-core@^7.1.14", "@salesforce/sf-plugins-core@^7.1.9":
+"@salesforce/sf-plugins-core@^7.1.11", "@salesforce/sf-plugins-core@^7.1.14":
   version "7.1.14"
   resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-7.1.14.tgz#5f07316a602b4c5d44c09bc74c294d7df9e2e260"
   integrity sha512-KDX9vYDeVOkozRrsjVh4Pvzay++7bWWKmaHtGOwkZrBHb3mVEdCp0ryF0WaDTfaEvgNKn7kiZEDSO7oEhJSzug==
