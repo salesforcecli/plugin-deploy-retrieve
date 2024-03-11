@@ -1,3 +1,9 @@
+## [3.2.31](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.30...3.2.31) (2024-03-11)
+
+### Bug Fixes
+
+- add deploy errors to validate error message ([#938](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/938)) ([d60804b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d60804bf20c870fd6b57443a183bba6a616cd44c))
+
 ## [3.2.30](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.29...3.2.30) (2024-03-10)
 
 ### Bug Fixes
