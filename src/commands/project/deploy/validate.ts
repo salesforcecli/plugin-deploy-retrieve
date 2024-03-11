@@ -224,6 +224,15 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
       this.log(messages.getMessage('info.suggestedQuickDeploy', [this.config.bin, deploy.id]));
     } else {
+      let componentDeployErrors = result.response.errorMessage;
+      if (!result.response.errorMessage) {
+        componentDeployErrors = '';
+        // gather component deployment errors
+        const failures = formatter.getFileResponseFailures();
+        failures?.map((f) => {
+          componentDeployErrors += `${f.problemType} in ${f.fullName} - ${f.error}${os.EOL}`;
+        });
+      }
       throw messages
         .createError('error.FailedValidation', [
           deploy.id,
@@ -233,7 +242,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
               (warning: CodeCoverageWarnings & { name?: string }) =>
                 `${warning.name ? `${warning.name} - ` : ''}${warning.message}`
             ),
-            result.response.errorMessage,
+            componentDeployErrors,
             result.response.numberComponentErrors ? `${result.response.numberComponentErrors} component error(s)` : '',
           ]
             .join(os.EOL)

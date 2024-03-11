@@ -8,7 +8,13 @@ import * as path from 'node:path';
 import { EOL } from 'node:os';
 import * as fs from 'node:fs';
 import { ux } from '@oclif/core';
-import { ComponentStatus, DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import {
+  ComponentStatus,
+  DeployResult,
+  FileResponse,
+  FileResponseFailure,
+  RequestStatus,
+} from '@salesforce/source-deploy-retrieve';
 import { Org, SfError, Lifecycle } from '@salesforce/core';
 import { Duration, ensureArray, sortBy } from '@salesforce/kit';
 import {
@@ -129,6 +135,27 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     if (this.flags.verbose) return 'verbose';
     if (this.flags.concise) return 'concise';
     return 'normal';
+  }
+
+  public getFileResponseFailures(): FileResponseFailure[] | undefined {
+    const failures = this.relativeFiles.filter(isSdrFailure);
+    const deployMessages = ensureArray(this.result.response.details?.componentFailures);
+    if (deployMessages.length > failures.length) {
+      const failureKeySet = new Set(failures.map((f) => makeKey(f.type, f.fullName)));
+      // if there's additional failures in the API response, find the failure and add it to the output
+      deployMessages
+        .filter((m) => !m.componentType || !failureKeySet.has(makeKey(m.componentType, m.fullName)))
+        .map((deployMessage) => {
+          failures.push({
+            fullName: deployMessage.fullName,
+            type: deployMessage.componentType ?? 'UNKNOWN',
+            state: ComponentStatus.Failed,
+            error: deployMessage.problem ?? 'UNKNOWN',
+            problemType: deployMessage.problemType ?? 'Error',
+          });
+        });
+    }
+    return failures;
   }
 
   private maybeCreateRequestedReports(): void {
@@ -269,24 +296,8 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   private displayFailures(): void {
     if (this.result.response.status === RequestStatus.Succeeded) return;
 
-    const failures = this.relativeFiles.filter(isSdrFailure);
-    const deployMessages = ensureArray(this.result.response.details?.componentFailures);
-    if (deployMessages.length > failures.length) {
-      const failureKeySet = new Set(failures.map((f) => makeKey(f.type, f.fullName)));
-      // if there's additional failures in the API response, find the failure and add it to the output
-      deployMessages
-        .filter((m) => !m.componentType || !failureKeySet.has(makeKey(m.componentType, m.fullName)))
-        .map((deployMessage) => {
-          failures.push({
-            fullName: deployMessage.fullName,
-            type: deployMessage.componentType ?? 'UNKNOWN',
-            state: ComponentStatus.Failed,
-            error: deployMessage.problem ?? 'UNKNOWN',
-            problemType: deployMessage.problemType ?? 'Error',
-          });
-        });
-    }
-    if (!failures.length) return;
+    const failures = this.getFileResponseFailures();
+    if (!failures?.length) return;
 
     const columns = {
       problemType: { header: 'Type' },
