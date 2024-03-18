@@ -70,8 +70,8 @@
     "alias": ["deploy:metadata:cancel"],
     "command": "project:deploy:cancel",
     "flagAliases": [],
-    "flagChars": ["i", "r", "w"],
-    "flags": ["async", "job-id", "json", "use-most-recent", "wait"],
+    "flagChars": ["i", "o", "r", "w"],
+    "flags": ["async", "job-id", "json", "target-org", "use-most-recent", "wait"],
     "plugin": "@salesforce/plugin-deploy-retrieve"
   },
   {
@@ -79,7 +79,7 @@
     "command": "project:deploy:preview",
     "flagAliases": [],
     "flagChars": ["c", "d", "m", "o", "x"],
-    "flags": ["ignore-conflicts", "json", "manifest", "metadata", "source-dir", "target-org", "concise"],
+    "flags": ["concise", "ignore-conflicts", "json", "manifest", "metadata", "source-dir", "target-org"],
     "plugin": "@salesforce/plugin-deploy-retrieve"
   },
   {

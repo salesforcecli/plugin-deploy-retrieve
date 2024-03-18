@@ -19,7 +19,7 @@ function readDeployCache(sessionDir: string): Record<string, CachedOptions> {
   return JSON.parse(contents) as Record<string, CachedOptions>;
 }
 
-describe('deploy metadata cancel NUTs', () => {
+describe.only('deploy metadata cancel NUTs', () => {
   let session: TestSession;
 
   before(async () => {
@@ -65,7 +65,7 @@ describe('deploy metadata cancel NUTs', () => {
       }
     });
 
-    it.skip('should cancel most recently started deployment without specifying the flag', () => {
+    it('should cancel most recently started deployment without specifying the flag', () => {
       const first = execCmd<DeployResultJson>(
         'deploy:metadata --source-dir force-app --async --ignore-conflicts --json',
         {
@@ -105,7 +105,9 @@ describe('deploy metadata cancel NUTs', () => {
       const cacheBefore = readDeployCache(session.dir);
       expect(cacheBefore).to.have.property(first.id);
 
-      const cancel = execCmd<DeployResultJson>(`deploy:metadata:cancel --job-id ${first.id} --json`);
+      const cancel = execCmd<DeployResultJson>(
+        `deploy:metadata:cancel --job-id ${first.id} --target-org ${session.orgs.get('default')?.username}--json`
+      );
       assert(cancel.jsonOutput);
 
       if (cancel.jsonOutput.status === 0) {
