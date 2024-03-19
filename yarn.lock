@@ -2265,6 +2265,25 @@
     proxy-agent "^6.4.0"
     ts-retry-promise "^0.7.1"
 
+"@salesforce/source-deploy-retrieve@^10.5.3":
+  version "10.5.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-10.5.3.tgz#c994a5522ce187bfc59bbdb76edfb550453a8025"
+  integrity sha512-gw28Co2twQ6GSIF94DdWxx6htBLWKIsMhaKlydfymoAp3kZrFmALRPh8Dj8RDQWV8wrSmzWqDFX9iGoldHZDbg==
+  dependencies:
+    "@salesforce/core" "^6.7.0"
+    "@salesforce/kit" "^3.0.15"
+    "@salesforce/ts-types" "^2.0.9"
+    fast-levenshtein "^3.0.0"
+    fast-xml-parser "^4.3.5"
+    got "^11.8.6"
+    graceful-fs "^4.2.11"
+    ignore "^5.3.1"
+    jszip "^3.10.1"
+    mime "2.6.0"
+    minimatch "^5.1.6"
+    proxy-agent "^6.4.0"
+    ts-retry-promise "^0.7.1"
+
 "@salesforce/source-testkit@^2.1.103":
   version "2.1.103"
   resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.1.103.tgz#7b035514e7930ce05e0946d14cb4e9008cf5813c"
