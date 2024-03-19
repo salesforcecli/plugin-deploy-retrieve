@@ -7,7 +7,6 @@
 
 import { rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
-
 import * as fs from 'node:fs';
 
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
@@ -163,7 +162,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         throw messages.createError('retrieveTargetDirOverlapsPackage', [flags['output-dir']]);
       }
     }
-    const format: Format = flags['target-metadata-dir'] ? 'metadata' : 'source';
+    const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
     this.spinner.start(messages.getMessage('spinner.start'));
