@@ -79,7 +79,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
     /** localChangesAsComponentSet returned an array to support multiple sequential deploys.
      * `sf` chooses not to support this so we force one ComponentSet
      */
-    const cs = (await stl.localChangesAsComponentSet(false))[0] ?? new ComponentSet();
+    const cs = (await stl.localChangesAsComponentSet(false))[0] ?? new ComponentSet(undefined, stl.registry);
     // stl produces a cs with api version already set.  command might have specified a version.
     if (opts['api-version']) {
       cs.apiVersion = opts['api-version'];

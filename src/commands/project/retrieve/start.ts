@@ -408,6 +408,7 @@ const buildRetrieveAndDeleteTargets = async (
             }
           : {}),
         ...(retrieveFromOrg ? { org: { username: retrieveFromOrg, exclude: [] } } : {}),
+        ...(format === 'source' ? { projectDir: await SfProject.resolveProjectPath() } : {}),
       }),
     };
   }
