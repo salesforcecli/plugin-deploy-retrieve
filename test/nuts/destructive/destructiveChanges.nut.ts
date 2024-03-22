@@ -108,9 +108,10 @@ describe('project deploy start --destructive NUTs', () => {
 
       expect(deleted).to.be.false;
       createManifest(`ApexClass:${apexName}`, 'pre');
+      createManifest(`ApexClass:${apexName}`, 'package');
 
       const result = execCmd<DeployResultJson>(
-        'project:deploy:start --json --manifest destructiveChangesPre.xml --pre-destructive-changes destructiveChangesPre.xml',
+        'project:deploy:start --json --manifest package.xml --pre-destructive-changes destructiveChangesPre.xml',
         {
           ensureExitCode: 0,
         }
@@ -123,6 +124,8 @@ describe('project deploy start --destructive NUTs', () => {
       assert(successes);
       // 1 package, 2 of the same apex classes
       expect(successes.length).to.equal(3);
+      expect(successes[0].deleted).to.be.true;
+      expect(successes[2].deleted).to.be.false;
     });
 
     it('should delete and get file information with an empty deploy package', async () => {
