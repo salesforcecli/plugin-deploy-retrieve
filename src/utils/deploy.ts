@@ -103,6 +103,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
         }
       : {}),
     ...(opts.metadata ? { metadata: { metadataEntries: opts.metadata, directoryPaths: await getPackageDirs() } } : {}),
+    projectDir: stl?.projectPath,
   });
 }
 

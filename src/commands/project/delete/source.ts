@@ -178,6 +178,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
             directoryPaths: await getPackageDirs(),
           }
         : undefined,
+      projectDir: this.project?.getPath(),
     });
     if (this.flags['track-source'] && !this.flags['force-overwrite']) {
       await this.filterConflictsByComponentSet();
