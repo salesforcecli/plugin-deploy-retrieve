@@ -1,3 +1,9 @@
+# [3.3.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.35...3.3.0) (2024-03-22)
+
+### Features
+
+- support for flags-dir ([#948](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/948)) ([b53b81d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b53b81dd86f4079599650bce7e3e4ccbbf54c160))
+
 ## [3.2.35](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.34...3.2.35) (2024-03-19)
 
 ### Bug Fixes
