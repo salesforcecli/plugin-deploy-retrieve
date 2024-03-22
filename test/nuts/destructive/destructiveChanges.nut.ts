@@ -6,11 +6,14 @@
  */
 
 import * as path from 'node:path';
+import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
+import { DeployMessage } from '@salesforce/source-deploy-retrieve';
+import { DeployResultJson } from '../../../src/utils/types.js';
 
 const isNameObsolete = async (username: string, memberType: string, memberName: string): Promise<boolean> => {
   const connection = await Connection.create({
@@ -97,6 +100,63 @@ describe('project deploy start --destructive NUTs', () => {
 
       deleted = await isNameObsolete(testkit.username, 'ApexClass', apexName);
       expect(deleted).to.be.true;
+    });
+
+    it('should delete and deploy the same component', async () => {
+      const { apexName } = createApexClass();
+      let deleted = await isNameObsolete(testkit.username, 'ApexClass', apexName);
+
+      expect(deleted).to.be.false;
+      createManifest(`ApexClass:${apexName}`, 'pre');
+
+      const result = execCmd<DeployResultJson>(
+        'project:deploy:start --json --manifest destructiveChangesPre.xml --pre-destructive-changes destructiveChangesPre.xml',
+        {
+          ensureExitCode: 0,
+        }
+      );
+
+      deleted = await isNameObsolete(testkit.username, 'ApexClass', apexName);
+      expect(deleted).to.be.false;
+
+      const successes = result?.jsonOutput?.result.details?.componentSuccesses as DeployMessage[];
+      assert(successes);
+      // 1 package, 2 of the same apex classes
+      expect(successes.length).to.equal(3);
+      expect(successes.filter((c) => c.fullName === 'a').some((c) => c.deleted === true)).to.be.true;
+      expect(successes.filter((c) => c.fullName === 'a').some((c) => c.deleted === false)).to.be.true;
+    });
+
+    it('should delete and get file information with an empty deploy package', async () => {
+      const { apexName } = createApexClass();
+      let deleted = await isNameObsolete(testkit.username, 'ApexClass', apexName);
+
+      expect(deleted).to.be.false;
+      createManifest(`ApexClass:${apexName}`, 'pre');
+
+      writeFileSync(
+        path.join(testkit.projectDir, 'package.xml'),
+        '<?xml version="1.0" encoding="UTF-8"?>\n' +
+          '<Package xmlns="http://soap.sforce.com/2006/04/metadata">\n' +
+          '    <version>59.0</version>\n' +
+          '</Package>'
+      );
+
+      const result = execCmd<DeployResultJson>(
+        'project:deploy:start --json --manifest package.xml --pre-destructive-changes destructiveChangesPre.xml',
+        {
+          ensureExitCode: 0,
+        }
+      );
+
+      deleted = await isNameObsolete(testkit.username, 'ApexClass', apexName);
+      expect(deleted).to.be.true;
+
+      const files = result?.jsonOutput?.result.files;
+      assert(files);
+      // 1 .cls, 1 .cls-meta.xml
+      expect(files.length).to.equal(2);
+      expect(files.filter((c) => c.fullName === 'a').every((c) => c.filePath !== undefined)).to.be.true;
     });
 
     it('should delete an ApexClass and then deploy a class with --purge-on-delete', async () => {
