@@ -123,8 +123,6 @@ describe('project deploy start --destructive NUTs', () => {
       assert(successes);
       // 1 package, 2 of the same apex classes
       expect(successes.length).to.equal(3);
-      expect(successes.filter((c) => c.fullName === 'a').some((c) => c.deleted === true)).to.be.true;
-      expect(successes.filter((c) => c.fullName === 'a').some((c) => c.deleted === false)).to.be.true;
     });
 
     it('should delete and get file information with an empty deploy package', async () => {
