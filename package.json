@@ -17,7 +17,7 @@
     "chalk": "^5.3.0"
   },
   "devDependencies": {
-    "@oclif/plugin-command-snapshot": "^5.1.1",
+    "@oclif/plugin-command-snapshot": "^5.1.2",
     "@salesforce/cli-plugins-testkit": "^5.1.10",
     "@salesforce/dev-scripts": "^8.4.2",
     "@salesforce/plugin-command-reference": "^3.0.71",
