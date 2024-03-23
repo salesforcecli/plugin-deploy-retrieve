@@ -28,7 +28,7 @@
     "eslint-plugin-sf-plugin": "^1.17.4",
     "oclif": "^4.4.19",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.3"
   },
   "config": {},
   "engines": {
