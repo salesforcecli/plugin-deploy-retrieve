@@ -2259,7 +2259,7 @@
     "@salesforce/ts-types" "^2.0.9"
     chalk "^5.3.0"
 
-"@salesforce/source-deploy-retrieve@^10.0.0", "@salesforce/source-deploy-retrieve@^10.5.1", "@salesforce/source-deploy-retrieve@^10.5.3", "@salesforce/source-deploy-retrieve@^10.5.5":
+"@salesforce/source-deploy-retrieve@^10.0.0", "@salesforce/source-deploy-retrieve@^10.5.2", "@salesforce/source-deploy-retrieve@^10.5.3", "@salesforce/source-deploy-retrieve@^10.5.5":
   version "10.5.5"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-10.5.5.tgz#c2680de777e4b392a5f02631ca1cd385cad72c93"
   integrity sha512-o+c/qD9QojXIPMOuteUSdrbx/GI9HS0jFv49NcVrZX1Rzm/ZUk5JHkLzJtiUVQOEnBg4VVnFh2rBarPh0x6dWg==
@@ -2278,15 +2278,15 @@
     proxy-agent "^6.4.0"
     ts-retry-promise "^0.7.1"
 
-"@salesforce/source-testkit@^2.1.103":
-  version "2.1.103"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.1.103.tgz#7b035514e7930ce05e0946d14cb4e9008cf5813c"
-  integrity sha512-5svet0Q+SxATBhGtbvhLZ/4SiGCAUcApanUGudgRypqKnmJFLs15pUpALa+JhNM0jJg+g1yf1ZUjcif/FzHXcg==
+"@salesforce/source-testkit@^2.1.105":
+  version "2.1.105"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.1.105.tgz#203066d514dc74223868152846ead9a3eb647455"
+  integrity sha512-tb4JTbLJrOPJt0mM8NkdhrpoLvUvIZ7r6M44bn038OSz+AvavPVmLXSrenTYXdB8rRosfNILzjol/WUUD5w+Tw==
   dependencies:
     "@salesforce/cli-plugins-testkit" "^5.1.10"
-    "@salesforce/core" "^6.7.0"
+    "@salesforce/core" "^6.7.1"
     "@salesforce/kit" "^3.0.15"
-    "@salesforce/source-deploy-retrieve" "^10.5.1"
+    "@salesforce/source-deploy-retrieve" "^10.5.2"
     "@salesforce/ts-types" "^2.0.9"
     archiver "^5.3.2"
     chai-each "^0.0.1"
