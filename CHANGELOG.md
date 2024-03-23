@@ -1,3 +1,9 @@
+## [3.3.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.3.0...3.3.1) (2024-03-23)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.0.28 to 3.0.33 ([66068c1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/66068c1ec0de5051fb629d7024c71ae5652377b1))
+
 # [3.3.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.35...3.3.0) (2024-03-22)
 
 ### Features

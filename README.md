@@ -62,4 +62,8 @@ sf plugins
 
 <!-- commands -->
 
+# Command Topics
+
+- [`sf project`](docs/project.md)
+
 <!-- commandsstop -->
