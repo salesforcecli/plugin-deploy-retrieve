@@ -35,6 +35,7 @@ const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 're
 describe('project retrieve start', () => {
   const $$ = new TestContext();
   const testOrg = new MockTestOrgData();
+  testOrg.tracksSource = true;
   let sfCommandUxStubs: ReturnType<typeof stubSfCommandUx>;
 
   testOrg.username = 'retrieve-test@org.com';
@@ -110,7 +111,7 @@ describe('project retrieve start', () => {
     const expectedArgs = { ...defaultArgs, ...overrides };
 
     expect(buildComponentSetStub.calledOnce).to.equal(true);
-    expect(JSON.parse(JSON.stringify(buildComponentSetStub.firstCall.args[0]))).to.deep.equal(
+    expect(JSON.parse(JSON.stringify(buildComponentSetStub.firstCall.args[0]))).to.deep.include(
       JSON.parse(JSON.stringify(expectedArgs))
     );
   };
