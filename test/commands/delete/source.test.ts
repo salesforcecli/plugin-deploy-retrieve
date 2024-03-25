@@ -108,7 +108,9 @@ describe('project delete source', () => {
   const defaultPackagePath = 'defaultPackagePath';
   const confirm = true;
 
-  const oclifConfigStub = fromStub(stubInterface<Config>($$.SANDBOX));
+  const oclifConfigStub = fromStub(
+    stubInterface<Config>($$.SANDBOX, { runHook: async () => ({ failures: [], successes: [] }) })
+  );
 
   // Stubs
   let buildComponentSetStub: sinon.SinonStub;
