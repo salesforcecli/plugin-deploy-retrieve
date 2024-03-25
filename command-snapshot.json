@@ -82,8 +82,8 @@
     "alias": ["deploy:metadata:cancel"],
     "command": "project:deploy:cancel",
     "flagAliases": [],
-    "flagChars": ["i", "r", "w"],
-    "flags": ["async", "flags-dir", "job-id", "json", "use-most-recent", "wait"],
+    "flagChars": ["i", "o", "r", "w"],
+    "flags": ["async", "flags-dir", "job-id", "json", "target-org", "use-most-recent", "wait"],
     "plugin": "@salesforce/plugin-deploy-retrieve"
   },
   {

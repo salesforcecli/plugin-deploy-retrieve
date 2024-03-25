@@ -17,6 +17,7 @@ import { DeployResultJson } from '../../../utils/types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata.cancel');
+const deployMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
 
 export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -26,6 +27,11 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
   public static readonly deprecateAliases = true;
 
   public static readonly flags = {
+    'target-org': Flags.optionalOrg({
+      char: 'o',
+      description: deployMessages.getMessage('flags.target-org.description'),
+      summary: deployMessages.getMessage('flags.target-org.summary'),
+    }),
     async: Flags.boolean({
       summary: messages.getMessage('flags.async.summary'),
       description: messages.getMessage('flags.async.description'),
@@ -63,7 +69,11 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
 
     // cancel don't care about your tracking conflicts
-    const deployOpts = { ...cache.maybeGet(jobId), 'ignore-conflicts': true };
+    const deployOpts = {
+      'target-org': flags['target-org']?.getUsername(),
+      ...cache.maybeGet(jobId),
+      'ignore-conflicts': true,
+    };
     // we may already know the job finished
     if (
       deployOpts.status &&
