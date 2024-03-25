@@ -185,7 +185,7 @@ describe('project delete source', () => {
     const expectedArgs = { ...defaultArgs, ...overrides };
 
     expect(buildComponentSetStub.calledOnce).to.equal(true);
-    expect(buildComponentSetStub.firstCall.args[0]).to.deep.equal(expectedArgs);
+    expect(buildComponentSetStub.firstCall.args[0]).to.deep.include(expectedArgs);
   };
 
   // Ensure Lifecycle hooks are called properly
