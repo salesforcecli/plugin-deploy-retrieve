@@ -1,3 +1,28 @@
+# [3.4.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.3.1...3.4.0) (2024-03-25)
+
+### Features
+
+- add --target-org to deploy cancel ([4eaf68f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4eaf68fc5872706f1f448b419db099d19d487555))
+
+## [3.3.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.3.0...3.3.1) (2024-03-23)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.0.28 to 3.0.33 ([66068c1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/66068c1ec0de5051fb629d7024c71ae5652377b1))
+
+# [3.3.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.35...3.3.0) (2024-03-22)
+
+### Features
+
+- support for flags-dir ([#948](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/948)) ([b53b81d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b53b81dd86f4079599650bce7e3e4ccbbf54c160))
+
+## [3.2.35](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.34...3.2.35) (2024-03-19)
+
+### Bug Fixes
+
+- bump sdr to 10.5.3 ([6e282a4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6e282a435b630a1ad8df995a2b1f82c90e148e8a))
+- bump stl to 5.1.18 ([7192d61](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7192d61bef6ec8728664f25395e7eb863e235fa2))
+
 ## [3.2.34](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.2.33...3.2.34) (2024-03-16)
 
 ### Bug Fixes

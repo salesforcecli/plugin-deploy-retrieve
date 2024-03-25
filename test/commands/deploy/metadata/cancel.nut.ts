@@ -105,7 +105,9 @@ describe('deploy metadata cancel NUTs', () => {
       const cacheBefore = readDeployCache(session.dir);
       expect(cacheBefore).to.have.property(first.id);
 
-      const cancel = execCmd<DeployResultJson>(`deploy:metadata:cancel --job-id ${first.id} --json`);
+      const cancel = execCmd<DeployResultJson>(
+        `deploy:metadata:cancel --job-id ${first.id} --target-org ${session.orgs.get('default')?.username} --json`
+      );
       assert(cancel.jsonOutput);
 
       if (cancel.jsonOutput.status === 0) {

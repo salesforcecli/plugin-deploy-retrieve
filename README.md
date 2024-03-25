@@ -85,8 +85,8 @@ Convert metadata retrieved via Metadata API into the source format used in Sales
 
 ```
 USAGE
-  $ sf project convert mdapi -r <value> [--json] [--api-version <value>] [-d <value>] [-p <value> | -x <value> | -m
-  <value>]
+  $ sf project convert mdapi -r <value> [--json] [--flags-dir <value>] [--api-version <value>] [-d <value>] [-p <value> |
+    -x <value> | -m <value>]
 
 FLAGS
   -d, --output-dir=<value>       Directory to store your files in after they’re converted to source format; can be an
@@ -98,7 +98,8 @@ FLAGS
       --api-version=<value>      Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Convert metadata retrieved via Metadata API into the source format used in Salesforce DX projects.
@@ -139,7 +140,7 @@ FLAG DESCRIPTIONS
     If you specify this parameter, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/convert/mdapi.ts)_
+_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/convert/mdapi.ts)_
 
 ## `sf project convert source`
 
@@ -147,11 +148,11 @@ Convert source-formatted files into metadata that you can deploy using Metadata 
 
 ```
 USAGE
-  $ sf project convert source [--json] [--api-version <value>] [-r <value>] [-d <value>] [-n <value>] [-p <value> | -x
-    <value> | -m <value>]
+  $ sf project convert source [--json] [--flags-dir <value>] [--api-version <value>] [-r <value>] [-d <value>] [-n <value>]
+    [-p <value> | -x <value> | -m <value>]
 
 FLAGS
-  -d, --output-dir=<value>     [default: metadataPackage_1710589460865] Output directory to store the Metadata
+  -d, --output-dir=<value>     [default: metadataPackage_1711394692449] Output directory to store the Metadata
                                API–formatted files in.
   -m, --metadata=<value>...    Metadata component names to convert.
   -n, --package-name=<value>   Name of the package to associate with the metadata-formatted files.
@@ -162,7 +163,8 @@ FLAGS
                                from sfdx-project.json
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Convert source-formatted files into metadata that you can deploy using Metadata API.
@@ -211,7 +213,7 @@ FLAG DESCRIPTIONS
     Override the api version used for api requests made by this command
 ```
 
-_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/convert/source.ts)_
+_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/convert/source.ts)_
 
 ## `sf project delete source`
 
@@ -219,9 +221,9 @@ Delete source from your project and from a non-source-tracked org.
 
 ```
 USAGE
-  $ sf project delete source -o <value> [--json] [--api-version <value>] [-w <value>] [--tests <value>] [-l
-    NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg] [-r] [-m <value>] [-p <value>] [-f [-t | -c]]
-    [--verbose]
+  $ sf project delete source -o <value> [--json] [--flags-dir <value>] [--api-version <value>] [-w <value>] [--tests
+    <value>] [-l NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg] [-r] [-m <value>] [-p <value>] [-f [-t |
+    -c]] [--verbose]
 
 FLAGS
   -c, --check-only             Validate delete command but don't delete anything from the org or the local project.
@@ -232,7 +234,7 @@ FLAGS
   -p, --source-dir=<value>...  Source file paths to delete.
   -r, --no-prompt              Don't prompt for delete confirmation.
   -t, --track-source           If the delete succeeds, update the source tracking information.
-  -w, --wait=<value>           [default: 33 minutes] Number of minutes to wait for the command to finish.
+  -w, --wait=<value>           Number of minutes to wait for the command to finish.
       --api-version=<value>    Override the api version used for api requests made by this command
       --verbose                Verbose output of the delete result.
 
@@ -242,7 +244,8 @@ TEST FLAGS
       --tests=<value>...     Apex tests to run when --test-level is RunSpecifiedTests.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Delete source from your project and from a non-source-tracked org.
@@ -350,7 +353,7 @@ FLAG DESCRIPTIONS
     - Separate the test names with spaces: --tests Test1 Test2 "Test With Space"
 ```
 
-_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/delete/source.ts)_
+_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/delete/source.ts)_
 
 ## `sf project delete tracking`
 
@@ -358,7 +361,7 @@ Delete all local source tracking information.
 
 ```
 USAGE
-  $ sf project delete tracking -o <value> [--json] [--api-version <value>] [-p]
+  $ sf project delete tracking -o <value> [--json] [--flags-dir <value>] [--api-version <value>] [-p]
 
 FLAGS
   -o, --target-org=<value>   (required) Username or alias of the target org. Not required if the `target-org`
@@ -367,7 +370,8 @@ FLAGS
       --api-version=<value>  Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Delete all local source tracking information.
@@ -386,7 +390,7 @@ EXAMPLES
     $ sf project delete tracking --target-org my-scratch
 ```
 
-_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/delete/tracking.ts)_
+_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/delete/tracking.ts)_
 
 ## `sf project deploy cancel`
 
@@ -394,16 +398,18 @@ Cancel a deploy operation.
 
 ```
 USAGE
-  $ sf project deploy cancel [--json] [--async | -w <value>] [-i <value>] [-r]
+  $ sf project deploy cancel [--json] [--flags-dir <value>] [-o <value>] [--async | -w <value>] [-i <value>] [-r]
 
 FLAGS
-  -i, --job-id=<value>   Job ID of the deploy operation you want to cancel.
-  -r, --use-most-recent  Use the job ID of the most recent deploy operation.
-  -w, --wait=<minutes>   Number of minutes to wait for the command to complete and display results.
-      --async            Run the command asynchronously.
+  -i, --job-id=<value>      Job ID of the deploy operation you want to cancel.
+  -o, --target-org=<value>  Login username or alias for the target org.
+  -r, --use-most-recent     Use the job ID of the most recent deploy operation.
+  -w, --wait=<minutes>      Number of minutes to wait for the command to complete and display results.
+      --async               Run the command asynchronously.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Cancel a deploy operation.
@@ -438,6 +444,10 @@ FLAG DESCRIPTIONS
 
     The job ID is valid for 10 days from when you started the deploy operation.
 
+  -o, --target-org=<value>  Login username or alias for the target org.
+
+    Overrides your default org.
+
   -r, --use-most-recent  Use the job ID of the most recent deploy operation.
 
     For performance reasons, this flag uses job IDs for deploy operations that started only in the past 3 days or less.
@@ -456,7 +466,7 @@ FLAG DESCRIPTIONS
     project deploy report".
 ```
 
-_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/deploy/cancel.ts)_
+_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/deploy/cancel.ts)_
 
 ## `sf project deploy preview`
 
@@ -464,7 +474,8 @@ Preview a deployment to see what will deploy to the org, the potential conflicts
 
 ```
 USAGE
-  $ sf project deploy preview -o <value> [--json] [-c] [-x <value> | -d <value> | -m <value>] [--concise]
+  $ sf project deploy preview -o <value> [--json] [--flags-dir <value>] [-c] [-x <value> | -d <value> | -m <value>]
+    [--concise]
 
 FLAGS
   -c, --ignore-conflicts       Don't display conflicts in preview of the deployment.
@@ -475,7 +486,8 @@ FLAGS
       --concise                Show only the changes that will be deployed; omits files that are forceignored.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Preview a deployment to see what will deploy to the org, the potential conflicts, and the ignored files.
@@ -540,7 +552,7 @@ FLAG DESCRIPTIONS
     All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/deploy/preview.ts)_
+_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/deploy/preview.ts)_
 
 ## `sf project deploy quick`
 
@@ -548,8 +560,8 @@ Quickly deploy a validated deployment to an org.
 
 ```
 USAGE
-  $ sf project deploy quick [--json] [--async | -w <value>] [--concise | --verbose] [-i <value>] [-o <value>] [-r] [-a
-    <value>]
+  $ sf project deploy quick [--json] [--flags-dir <value>] [--async | -w <value>] [--concise | --verbose] [-i <value>] [-o
+    <value>] [-r] [-a <value>]
 
 FLAGS
   -a, --api-version=<value>  Target API version for the deploy.
@@ -563,7 +575,8 @@ FLAGS
       --verbose              Show verbose output of the deploy result.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Quickly deploy a validated deployment to an org.
@@ -627,7 +640,7 @@ FLAG DESCRIPTIONS
     deploy report".
 ```
 
-_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/deploy/quick.ts)_
+_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/deploy/quick.ts)_
 
 ## `sf project deploy report`
 
@@ -635,7 +648,7 @@ Check or poll for the status of a deploy operation.
 
 ```
 USAGE
-  $ sf project deploy report [--json] [-o <value>] [-i <value>] [-r] [--coverage-formatters
+  $ sf project deploy report [--json] [--flags-dir <value>] [-o <value>] [-i <value>] [-r] [--coverage-formatters
     clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary] [--junit] [--results-dir
     <value>] [-w <value>]
 
@@ -653,7 +666,8 @@ TEST FLAGS
   --results-dir=<value>              Output directory for code coverage and JUnit results; defaults to the deploy ID.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Check or poll for the status of a deploy operation.
@@ -722,7 +736,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/deploy/report.ts)_
+_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/deploy/report.ts)_
 
 ## `sf project deploy resume`
 
@@ -730,9 +744,9 @@ Resume watching a deploy operation and update source tracking when the deploy co
 
 ```
 USAGE
-  $ sf project deploy resume [--json] [--concise | --verbose] [-i <value>] [-r] [-w <value>] [--coverage-formatters
-    clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary] [--junit] [--results-dir
-    <value>]
+  $ sf project deploy resume [--json] [--flags-dir <value>] [--concise | --verbose] [-i <value>] [-r] [-w <value>]
+    [--coverage-formatters clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary]
+    [--junit] [--results-dir <value>]
 
 FLAGS
   -i, --job-id=<value>   Job ID of the deploy operation you want to resume.
@@ -749,7 +763,8 @@ TEST FLAGS
   --results-dir=<value>              Output directory for code coverage and JUnit results; defaults to the deploy ID.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Resume watching a deploy operation and update source tracking when the deploy completes.
@@ -806,7 +821,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/deploy/resume.ts)_
+_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/deploy/resume.ts)_
 
 ## `sf project deploy start`
 
@@ -814,12 +829,12 @@ Deploy metadata to an org from your local project.
 
 ```
 USAGE
-  $ sf project deploy start -o <value> [--json] [-a <value>] [--async | -w <value>] [--concise | --verbose] [--dry-run]
-    [-c] [-r] [-g] [--single-package ] [-t <value>] [-l NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg]
-    [--purge-on-delete [-x <value> | -d <value> | -m <value> | --metadata-dir <value>]] [--pre-destructive-changes
-    <value> ] [--post-destructive-changes <value> ] [--coverage-formatters
-    clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary] [--junit] [--results-dir
-    <value>]
+  $ sf project deploy start -o <value> [--json] [--flags-dir <value>] [-a <value>] [--async | -w <value>] [--concise |
+    --verbose] [--dry-run] [-c] [-r] [-g] [--single-package ] [-t <value>] [-l
+    NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg] [--purge-on-delete [-x <value> | -d <value> | -m <value>
+    | --metadata-dir <value>]] [--pre-destructive-changes <value> ] [--post-destructive-changes <value> ]
+    [--coverage-formatters clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary]
+    [--junit] [--results-dir <value>]
 
 FLAGS
   -a, --api-version=<value>  Target API version for the deploy.
@@ -827,8 +842,7 @@ FLAGS
   -g, --ignore-warnings      Ignore warnings and allow a deployment to complete successfully.
   -o, --target-org=<value>   (required) Login username or alias for the target org.
   -r, --ignore-errors        Ignore any errors and don’t roll back deployment.
-  -w, --wait=<minutes>       [default: 33 minutes] Number of minutes to wait for command to complete and display
-                             results.
+  -w, --wait=<minutes>       Number of minutes to wait for command to complete and display results.
       --async                Run the command asynchronously.
       --concise              Show concise output of the deploy result.
       --dry-run              Validate deploy and run Apex tests but don’t save to the org.
@@ -852,7 +866,8 @@ TEST FLAGS
                                          ID.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 METADATA API FORMAT FLAGS
   --metadata-dir=<value>  Root of directory or zip file of metadata formatted files to deploy.
@@ -1027,7 +1042,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/deploy/start.ts)_
+_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/deploy/start.ts)_
 
 ## `sf project deploy validate`
 
@@ -1035,9 +1050,9 @@ Validate a metadata deployment without actually executing it.
 
 ```
 USAGE
-  $ sf project deploy validate -o <value> [--json] [-a <value>] [--async] [--concise | --verbose] [-m <value>] [-d <value>]
-    [--single-package --metadata-dir <value>] [-t <value>] [-l RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests] [-w
-    <value>] [-g] [--coverage-formatters
+  $ sf project deploy validate -o <value> [--json] [--flags-dir <value>] [-a <value>] [--async] [--concise | --verbose] [-m
+    <value>] [-d <value>] [--single-package --metadata-dir <value>] [-t <value>] [-l
+    RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests] [-w <value>] [-g] [--coverage-formatters
     clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary] [--junit] [--results-dir
     <value>] [--purge-on-delete -x <value>] [--pre-destructive-changes <value> ] [--post-destructive-changes <value> ]
 
@@ -1045,8 +1060,7 @@ FLAGS
   -a, --api-version=<value>  Target API version for the validation.
   -g, --ignore-warnings      Ignore warnings and allow a deployment to complete successfully.
   -o, --target-org=<value>   (required) Login username or alias for the target org.
-  -w, --wait=<minutes>       [default: 33 minutes] Number of minutes to wait for the command to complete and display
-                             results.
+  -w, --wait=<minutes>       Number of minutes to wait for the command to complete and display results.
       --async                Run the command asynchronously.
       --concise              Show concise output of the validation result.
       --verbose              Show verbose output of the validation result.
@@ -1068,7 +1082,8 @@ TEST FLAGS
                                          ID.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 METADATA API FORMAT FLAGS
   --metadata-dir=<value>  Root of directory or zip file of metadata formatted files to deploy.
@@ -1202,7 +1217,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/deploy/validate.ts)_
+_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/deploy/validate.ts)_
 
 ## `sf project generate manifest`
 
@@ -1210,8 +1225,8 @@ Create a project manifest that lists the metadata components you want to deploy 
 
 ```
 USAGE
-  $ sf project generate manifest [--json] [--api-version <value>] [-m <value>] [-p <value>] [-n <value> | -t
-    pre|post|destroy|package] [-c managed|unlocked --from-org <value>] [-d <value>]
+  $ sf project generate manifest [--json] [--flags-dir <value>] [--api-version <value>] [-m <value>] [-p <value>] [-n <value> |
+    -t pre|post|destroy|package] [-c managed|unlocked --from-org <value>] [-d <value>]
 
 FLAGS
   -c, --include-packages=<option>...  Package types (managed, unlocked) whose metadata is included in the manifest; by
@@ -1228,7 +1243,8 @@ FLAGS
                                       build a manifest.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Create a project manifest that lists the metadata components you want to deploy or retrieve.
@@ -1277,7 +1293,7 @@ EXAMPLES
     $ sf project generate manifest --from-org test@myorg.com --include-packages unlocked
 ```
 
-_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/generate/manifest.ts)_
+_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/generate/manifest.ts)_
 
 ## `sf project list ignored`
 
@@ -1285,13 +1301,14 @@ Check your local project package directories for forceignored files.
 
 ```
 USAGE
-  $ sf project list ignored [--json] [-p <value>]
+  $ sf project list ignored [--json] [--flags-dir <value>] [-p <value>]
 
 FLAGS
   -p, --source-dir=<value>  File or directory of files that the command checks for foreceignored files.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Check your local project package directories for forceignored files.
@@ -1318,7 +1335,7 @@ EXAMPLES
     $ sf project list ignored --source-dir package.xml
 ```
 
-_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/list/ignored.ts)_
+_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/list/ignored.ts)_
 
 ## `sf project reset tracking`
 
@@ -1326,7 +1343,7 @@ Reset local and remote source tracking.
 
 ```
 USAGE
-  $ sf project reset tracking -o <value> [--json] [--api-version <value>] [-r <value>] [-p]
+  $ sf project reset tracking -o <value> [--json] [--flags-dir <value>] [--api-version <value>] [-r <value>] [-p]
 
 FLAGS
   -o, --target-org=<value>   (required) Username or alias of the target org. Not required if the `target-org`
@@ -1336,7 +1353,8 @@ FLAGS
       --api-version=<value>  Override the api version used for api requests made by this command
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Reset local and remote source tracking.
@@ -1366,7 +1384,7 @@ EXAMPLES
     $ sf project reset tracking --revision 30
 ```
 
-_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/reset/tracking.ts)_
+_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/reset/tracking.ts)_
 
 ## `sf project retrieve preview`
 
@@ -1374,7 +1392,7 @@ Preview a retrieval to see what will be retrieved from the org, the potential co
 
 ```
 USAGE
-  $ sf project retrieve preview -o <value> [--json] [-c] [--concise]
+  $ sf project retrieve preview -o <value> [--json] [--flags-dir <value>] [-c] [--concise]
 
 FLAGS
   -c, --ignore-conflicts    Don't display conflicts in the preview of the retrieval.
@@ -1382,7 +1400,8 @@ FLAGS
       --concise             Show only the changes that will be retrieved; omits files that are forceignored.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Preview a retrieval to see what will be retrieved from the org, the potential conflicts, and the ignored files.
@@ -1422,7 +1441,7 @@ FLAG DESCRIPTIONS
     Overrides your default org.
 ```
 
-_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/retrieve/preview.ts)_
+_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/retrieve/preview.ts)_
 
 ## `sf project retrieve start`
 
@@ -1430,8 +1449,8 @@ Retrieve metadata from an org to your local project.
 
 ```
 USAGE
-  $ sf project retrieve start -o <value> [--json] [-a <value>] [-c] [-x <value> | -m <value> | -d <value>] [-r <value> | -n
-    <value> | ] [--single-package -t <value>] [-w <value>] [-z ] [--zip-file-name <value> ]
+  $ sf project retrieve start -o <value> [--json] [--flags-dir <value>] [-a <value>] [-c] [-x <value> | -m <value> | -d
+    <value>] [-r <value> | -n <value> | ] [--single-package -t <value>] [-w <value>] [-z ] [--zip-file-name <value> ]
 
 FLAGS
   -a, --api-version=<value>      Target API version for the retrieve.
@@ -1454,7 +1473,8 @@ METADATA API FORMAT FLAGS
       --zip-file-name=<value>        File name to use for the retrieved zip file.
 
 GLOBAL FLAGS
-  --json  Format output as json.
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
 DESCRIPTION
   Retrieve metadata from an org to your local project.
@@ -1572,6 +1592,6 @@ FLAG DESCRIPTIONS
     If you specify this parameter, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.2.34/src/commands/project/retrieve/start.ts)_
+_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.4.0/src/commands/project/retrieve/start.ts)_
 
 <!-- commandsstop -->
