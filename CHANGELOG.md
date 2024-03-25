@@ -1,3 +1,9 @@
+# [3.4.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.3.1...3.4.0) (2024-03-25)
+
+### Features
+
+- add --target-org to deploy cancel ([4eaf68f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4eaf68fc5872706f1f448b419db099d19d487555))
+
 ## [3.3.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.3.0...3.3.1) (2024-03-23)
 
 ### Bug Fixes
