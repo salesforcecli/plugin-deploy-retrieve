@@ -15,11 +15,10 @@ import {
   ComponentSet,
   ComponentSetBuilder,
   ComponentSetOptions,
-  ComponentStatus,
   MetadataApiRetrieve,
   RetrieveSetOptions,
 } from '@salesforce/source-deploy-retrieve';
-import { RetrieveResultJson } from '../../../src/utils/types.js';
+import { RetrieveResultJson, isFileResponseDeleted, isSdrSuccess } from '../../../src/utils/types.js';
 import RetrieveMetadata from '../../../src/commands/project/retrieve/start.js';
 
 describe('Partial Bundle Delete Retrieves', () => {
@@ -149,7 +148,7 @@ describe('Partial Bundle Delete Retrieves', () => {
       expect(files).to.be.an('array').with.length.greaterThan(0);
 
       // find the deleted entry for testFile.css
-      const deletedFileResponse = files.find((fr) => fr.state === ComponentStatus['Deleted']);
+      const deletedFileResponse = files.filter(isSdrSuccess).find(isFileResponseDeleted);
       expect(deletedFileResponse).to.deep.equal({
         fullName: 'pageTemplate_2_7_3',
         type: 'AuraDefinitionBundle',
@@ -182,7 +181,7 @@ describe('Partial Bundle Delete Retrieves', () => {
       assert(files);
       expect(files).to.be.an('array').with.length.greaterThan(0);
       // find the deleted entry for testFile.css
-      const deletedFileResponse = files.find((fr) => fr.state === ComponentStatus['Deleted']);
+      const deletedFileResponse = files.filter(isSdrSuccess).find(isFileResponseDeleted);
       expect(deletedFileResponse).to.deep.equal({
         fullName: 'propertyTile',
         type: 'LightningComponentBundle',

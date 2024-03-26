@@ -24,7 +24,15 @@ import {
   JUnitReporter,
   TestResult,
 } from '@salesforce/apex-node';
-import { DeployResultJson, isSdrFailure, isSdrSuccess, TestLevel, Verbosity, Formatter } from '../utils/types.js';
+import {
+  DeployResultJson,
+  isSdrFailure,
+  isSdrSuccess,
+  TestLevel,
+  Verbosity,
+  Formatter,
+  isFileResponseDeleted,
+} from '../utils/types.js';
 import {
   generateCoveredLines,
   getCoverageFormattersOptions,
@@ -320,7 +328,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   }
 
   private displayDeletes(): void {
-    const deletions = this.relativeFiles.filter(isSdrSuccess).filter((f) => f.state === ComponentStatus['Deleted']);
+    const deletions = this.relativeFiles.filter(isSdrSuccess).filter(isFileResponseDeleted);
 
     if (!deletions.length) return;
 
