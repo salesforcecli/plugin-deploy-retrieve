@@ -9,12 +9,12 @@ import { ux } from '@oclif/core';
 import { ConflictResponse } from '@salesforce/source-tracking';
 
 export const writeConflictTable = (conflicts?: ConflictResponse[]): void => {
-  // Interfaces cannot be casted to Record<string, unknown> so we have to cast to unknown first
-  // See https://github.com/microsoft/TypeScript/issues/15300
   if (!conflicts || conflicts.length === 0) {
     return;
   }
   ux.table(
+    // Interfaces cannot be used as Record<string, unknown> so we have to make it a concrete type
+    // See https://github.com/microsoft/TypeScript/issues/15300
     conflicts.map((c) => ({ state: c.state, fullName: c.fullName, type: c.type, filePath: c.filePath })),
     {
       state: { header: 'STATE' },

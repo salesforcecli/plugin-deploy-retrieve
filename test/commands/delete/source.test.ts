@@ -116,7 +116,7 @@ describe('project delete source', () => {
   let buildComponentSetStub: sinon.SinonStub;
   let lifecycleEmitStub: sinon.SinonStub;
   let resolveProjectConfigStub: sinon.SinonStub;
-  let fsUnlink: sinon.SinonStub;
+  let rmStub: sinon.SinonStub;
 
   class TestDelete extends Source {
     public async runIt() {
@@ -151,7 +151,7 @@ describe('project delete source', () => {
       onError: () => {},
     });
     stubMethod($$.SANDBOX, cmd, 'handlePrompt').returns(confirm);
-    fsUnlink = stubMethod($$.SANDBOX, fs.promises, 'unlink').resolves(true);
+    rmStub = stubMethod($$.SANDBOX, fs.promises, 'rm').resolves();
     stubMethod($$.SANDBOX, DeployCache, 'update').resolves();
 
     return cmd.runIt();
@@ -198,17 +198,15 @@ describe('project delete source', () => {
 
   it('should pass along sourcepath', async () => {
     const sourcepath = ['somepath'];
-    stubMethod($$.SANDBOX, fs, 'statSync').returns({ isDirectory: () => false });
     await runDeleteCmd(['--sourcepath', sourcepath[0], '--json', '-r']);
     ensureCreateComponentSetArgs({ sourcepath });
     ensureHookArgs();
     // deleting the component and its xml
-    expect(fsUnlink.callCount).to.equal(2);
+    expect(rmStub.callCount).to.equal(2);
   });
 
   it('should pass along metadata', async () => {
     const metadata = ['ApexClass:MyClass'];
-    stubMethod($$.SANDBOX, fs, 'statSync').returns({ isDirectory: () => false });
     await runDeleteCmd(['--metadata', metadata[0], '--json', '-r']);
     ensureCreateComponentSetArgs({
       metadata: {
@@ -221,7 +219,6 @@ describe('project delete source', () => {
 
   it('should pass along apiversion', async () => {
     const metadata = ['ApexClass:MyClass'];
-    stubMethod($$.SANDBOX, fs, 'statSync').returns({ isDirectory: () => false });
 
     await runDeleteCmd(['--metadata', metadata[0], '--json', '-r', '--apiversion', '52.0']);
     ensureCreateComponentSetArgs({
@@ -239,7 +236,6 @@ describe('project delete source', () => {
     const metadata = ['ApexClass:MyClass'];
 
     resolveProjectConfigStub.resolves({ sourceApiVersion });
-    stubMethod($$.SANDBOX, fs, 'statSync').returns({ isDirectory: () => false });
 
     await runDeleteCmd(['--metadata', metadata[0], '--json', '-r'], { sourceApiVersion });
     ensureCreateComponentSetArgs({
