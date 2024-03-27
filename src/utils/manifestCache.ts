@@ -9,6 +9,7 @@ import { homedir } from 'node:os';
 import * as fs from 'node:fs';
 import { ComponentSet } from '@salesforce/source-deploy-retrieve';
 import { Global } from '@salesforce/core';
+import { isNonDecomposedCustomLabel } from './metadataTypes.js';
 
 const MANIFEST_CACHE_DIR = 'manifestCache';
 
@@ -28,7 +29,7 @@ export const writeManifest = async (jobId: string, componentSet: ComponentSet): 
     // cs.filter doesn't return the SAME component set, it just returns a new one...
     // and so when we set anything on the component set that was passed in, it won't be set on the filtered one
     // so, we create a new CS, and set the values from the original
-    const cs = new ComponentSet(componentSet.filter((c) => c.type.name !== 'CustomLabels'));
+    const cs = new ComponentSet(componentSet.filter((c) => !isNonDecomposedCustomLabel(c)));
     cs.sourceApiVersion = componentSet.sourceApiVersion;
     cs.apiVersion = componentSet.apiVersion;
     xml = await cs.getPackageXml();

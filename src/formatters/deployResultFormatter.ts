@@ -13,6 +13,7 @@ import {
   DeployResult,
   FileResponse,
   FileResponseFailure,
+  FileResponseSuccess,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError, Lifecycle } from '@salesforce/core';
@@ -41,11 +42,11 @@ import {
   transformCoverageToApexCoverage,
 } from '../utils/coverage.js';
 import {
-  sortFileResponses,
-  asRelativePaths,
   tableHeader,
   getFileResponseSuccessProps,
   error,
+  fileResponseSortFn,
+  makePathRelative,
 } from '../utils/output.js';
 import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
 
@@ -67,11 +68,13 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       'results-dir': string;
       'target-org': Org;
       wait: Duration | number;
-    }>
+    }>,
+    /** add extra synthetic fileResponses not in the mdapiResponse  */
+    protected extraDeletes: FileResponseSuccess[] = []
   ) {
     super(result, flags);
-    this.absoluteFiles = sortFileResponses(this.result.getFileResponses() ?? []);
-    this.relativeFiles = asRelativePaths(this.absoluteFiles);
+    this.absoluteFiles = (this.result.getFileResponses() ?? []).sort(fileResponseSortFn);
+    this.relativeFiles = this.absoluteFiles.map(makePathRelative);
     this.testLevel = this.flags['test-level'];
     this.verbosity = this.determineVerbosity();
     this.resultsDir = this.flags['results-dir'] ?? 'coverage';
@@ -133,7 +136,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       this.displaySuccesses();
     }
     this.displayFailures();
-    this.displayDeletes();
+    displayDeletes(this.relativeFiles, this.extraDeletes);
     this.displayTestResults();
     this.maybeCreateRequestedReports();
     this.displayReplacements();
@@ -294,11 +297,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     const options = { title: tableHeader(title), 'no-truncate': true };
     ux.log();
 
-    ux.table(
-      successes.map((s) => ({ filePath: s.filePath, fullName: s.fullName, type: s.type, state: s.state })),
-      columns,
-      options
-    );
+    ux.table(successes.map(getFileResponseSuccessProps), columns, options);
   }
 
   private displayFailures(): void {
@@ -326,23 +325,27 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       options
     );
   }
-
-  private displayDeletes(): void {
-    const deletions = this.relativeFiles.filter(isSdrSuccess).filter(isFileResponseDeleted);
-
-    if (!deletions.length) return;
-
-    const columns = {
-      fullName: { header: 'Name' },
-      type: { header: 'Type' },
-      filePath: { header: 'Path' },
-    };
-
-    const options = { title: tableHeader('Deleted Source'), 'no-truncate': true };
-    ux.log();
-
-    ux.table(getFileResponseSuccessProps(deletions), columns, options);
-  }
 }
 
 const makeKey = (type: string, name: string): string => `${type}#${name}`;
+
+const displayDeletes = (relativeFiles: FileResponse[], extraDeletes: FileResponseSuccess[]): void => {
+  const deletions = relativeFiles
+    .filter(isSdrSuccess)
+    .filter(isFileResponseDeleted)
+    .concat(extraDeletes)
+    .map(getFileResponseSuccessProps);
+
+  if (!deletions.length) return;
+
+  const columns = {
+    fullName: { header: 'Name' },
+    type: { header: 'Type' },
+    filePath: { header: 'Path' },
+  };
+
+  const options = { title: tableHeader('Deleted Source'), 'no-truncate': true };
+  ux.log();
+
+  ux.table(deletions, columns, options);
+};

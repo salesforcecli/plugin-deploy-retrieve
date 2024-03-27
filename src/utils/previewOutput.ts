@@ -87,13 +87,13 @@ const getNonIgnoredConflicts = (files: PreviewFile[]): PreviewFile[] => files.fi
 const willGo = (previewFile: PreviewFile): boolean => !previewFile.conflict && !previewFile.ignored;
 
 const getWillDeploy = (files: PreviewFile[]): PreviewFile[] =>
-  files.filter((f) => willGo(f) && f.operation === 'deploy');
+  files.filter(willGo).filter((f) => f.operation === 'deploy');
 
 const getWillRetrieve = (files: PreviewFile[]): PreviewFile[] =>
-  files.filter((f) => willGo(f) && f.operation === 'retrieve');
+  files.filter(willGo).filter((f) => f.operation === 'retrieve');
 
 const getWillDelete = (files: PreviewFile[]): PreviewFile[] =>
-  files.filter((f) => willGo(f) && f.operation && ['deletePre', 'deletePost'].includes(f.operation));
+  files.filter(willGo).filter((f) => f.operation && ['deletePre', 'deletePost'].includes(f.operation));
 
 // relative paths are easier on tables
 const columns = { type: {}, fullName: {}, projectRelativePath: { header: 'Path' } };
