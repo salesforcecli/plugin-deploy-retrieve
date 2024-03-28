@@ -172,7 +172,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       format
     );
     if (Boolean(flags.manifest) || Boolean(flags.metadata)) {
-      const access = new RegistryAccess();
+      const access = new RegistryAccess(undefined, SfProject.getInstance()?.getPath());
       if (wantsToRetrieveCustomFields(componentSetFromNonDeletes, access)) {
         this.warn(messages.getMessage('wantsToRetrieveCustomFields'));
         componentSetFromNonDeletes.add({
