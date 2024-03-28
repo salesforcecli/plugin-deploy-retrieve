@@ -7,5 +7,6 @@
 
 import { MetadataComponent, SourceComponent } from '@salesforce/source-deploy-retrieve';
 
-export const isNonDecomposedCustomLabel = (cmp: SourceComponent | MetadataComponent): boolean =>
-  cmp.type.strategies?.recomposition === 'startEmpty';
+/** true if it's the original, nonDecomposed CustomLabels type.  This returns false for customRegistry if they've overridden the type */
+export const isNonDecomposedCustomLabels = (cmp: SourceComponent | MetadataComponent): boolean =>
+  cmp.type.strategies?.transformer === 'nonDecomposed';

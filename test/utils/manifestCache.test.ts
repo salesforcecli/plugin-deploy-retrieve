@@ -6,13 +6,14 @@
  */
 import * as fs from 'node:fs';
 import { expect } from 'chai';
-import { ComponentSet } from '@salesforce/source-deploy-retrieve';
+import { ComponentSet, RegistryAccess } from '@salesforce/source-deploy-retrieve';
 import sinon from 'sinon';
 import { writeManifest } from '../../src/utils/manifestCache.js';
 
 describe('manifest cache', () => {
   let sandbox: sinon.SinonSandbox;
   let fsWriteStub: sinon.SinonStub;
+  const registry = new RegistryAccess();
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
@@ -26,7 +27,7 @@ describe('manifest cache', () => {
   it('it will write an empty manifest', async () => {
     const cs = new ComponentSet();
     cs.apiVersion = '57.0';
-    await writeManifest('123', cs);
+    await writeManifest('123', cs, registry);
     expect(fsWriteStub.calledOnce).to.be.true;
     expect(fsWriteStub.firstCall.args[0]).to.include('123.xml');
     expect(fsWriteStub.firstCall.args[1]).to.equal(
@@ -42,7 +43,7 @@ describe('manifest cache', () => {
     const cs = new ComponentSet();
     cs.apiVersion = '57.0';
     cs.add({ fullName: 'CustomLabels', type: 'CustomLabels' });
-    await writeManifest('123', cs);
+    await writeManifest('123', cs, registry);
     expect(fsWriteStub.calledOnce).to.be.true;
     expect(fsWriteStub.firstCall.args[0]).to.include('123.xml');
     expect(fsWriteStub.firstCall.args[1]).to.equal(
@@ -62,7 +63,7 @@ describe('manifest cache', () => {
     const cs = new ComponentSet();
     cs.apiVersion = '57.0';
     cs.add({ fullName: 'MyCustom', type: 'CustomLabel' });
-    await writeManifest('123', cs);
+    await writeManifest('123', cs, registry);
     expect(fsWriteStub.calledOnce).to.be.true;
     expect(fsWriteStub.firstCall.args[0]).to.include('123.xml');
     expect(fsWriteStub.firstCall.args[1]).to.equal(
@@ -83,7 +84,7 @@ describe('manifest cache', () => {
     cs.sourceApiVersion = '57.0';
     cs.add({ fullName: 'MyCustom', type: 'CustomLabel' });
     cs.add({ fullName: 'CustomLabels', type: 'CustomLabels' });
-    await writeManifest('123', cs);
+    await writeManifest('123', cs, registry);
     expect(fsWriteStub.calledOnce).to.be.true;
     expect(fsWriteStub.firstCall.args[0]).to.include('123.xml');
     expect(fsWriteStub.firstCall.args[1]).to.equal(
@@ -105,7 +106,7 @@ describe('manifest cache', () => {
     cs.add({ fullName: 'MyCustom', type: 'CustomLabel' });
     cs.add({ fullName: 'CustomLabels', type: 'CustomLabels' });
     cs.add({ fullName: 'myClass', type: 'ApexClass' });
-    await writeManifest('123', cs);
+    await writeManifest('123', cs, registry);
     expect(fsWriteStub.calledOnce).to.be.true;
     expect(fsWriteStub.firstCall.args[0]).to.include('123.xml');
     expect(fsWriteStub.firstCall.args[1]).to.equal(

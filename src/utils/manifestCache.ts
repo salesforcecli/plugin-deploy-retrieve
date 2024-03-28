@@ -7,15 +7,19 @@
 import * as path from 'node:path';
 import { homedir } from 'node:os';
 import * as fs from 'node:fs';
-import { ComponentSet } from '@salesforce/source-deploy-retrieve';
+import { ComponentSet, RegistryAccess } from '@salesforce/source-deploy-retrieve';
 import { Global } from '@salesforce/core';
-import { isNonDecomposedCustomLabel } from './metadataTypes.js';
+import { isNonDecomposedCustomLabels } from './metadataTypes.js';
 
 const MANIFEST_CACHE_DIR = 'manifestCache';
 
 /** Give it a jobId, ComponentSet it will write the manifest file
  * returns the file path it wrote to */
-export const writeManifest = async (jobId: string, componentSet: ComponentSet): Promise<string> => {
+export const writeManifest = async (
+  jobId: string,
+  componentSet: ComponentSet,
+  registry: RegistryAccess
+): Promise<string> => {
   const types = new Set((await componentSet.getObject()).Package.types.map((t) => t.name));
   // when we write a manifest, we will omit the CustomLabels component since it's redundant with the individual labels.
   // this makes the use of the manifest in report/resume/etc accurate in certain mpd scenarios where it would otherwise pull in ALL labels from every dir
@@ -29,9 +33,14 @@ export const writeManifest = async (jobId: string, componentSet: ComponentSet): 
     // cs.filter doesn't return the SAME component set, it just returns a new one...
     // and so when we set anything on the component set that was passed in, it won't be set on the filtered one
     // so, we create a new CS, and set the values from the original
-    const cs = new ComponentSet(componentSet.filter((c) => !isNonDecomposedCustomLabel(c)));
+    const cs = new ComponentSet(
+      componentSet.filter((c) => !isNonDecomposedCustomLabels(c)),
+      registry
+    );
     cs.sourceApiVersion = componentSet.sourceApiVersion;
     cs.apiVersion = componentSet.apiVersion;
+    cs.projectDirectory = componentSet.projectDirectory;
+
     xml = await cs.getPackageXml();
   } else {
     xml = await componentSet.getPackageXml();

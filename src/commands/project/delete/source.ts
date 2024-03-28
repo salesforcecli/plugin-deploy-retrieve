@@ -35,7 +35,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import chalk from 'chalk';
 import { writeConflictTable } from '../../../utils/conflicts.js';
-import { isNonDecomposedCustomLabel } from '../../../utils/metadataTypes.js';
+import { isNonDecomposedCustomLabels } from '../../../utils/metadataTypes.js';
 import { getFileResponseSuccessProps } from '../../../utils/output.js';
 import { API, DeleteSourceJson, isFileResponseDeleted, isSdrSuccess, isSourceComponent } from '../../../utils/types.js';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
@@ -362,7 +362,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
   private async deleteFilesLocally(): Promise<void> {
     if (!this.flags['check-only'] && this.deployResult?.response?.status === RequestStatus.Succeeded) {
-      const customLabels = this.componentSet.getSourceComponents().toArray().filter(isNonDecomposedCustomLabel);
+      const customLabels = this.componentSet.getSourceComponents().toArray().filter(isNonDecomposedCustomLabels);
       const promisesFromLabels = customLabels[0]?.xml ? [deleteCustomLabels(customLabels[0].xml, customLabels)] : [];
       // mixed delete/deploy operations have already been deleted and stashed
       const otherPromises = !this.mixedDeployDelete.delete.length
@@ -370,7 +370,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
             .filter(isSourceComponent)
             .flatMap((component: SourceComponent) => [
               ...(component.content ? [fs.promises.rm(component.content, { recursive: true, force: true })] : []),
-              ...(component.xml && !isNonDecomposedCustomLabel(component) ? [fs.promises.rm(component.xml)] : []),
+              ...(component.xml && !isNonDecomposedCustomLabels(component) ? [fs.promises.rm(component.xml)] : []),
             ])
         : [];
 
@@ -410,7 +410,9 @@ export class Source extends SfCommand<DeleteSourceJson> {
         .filter(sourceComponentIsNotInMixedDeployDelete(this.mixedDeployDelete))
         .flatMap((c) =>
           // for custom labels, print each custom label to be deleted, not the whole file
-          isNonDecomposedCustomLabel(c) ? [`${c.type.name}:${c.fullName}`] : [c.xml as string, ...c.walkContent()] ?? []
+          isNonDecomposedCustomLabels(c)
+            ? [`${c.type.name}:${c.fullName}`]
+            : [c.xml as string, ...c.walkContent()] ?? []
         )
         .concat(this.mixedDeployDelete.delete.map((fr) => `${fr.fullName} (${fr.filePath})`));
 

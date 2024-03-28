@@ -14,6 +14,7 @@ import {
   DeployResult,
   MetadataApiDeploy,
   MetadataApiDeployOptions,
+  RegistryAccess,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SourceTracking } from '@salesforce/source-tracking';
@@ -125,6 +126,7 @@ export async function executeDeploy(
 
   let deploy: MetadataApiDeploy | undefined;
   let componentSet: ComponentSet | undefined;
+  let registry: RegistryAccess | undefined;
 
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   // for mdapi deploys, use the passed in api-version.
@@ -153,6 +155,7 @@ export async function executeDeploy(
       subscribeSDREvents: true,
       ignoreConflicts: opts['ignore-conflicts'],
     });
+    registry = stl.registry;
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
       if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
@@ -181,7 +184,9 @@ export async function executeDeploy(
   }
 
   // does not apply to mdapi deploys
-  const manifestPath = componentSet ? await writeManifest(deploy.id, componentSet) : undefined;
+  const manifestPath = componentSet
+    ? await writeManifest(deploy.id, componentSet, registry ?? new RegistryAccess())
+    : undefined;
   await DeployCache.set(deploy.id, { ...opts, manifest: manifestPath });
 
   return { deploy, componentSet };
