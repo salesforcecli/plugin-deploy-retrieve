@@ -5,12 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { ux } from '@oclif/core';
-import { DeployResult, FileResponse, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { DeployResult, FileResponse, FileResponseSuccess, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
 import chalk from 'chalk';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import { DeleteSourceJson, Formatter, TestLevel } from '../utils/types.js';
-import { sortFileResponses, asRelativePaths } from '../utils/output.js';
+import { DeleteSourceJson, Formatter, TestLevel, isSdrSuccess } from '../utils/types.js';
+import { fileResponseSortFn, getFileResponseSuccessProps, makePathRelative } from '../utils/output.js';
 import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
 
 export class DeleteResultFormatter extends TestResultsFormatter implements Formatter<DeleteSourceJson> {
@@ -44,7 +44,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
   public display(): void {
     this.displayTestResults();
     if ([0, 69].includes(process.exitCode ?? 0)) {
-      const successes: FileResponse[] = [];
+      const successes: FileResponseSuccess[] = [];
       const fileResponseSuccesses: Map<string, FileResponse> = new Map<string, FileResponse>();
 
       if (this.result?.getFileResponses()?.length) {
@@ -53,9 +53,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
           fileResponses.push(f);
           fileResponseSuccesses.set(`${f.type}#${f.fullName}`, f);
         });
-        sortFileResponses(fileResponses);
-        asRelativePaths(fileResponses);
-        successes.push(...fileResponses);
+        successes.push(...fileResponses.filter(isSdrSuccess).map(makePathRelative).sort(fileResponseSortFn));
       }
 
       const deployMessages = ensureArray(this.result?.response?.details?.componentSuccesses).filter(
@@ -68,7 +66,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
             successes.push(
               Object.assign(deployMessage, {
                 type: deployMessage.componentType,
-              } as FileResponse)
+              } as FileResponseSuccess)
             );
           }
         });
@@ -77,11 +75,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
       ux.log('');
       ux.styledHeader(chalk.blue('Deleted Source'));
       ux.table(
-        successes.map((entry) => ({
-          fullName: entry.fullName,
-          type: entry.type,
-          filePath: entry.filePath,
-        })),
+        successes.map(getFileResponseSuccessProps),
         {
           fullName: { header: 'FULL NAME' },
           type: { header: 'TYPE' },

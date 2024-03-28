@@ -126,6 +126,7 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
             exclude: exclude(flags['include-packages']),
           }
         : undefined,
+      projectDir: this.project?.getPath(),
     });
 
     const outputDir = flags['output-dir'];

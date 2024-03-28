@@ -12,9 +12,9 @@ import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
-import type { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter.js';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
 import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import type { StatusResult } from './types.js';
 
 let session: TestSession;
 // leave this in posix path mode since it's used in forceignore

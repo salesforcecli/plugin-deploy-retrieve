@@ -14,6 +14,7 @@ import {
   DeployResult,
   MetadataApiDeploy,
   MetadataApiDeployOptions,
+  RegistryAccess,
   RequestStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SourceTracking } from '@salesforce/source-tracking';
@@ -79,7 +80,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
     /** localChangesAsComponentSet returned an array to support multiple sequential deploys.
      * `sf` chooses not to support this so we force one ComponentSet
      */
-    const cs = (await stl.localChangesAsComponentSet(false))[0] ?? new ComponentSet();
+    const cs = (await stl.localChangesAsComponentSet(false))[0] ?? new ComponentSet(undefined, stl.registry);
     // stl produces a cs with api version already set.  command might have specified a version.
     if (opts['api-version']) {
       cs.apiVersion = opts['api-version'];
@@ -103,6 +104,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
         }
       : {}),
     ...(opts.metadata ? { metadata: { metadataEntries: opts.metadata, directoryPaths: await getPackageDirs() } } : {}),
+    projectDir: stl?.projectPath,
   });
 }
 
@@ -124,6 +126,7 @@ export async function executeDeploy(
 
   let deploy: MetadataApiDeploy | undefined;
   let componentSet: ComponentSet | undefined;
+  let registry: RegistryAccess | undefined;
 
   const org = await Org.create({ aliasOrUsername: opts['target-org'] });
   // for mdapi deploys, use the passed in api-version.
@@ -152,6 +155,7 @@ export async function executeDeploy(
       subscribeSDREvents: true,
       ignoreConflicts: opts['ignore-conflicts'],
     });
+    registry = stl.registry;
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
       if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
@@ -180,7 +184,9 @@ export async function executeDeploy(
   }
 
   // does not apply to mdapi deploys
-  const manifestPath = componentSet ? await writeManifest(deploy.id, componentSet) : undefined;
+  const manifestPath = componentSet
+    ? await writeManifest(deploy.id, componentSet, registry ?? new RegistryAccess())
+    : undefined;
   await DeployCache.set(deploy.id, { ...opts, manifest: manifestPath });
 
   return { deploy, componentSet };

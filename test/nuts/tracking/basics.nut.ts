@@ -9,10 +9,9 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { expect, assert } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
-import type { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter.js';
-import { DeployResultJson, RetrieveResultJson, isSdrFailure } from '../../../src/utils/types.js';
+import { DeployResultJson, RetrieveResultJson, isSdrFailure, isSdrSuccess } from '../../../src/utils/types.js';
 import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import type { StatusResult } from './types.js';
 import { eBikesDeployResultCount } from './constants.js';
 
 const filterIgnored = (r: StatusResult): boolean => r.ignored !== true;
@@ -81,16 +80,9 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(resp.jsonOutput?.status, JSON.stringify(resp)).to.equal(0);
       const files = resp.jsonOutput?.result.files;
       assert(Array.isArray(files));
-      expect(files, JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))).to.have.length.greaterThan(
-        eBikesDeployResultCount - 5
-      );
-      expect(files, JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))).to.have.length.lessThan(
-        eBikesDeployResultCount + 5
-      );
-      expect(
-        files.every((f) => f.state !== ComponentStatus.Failed),
-        JSON.stringify(files.filter((f) => f.state === ComponentStatus.Failed))
-      ).to.equal(true);
+      expect(files, JSON.stringify(files.filter(isSdrFailure))).to.have.length.greaterThan(eBikesDeployResultCount - 5);
+      expect(files, JSON.stringify(files.filter(isSdrFailure))).to.have.length.lessThan(eBikesDeployResultCount + 5);
+      expect(files.every(isSdrSuccess), JSON.stringify(files.filter(isSdrFailure))).to.equal(true);
     });
     it('sees no local changes (all were committed from push), but profile updated in remote', () => {
       const localResult = execCmd<StatusResult[]>('force:source:status --json --local', {

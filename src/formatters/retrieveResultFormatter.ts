@@ -10,7 +10,7 @@ import { FileResponse, RetrieveMessage, RetrieveResult } from '@salesforce/sourc
 import { NamedPackageDir, SfProject } from '@salesforce/core';
 import { ensureArray } from '@salesforce/kit';
 import { Formatter, isSdrSuccess, RetrieveResultJson } from '../utils/types.js';
-import { sortFileResponses, asRelativePaths, tableHeader, getFileResponseSuccessProps } from '../utils/output.js';
+import { tableHeader, getFileResponseSuccessProps, fileResponseSortFn, makePathRelative } from '../utils/output.js';
 
 export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   private files: FileResponse[];
@@ -35,7 +35,11 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
   }
 
   private displaySuccesses(): void {
-    const successes = sortFileResponses(asRelativePaths(this.files.filter(isSdrSuccess)));
+    const successes = this.files
+      .filter(isSdrSuccess)
+      .map(makePathRelative)
+      .sort(fileResponseSortFn)
+      .map(getFileResponseSuccessProps);
 
     if (!successes.length) {
       // a retrieve happened, but nothing was retrieved
@@ -55,7 +59,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       const options = { title: tableHeader('Retrieved Source'), 'no-truncate': true };
       this.ux.log();
 
-      this.ux.table(getFileResponseSuccessProps(successes), columns, options);
+      this.ux.table(successes, columns, options);
     }
 
     const warnings = getWarnings(this.result);

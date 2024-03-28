@@ -14,6 +14,7 @@ import {
   ComponentSetBuilder,
   ConvertResult,
   MetadataConverter,
+  RegistryAccess,
 } from '@salesforce/source-deploy-retrieve';
 import {
   arrayWithDeprecation,
@@ -117,13 +118,13 @@ export class Mdapi extends SfCommand<ConvertMdapiJson> {
             directoryPaths: [this.flags['root-dir']],
           }
         : undefined,
+      ...(this.project ? { projectDir: this.project?.getPath() } : {}),
     });
 
     const numOfComponents = this.componentSet.getSourceComponents().toArray().length;
     if (numOfComponents > 0) {
       this.spinner.start(`Converting ${numOfComponents} metadata components`);
-
-      const converter = new MetadataConverter();
+      const converter = new MetadataConverter(new RegistryAccess(undefined, this.project?.getPath()));
       this.convertResult = await converter.convert(this.componentSet, 'source', {
         type: 'directory',
         outputDirectory: outputDir,

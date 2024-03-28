@@ -108,3 +108,6 @@ export const isSdrFailure = (fileResponse: FileResponse): fileResponse is FileRe
 
 export const isSdrSuccess = (fileResponse: FileResponse): fileResponse is FileResponseSuccess =>
   fileResponse.state !== ComponentStatus.Failed;
+
+export const isFileResponseDeleted = (fileResponse: FileResponseSuccess): boolean =>
+  fileResponse.state === ComponentStatus.Deleted;

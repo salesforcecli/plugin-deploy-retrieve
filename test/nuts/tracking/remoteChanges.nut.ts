@@ -11,10 +11,10 @@ import { expect, assert, config } from 'chai';
 
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
-import { ComponentStatus, FileResponse } from '@salesforce/source-deploy-retrieve';
-import type { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter.js';
-import { PreviewResult, PreviewFile } from '../../../src/utils/previewOutput.js';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
+import type { FileResponse } from '@salesforce/source-deploy-retrieve';
+import type { PreviewResult, PreviewFile } from '../../../src/utils/previewOutput.js';
+import { DeployResultJson, isSdrFailure, isSdrSuccess, RetrieveResultJson } from '../../../src/utils/types.js';
+import type { StatusResult } from './types.js';
 import { eBikesDeployResultCount } from './constants.js';
 
 let session: TestSession;
@@ -62,10 +62,7 @@ describe('remote changes', () => {
       assert(Array.isArray(pushedSource));
       expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.greaterThan(eBikesDeployResultCount - 5);
       expect(pushedSource, JSON.stringify(pushedSource)).to.have.length.lessThan(eBikesDeployResultCount + 5);
-      expect(
-        pushedSource.every((r) => r.state !== ComponentStatus.Failed),
-        JSON.stringify(pushedSource.filter((r) => r.state === ComponentStatus.Failed))
-      ).to.equal(true);
+      expect(pushedSource.every(isSdrSuccess), JSON.stringify(pushedSource.filter(isSdrFailure))).to.equal(true);
     });
 
     it('sees no local changes (all were committed from deploy)', () => {
