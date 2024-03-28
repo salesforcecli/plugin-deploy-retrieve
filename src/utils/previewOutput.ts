@@ -18,6 +18,7 @@ import {
   VirtualTreeContainer,
   MetadataType,
   SourceComponent,
+  RegistryAccess,
 } from '@salesforce/source-deploy-retrieve';
 import { filePathsFromMetadataComponent } from '@salesforce/source-deploy-retrieve/lib/src/utils/filePathGenerator.js';
 
@@ -53,9 +54,12 @@ const ensureAbsolutePath = (f: string): string => (isAbsolute(f) ? f : resolve(f
 
 // borrowed from STL populateFilesPaths.
 // TODO: this goes in SDR maybe?
-const resolvePaths = (filenames: string[]): Array<Pick<PreviewFile, 'type' | 'fullName' | 'path'>> => {
+const resolvePaths = (
+  filenames: string[],
+  registry?: RegistryAccess
+): Array<Pick<PreviewFile, 'type' | 'fullName' | 'path'>> => {
   // component set generated from the filenames on all local changes
-  const resolver = new MetadataResolver(undefined, VirtualTreeContainer.fromFilePaths(filenames), false);
+  const resolver = new MetadataResolver(registry, VirtualTreeContainer.fromFilePaths(filenames), false);
   const sourceComponents = filenames
     .flatMap((filename) => {
       try {
@@ -181,7 +185,10 @@ export const compileResults = ({
     );
 
   // Source backed components won't appear in the ComponentSet if ignored
-  const ignoredSourceComponents = resolvePaths([...(componentSet.forceIgnoredPaths ?? [])]).map(
+  const ignoredSourceComponents = resolvePaths(
+    [...(componentSet.forceIgnoredPaths ?? [])],
+    new RegistryAccess(undefined, projectPath)
+  ).map(
     (resolved): PreviewFile => ({
       ...resolved,
       ...(resolved.path ? { projectRelativePath: relative(projectPath, resolved.path) } : {}),
