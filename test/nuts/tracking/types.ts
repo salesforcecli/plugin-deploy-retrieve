@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-// The types in here is copied from plugin-source.  Used by the tracking NUTs to validate that behavior is identical between the two plugins.
+// Types are copied from plugin-source.  Used by the tracking NUTs to validate that behavior is identical between the two plugins.
 type StatusActualState = 'Deleted' | 'Add' | 'Changed' | 'Unchanged';
 type StatusOrigin = 'Local' | 'Remote';
 type StatusStateString = `${StatusOrigin} ${StatusActualState}` | `${StatusOrigin} ${StatusActualState} (Conflict)`;
