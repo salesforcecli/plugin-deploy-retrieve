@@ -23,7 +23,7 @@ import {
   RequestStatus,
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
-import { Duration } from '@salesforce/kit';
+import { Duration, logFn } from '@salesforce/kit';
 import { ChangeResult, ConflictResponse, deleteCustomLabels, SourceTracking } from '@salesforce/source-tracking';
 import {
   arrayWithDeprecation,
@@ -35,7 +35,7 @@ import {
 } from '@salesforce/sf-plugins-core';
 import chalk from 'chalk';
 import { writeConflictTable } from '../../../utils/conflicts.js';
-import { isNonDecomposedCustomLabels } from '../../../utils/metadataTypes.js';
+import { isNonDecomposedCustomLabel, isNonDecomposedCustomLabelsOrCustomLabel } from '../../../utils/metadataTypes.js';
 import { getFileResponseSuccessProps } from '../../../utils/output.js';
 import { API, DeleteSourceJson, isFileResponseDeleted, isSdrSuccess, isSourceComponent } from '../../../utils/types.js';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
@@ -362,7 +362,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
   private async deleteFilesLocally(): Promise<void> {
     if (!this.flags['check-only'] && this.deployResult?.response?.status === RequestStatus.Succeeded) {
-      const customLabels = this.componentSet.getSourceComponents().toArray().filter(isNonDecomposedCustomLabels);
+      const customLabels = this.componentSet.getSourceComponents().toArray().filter(isNonDecomposedCustomLabel);
       const promisesFromLabels = customLabels[0]?.xml ? [deleteCustomLabels(customLabels[0].xml, customLabels)] : [];
       // mixed delete/deploy operations have already been deleted and stashed
       const otherPromises = !this.mixedDeployDelete.delete.length
@@ -370,7 +370,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
             .filter(isSourceComponent)
             .flatMap((component: SourceComponent) => [
               ...(component.content ? [fs.promises.rm(component.content, { recursive: true, force: true })] : []),
-              ...(component.xml && !isNonDecomposedCustomLabels(component) ? [fs.promises.rm(component.xml)] : []),
+              ...(component.xml && !isNonDecomposedCustomLabel(component) ? [fs.promises.rm(component.xml)] : []),
             ])
         : [];
 
@@ -408,9 +408,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
       const local = (this.components ?? [])
         .filter(isSourceComponent)
         .filter(sourceComponentIsNotInMixedDeployDelete(this.mixedDeployDelete))
+        .map(logFn)
         .flatMap((c) =>
           // for custom labels, print each custom label to be deleted, not the whole file
-          isNonDecomposedCustomLabels(c)
+          isNonDecomposedCustomLabelsOrCustomLabel(c)
             ? [`${c.type.name}:${c.fullName}`]
             : [c.xml as string, ...c.walkContent()] ?? []
         )

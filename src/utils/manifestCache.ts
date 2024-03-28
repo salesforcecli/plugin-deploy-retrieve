@@ -33,10 +33,12 @@ export const writeManifest = async (
     // cs.filter doesn't return the SAME component set, it just returns a new one...
     // and so when we set anything on the component set that was passed in, it won't be set on the filtered one
     // so, we create a new CS, and set the values from the original
+
     const cs = new ComponentSet(
       componentSet.filter((c) => !isNonDecomposedCustomLabels(c)),
       registry
     );
+
     cs.sourceApiVersion = componentSet.sourceApiVersion;
     cs.apiVersion = componentSet.apiVersion;
     cs.projectDirectory = componentSet.projectDirectory;
