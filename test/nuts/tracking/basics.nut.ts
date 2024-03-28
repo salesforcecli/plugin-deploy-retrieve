@@ -9,9 +9,9 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { expect, assert } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
-import type { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter.js';
 import { DeployResultJson, RetrieveResultJson, isSdrFailure, isSdrSuccess } from '../../../src/utils/types.js';
 import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import type { StatusResult } from './types.js';
 import { eBikesDeployResultCount } from './constants.js';
 
 const filterIgnored = (r: StatusResult): boolean => r.ignored !== true;

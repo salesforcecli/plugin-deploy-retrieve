@@ -21,7 +21,6 @@
     "@salesforce/cli-plugins-testkit": "^5.1.12",
     "@salesforce/dev-scripts": "^8.4.2",
     "@salesforce/plugin-command-reference": "^3.0.73",
-    "@salesforce/plugin-source": "^3.2.0",
     "@salesforce/source-testkit": "^2.1.108",
     "@salesforce/ts-sinon": "^1.4.19",
     "cross-env": "^7.0.3",

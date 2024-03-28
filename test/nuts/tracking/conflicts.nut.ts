@@ -11,9 +11,9 @@ import { strict as assert } from 'node:assert';
 import { expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
-import type { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter.js';
 import { DeployResultJson, isSdrFailure, isSdrSuccess, RetrieveResultJson } from '../../../src/utils/types.js';
 import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import type { StatusResult } from './types.js';
 import { eBikesDeployResultCount } from './constants.js';
 
 let session: TestSession;

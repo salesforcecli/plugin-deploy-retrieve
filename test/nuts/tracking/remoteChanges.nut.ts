@@ -12,9 +12,9 @@ import { expect, assert, config } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
 import type { FileResponse } from '@salesforce/source-deploy-retrieve';
-import type { StatusResult } from '@salesforce/plugin-source/lib/formatters/source/statusFormatter.js';
 import type { PreviewResult, PreviewFile } from '../../../src/utils/previewOutput.js';
 import { DeployResultJson, isSdrFailure, isSdrSuccess, RetrieveResultJson } from '../../../src/utils/types.js';
+import type { StatusResult } from './types.js';
 import { eBikesDeployResultCount } from './constants.js';
 
 let session: TestSession;
