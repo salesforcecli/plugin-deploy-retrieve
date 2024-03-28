@@ -10,7 +10,7 @@ import sinon from 'sinon';
 import { assert, expect } from 'chai';
 import { TestSession, TestProject, execCmd } from '@salesforce/cli-plugins-testkit';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
-import { AuthInfo, Connection } from '@salesforce/core';
+import { AuthInfo, Connection, Org } from '@salesforce/core';
 import {
   ComponentSet,
   ComponentSetBuilder,
@@ -78,6 +78,7 @@ describe('Partial Bundle Delete Retrieves', () => {
     // suppress ui results from test output
     stubSfCommandUx(sandbox);
     sandbox.stub(connection.metadata, 'retrieve').resolves(retrieveResponse);
+    sandbox.stub(Org.prototype, 'tracksSource').resolves(false);
     sandbox.stub(connection.metadata, 'checkRetrieveStatus').resolves(checkRetrieveStatusResponse);
     const csbBuild: (options: ComponentSetOptions) => Promise<ComponentSet> = ComponentSetBuilder.build.bind({});
     sandbox.stub(ComponentSetBuilder, 'build').callsFake(async (opts) => {
