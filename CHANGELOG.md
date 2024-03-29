@@ -1,3 +1,19 @@
+# [3.5.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.4.0...3.5.0) (2024-03-29)
+
+### Bug Fixes
+
+- delete stuff is very specific about customLabel vs. customLabels ([810ddb4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/810ddb4090dea132cf31b087a7f5a3b8b2e8bd52))
+- identify labels when comp is child OR parent ([0c2c6ba](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0c2c6ba13d531dfc176f9d4ac65dfae3cec1ce60))
+- stashPath map by fullname, not sourcepath ([be96906](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/be96906cd8538fb2d961143761c59908b42ea5b6))
+- unstash after a prompt = no ([b13aeea](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b13aeea7ea0096a763fcc22fa7a17fbd9b858080))
+
+### Features
+
+- custom registries ([033a2e0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/033a2e0ce6bf7f9395a6787cc589eedb1feeb5e1))
+- custom registries in mdapi convert ([8b020c3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8b020c3556f0e860c239e6d59eef17c05ac0474b))
+- delete source handles decomposed types ([c496b74](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c496b74d3c7625e70bb4b47f989876d7ecc3da20))
+- support registry variants ([5dbe516](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5dbe516a733ec4ee193d21c0615965aa54059aac))
+
 # [3.4.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.3.1...3.4.0) (2024-03-25)
 
 ### Features
