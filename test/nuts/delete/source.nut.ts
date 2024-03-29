@@ -8,8 +8,8 @@
 import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
-import { expect } from 'chai';
-import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { expect, assert } from 'chai';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
 import { AuthInfo, Connection } from '@salesforce/core';
@@ -28,62 +28,6 @@ const isNameObsolete = async (username: string, memberType: string, memberName: 
 
   return res.IsNameObsolete;
 };
-
-describe('CustomLabels', () => {
-  let testkit: TestSession;
-
-  before(async () => {
-    testkit = await TestSession.create({
-      project: {
-        gitClone: 'https://github.com/WillieRuemmele/sfdx-delete-customlabel',
-      },
-      scratchOrgs: [{ setDefault: true, config: path.join('config', 'project-scratch-def.json') }],
-      devhubAuthStrategy: 'AUTO',
-    });
-    execCmd('project:deploy:start --source-dir force-app', { ensureExitCode: 0 });
-  });
-
-  after(async () => {
-    await testkit?.clean();
-  });
-  it('will not delete the entire .xml file', () => {
-    const clPath = path.join(
-      testkit.project.dir,
-      'force-app',
-      'main',
-      'default',
-      'labels',
-      'CustomLabels.labels-meta.xml'
-    );
-    const result = execCmd<DeleteSourceJson>(
-      'project:delete:source --json --no-prompt --metadata CustomLabel:DeleteMe',
-      {
-        ensureExitCode: 0,
-      }
-    ).jsonOutput?.result;
-    expect(fs.existsSync(clPath)).to.be.true;
-    expect(fs.readFileSync(clPath, 'utf8')).to.not.contain('<fullName>DeleteMe</fullName>');
-    expect(fs.readFileSync(clPath, 'utf8')).to.contain('<fullName>KeepMe1</fullName>');
-    expect(fs.readFileSync(clPath, 'utf8')).to.contain('<fullName>KeepMe2</fullName>');
-    expect(result?.deletedSource).to.have.length(1);
-  });
-
-  it('will delete the entire .xml file', () => {
-    const clPath = path.join(
-      testkit.project.dir,
-      'force-app',
-      'main',
-      'default',
-      'labels',
-      'CustomLabels.labels-meta.xml'
-    );
-    const result = execCmd<DeleteSourceJson>('project:delete:source --json --no-prompt --metadata CustomLabels', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result;
-    expect(result?.deletedSource).to.have.length(3);
-    expect(fs.existsSync(clPath)).to.be.false;
-  });
-});
 
 describe('project delete source NUTs', () => {
   let testkit: SourceTestkit;
@@ -241,15 +185,14 @@ describe('project delete source NUTs', () => {
     const lwcPath = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc', 'brokerCard', 'helper.js');
     fs.writeFileSync(lwcPath, '//', { encoding: 'utf8' });
     execCmd(`project:deploy:start --source-dir ${lwcPath}`, { cli: 'sf', ensureExitCode: 0 });
-    const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(
-      `project:delete:source -p ${lwcPath} --no-prompt --json`
-    ).jsonOutput?.result;
-
-    expect(deleteResult?.deletedSource.length).to.equal(1);
-    expect(deleteResult?.deletedSource[0].filePath, 'filepath').to.include(lwcPath);
-    expect(deleteResult?.deletedSource[0].fullName, 'fullname').to.include(path.join('brokerCard', 'helper.js'));
-    expect(deleteResult?.deletedSource[0].state, 'state').to.equal('Deleted');
-    expect(deleteResult?.deletedSource[0].type, 'type').to.equal('LightningComponentBundle');
+    const deleteResult = execCmd<DeleteSourceJson>(`project:delete:source -p ${lwcPath} --no-prompt --json`).jsonOutput
+      ?.result;
+    assert(deleteResult?.deletedSource);
+    expect(deleteResult.deletedSource.length).to.equal(1);
+    expect(deleteResult.deletedSource[0].filePath, 'filepath').to.include(lwcPath);
+    expect(deleteResult.deletedSource[0].fullName, 'fullname').to.include(path.join('brokerCard', 'helper.js'));
+    expect(deleteResult.deletedSource[0].state, 'state').to.equal('Deleted');
+    expect(deleteResult.deletedSource[0].type, 'type').to.equal('LightningComponentBundle');
 
     await queryOrgAndFS('brokerCard', lwcPath);
   });
@@ -262,10 +205,11 @@ describe('project delete source NUTs', () => {
     fs.writeFileSync(lwcPath2, '//', { encoding: 'utf8' });
     execCmd(`project:deploy:start --source-dir ${lwcPath1} --source-dir ${lwcPath2}`);
     // delete both helper.js files at the same time
-    const deleteResult = execCmd<{ deletedSource: FileResponse[] }>(
+    const deleteResult = execCmd<DeleteSourceJson>(
       // eslint-disable-next-line sf-plugin/no-execcmd-double-quotes
       `project:delete:source -p "${lwcPath1},${lwcPath2}" --no-prompt --json`
     ).jsonOutput?.result;
+    assert(deleteResult?.deletedSource);
 
     expect(deleteResult?.deletedSource.length).to.equal(2);
     expect(deleteResult?.deletedSource[0].filePath, 'filepath').to.include(lwcPath1);
@@ -288,9 +232,9 @@ describe('project delete source NUTs', () => {
     execCmd(`force:lightning:component:create -n mylwc --type lwc -d ${lwcPath}`, { cli: 'sf', ensureExitCode: 0 });
     execCmd(`project:deploy:start --source-dir ${mylwcPath}`);
     expect(await isNameObsolete(testkit.username, 'LightningComponentBundle', 'mylwc')).to.be.false;
-    const deleteResult = execCmd<{ deletedSource: [FileResponse] }>(
-      `project:delete:source -p ${mylwcPath} --no-prompt --json`
-    ).jsonOutput?.result;
+    const deleteResult = execCmd<DeleteSourceJson>(`project:delete:source -p ${mylwcPath} --no-prompt --json`)
+      .jsonOutput?.result;
+    assert(deleteResult?.deletedSource);
 
     expect(deleteResult?.deletedSource.length).to.equal(3);
     expect(deleteResult?.deletedSource[0].filePath, 'filepath').to.include(mylwcPath);

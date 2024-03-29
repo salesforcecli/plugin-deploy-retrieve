@@ -10,7 +10,7 @@ import { ux } from '@oclif/core';
 import { FileResponse, RetrieveResult } from '@salesforce/source-deploy-retrieve';
 import { Messages } from '@salesforce/core';
 import { Formatter, MetadataRetrieveResultJson } from '../utils/types.js';
-import { sortFileResponses, asRelativePaths } from '../utils/output.js';
+import { fileResponseSortFn, makePathRelative } from '../utils/output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 export const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
@@ -23,7 +23,7 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
     private opts: { 'target-metadata-dir': string; 'zip-file-name': string; unzip: boolean }
   ) {
     this.zipFilePath = join(opts['target-metadata-dir'], opts['zip-file-name']);
-    this.files = sortFileResponses(asRelativePaths(this.result.getFileResponses() ?? []));
+    this.files = (this.result.getFileResponses() ?? []).map(makePathRelative).sort(fileResponseSortFn);
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await

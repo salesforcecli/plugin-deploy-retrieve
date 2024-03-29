@@ -10,16 +10,15 @@ import sinon from 'sinon';
 import { assert, expect } from 'chai';
 import { TestSession, TestProject, execCmd } from '@salesforce/cli-plugins-testkit';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
-import { AuthInfo, Connection } from '@salesforce/core';
+import { AuthInfo, Connection, Org } from '@salesforce/core';
 import {
   ComponentSet,
   ComponentSetBuilder,
   ComponentSetOptions,
-  ComponentStatus,
   MetadataApiRetrieve,
   RetrieveSetOptions,
 } from '@salesforce/source-deploy-retrieve';
-import { RetrieveResultJson } from '../../../src/utils/types.js';
+import { RetrieveResultJson, isFileResponseDeleted, isSdrSuccess } from '../../../src/utils/types.js';
 import RetrieveMetadata from '../../../src/commands/project/retrieve/start.js';
 
 describe('Partial Bundle Delete Retrieves', () => {
@@ -79,6 +78,7 @@ describe('Partial Bundle Delete Retrieves', () => {
     // suppress ui results from test output
     stubSfCommandUx(sandbox);
     sandbox.stub(connection.metadata, 'retrieve').resolves(retrieveResponse);
+    sandbox.stub(Org.prototype, 'tracksSource').resolves(false);
     sandbox.stub(connection.metadata, 'checkRetrieveStatus').resolves(checkRetrieveStatusResponse);
     const csbBuild: (options: ComponentSetOptions) => Promise<ComponentSet> = ComponentSetBuilder.build.bind({});
     sandbox.stub(ComponentSetBuilder, 'build').callsFake(async (opts) => {
@@ -149,7 +149,7 @@ describe('Partial Bundle Delete Retrieves', () => {
       expect(files).to.be.an('array').with.length.greaterThan(0);
 
       // find the deleted entry for testFile.css
-      const deletedFileResponse = files.find((fr) => fr.state === ComponentStatus['Deleted']);
+      const deletedFileResponse = files.filter(isSdrSuccess).find(isFileResponseDeleted);
       expect(deletedFileResponse).to.deep.equal({
         fullName: 'pageTemplate_2_7_3',
         type: 'AuraDefinitionBundle',
@@ -182,7 +182,7 @@ describe('Partial Bundle Delete Retrieves', () => {
       assert(files);
       expect(files).to.be.an('array').with.length.greaterThan(0);
       // find the deleted entry for testFile.css
-      const deletedFileResponse = files.find((fr) => fr.state === ComponentStatus['Deleted']);
+      const deletedFileResponse = files.filter(isSdrSuccess).find(isFileResponseDeleted);
       expect(deletedFileResponse).to.deep.equal({
         fullName: 'propertyTile',
         type: 'LightningComponentBundle',

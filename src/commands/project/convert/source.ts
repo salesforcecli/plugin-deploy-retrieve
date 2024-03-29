@@ -14,6 +14,7 @@ import {
   ComponentSetBuilder,
   ConvertResult,
   MetadataConverter,
+  RegistryAccess,
 } from '@salesforce/source-deploy-retrieve';
 import {
   arrayWithDeprecation,
@@ -130,11 +131,13 @@ export class Source extends SfCommand<ConvertResultJson> {
             directoryPaths: await getPackageDirs(),
           }
         : undefined,
+      projectDir: this.project?.getPath(),
     });
 
     const packageName = this.flags['package-name'];
     const outputDirectory = resolve(this.flags['output-dir']);
-    const converter = new MetadataConverter();
+    const registry = new RegistryAccess(undefined, this.project?.getPath());
+    const converter = new MetadataConverter(registry);
     this.convertResult = await converter.convert(this.componentSet, 'metadata', {
       type: 'directory',
       outputDirectory,

@@ -172,7 +172,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       format
     );
     if (Boolean(flags.manifest) || Boolean(flags.metadata)) {
-      const access = new RegistryAccess();
+      const access = new RegistryAccess(undefined, SfProject.getInstance()?.getPath());
       if (wantsToRetrieveCustomFields(componentSetFromNonDeletes, access)) {
         this.warn(messages.getMessage('wantsToRetrieveCustomFields'));
         componentSetFromNonDeletes.add({
@@ -369,7 +369,7 @@ const buildRetrieveAndDeleteTargets = async (
       org: flags['target-org'],
       project: await SfProject.resolve(),
       subscribeSDREvents: true,
-      ignoreConflicts: format === 'metadata' || flags['ignore-conflicts'],
+      ignoreConflicts: flags['ignore-conflicts'],
     });
     const result = await stl.maybeApplyRemoteDeletesToLocal(true);
     // STL returns a componentSet that gets these from the project/config.
@@ -380,6 +380,14 @@ const buildRetrieveAndDeleteTargets = async (
     return result;
   } else {
     const retrieveFromOrg = flags.metadata?.some(isRegexMatch) ? flags['target-org'].getUsername() : undefined;
+    if (format === 'source' && (await flags['target-org'].supportsSourceTracking())) {
+      await SourceTracking.create({
+        org: flags['target-org'],
+        project: await SfProject.resolve(),
+        subscribeSDREvents: true,
+        ignoreConflicts: flags['ignore-conflicts'],
+      });
+    }
 
     return {
       componentSetFromNonDeletes: await ComponentSetBuilder.build({
@@ -408,6 +416,7 @@ const buildRetrieveAndDeleteTargets = async (
             }
           : {}),
         ...(retrieveFromOrg ? { org: { username: retrieveFromOrg, exclude: [] } } : {}),
+        ...(format === 'source' ? { projectDir: await SfProject.resolveProjectPath() } : {}),
       }),
     };
   }

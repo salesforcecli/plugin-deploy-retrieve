@@ -18,11 +18,12 @@ import {
   DeployResult,
   DestructiveChangesType,
   FileResponse,
+  FileResponseSuccess,
   MetadataComponent,
   RequestStatus,
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
-import { Duration } from '@salesforce/kit';
+import { Duration, logFn } from '@salesforce/kit';
 import { ChangeResult, ConflictResponse, deleteCustomLabels, SourceTracking } from '@salesforce/source-tracking';
 import {
   arrayWithDeprecation,
@@ -33,7 +34,10 @@ import {
   SfCommand,
 } from '@salesforce/sf-plugins-core';
 import chalk from 'chalk';
-import { API, DeleteSourceJson, isSourceComponent } from '../../../utils/types.js';
+import { writeConflictTable } from '../../../utils/conflicts.js';
+import { isNonDecomposedCustomLabel, isNonDecomposedCustomLabelsOrCustomLabel } from '../../../utils/metadataTypes.js';
+import { getFileResponseSuccessProps } from '../../../utils/output.js';
+import { API, DeleteSourceJson, isFileResponseDeleted, isSdrSuccess, isSourceComponent } from '../../../utils/types.js';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
 import { resolveApi, validateTests } from '../../../utils/deploy.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
@@ -41,12 +45,13 @@ import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter
 import { DeployProgress } from '../../../utils/progressBar.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { testLevelFlag, testsFlag } from '../../../utils/flags.js';
-const fsPromises = fs.promises;
 const testFlags = 'Test';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
 const xorFlags = ['metadata', 'source-dir'];
+
+type MixedDeployDelete = { deploy: string[]; delete: FileResponseSuccess[] };
 export class Source extends SfCommand<DeleteSourceJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
@@ -124,20 +129,15 @@ export class Source extends SfCommand<DeleteSourceJson> {
   };
   protected fileResponses: FileResponse[] | undefined;
   protected tracking: SourceTracking | undefined;
-  // private deleteResultFormatter: DeleteResultFormatter | DeployResultFormatter;
-  private aborted = false;
   private components: MetadataComponent[] | undefined;
   // create the delete FileResponse as we're parsing the comp. set to use in the output
-  private mixedDeployDelete: { deploy: string[]; delete: FileResponse[] } = { delete: [], deploy: [] };
+  private mixedDeployDelete: MixedDeployDelete = { delete: [], deploy: [] };
   // map of component in project, to where it is stashed
   private stashPath = new Map<string, string>();
-  private tempDir = path.join(os.tmpdir(), 'source_delete');
   private flags!: Interfaces.InferredFlags<typeof Source.flags>;
   private org!: Org;
   private componentSet!: ComponentSet;
-  private isRest!: boolean;
   private deployResult!: DeployResult;
-  private deleteResultFormatter!: DeployResultFormatter | DeleteResultFormatter;
 
   public async run(): Promise<DeleteSourceJson> {
     this.flags = (await this.parse(Source)).flags;
@@ -178,6 +178,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
             directoryPaths: await getPackageDirs(),
           }
         : undefined,
+      projectDir: this.project?.getPath(),
     });
     if (this.flags['track-source'] && !this.flags['force-overwrite']) {
       await this.filterConflictsByComponentSet();
@@ -208,37 +209,49 @@ export class Source extends SfCommand<DeleteSourceJson> {
     this.componentSet = cs;
 
     if (sourcepaths) {
-      // determine if user is trying to delete a single file from a bundle, which is actually just an fs delete operation
-      // and then a constructive deploy on the "new" bundle
-      await Promise.all(
-        this.components
+      await Promise.all([
+        // determine if user is trying to delete a single file from a bundle, which is actually just an fs delete operation
+        // and then a constructive deploy on the "new" bundle
+        ...this.components
           .filter((comp) => comp.type.strategies?.adapter === 'bundle')
           .filter(isSourceComponent)
-          .flatMap((bundle: SourceComponent) =>
-            sourcepaths.map((sourcepath) =>
-              // walkContent returns absolute paths while sourcepath will usually be relative
-              bundle.walkContent().some((content) => content.endsWith(sourcepath))
-                ? this.moveBundleToManifest(bundle, sourcepath)
-                : []
-            )
-          )
-      );
+          .flatMap((bundle) =>
+            sourcepaths
+              .filter(someContentsEndWithPath(bundle))
+              .map((sourcepath) =>
+                this.moveToManifest(bundle, sourcepath, path.join(bundle.name, path.basename(sourcepath)))
+              )
+          ),
+        // same for decomposed components with non-addressable children (ex: decomposedPermissionSet.  Deleting a file means "redploy without that")
+        ...this.components
+          .filter(allChildrenAreNotAddressable)
+          .filter(isSourceComponent)
+          .flatMap((decomposed) =>
+            sourcepaths
+              .filter(someContentsEndWithPath(decomposed))
+              .map((sourcepath) => this.moveToManifest(decomposed, sourcepath, decomposed.fullName))
+          ),
+      ]);
     }
 
-    this.aborted = !(await this.handlePrompt());
-    if (this.aborted) {
+    if (!(await this.handlePrompt())) {
+      await Promise.all(
+        this.mixedDeployDelete.delete.map(async (file) => {
+          await restoreFileFromStash(this.stashPath, file.filePath as string);
+        })
+      );
       throw messages.createError('prompt.delete.cancel');
     }
 
     // fire predeploy event for the delete
     await Lifecycle.getInstance().emit('predeploy', this.components);
-    this.isRest = (await resolveApi()) === API['REST'];
-    this.log(`*** Deleting with ${this.isRest ? 'REST' : 'SOAP'} API ***`);
+    const isRest = (await resolveApi()) === API['REST'];
+    this.log(`*** Deleting with ${isRest ? 'REST' : 'SOAP'} API ***`);
 
     const deploy = await this.componentSet.deploy({
       usernameOrConnection: this.org.getUsername() as string,
       apiOptions: {
-        rest: this.isRest,
+        rest: isRest,
         checkOnly: this.flags['check-only'] ?? false,
         ...(this.flags.tests ? { runTests: this.flags.tests } : {}),
         ...(this.flags['test-level'] ? { testLevel: this.flags['test-level'] } : {}),
@@ -265,20 +278,17 @@ export class Source extends SfCommand<DeleteSourceJson> {
    * Checks the response status to determine whether the delete was successful.
    */
   protected async resolveSuccess(): Promise<void> {
-    const status = this.deployResult?.response?.status;
-    if (status !== RequestStatus.Succeeded && !this.aborted) {
+    // if deploy failed restore the stashed files if they exist
+    if (this.deployResult?.response?.status !== RequestStatus.Succeeded) {
       process.exitCode = 1;
-    }
-    // if deploy failed OR the operation was cancelled, restore the stashed files if they exist
-    else if (status !== RequestStatus.Succeeded || this.aborted) {
       await Promise.all(
         this.mixedDeployDelete.delete.map(async (file) => {
-          await this.restoreFileFromStash(file.filePath as string);
+          await restoreFileFromStash(this.stashPath, file.filePath as string);
         })
       );
     } else if (this.mixedDeployDelete.delete.length) {
       // successful delete -> delete the stashed file
-      await this.deleteStash();
+      return deleteStash();
     }
   }
 
@@ -288,18 +298,18 @@ export class Source extends SfCommand<DeleteSourceJson> {
       testLevel: this.flags['test-level'],
     };
 
-    this.deleteResultFormatter = this.mixedDeployDelete.deploy.length
-      ? new DeployResultFormatter(this.deployResult, formatterOptions)
+    const deleteResultFormatter = this.mixedDeployDelete.deploy.length
+      ? new DeployResultFormatter(this.deployResult, formatterOptions, this.mixedDeployDelete.delete)
       : new DeleteResultFormatter(this.deployResult, formatterOptions);
 
     // Only display results to console when JSON flag is unset.
     if (!this.jsonEnabled()) {
-      this.deleteResultFormatter.display();
+      deleteResultFormatter.display();
     }
 
-    if (this.mixedDeployDelete.deploy.length && !this.aborted) {
+    if (this.mixedDeployDelete.deploy.length) {
       // override JSON output when we actually deployed
-      const json = (await this.deleteResultFormatter.getJson()) as DeleteSourceJson;
+      const json = (await deleteResultFormatter.getJson()) as DeleteSourceJson;
       json.deletedSource = this.mixedDeployDelete.delete; // to match toolbelt json output
       json.outboundFiles = []; // to match toolbelt version
       json.deletes = json.deploys; // to match toolbelt version
@@ -307,18 +317,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       return json;
     }
 
-    if (this.aborted) {
-      return {
-        status: 0,
-        result: {
-          deletedSource: [],
-          deletes: [{}],
-          outboundFiles: [],
-        },
-      } as unknown as DeleteSourceJson;
-    }
-
-    return (await this.deleteResultFormatter.getJson()) as DeleteSourceJson;
+    return (await deleteResultFormatter.getJson()) as DeleteSourceJson;
   }
 
   private async maybeUpdateTracking(): Promise<void> {
@@ -329,9 +328,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       }
       this.spinner.start('Updating source tracking');
 
-      const successes = (this.fileResponses ?? this.deployResult.getFileResponses()).filter(
-        (fileResponse) => fileResponse.state !== ComponentStatus.Failed
-      );
+      const successes = (this.fileResponses ?? this.deployResult.getFileResponses()).filter(isSdrSuccess);
       if (!successes.length) {
         this.spinner.stop();
         return;
@@ -343,12 +340,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
             .filter((fileResponse) => fileResponse.state !== ComponentStatus.Deleted)
             .map((fileResponse) => fileResponse.filePath) as string[],
           deletedFiles: successes
-            .filter((fileResponse) => fileResponse.state === ComponentStatus.Deleted)
+            .filter(isFileResponseDeleted)
             .map((fileResponse) => fileResponse.filePath) as string[],
         }),
-        this.tracking?.updateRemoteTracking(
-          successes.map(({ state, fullName, type, filePath }) => ({ state, fullName, type, filePath }))
-        ),
+        this.tracking?.updateRemoteTracking(successes.map(getFileResponseSuccessProps)),
       ]);
 
       this.spinner.stop();
@@ -357,120 +352,77 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
   private async deleteFilesLocally(): Promise<void> {
     if (!this.flags['check-only'] && this.deployResult?.response?.status === RequestStatus.Succeeded) {
-      const promises: Array<Promise<void> | ReturnType<typeof deleteCustomLabels>> = [];
-      const customLabels = this.componentSet
-        .getSourceComponents()
-        .toArray()
-        .filter((comp) => comp.type.id === 'customlabel');
-      if (customLabels.length && customLabels[0].xml) {
-        promises.push(deleteCustomLabels(customLabels[0].xml, customLabels));
-      }
-      this.components?.filter(isSourceComponent).map((component: SourceComponent) => {
-        // mixed delete/deploy operations have already been deleted and stashed
-        if (!this.mixedDeployDelete.delete.length) {
-          if (component.content) {
-            const stats = fs.statSync(component.content);
-            if (stats.isDirectory()) {
-              promises.push(fsPromises.rm(component.content, { recursive: true }));
-            } else {
-              promises.push(fsPromises.unlink(component.content));
-            }
-          }
-          if (component.xml) {
-            if (component.type.id !== 'customlabel') {
-              // CustomLabels handled as a special case above
-              promises.push(fsPromises.unlink(component.xml));
-            }
-          }
-        }
-      });
-      await Promise.all(promises);
+      const customLabels = this.componentSet.getSourceComponents().toArray().filter(isNonDecomposedCustomLabel);
+      const promisesFromLabels = customLabels[0]?.xml ? [deleteCustomLabels(customLabels[0].xml, customLabels)] : [];
+      // mixed delete/deploy operations have already been deleted and stashed
+      const otherPromises = !this.mixedDeployDelete.delete.length
+        ? (this.components ?? [])
+            .filter(isSourceComponent)
+            .flatMap((component: SourceComponent) => [
+              ...(component.content ? [fs.promises.rm(component.content, { recursive: true, force: true })] : []),
+              ...(component.xml && !isNonDecomposedCustomLabel(component) ? [fs.promises.rm(component.xml)] : []),
+            ])
+        : [];
+
+      await Promise.all([...promisesFromLabels, ...otherPromises]);
     }
   }
 
-  private async moveFileToStash(file: string): Promise<void> {
-    await fsPromises.mkdir(path.dirname(this.stashPath.get(file) as string), { recursive: true });
-    await fsPromises.copyFile(file, this.stashPath.get(file) as string);
-    await fsPromises.unlink(file);
-  }
-
-  private async restoreFileFromStash(file: string): Promise<void> {
-    await fsPromises.rename(this.stashPath.get(file) as string, file);
-  }
-
-  private async deleteStash(): Promise<void> {
-    await fsPromises.rm(this.tempDir, { recursive: true, force: true });
-  }
-
-  private async moveBundleToManifest(bundle: SourceComponent, sourcepath: string): Promise<void> {
-    // if one of the passed in sourcepaths is to a bundle component
-    const fileName = path.basename(sourcepath);
-    const fullName = path.join(bundle.name, fileName);
+  private async moveToManifest(cmp: SourceComponent, sourcepath: string, fullName: string): Promise<void> {
     this.mixedDeployDelete.delete.push({
       state: ComponentStatus.Deleted,
       fullName,
-      type: bundle.type.name,
+      type: cmp.type.name,
       filePath: sourcepath,
     });
+
     // stash the file in case we need to restore it due to failed deploy/aborted command
-    this.stashPath.set(sourcepath, path.join(this.tempDir, fullName));
-    await this.moveFileToStash(sourcepath);
-
+    this.stashPath.set(sourcepath, path.join(os.tmpdir(), 'source_delete', fullName));
+    await moveFileToStash(this.stashPath, sourcepath);
     // re-walk the directory to avoid picking up the deleted file
-    this.mixedDeployDelete.deploy.push(...bundle.walkContent());
+    this.mixedDeployDelete.deploy.push(...cmp.walkContent());
 
-    // now remove the bundle from destructive changes and add to manifest
-    // set the bundle as NOT marked for delete
-    this.componentSet.destructiveChangesPost.delete(`${bundle.type.id}#${bundle.fullName}`);
-    bundle.setMarkedForDelete(false);
-    this.componentSet.add(bundle);
+    // now from destructive changes and add to manifest
+    // set NOT marked for delete
+    this.componentSet.destructiveChangesPost.delete(`${cmp.type.id}#${cmp.fullName}`);
+    cmp.setMarkedForDelete(false);
+    this.componentSet.add(cmp);
   }
 
   private async handlePrompt(): Promise<boolean> {
     if (!this.flags['no-prompt']) {
-      const remote: string[] = [];
-      let local: string[] = [];
-      const message: string[] = [];
+      const remote = (this.components ?? [])
+        .filter((comp) => !(comp instanceof SourceComponent))
+        .map((comp) => `${comp.type.name}:${comp.fullName}`);
 
-      this.components?.flatMap((component) => {
-        if (component instanceof SourceComponent) {
-          if (component.type.name === 'CustomLabel') {
-            // for custom labels, print each custom label to be deleted, not the whole file
-            local.push(`${component.type.name}:${component.fullName}`);
-          } else {
-            local.push(component.xml as string, ...component.walkContent());
-          }
-        } else {
-          // remote only metadata
-          remote.push(`${component.type.name}:${component.fullName}`);
-        }
-      });
+      const local = (this.components ?? [])
+        .filter(isSourceComponent)
+        .filter(sourceComponentIsNotInMixedDeployDelete(this.mixedDeployDelete))
+        .map(logFn)
+        .flatMap((c) =>
+          // for custom labels, print each custom label to be deleted, not the whole file
+          isNonDecomposedCustomLabelsOrCustomLabel(c)
+            ? [`${c.type.name}:${c.fullName}`]
+            : [c.xml as string, ...c.walkContent()] ?? []
+        )
+        .concat(this.mixedDeployDelete.delete.map((fr) => `${fr.fullName} (${fr.filePath})`));
 
-      if (this.mixedDeployDelete.delete.length) {
-        local = this.mixedDeployDelete.delete.map((fr) => fr.fullName);
-      }
+      const message: string[] = [
+        ...(this.mixedDeployDelete.deploy.length
+          ? [messages.getMessage('deployPrompt', [[...new Set(this.mixedDeployDelete.deploy)].join('\n')])]
+          : []),
 
-      if (this.mixedDeployDelete.deploy.length) {
-        message.push(messages.getMessage('deployPrompt', [[...new Set(this.mixedDeployDelete.deploy)].join('\n')]));
-      }
+        ...(remote.length ? [messages.getMessage('remotePrompt', [[...new Set(remote)].join('\n')])] : []),
 
-      if (remote.length) {
-        message.push(messages.getMessage('remotePrompt', [[...new Set(remote)].join('\n')]));
-      }
+        // add a whitespace between remote and local
+        ...(local.length && (this.mixedDeployDelete.deploy.length || remote.length) ? ['\n'] : []),
+        ...(local.length ? [messages.getMessage('localPrompt', [[...new Set(local)].join('\n')])] : []),
 
-      if (local.length) {
-        if (message.length) {
-          // add a whitespace between remote and local
-          message.push('\n');
-        }
-        message.push('\n', messages.getMessage('localPrompt', [[...new Set(local)].join('\n')]));
-      }
-
-      message.push(
         this.flags['check-only'] ?? false
           ? messages.getMessage('areYouSureCheckOnly')
-          : messages.getMessage('areYouSure')
-      );
+          : messages.getMessage('areYouSure'),
+      ];
+
       return this.confirm({ message: message.join('\n') });
     }
     return true;
@@ -485,48 +437,67 @@ export class Source extends SfCommand<DeleteSourceJson> {
       (await this.tracking?.getConflicts())?.filter((cr) =>
         this.componentSet.has({ fullName: cr.name as string, type: cr.type as string })
       ) ?? [];
-    this.processConflicts(filteredConflicts, messages.getMessage('conflictMsg'));
+    processConflicts(filteredConflicts, messages.getMessage('conflictMsg'));
     return filteredConflicts;
   };
-
-  /**
-   * Write a table (if not json) and throw an error that includes a custom message and the conflict data
-   *
-   * @param conflicts
-   * @param message
-   */
-  private processConflicts = (conflicts: ChangeResult[], message: string): void => {
-    if (conflicts.length === 0) {
-      return;
-    }
-
-    this.table(
-      conflicts,
-      {
-        state: { header: 'STATE' },
-        fullName: { header: 'FULL NAME' },
-        type: { header: 'TYPE' },
-        filePath: { header: 'FILE PATH' },
-      },
-      { 'no-truncate': true }
-    );
-
-    // map do dedupe by name-type-filename
-    const conflictMap = new Map<string, ConflictResponse>();
-    conflicts.forEach((c) => {
-      c.filenames?.forEach((f) => {
-        conflictMap.set(`${c.name}#${c.type}#${f}`, {
-          state: 'Conflict',
-          fullName: c.name as string,
-          type: c.type as string,
-          filePath: path.resolve(f),
-        });
-      });
-    });
-    const reformattedConflicts = Array.from(conflictMap.values());
-
-    const err = new SfError(message, 'sourceConflictDetected');
-    err.setData(reformattedConflicts);
-    throw err;
-  };
 }
+
+const moveFileToStash = async (stashPath: Map<string, string>, file: string): Promise<void> => {
+  await fs.promises.mkdir(path.dirname(stashPath.get(file) as string), { recursive: true });
+  await fs.promises.copyFile(file, stashPath.get(file) as string);
+  await fs.promises.unlink(file);
+};
+
+const restoreFileFromStash = async (stashPath: Map<string, string>, file: string): Promise<void> =>
+  fs.promises.rename(stashPath.get(file) as string, file);
+
+const deleteStash = async (): Promise<void> =>
+  fs.promises.rm(path.join(os.tmpdir(), 'source_delete'), { recursive: true, force: true });
+
+const someContentsEndWithPath =
+  (cmp: SourceComponent) =>
+  (sourcePath: string): boolean =>
+    // walkContent returns absolute paths while sourcepath will usually be relative
+    cmp.walkContent().some((content) => content.endsWith(sourcePath));
+
+const allChildrenAreNotAddressable = (comp: MetadataComponent): boolean => {
+  const types = Object.values(comp.type.children?.types ?? {});
+  return types.length > 0 && types.every((child) => child.isAddressable === false);
+};
+
+const sourceComponentIsNotInMixedDeployDelete =
+  (mixedDeployDelete: MixedDeployDelete) =>
+  (c: SourceComponent): boolean =>
+    !mixedDeployDelete.delete.some((d) => d.fullName === c.fullName && d.type === c.type.name);
+
+/**
+ * Write a table (if not json) and throw an error that includes a custom message and the conflict data
+ *
+ * @param conflicts
+ * @param message
+ */
+const processConflicts = (conflicts: ChangeResult[], message: string): void => {
+  if (conflicts.length === 0) return;
+
+  const reformattedConflicts = Array.from(
+    // map do dedupe by name-type-filename
+    new Map(
+      conflicts.flatMap(changeResultToConflictResponses).map((c) => [`${c.fullName}#${c.type}#${c.filePath}`, c])
+    ).values()
+  );
+
+  writeConflictTable(reformattedConflicts);
+
+  const err = new SfError(message, 'sourceConflictDetected');
+  err.setData(reformattedConflicts);
+  throw err;
+};
+
+/** each ChangeResult can have multiple filenames, each of which becomes a ConflictResponse */
+const changeResultToConflictResponses = (cr: ChangeResult): ConflictResponse[] =>
+  (cr.filenames ?? []).map((f) => ({
+    state: 'Conflict',
+    fullName: cr.name ?? '<Name is missing>',
+    type: cr.type ?? '<Type is missing>',
+    filePath: path.resolve(f),
+  }));
