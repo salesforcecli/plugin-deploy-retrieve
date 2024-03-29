@@ -129,8 +129,6 @@ export class Source extends SfCommand<DeleteSourceJson> {
   };
   protected fileResponses: FileResponse[] | undefined;
   protected tracking: SourceTracking | undefined;
-  // private deleteResultFormatter: DeleteResultFormatter | DeployResultFormatter;
-  private aborted = false;
   private components: MetadataComponent[] | undefined;
   // create the delete FileResponse as we're parsing the comp. set to use in the output
   private mixedDeployDelete: MixedDeployDelete = { delete: [], deploy: [] };
@@ -236,8 +234,12 @@ export class Source extends SfCommand<DeleteSourceJson> {
       ]);
     }
 
-    this.aborted = !(await this.handlePrompt());
-    if (this.aborted) {
+    if (!(await this.handlePrompt())) {
+      await Promise.all(
+        this.mixedDeployDelete.delete.map(async (file) => {
+          await restoreFileFromStash(this.stashPath, file.filePath as string);
+        })
+      );
       throw messages.createError('prompt.delete.cancel');
     }
 
@@ -276,12 +278,9 @@ export class Source extends SfCommand<DeleteSourceJson> {
    * Checks the response status to determine whether the delete was successful.
    */
   protected async resolveSuccess(): Promise<void> {
-    const status = this.deployResult?.response?.status;
-    if (status !== RequestStatus.Succeeded && !this.aborted) {
+    // if deploy failed restore the stashed files if they exist
+    if (this.deployResult?.response?.status !== RequestStatus.Succeeded) {
       process.exitCode = 1;
-    }
-    // if deploy failed OR the operation was cancelled, restore the stashed files if they exist
-    else if (status !== RequestStatus.Succeeded || this.aborted) {
       await Promise.all(
         this.mixedDeployDelete.delete.map(async (file) => {
           await restoreFileFromStash(this.stashPath, file.filePath as string);
@@ -308,7 +307,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       deleteResultFormatter.display();
     }
 
-    if (this.mixedDeployDelete.deploy.length && !this.aborted) {
+    if (this.mixedDeployDelete.deploy.length) {
       // override JSON output when we actually deployed
       const json = (await deleteResultFormatter.getJson()) as DeleteSourceJson;
       json.deletedSource = this.mixedDeployDelete.delete; // to match toolbelt json output
@@ -316,17 +315,6 @@ export class Source extends SfCommand<DeleteSourceJson> {
       json.deletes = json.deploys; // to match toolbelt version
       delete json.deploys;
       return json;
-    }
-
-    if (this.aborted) {
-      return {
-        status: 0,
-        result: {
-          deletedSource: [],
-          deletes: [{}],
-          outboundFiles: [],
-        },
-      } as unknown as DeleteSourceJson;
     }
 
     return (await deleteResultFormatter.getJson()) as DeleteSourceJson;
