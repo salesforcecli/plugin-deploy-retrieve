@@ -489,24 +489,14 @@ const sourceComponentIsNotInMixedDeployDelete =
  * @param message
  */
 const processConflicts = (conflicts: ChangeResult[], message: string): void => {
-  if (conflicts.length === 0) {
-    return;
-  }
+  if (conflicts.length === 0) return;
 
-  // map do dedupe by name-type-filename
-  const conflictMap = new Map<string, ConflictResponse>();
-  conflicts.forEach((c) => {
-    c.filenames?.forEach((f) => {
-      conflictMap.set(`${c.name}#${c.type}#${f}`, {
-        state: 'Conflict',
-        fullName: c.name as string,
-        type: c.type as string,
-        filePath: path.resolve(f),
-      });
-    });
-  });
-
-  const reformattedConflicts = Array.from(conflictMap.values());
+  const reformattedConflicts = Array.from(
+    // map do dedupe by name-type-filename
+    new Map(
+      conflicts.flatMap(changeResultToConflictResponses).map((c) => [`${c.fullName}#${c.type}#${c.filePath}`, c])
+    ).values()
+  );
 
   writeConflictTable(reformattedConflicts);
 
@@ -514,3 +504,12 @@ const processConflicts = (conflicts: ChangeResult[], message: string): void => {
   err.setData(reformattedConflicts);
   throw err;
 };
+
+/** each ChangeResult can have multiple filenames, each of which becomes a ConflictResponse */
+const changeResultToConflictResponses = (cr: ChangeResult): ConflictResponse[] =>
+  (cr.filenames ?? []).map((f) => ({
+    state: 'Conflict',
+    fullName: cr.name ?? '<Name is missing>',
+    type: cr.type ?? '<Type is missing>',
+    filePath: path.resolve(f),
+  }));
