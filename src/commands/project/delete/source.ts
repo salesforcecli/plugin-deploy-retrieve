@@ -50,6 +50,8 @@ const testFlags = 'Test';
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
 const xorFlags = ['metadata', 'source-dir'];
+
+type MixedDeployDelete = { deploy: string[]; delete: FileResponseSuccess[] };
 export class Source extends SfCommand<DeleteSourceJson> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
@@ -131,7 +133,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   private aborted = false;
   private components: MetadataComponent[] | undefined;
   // create the delete FileResponse as we're parsing the comp. set to use in the output
-  private mixedDeployDelete: { deploy: string[]; delete: FileResponseSuccess[] } = { delete: [], deploy: [] };
+  private mixedDeployDelete: MixedDeployDelete = { delete: [], deploy: [] };
   // map of component in project, to where it is stashed
   private stashPath = new Map<string, string>();
   private flags!: Interfaces.InferredFlags<typeof Source.flags>;
@@ -476,7 +478,7 @@ const allChildrenAreNotAddressable = (comp: MetadataComponent): boolean => {
 };
 
 const sourceComponentIsNotInMixedDeployDelete =
-  (mixedDeployDelete: { delete: FileResponse[] }) =>
+  (mixedDeployDelete: MixedDeployDelete) =>
   (c: SourceComponent): boolean =>
     !mixedDeployDelete.delete.some((d) => d.fullName === c.fullName && d.type === c.type.name);
 
