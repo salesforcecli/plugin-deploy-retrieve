@@ -389,7 +389,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
     });
 
     // stash the file in case we need to restore it due to failed deploy/aborted command
-    this.stashPath.set(sourcepath, path.join(path.join(os.tmpdir(), 'source_delete'), sourcepath));
+    this.stashPath.set(sourcepath, path.join(os.tmpdir(), 'source_delete', fullName));
     await moveFileToStash(this.stashPath, sourcepath);
     // re-walk the directory to avoid picking up the deleted file
     this.mixedDeployDelete.deploy.push(...cmp.walkContent());
