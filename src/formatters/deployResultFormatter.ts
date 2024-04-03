@@ -25,6 +25,7 @@ import {
   JUnitReporter,
   TestResult,
 } from '@salesforce/apex-node';
+import { getState } from '@salesforce/source-deploy-retrieve/lib/src/client/deployMessages.js';
 import {
   DeployResultJson,
   isSdrFailure,
@@ -51,10 +52,10 @@ import {
 import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
 
 export class DeployResultFormatter extends TestResultsFormatter implements Formatter<DeployResultJson> {
-  private relativeFiles: FileResponse[];
-  private absoluteFiles: FileResponse[];
-  private coverageOptions: CoverageReporterOptions;
-  private resultsDir: string;
+  private readonly relativeFiles: FileResponse[];
+  private readonly absoluteFiles: FileResponse[];
+  private readonly coverageOptions: CoverageReporterOptions;
+  private readonly resultsDir: string;
   private readonly junit: boolean | undefined;
 
   public constructor(
@@ -284,6 +285,26 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
 
   private displaySuccesses(): void {
     const successes = this.relativeFiles.filter(isSdrSuccess);
+
+    ensureArray(this.result.response.details.componentSuccesses)
+      .filter(
+        (fromServer) =>
+          // removes package.xml, other manifests
+          fromServer.componentType !== '' &&
+          // if we don't find the file in the response, it's because it doesn't exist locally, yet
+          !successes.find(
+            (fromLocal) => fromServer.fullName === fromLocal.fullName && fromServer.componentType === fromLocal.type
+          )
+      )
+      .map((s) =>
+        successes.push({
+          fullName: s.fullName,
+          // @ts-expect-error getState can return 'failed' which isn't applicable to FileSuccess
+          state: getState(s),
+          type: s.componentType ?? '',
+          filePath: 'Not found in project',
+        })
+      );
 
     if (!successes.length || this.result.response.status === RequestStatus.Failed) return;
 
