@@ -389,7 +389,7 @@ export const getDeployResult = (
         const successes = response.details.componentSuccesses;
         fileProps = ensureArray(successes);
         return fileProps
-          .filter((p) => p.fileName !== 'package.xml')
+          .filter((p) => p.fileName !== 'package.xml' && p.fileName !== '')
           .map((comp) => ({
             fullName: comp.fullName,
             filePath: comp.fileName,
