@@ -11,7 +11,7 @@ import path from 'node:path';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { assert, config } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
-import { DeployResultJson } from '../../../../src/utils/types.js';
+import { DeployResultJson } from '../../../src/utils/types.js';
 
 config.truncateThreshold = 0;
 

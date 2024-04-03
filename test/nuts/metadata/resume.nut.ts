@@ -12,8 +12,8 @@ import { strict as assert } from 'node:assert';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { DeployResultJson } from '../../../../src/utils/types.js';
-import { CachedOptions } from '../../../../src/utils/deploy.js';
+import { DeployResultJson } from '../../../src/utils/types.js';
+import { CachedOptions } from '../../../src/utils/deploy.js';
 
 function readDeployCache(projectDir: string): Record<string, CachedOptions> {
   // source-testkit doesn't expose the session, so we'll go up 1 level from the project to get to it

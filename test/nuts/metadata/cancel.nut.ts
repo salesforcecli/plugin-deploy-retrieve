@@ -11,8 +11,8 @@ import { strict as assert } from 'node:assert';
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { DeployResultJson } from '../../../../src/utils/types.js';
-import { CachedOptions } from '../../../../src/utils/deploy.js';
+import { DeployResultJson } from '../../../src/utils/types.js';
+import { CachedOptions } from '../../../src/utils/deploy.js';
 
 function readDeployCache(sessionDir: string): Record<string, CachedOptions> {
   const contents = fs.readFileSync(path.join(sessionDir, '.sf', 'deploy-cache.json'), 'utf-8');
