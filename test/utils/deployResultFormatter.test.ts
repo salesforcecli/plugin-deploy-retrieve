@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import * as path from 'node:path';
+import { join } from 'node:path';
 import { assert, expect, config } from 'chai';
 import sinon from 'sinon';
 import { DeployMessage, DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
@@ -47,7 +48,7 @@ describe('deployResultFormatter', () => {
       expect(tableStub.callCount).to.equal(1);
       expect(tableStub.firstCall.args[0]).to.deep.equal([
         {
-          filePath: 'classes/ProductController.cls',
+          filePath: join('classes', 'ProductController.cls'),
           fullName: 'ProductController',
           state: 'Changed',
           type: 'ApexClass',
