@@ -1,3 +1,9 @@
+## [3.5.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.2...3.5.3) (2024-04-04)
+
+### Bug Fixes
+
+- remove logging ([#960](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/960)) ([e2a023d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e2a023d2adb082fdd6fd041996d1754c14c8de02))
+
 ## [3.5.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.1...3.5.2) (2024-03-30)
 
 ### Bug Fixes
