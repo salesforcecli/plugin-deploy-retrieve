@@ -23,7 +23,7 @@ import {
   RequestStatus,
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
-import { Duration, logFn } from '@salesforce/kit';
+import { Duration } from '@salesforce/kit';
 import { ChangeResult, ConflictResponse, deleteCustomLabels, SourceTracking } from '@salesforce/source-tracking';
 import {
   arrayWithDeprecation,
@@ -398,7 +398,6 @@ export class Source extends SfCommand<DeleteSourceJson> {
       const local = (this.components ?? [])
         .filter(isSourceComponent)
         .filter(sourceComponentIsNotInMixedDeployDelete(this.mixedDeployDelete))
-        .map(logFn)
         .flatMap((c) =>
           // for custom labels, print each custom label to be deleted, not the whole file
           isNonDecomposedCustomLabelsOrCustomLabel(c)
