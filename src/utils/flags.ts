@@ -52,13 +52,13 @@ async function ensureDirectoryPath(path: string): Promise<string> {
   return resolvedPath;
 }
 
-function resolveZipFileName(zipFileName?: string): string {
+const resolveZipFileName = (zipFileName?: string): string => {
   if (!zipFileName) {
     return DEFAULT_ZIP_FILE_NAME;
   }
   // If no file extension was provided append, '.zip'
-  return !extname(zipFileName) ? (zipFileName += '.zip') : zipFileName;
-}
+  return !extname(zipFileName) ? `${zipFileName}.zip` : zipFileName;
+};
 
 export const DEFAULT_ZIP_FILE_NAME = 'unpackaged.zip';
 

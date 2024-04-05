@@ -145,13 +145,12 @@ export async function executeDeploy(
       await deploy.start();
     }
   } else {
-    // mdapi format deploys don't require a project, but at this point we need one
-    project ??= await SfProject.resolve();
     // instantiate source tracking
     // stl will decide, based on the org's properties, what needs to be done
     const stl = await SourceTracking.create({
       org,
-      project,
+      // mdapi format deploys don't require a project, but at this point we need one
+      project: project ?? (await SfProject.resolve()),
       subscribeSDREvents: true,
       ignoreConflicts: opts['ignore-conflicts'],
     });
