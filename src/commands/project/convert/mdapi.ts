@@ -30,7 +30,7 @@ import { MetadataConvertResultFormatter } from '../../../formatters/metadataConv
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.mdapi');
 
-export interface EnsureFsFlagOptions {
+export type EnsureFsFlagOptions = {
   flagName: string;
   path: string;
   type: 'dir' | 'file' | 'any';
