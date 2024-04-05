@@ -42,13 +42,13 @@ export type PreviewFile = {
   operation?: BaseOperation | 'deletePost' | 'deletePre';
 };
 
-export interface PreviewResult {
+export type PreviewResult = {
   ignored: PreviewFile[];
   conflicts: PreviewFile[];
   toDeploy: PreviewFile[];
   toDelete: PreviewFile[];
   toRetrieve: PreviewFile[];
-}
+};
 
 const ensureAbsolutePath = (f: string): string => (isAbsolute(f) ? f : resolve(f));
 
