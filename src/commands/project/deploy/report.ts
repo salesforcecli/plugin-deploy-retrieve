@@ -7,7 +7,7 @@
 
 import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
-import { ComponentSet, DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
+import { ComponentSet, DeployResult, MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { buildComponentSet } from '../../../utils/deploy.js';
 import { DeployProgress } from '../../../utils/progressBar.js';
 import { DeployCache } from '../../../utils/deployCache.js';
@@ -79,10 +79,15 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       ? await Org.create({ aliasOrUsername: deployOpts['target-org'] })
       : flags['target-org'];
 
+    if (!org) {
+      // if we don't find an org from flags, config, or the cache, throw an error
+      throw messages.createError('noOrgError');
+    }
+
     // if we're using mdapi we won't have a component set
     let componentSet = new ComponentSet();
     if (!deployOpts?.isMdapi) {
-      if (!cache.maybeGet(jobId)) {
+      if (!deployOpts) {
         // If the cache file isn't there, use the project package directories for the CompSet
         try {
           this.project = await SfProject.resolve();
@@ -91,7 +96,8 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
         } catch (err) {
           // ignore the error. this was just to get improved command output.
         }
-      } else {
+      } else if (deployOpts.status !== RequestStatus.Succeeded) {
+        // if it's succeeded, the deployOpts can't be used to build a CS - nor do we need one
         componentSet = await buildComponentSet({ ...deployOpts, wait });
       }
     }

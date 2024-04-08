@@ -14,7 +14,7 @@ import { ConvertMdapiJson } from '../../../src/utils/types.js';
 let session: TestSession;
 
 const writeManifest = (manifestPath: string, contents?: string) => {
-  contents ??= `<?xml version="1.0" encoding="UTF-8"?>
+  const defaultContents = `<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>*</members>
@@ -22,7 +22,7 @@ const writeManifest = (manifestPath: string, contents?: string) => {
     </types>
     <version>53.0</version>
 </Package>`;
-  fs.writeFileSync(manifestPath, contents);
+  fs.writeFileSync(manifestPath, contents ?? defaultContents);
 };
 
 describe('project convert mdapi NUTs', () => {
