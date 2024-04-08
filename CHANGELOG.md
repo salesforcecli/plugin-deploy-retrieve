@@ -1,3 +1,9 @@
+## [3.5.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.5...3.5.6) (2024-04-08)
+
+### Bug Fixes
+
+- refactor interface=>type, no-param-reassign ([#965](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/965)) ([b10a4f2](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b10a4f20a3baa28eb45dc2bee7f738711c927523))
+
 ## [3.5.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.4...3.5.5) (2024-04-08)
 
 ### Bug Fixes
