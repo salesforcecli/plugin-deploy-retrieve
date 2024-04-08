@@ -4,6 +4,9 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+// existing tests do a lot mutation.  I decided to leave rather than refactor
+/* eslint-disable no-param-reassign */
+
 import { join, relative } from 'node:path';
 import * as fs from 'node:fs';
 import { FileResponse } from '@salesforce/source-deploy-retrieve';
