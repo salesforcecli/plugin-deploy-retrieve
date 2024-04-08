@@ -79,6 +79,11 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       ? await Org.create({ aliasOrUsername: deployOpts['target-org'] })
       : flags['target-org'];
 
+    if (!org) {
+      // if we don't find an org from flags, config, or the cache, throw an error
+      throw messages.createError('noOrgError');
+    }
+
     // if we're using mdapi we won't have a component set
     let componentSet = new ComponentSet();
     if (!deployOpts?.isMdapi) {
