@@ -1,3 +1,9 @@
+## [3.5.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.4...3.5.5) (2024-04-08)
+
+### Bug Fixes
+
+- allow deploy report on validated deploys ([#962](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/962)) ([67affbb](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/67affbb8987fd0b2986a518980a05cb192a04f94))
+
 ## [3.5.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.3...3.5.4) (2024-04-06)
 
 ### Bug Fixes
