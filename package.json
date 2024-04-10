@@ -21,7 +21,7 @@
     "@salesforce/cli-plugins-testkit": "^5.2.0",
     "@salesforce/dev-scripts": "^9.0.0",
     "@salesforce/plugin-command-reference": "^3.0.73",
-    "@salesforce/source-testkit": "^2.1.108",
+    "@salesforce/source-testkit": "^2.2.0",
     "@salesforce/ts-sinon": "^1.4.19",
     "cross-env": "^7.0.3",
     "eslint-plugin-sf-plugin": "^1.18.0",
