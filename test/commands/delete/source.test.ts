@@ -17,7 +17,7 @@ import {
 import { Lifecycle, SfProject } from '@salesforce/core';
 import { fromStub, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { Config } from '@oclif/core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { SfCommand } from '@salesforce/sf-plugins-core';
 import { ComponentProperties } from '@salesforce/source-deploy-retrieve/lib/src/resolve/sourceComponent.js';
 import { Source } from '../../../src/commands/project/delete/source.js';
