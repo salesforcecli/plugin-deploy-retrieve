@@ -56,9 +56,7 @@ export const getCoverageFormattersOptions = (formatters: string[] = []): Coverag
           // always join any subdir from the defaults with our custom coverage dir
           ...('subdir' in formatDefaults ? { subdir: path.join('coverage', formatDefaults.subdir) } : {}),
           // if there is no subdir, we also put the file in the coverage dir, otherwise leave it alone
-          ...('file' in formatDefaults && !('subdir' in formatDefaults)
-            ? { file: path.join('coverage', formatDefaults.file) }
-            : {}),
+          ...('file' in formatDefaults && !('subdir' in formatDefaults) ? { file: formatDefaults.file } : {}),
         },
       ];
     })
