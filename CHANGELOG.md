@@ -1,3 +1,9 @@
+# [3.6.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.6...3.6.0) (2024-04-10)
+
+### Features
+
+- jsforce-node, core7 ([5764f8b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5764f8b3288090bb09f705f9d4b36d49e67888c3))
+
 ## [3.5.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.5...3.5.6) (2024-04-08)
 
 ### Bug Fixes
