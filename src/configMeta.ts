@@ -6,7 +6,7 @@
  */
 
 import type { ConfigValue } from '@salesforce/core';
-import { Messages } from '@salesforce/core/lib/messages.js';
+import { Messages } from '@salesforce/core/messages';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'config');

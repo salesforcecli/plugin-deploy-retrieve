@@ -21,7 +21,7 @@ import {
 import { Messages, SfProject } from '@salesforce/core';
 import { stubMethod } from '@salesforce/ts-sinon';
 import { stubSfCommandUx, stubSpinner, stubUx } from '@salesforce/sf-plugins-core';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import oclifUtils from '@oclif/core/lib/util/fs.js';
 import { RetrieveResultFormatter } from '../../../src/formatters/retrieveResultFormatter.js';
 import { getRetrieveResult } from '../../utils/retrieveResponse.js';

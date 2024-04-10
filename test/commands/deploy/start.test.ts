@@ -6,7 +6,7 @@
  */
 
 import { expect } from 'chai';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import DeployMetadata from '../../../src/commands/project/deploy/start.js';
