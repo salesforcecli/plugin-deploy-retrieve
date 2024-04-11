@@ -7,6 +7,7 @@
 import * as path from 'node:path';
 import { EOL } from 'node:os';
 import * as fs from 'node:fs';
+import { join } from 'node:path';
 import { ux } from '@oclif/core';
 import {
   ComponentStatus,
@@ -51,10 +52,10 @@ import {
 import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
 
 export class DeployResultFormatter extends TestResultsFormatter implements Formatter<DeployResultJson> {
-  private relativeFiles: FileResponse[];
-  private absoluteFiles: FileResponse[];
-  private coverageOptions: CoverageReporterOptions;
-  private resultsDir: string;
+  private readonly relativeFiles: FileResponse[];
+  private readonly absoluteFiles: FileResponse[];
+  private readonly coverageOptions: CoverageReporterOptions;
+  private readonly resultsDir: string;
   private readonly junit: boolean | undefined;
 
   public constructor(
@@ -173,7 +174,10 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     // only generate reports if test results are presented
     if (this.coverageOptions.reportFormats?.length) {
       ux.log(
-        `Code Coverage formats, [${this.flags['coverage-formatters']?.join(', ')}], written to ${this.resultsDir}/`
+        `Code Coverage formats, [${this.flags['coverage-formatters']?.join(', ')}], written to ${join(
+          this.resultsDir,
+          'coverage'
+        )}/`
       );
       this.createCoverageReport('no-map');
     }
