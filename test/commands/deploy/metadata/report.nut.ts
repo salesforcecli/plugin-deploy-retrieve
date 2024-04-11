@@ -50,7 +50,7 @@ describe('[project deploy report] NUTs with source-dir', () => {
         deploy.result.files
       );
       // no remote-only components returned
-      expect(deploy.warnings).to.be.undefined;
+      expect(deploy.warnings).to.equal([]);
     });
   });
 
@@ -73,7 +73,7 @@ describe('[project deploy report] NUTs with source-dir', () => {
         deploy.result.files
       );
       // no remote-only components returned
-      expect(deploy.warnings).to.be.undefined;
+      expect(deploy.warnings).to.equal([]);
     });
 
     it('should report from specified target-org and job-id without deploy cache', async () => {
@@ -96,7 +96,7 @@ describe('[project deploy report] NUTs with source-dir', () => {
       assert(isObject(deploy));
       await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
       // no remote-only components returned
-      expect(deploy.warnings).to.be.undefined;
+      expect(deploy.warnings).to.equal([]);
     });
   });
 
