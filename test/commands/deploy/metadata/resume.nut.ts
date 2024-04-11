@@ -54,7 +54,11 @@ describe('[project deploy resume] NUTs', () => {
         exitCode: 0,
       });
       assert(deploy);
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployedViaResult(
+        ['force-app/**/*', '**/CustomLabels.labels-meta.xml'],
+        ['force-app/test/**/*'],
+        deploy.result.files
+      );
 
       const cacheAfter = readDeployCache(testkit.projectDir);
 
@@ -87,7 +91,11 @@ describe('[project deploy resume] NUTs', () => {
       });
       assert(deploy);
 
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployedViaResult(
+        ['force-app/**/*', '**/CustomLabels.labels-meta.xml'],
+        ['force-app/test/**/*'],
+        deploy.result.files
+      );
       const cacheAfter = readDeployCache(testkit.projectDir);
       expect(cacheAfter).to.have.property(deployId);
       expect(cacheAfter[deployId]).have.property('status');
@@ -122,7 +130,11 @@ describe('[project deploy resume] NUTs', () => {
       });
       assert(deploy);
 
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployedViaResult(
+        ['force-app/**/*', '**/CustomLabels.labels-meta.xml'],
+        ['force-app/test/**/*'],
+        deploy.result.files
+      );
 
       const cacheAfter = readDeployCache(testkit.projectDir);
       expect(cacheAfter).to.have.property(first.result.id);

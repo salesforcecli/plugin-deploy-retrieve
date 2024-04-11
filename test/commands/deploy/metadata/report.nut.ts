@@ -44,7 +44,13 @@ describe('[project deploy report] NUTs with source-dir', () => {
         exitCode: 0,
       });
       assert(isObject(deploy));
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployedViaResult(
+        ['force-app/**/*', '**/CustomLabels.labels-meta.xml'],
+        ['force-app/test/**/*'],
+        deploy.result.files
+      );
+      // no remote-only components returned
+      expect(deploy.warnings).to.be.undefined;
     });
   });
 
@@ -61,7 +67,13 @@ describe('[project deploy report] NUTs with source-dir', () => {
         exitCode: 0,
       });
       assert(isObject(deploy));
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployedViaResult(
+        ['force-app/**/*', '**/CustomLabels.labels-meta.xml'],
+        ['force-app/test/**/*'],
+        deploy.result.files
+      );
+      // no remote-only components returned
+      expect(deploy.warnings).to.be.undefined;
     });
 
     it('should report from specified target-org and job-id without deploy cache', async () => {
@@ -83,6 +95,8 @@ describe('[project deploy report] NUTs with source-dir', () => {
       });
       assert(isObject(deploy));
       await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+      // no remote-only components returned
+      expect(deploy.warnings).to.be.undefined;
     });
   });
 
@@ -106,7 +120,11 @@ describe('[project deploy report] NUTs with source-dir', () => {
       expect(existsSync(join(testkit.projectDir, 'test-output-override', 'junit', 'junit.xml'))).to.be.true;
       expect(existsSync(join(testkit.projectDir, 'test-output'))).to.be.false;
       assert(isObject(deploy));
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployedViaResult(
+        ['force-app/**/*', '**/CustomLabels.labels-meta.xml'],
+        ['force-app/test/**/*'],
+        deploy.result.files
+      );
     });
   });
 });
