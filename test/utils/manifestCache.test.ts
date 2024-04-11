@@ -21,6 +21,7 @@ describe('manifest cache', () => {
 
   afterEach(() => {
     sandbox.restore();
+    fsWriteStub.restore();
   });
 
   it('it will write an empty manifest', async () => {
@@ -122,6 +123,10 @@ describe('manifest cache', () => {
     <types>
         <members>MyCustom</members>
         <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
     </types>
     <version>57.0</version>
 </Package>
