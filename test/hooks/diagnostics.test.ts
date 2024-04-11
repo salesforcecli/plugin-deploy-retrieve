@@ -10,7 +10,7 @@ import { expect } from 'chai';
 import { fromStub, StubbedType, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { SfDoctor } from '@salesforce/plugin-info';
 import { ConfigAggregator, Lifecycle, Messages, Org, SfProject } from '@salesforce/core';
-import { TestContext } from '@salesforce/core/lib/testSetup.js';
+import { TestContext } from '@salesforce/core/testSetup';
 import { hook } from '../../src/hooks/diagnostics.js';
 const pluginName = '@salesforce/plugin-deploy-retrieve';
 

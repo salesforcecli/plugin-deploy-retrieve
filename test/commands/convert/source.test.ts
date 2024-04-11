@@ -10,7 +10,7 @@ import { ComponentSetBuilder, ComponentSetOptions, MetadataConverter } from '@sa
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { stubMethod } from '@salesforce/ts-sinon';
-import { MockTestOrgData, TestContext } from '@salesforce/core/lib/testSetup.js';
+import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
 import oclifUtils from '@oclif/core/lib/util/fs.js';
 import { SfProject } from '@salesforce/core';
