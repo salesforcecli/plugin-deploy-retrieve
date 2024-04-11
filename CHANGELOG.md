@@ -1,3 +1,9 @@
+## [3.6.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.0...3.6.1) (2024-04-11)
+
+### Bug Fixes
+
+- **deps:** less jforce ([#975](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/975)) ([f99a2ca](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f99a2ca043d4976625729b3202ddacd014183568))
+
 # [3.6.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.5.6...3.6.0) (2024-04-10)
 
 ### Features
