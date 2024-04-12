@@ -1,3 +1,9 @@
+## [3.6.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.1...3.6.2) (2024-04-12)
+
+### Bug Fixes
+
+- correctly write code coverage to coverage/ ([c8d3059](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c8d3059d86ef9a012d636c5500b4f4b0fdb324d2))
+
 ## [3.6.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.0...3.6.1) (2024-04-11)
 
 ### Bug Fixes
