@@ -40,6 +40,7 @@ describe('retrieve mdapi format without project', () => {
       `project:retrieve:start -o ${session.hubOrg.username} --target-metadata-dir ${outputDir} -x ${xmlPath} --json`,
       {
         ensureExitCode: 0,
+        cwd: session.dir,
       }
     ).jsonOutput?.result;
     // hub should have a connected app!
