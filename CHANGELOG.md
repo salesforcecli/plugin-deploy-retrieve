@@ -1,3 +1,9 @@
+## [3.6.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.2...3.6.3) (2024-04-19)
+
+### Bug Fixes
+
+- mdapi retrieve using manifest without project ([9bbf034](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9bbf03436f8aec048a9192a37709c802f0ec30ac))
+
 ## [3.6.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.1...3.6.2) (2024-04-12)
 
 ### Bug Fixes
