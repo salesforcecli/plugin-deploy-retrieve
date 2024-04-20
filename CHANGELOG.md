@@ -1,3 +1,9 @@
+## [3.6.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.3...3.6.4) (2024-04-20)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 6.0.0 to 6.0.3 ([34630ea](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/34630ea44606556849cb9ad3c883870af3739ced))
+
 ## [3.6.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.2...3.6.3) (2024-04-19)
 
 ### Bug Fixes
