@@ -1,3 +1,9 @@
+## [3.6.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.4...3.6.5) (2024-04-20)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 9.0.1 to 9.0.4 ([e3755bb](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e3755bbce3f935f3b9164ed0fbec5afedb094a08))
+
 ## [3.6.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.3...3.6.4) (2024-04-20)
 
 ### Bug Fixes
