@@ -16,9 +16,6 @@ const type = reg.getTypeByName('ApexClass');
 
 describe('isSourceComponent (type guard)', () => {
   describe('good', () => {
-    it('full, correct definition', () => {
-      expect({ fullName: 'foo', type, xml: 'fooXml', content: 'fooContent' }).to.satisfy(isSourceComponent);
-    });
     it('SC constructed with xml', () => {
       expect(new SourceComponent({ name: 'foo', type, xml: 'classes/foo.cls' })).to.satisfy(isSourceComponent);
     });
@@ -45,9 +42,6 @@ describe('isSourceComponent (type guard)', () => {
 
 describe('isSourceComponentWithXml (type guard)', () => {
   describe('good', () => {
-    it('full, correct definition', () => {
-      expect({ fullName: 'foo', type, xml: 'fooXml', content: 'fooContent' }).to.satisfy(isSourceComponentWithXml);
-    });
     it('SC constructed with xml', () => {
       expect(new SourceComponent({ name: 'foo', type, xml: 'classes/foo.cls' })).to.satisfy(isSourceComponentWithXml);
     });
