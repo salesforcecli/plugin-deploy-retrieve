@@ -66,7 +66,7 @@ const resolvePaths = (
         return resolver.getComponentsFromPath(filename);
       } catch (e) {
         // resolver will do logging before throw we don't do it here
-        return undefined;
+        return [];
       }
     })
     .filter(isSourceComponentWithXml)

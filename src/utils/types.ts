@@ -14,6 +14,7 @@ import {
   SourceComponent,
   FileResponseFailure,
   FileResponseSuccess,
+  ComponentLike,
 } from '@salesforce/source-deploy-retrieve';
 import { isObject } from '@salesforce/ts-types';
 import { DefaultReportOptions } from '@salesforce/apex-node';
@@ -89,7 +90,7 @@ export type Formatter<T> = {
 };
 
 /** validates source component with fullname, type, and xml props */
-export const isSourceComponent = (sc: unknown): sc is SourceComponent =>
+export const isSourceComponent = (sc: ComponentLike): sc is SourceComponent =>
   isObject(sc) &&
   'type' in sc &&
   typeof sc.type === 'object' &&
@@ -97,10 +98,11 @@ export const isSourceComponent = (sc: unknown): sc is SourceComponent =>
   'name' in sc.type &&
   typeof sc.type.name === 'string' &&
   'fullName' in sc &&
+  'walkContent' in sc &&
   // (typeof sc.fullName === 'string' || typeof sc.fullName === 'function');
   typeof sc.fullName === 'string';
 
-export const isSourceComponentWithXml = (sc: unknown): sc is SourceComponent & { xml: string } =>
+export const isSourceComponentWithXml = (sc: ComponentLike): sc is SourceComponent & { xml: string } =>
   isSourceComponent(sc) && 'xml' in sc && typeof sc.xml === 'string';
 
 export const isSdrFailure = (fileResponse: FileResponse): fileResponse is FileResponseFailure =>
@@ -111,3 +113,5 @@ export const isSdrSuccess = (fileResponse: FileResponse): fileResponse is FileRe
 
 export const isFileResponseDeleted = (fileResponse: FileResponseSuccess): boolean =>
   fileResponse.state === ComponentStatus.Deleted;
+
+export const isDefined = <T>(value?: T): value is T => value !== undefined;
