@@ -1,3 +1,9 @@
+## [3.6.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.6...3.6.7) (2024-04-24)
+
+### Bug Fixes
+
+- **deps:** bump apex-node off of beta ([#987](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/987)) ([df620fe](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/df620fe627f3bda2058ecf2f33d996423371ab18))
+
 ## [3.6.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.5...3.6.6) (2024-04-22)
 
 ### Bug Fixes
