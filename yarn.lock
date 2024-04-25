@@ -1658,26 +1658,10 @@
     istanbul-lib-report "^3.0.1"
     istanbul-reports "^3.1.6"
 
-"@salesforce/cli-plugins-testkit@^5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.2.0.tgz#dd664a9a51eac42f9959e0cfa1d3349256446291"
-  integrity sha512-b0lHGBycDBmeGcDx0j9SfxlNyCg3WhflNeX1PBitMTxgZ5O9UMiSFvLbqgGeTB8Eoq4JgNgou6RRrNoZHFnqcw==
-  dependencies:
-    "@salesforce/core" "^7.0.0"
-    "@salesforce/kit" "^3.1.0"
-    "@salesforce/ts-types" "^2.0.9"
-    "@types/shelljs" "^0.8.15"
-    debug "^4.3.1"
-    jszip "^3.10.1"
-    shelljs "^0.8.4"
-    sinon "^17.0.1"
-    strip-ansi "6.0.1"
-    ts-retry-promise "^0.8.0"
-
-"@salesforce/cli-plugins-testkit@^5.2.4-qa.1":
-  version "5.2.4-qa.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.2.4-qa.1.tgz#837d17ffbe8d286d8c3db98736339c6704fc37dd"
-  integrity sha512-dfgfGYISR+7f1wXCms5o+XovHfhabBvxioITB8sNu5bPpK1NGfy6rpJjSrfCZoMkJV7SoQNx0f8MxbnGIgnLPQ==
+"@salesforce/cli-plugins-testkit@^5.2.0", "@salesforce/cli-plugins-testkit@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.3.0.tgz#ec7c8da49c36e4c07f6ddc80cb57776e687e4925"
+  integrity sha512-g+kmsucxS8QBxlV9gjltl4lVW8GjvtlQNUijhtZEqm9Vwb0s5MG/K0wfzg2MwVUZ+ZwNWgcKnRruD5K8LzMZkA==
   dependencies:
     "@salesforce/core" "^7.3.0"
     "@salesforce/kit" "^3.1.1"
@@ -1690,7 +1674,7 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.0"
 
-"@salesforce/core@^7.0.0", "@salesforce/core@^7.0.1", "@salesforce/core@^7.2.0", "@salesforce/core@^7.3.0":
+"@salesforce/core@^7.0.1", "@salesforce/core@^7.2.0", "@salesforce/core@^7.3.0":
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-7.3.0.tgz#2ad3dfccb1ef0eb2e65b49b655e39748002bbc13"
   integrity sha512-c/gZLvKFHvgAv/Gyd4LjGGQykvGLn67QtCmdT7Hnm57bTDZoyr7XJXcaI+ILN0NO47guG1tEWP5eBvAi+u2DNA==
