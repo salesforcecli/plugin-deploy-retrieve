@@ -1674,6 +1674,22 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.0"
 
+"@salesforce/cli-plugins-testkit@^5.2.4-qa.1":
+  version "5.2.4-qa.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.2.4-qa.1.tgz#837d17ffbe8d286d8c3db98736339c6704fc37dd"
+  integrity sha512-dfgfGYISR+7f1wXCms5o+XovHfhabBvxioITB8sNu5bPpK1NGfy6rpJjSrfCZoMkJV7SoQNx0f8MxbnGIgnLPQ==
+  dependencies:
+    "@salesforce/core" "^7.3.0"
+    "@salesforce/kit" "^3.1.1"
+    "@salesforce/ts-types" "^2.0.9"
+    "@types/shelljs" "^0.8.15"
+    debug "^4.3.1"
+    jszip "^3.10.1"
+    shelljs "^0.8.4"
+    sinon "^17.0.1"
+    strip-ansi "6.0.1"
+    ts-retry-promise "^0.8.0"
+
 "@salesforce/core@^7.0.0", "@salesforce/core@^7.0.1", "@salesforce/core@^7.2.0", "@salesforce/core@^7.3.0":
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-7.3.0.tgz#2ad3dfccb1ef0eb2e65b49b655e39748002bbc13"
