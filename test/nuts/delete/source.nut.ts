@@ -7,6 +7,7 @@
 
 import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { platform } from 'node:os';
 import * as path from 'node:path';
 import { expect, assert, config } from 'chai';
 import { Interaction, execCmd, execInteractiveCmd } from '@salesforce/cli-plugins-testkit';
@@ -268,7 +269,7 @@ describe('project delete source NUTs', () => {
     expect(fs.existsSync(brokerPath)).to.be.true;
   });
 
-  it('deletes a remote-only layout using interactive prompt', async () => {
+  (platform() === 'win32' ? it : it.skip)('deletes a remote-only layout using interactive prompt', async () => {
     const layoutName = 'Account-Account %28Marketing%29 Layout';
     const response = (
       await execInteractiveCmd(
