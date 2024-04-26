@@ -269,7 +269,7 @@ describe('project delete source NUTs', () => {
     expect(fs.existsSync(brokerPath)).to.be.true;
   });
 
-  (platform() === 'win32' ? it : it.skip)('deletes a remote-only layout using interactive prompt', async () => {
+  (platform() === 'win32' ? it.skip : it)('deletes a remote-only layout using interactive prompt', async () => {
     const layoutName = 'Account-Account %28Marketing%29 Layout';
     const response = (
       await execInteractiveCmd(
