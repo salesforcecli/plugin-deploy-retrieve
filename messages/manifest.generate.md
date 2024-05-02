@@ -39,7 +39,7 @@ To include multiple metadata components, either set multiple --metadata <name> f
 
 # flags.include-packages.summary
 
-Package types (managed, unlocked) whose metadata is included in the manifest; by default, metadata in packages is ignored.
+Package types (managed, unlocked) whose metadata is included in the manifest; by default, metadata in managed and unlocked packages is excluded. Metadata in unmanaged packages is always included.
 
 # flags.from-org.summary
 
