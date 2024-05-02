@@ -1,3 +1,9 @@
+## [3.6.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.8...3.6.9) (2024-05-02)
+
+### Bug Fixes
+
+- update help for --include-packages ([#994](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/994)) ([892cc58](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/892cc58775bd40c675ea394e56e1d45e7eb1a89a))
+
 ## [3.6.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.7...3.6.8) (2024-04-27)
 
 ### Bug Fixes
