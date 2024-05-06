@@ -10,6 +10,7 @@ import { ux } from '@oclif/core';
 import { ConvertResult } from '@salesforce/source-deploy-retrieve';
 import { SfError, Messages } from '@salesforce/core';
 import { ConvertResultJson, Formatter } from '../utils/types.js';
+import { exitCodeAsNumber } from '../utils/output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 export const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');
@@ -27,7 +28,7 @@ export class SourceConvertResultFormatter implements Formatter<ConvertResultJson
   }
 
   public display(): void {
-    if ([0, 69].includes(process.exitCode ?? 0)) {
+    if ([0, 69].includes(exitCodeAsNumber() ?? 0)) {
       ux.log(convertMessages.getMessage('success', [this.result.packagePath]));
     } else {
       throw new SfError(convertMessages.getMessage('convertFailed'), 'ConvertFailed');

@@ -10,7 +10,12 @@ import { ensureArray } from '@salesforce/kit';
 import chalk from 'chalk';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { DeleteSourceJson, Formatter, TestLevel, isSdrSuccess } from '../utils/types.js';
-import { fileResponseSortFn, getFileResponseSuccessProps, makePathRelative } from '../utils/output.js';
+import {
+  exitCodeAsNumber,
+  fileResponseSortFn,
+  getFileResponseSuccessProps,
+  makePathRelative,
+} from '../utils/output.js';
 import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
 
 export class DeleteResultFormatter extends TestResultsFormatter implements Formatter<DeleteSourceJson> {
@@ -43,7 +48,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
 
   public display(): void {
     this.displayTestResults();
-    if ([0, 69].includes(process.exitCode ?? 0)) {
+    if ([0, 69].includes(exitCodeAsNumber() ?? 0)) {
       const successes: FileResponseSuccess[] = [];
       const fileResponseSuccesses: Map<string, FileResponse> = new Map<string, FileResponse>();
 
