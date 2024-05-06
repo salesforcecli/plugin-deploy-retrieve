@@ -1824,7 +1824,7 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.0"
 
-"@salesforce/core@^7.0.1", "@salesforce/core@^7.2.0", "@salesforce/core@^7.3.0", "@salesforce/core@^7.3.1", "@salesforce/core@^7.3.3", "@salesforce/core@^7.3.4":
+"@salesforce/core@^7.0.1", "@salesforce/core@^7.2.0", "@salesforce/core@^7.3.0", "@salesforce/core@^7.3.1", "@salesforce/core@^7.3.4", "@salesforce/core@^7.3.5":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-7.3.4.tgz#0630a5b236254a7a690872d7179f7216dff02560"
   integrity sha512-m6XY5Ju3rh2ljaqVydSPS1vekw+EyQ4uHiNV6mIdJeBile7WJgn5TbE7AJUU91ASPYy9X+/ZuiHyIbOaMc2YrA==
@@ -1980,13 +1980,13 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@dev":
-  version "6.0.5-dev.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.0.5-dev.0.tgz#e51b842db016ccee1518396489fc202d71b2c5ea"
-  integrity sha512-WjGsjeiZP8HolIJ+DWr9h6kaK71KkIz/cjYB+8Lu6qwLMqXMCdBDnBtkEjVe6yasHF5TAKbZ7GvMvRhV2EbKyg==
+"@salesforce/source-tracking@6.0.5-dev.1":
+  version "6.0.5-dev.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.0.5-dev.1.tgz#4706152ea4138e51da09fdf83bda77344a46477a"
+  integrity sha512-tri33OiHEvC0KZru3sHXdKiMUdotB5/PuIBummdd9Z6EMYa8FGcsYMXI5F+bmZxu3Uh4m0Tik5DJo8OrgbBvIQ==
   dependencies:
     "@oclif/core" "^3.26.5"
-    "@salesforce/core" "^7.3.3"
+    "@salesforce/core" "^7.3.5"
     "@salesforce/kit" "^3.1.1"
     "@salesforce/source-deploy-retrieve" "^11.3.0"
     "@salesforce/ts-types" "^2.0.9"
