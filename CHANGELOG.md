@@ -1,3 +1,9 @@
+## [3.6.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.11...3.6.12) (2024-05-06)
+
+### Bug Fixes
+
+- node types for process exitCode don't allow string ([762372e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/762372eab3ddbf743bf03252fa2d6b619a7c4065))
+
 ## [3.6.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.10...3.6.11) (2024-05-04)
 
 ### Bug Fixes
