@@ -29,6 +29,15 @@ export const fileResponseSortFn = (i: FileResponse, j: FileResponse): number => 
   return i.type > j.type ? 1 : -1;
 };
 
+export const exitCodeAsNumber = (): number | undefined => {
+  try {
+    return typeof process.exitCode === 'string' ? parseInt(process.exitCode, 10) : process.exitCode;
+  } catch {
+    // it *could* be a string that fails to parse to int?
+    return undefined;
+  }
+};
+
 /** oclif table doesn't like "interface" but likes "type".  SDR exports an interface  */
 export const getFileResponseSuccessProps = (
   s: FileResponseSuccess
