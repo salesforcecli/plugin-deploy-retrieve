@@ -1537,25 +1537,7 @@
     "@salesforce/ts-types" "^2.0.9"
     chalk "^5.3.0"
 
-"@salesforce/source-deploy-retrieve@^11.0.1", "@salesforce/source-deploy-retrieve@^11.3.0":
-  version "11.4.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-11.4.0.tgz#b174f168d41ec3a15a3454732da09e8d7672a576"
-  integrity sha512-9r6eb2N1i3n1Sr4SWzDje8a8blD3k49kMSRLX1rPTpEtmcvFTs76JlVn1IJeIyK3hXtvNyb6UA/6+EClsr853A==
-  dependencies:
-    "@salesforce/core" "^7.3.1"
-    "@salesforce/kit" "^3.1.1"
-    "@salesforce/ts-types" "^2.0.9"
-    fast-levenshtein "^3.0.0"
-    fast-xml-parser "^4.3.6"
-    got "^11.8.6"
-    graceful-fs "^4.2.11"
-    ignore "^5.3.1"
-    jszip "^3.10.1"
-    mime "2.6.0"
-    minimatch "^5.1.6"
-    proxy-agent "^6.4.0"
-
-"@salesforce/source-deploy-retrieve@^11.4.1":
+"@salesforce/source-deploy-retrieve@^11.0.1", "@salesforce/source-deploy-retrieve@^11.3.0", "@salesforce/source-deploy-retrieve@^11.4.1":
   version "11.4.1"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-11.4.1.tgz#a855c7377a358512026c3ef8f1e66107452671b3"
   integrity sha512-vhf9YQ4NoQkAfID3WiSyFdMdAr6Ku8Abe0HhwSA0QbkE4r/N+yFZGjseRANPVnmAtAvHroCuP0cx1zGc1HC42Q==
