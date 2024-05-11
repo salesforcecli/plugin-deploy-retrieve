@@ -1,3 +1,9 @@
+## [3.6.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.13...3.6.14) (2024-05-11)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve from 11.4.1 to 11.4.3 ([44ff515](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/44ff5152c49078b0c05879271314834988d97301))
+
 ## [3.6.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.12...3.6.13) (2024-05-10)
 
 ### Bug Fixes
