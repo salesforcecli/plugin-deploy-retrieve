@@ -1573,7 +1573,7 @@
     minimatch "^5.1.6"
     proxy-agent "^6.4.0"
 
-"@salesforce/source-deploy-retrieve@^11.4.3":
+"@salesforce/source-deploy-retrieve@^11.4.3", "@salesforce/source-deploy-retrieve@^11.4.4":
   version "11.4.4"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-11.4.4.tgz#c853e0888c6a5b64c4af3e705010ef1a6dac4c13"
   integrity sha512-6dohRR9t6Aj2mbHzfYtbphxqxF83AwmAjkFFQPB6+Yn1ceVKmJjd0WY23fgWTTaTum+2pnw9XA35qwu4naBCVw==
@@ -1607,15 +1607,15 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^6.0.5-dev.3":
-  version "6.0.5-dev.3"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.0.5-dev.3.tgz#7086d32de3ba4c9875ef69286759040970b1c31b"
-  integrity sha512-LooxxWwsRCzyrYtsE9Qhz48Pgb+brwAV2Yweo3NjllOqpCSWsBec1K4mcvggWxDqZBiguN8ABaoYBNB8CEVjIw==
+"@salesforce/source-tracking@^6.0.5-dev.4":
+  version "6.0.5-dev.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.0.5-dev.4.tgz#9c86bda2b5446921ca62cd8605e70753930bb9c9"
+  integrity sha512-iNlaTybWRCvZC3yBOUmdKD0Ep451VlhGXga20+uAnZkpbTGlK3Yd0964y8oFNvinCWuaCcO+3giljaKBu5NzLA==
   dependencies:
     "@oclif/core" "^3.26.5"
     "@salesforce/core" "^7.3.5"
     "@salesforce/kit" "^3.1.1"
-    "@salesforce/source-deploy-retrieve" "^11.4.3"
+    "@salesforce/source-deploy-retrieve" "^11.4.4"
     "@salesforce/ts-types" "^2.0.9"
     fast-xml-parser "^4.3.6"
     graceful-fs "^4.2.11"
