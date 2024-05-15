@@ -1607,10 +1607,10 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^6.0.5-dev.4":
-  version "6.0.5-dev.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.0.5-dev.4.tgz#9c86bda2b5446921ca62cd8605e70753930bb9c9"
-  integrity sha512-iNlaTybWRCvZC3yBOUmdKD0Ep451VlhGXga20+uAnZkpbTGlK3Yd0964y8oFNvinCWuaCcO+3giljaKBu5NzLA==
+"@salesforce/source-tracking@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.2.0.tgz#74529af2b268a47953cad03ff34f2dd359876c48"
+  integrity sha512-csG3dq0iIoOXFZ2dbeICEMTRrFJVAqxebaLxPzP6Dbo5qO2sjd4RWGJGvHKeyfLIE8L4vZ4/lJZ08cpEe4UbZA==
   dependencies:
     "@oclif/core" "^3.26.5"
     "@salesforce/core" "^7.3.5"
