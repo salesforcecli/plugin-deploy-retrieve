@@ -78,6 +78,11 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
             project: this.project!,
           });
 
+    if (stl) {
+      // This helps prevent a race condition when the status is being generated for the first time
+      await stl.ensureLocalTracking();
+    }
+
     const [componentSet, filesWithConflicts] = await Promise.all([
       buildComponentSet({ ...flags, 'target-org': flags['target-org'].getUsername() }, stl),
       getConflictFiles(stl, flags['ignore-conflicts']),
