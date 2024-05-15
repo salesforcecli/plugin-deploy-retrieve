@@ -1,3 +1,9 @@
+# [3.7.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.15...3.7.0) (2024-05-15)
+
+### Features
+
+- detect file moves ([ca3b6d4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ca3b6d47aeeb46ec5d83a6ce19113a795a28a3df))
+
 ## [3.6.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.14...3.6.15) (2024-05-11)
 
 ### Bug Fixes
