@@ -34,8 +34,8 @@ export const TMP_DIR = process.env.SF_MDAPI_TEMP_DIR ?? 'decompositionConverterT
 export const getDecomposablePackageDirectories = async (
   project: SfProject,
   preset: string
-): Promise<ComponentSetAndPackageDirPath[]> =>
-  (
+): Promise<ComponentSetAndPackageDirPath[]> => {
+  const output = (
     await Promise.all(
       project
         .getPackageDirectories()
@@ -46,6 +46,11 @@ export const getDecomposablePackageDirectories = async (
     .filter(componentSetIsNonEmpty)
     // we do this after filtering componentSets to reduce false positives (ex: dir does not have main/default but also has nothing to decompose)
     .map(validateMainDefault(project.getPath()));
+  if (output.length === 0) {
+    loadMessages().createError('error.noTargetTypes', [preset]);
+  }
+  return output;
+};
 
 /** converts the composed metadata to mdapi format in a temp dir */
 export const convertToMdapi = async (packageDirsWithDecomposable: ComponentSetAndPackageDirPath[]): Promise<string[]> =>

@@ -56,9 +56,9 @@ export default class ProjectDecompose extends SfCommand<ProjectDecomposeResult> 
     if (await flags['target-org']?.supportsSourceTracking()) {
       throw messages.createError('error.trackingNotSupported');
     }
+    const projectJson = getValidatedProjectJson(flags.behavior, this.project!);
     const packageDirsWithDecomposable = await getDecomposablePackageDirectories(this.project!, flags.behavior);
     const filesToDelete = await convertToMdapi(packageDirsWithDecomposable);
-    const projectJson = getValidatedProjectJson(flags.behavior, this.project!);
     const backupPjsonContents = flags['dry-run'] ? await readFile(projectJson.getPath()) : '';
 
     // flip the preset in the sfdx-project.json, even for dry-run, since the registry will need for conversions

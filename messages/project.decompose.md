@@ -15,12 +15,16 @@ Which sourceBehaviorOption to enable.
 - Switch the project to use decomposed custom labels
   <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels --source-dir .
 
-- Switch one packageDirectory to use decomposed custom labels
-  <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels --source-dir force-app
+- Without changing any existing files, see what the command would have produced.
+  <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels --dry-run
 
 # flags.dry-run.summary
 
-Explain what the command would do but don't modify the project.
+Explain what the command would do.
+
+# flags.dry-run.description
+
+Doesn't modify existing files. Lists files that would be deleted, explains modifications to sfdx-project.json, and outputs the resulting modifications to a new folder for review.
 
 # flags.preserve-temp-dir.summary
 
@@ -50,3 +54,7 @@ The command will move metadata into main/default which doesn't seem like what yo
 # success.dryRun
 
 Files were created in %s outside your package directories for inspection.
+
+# error.noTargetTypes
+
+The project contains no packageDirectories with metadata that matches the specified behavior %s.
