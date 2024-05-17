@@ -37,6 +37,14 @@
     "plugin": "@salesforce/plugin-deploy-retrieve"
   },
   {
+    "alias": [],
+    "command": "project:decompose",
+    "flagAliases": [],
+    "flagChars": ["o", "p"],
+    "flags": ["behavior", "dry-run", "flags-dir", "json", "preserve-temp-dir", "target-org"],
+    "plugin": "@salesforce/plugin-deploy-retrieve"
+  },
+  {
     "alias": ["force:source:delete"],
     "command": "project:delete:source",
     "flagAliases": [
