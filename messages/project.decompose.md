@@ -1,22 +1,22 @@
 # summary
 
-Enable a preset in sfdx-project.json and update your project source to use it.
+Enable a sourceBehaviorOption in sfdx-project.json and update your project source to use it.
 
 # description
 
-Makes local changes to your project based on the chosen preset.
+Makes local changes to your project based on the chosen sourceBehaviorOption.
 
-# flags.preset.summary
+# flags.behavior.summary
 
-Which preset to enable.
+Which sourceBehaviorOption to enable.
 
 # examples
 
 - Switch the project to use decomposed custom labels
-  <%= config.bin %> <%= command.id %> --preset DecomposeCustomLabels --source-dir .
+  <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels --source-dir .
 
 - Switch one packageDirectory to use decomposed custom labels
-  <%= config.bin %> <%= command.id %> --preset DecomposeCustomLabels --source-dir force-app
+  <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels --source-dir force-app
 
 # flags.dry-run.summary
 
@@ -26,6 +26,27 @@ Explain what the command would do but don't modify the project.
 
 Don't delete the metadata API format temp dir that this command creates. Useful for debugging.
 
-# flags.source-dir.summary
+# error.trackingNotSupported
 
-Directory to modify the decomposition for. Can be an entire SfdxProject or any subfolder inside it.
+The project has a target-org that uses source tracking. This operation will cause changes to the local project that can't be properly tracked.
+
+# error.trackingNotSupported.actions
+
+- Get any changes or data you need from the org
+- Delete the org (`sf org delete scratch` or `sf org delete sandbox`)
+- Run the command again
+- Create a new org and deploy the modified source
+
+# error.packageDirectoryNeedsMainDefault
+
+The package directory %s does not have a main/default structure.
+The command will move metadata into main/default which doesn't seem like what you'd want.
+
+# error.packageDirectoryNeedsMainDefault.actions
+
+- Update %s to have all its metadata inside main/default.
+- Run the command again.
+
+# success.dryRun
+
+Files were created in %s outside your package directories for inspection.
