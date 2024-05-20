@@ -13,7 +13,7 @@ Which sourceBehaviorOption to enable.
 # examples
 
 - Switch the project to use decomposed custom labels
-  <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels --source-dir .
+  <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels
 
 - Without changing any existing files, see what the command would have produced.
   <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels --dry-run

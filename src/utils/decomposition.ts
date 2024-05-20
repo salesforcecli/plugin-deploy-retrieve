@@ -21,7 +21,7 @@ import { isString } from '@salesforce/ts-types';
 
 export type ComponentSetAndPackageDirPath = { packageDirPath: string; cs: ComponentSet };
 
-// TODO: there must be a cleaner way to read this
+// TODO: there could be a cleaner way to read this
 const PRESET_DIR = join(import.meta.resolve('@salesforce/source-deploy-retrieve'), '..', 'registry', 'presets').replace(
   'file:',
   ''
@@ -30,22 +30,23 @@ export const PRESETS_PROP = 'sourceBehaviorOptions';
 export const PRESET_CHOICES = (await readdir(PRESET_DIR)).map((f) => f.replace('.json', ''));
 export const TMP_DIR = process.env.SF_MDAPI_TEMP_DIR ?? 'decompositionConverterTempDir';
 
-/** returns packageDirectories and ComponentsSets where there is metadata of the type we'll decompose */
-export const getDecomposablePackageDirectories = async (
+/** returns packageDirectories and ComponentsSets where there is metadata of the type we'll change the behavior for */
+export const getPackageDirectoriesForPreset = async (
   project: SfProject,
   preset: string
 ): Promise<ComponentSetAndPackageDirPath[]> => {
+  const projectDir = project.getPath();
   const output = (
     await Promise.all(
       project
         .getPackageDirectories()
         .map((pd) => pd.path)
-        .map(componentSetFromPackageDirectory(project.getPath())(await getTypesFromPreset(preset)))
+        .map(componentSetFromPackageDirectory(projectDir)(await getTypesFromPreset(preset)))
     )
   )
     .filter(componentSetIsNonEmpty)
     // we do this after filtering componentSets to reduce false positives (ex: dir does not have main/default but also has nothing to decompose)
-    .map(validateMainDefault(project.getPath()));
+    .map(validateMainDefault(projectDir));
   if (output.length === 0) {
     loadMessages().createError('error.noTargetTypes', [preset]);
   }
@@ -69,12 +70,71 @@ export const convertToMdapi = async (packageDirsWithDecomposable: ComponentSetAn
     )
   ).flat();
 
-export const convertToSource = async ({
-  packageDirsWithDecomposable,
+/** get the LOCAL project json, throws if not present OR the preset already exists */
+export const getValidatedProjectJson = (preset: string, project: SfProject): SfProjectJson => {
+  const projectJson = project.getSfProjectJson(false);
+  if (projectJson.get<string[]>(PRESETS_PROP)?.includes(preset)) {
+    throw SfError.create({
+      name: 'sourceBehaviorOptionAlreadyExists',
+      message: `sourceBehaviorOption ${preset} already exists in sfdx-project.json`,
+    });
+  }
+  return projectJson;
+};
+
+/** converts the temporary mdapi back to source, return a list of the created files */
+export const convertBackToSource = async ({
+  packageDirsWithPreset,
+  projectDir,
+  dryRun,
+}: {
+  packageDirsWithPreset: ComponentSetAndPackageDirPath[];
+  projectDir: string;
+  /** if provided, will output the results into a separate directory outside the project's packageDirectories */
+  dryRun: boolean;
+}): Promise<string[]> => [
+  ...new Set(
+    (
+      await convertToSource({
+        packageDirsWithPreset,
+        projectDir,
+        dryRunDir: dryRun ? DRY_RUN_DIR : undefined,
+      })
+    )
+      .flatMap((cr) => cr.converted ?? [])
+      // we can't use walkContent because there's a conditional inside it
+      .flatMap(getSourceComponentFiles)
+      .filter(isString)
+  ),
+];
+
+const getSourceComponentFiles = (c: SourceComponent): string[] =>
+  [c.xml, ...(c.content ? fullPathsFromDir(c.content) : [])].filter(isString);
+
+const fullPathsFromDir = (dir: string): string[] =>
+  readdirSync(dir, { withFileTypes: true }).map((d) => join(d.path, d.name));
+
+/** build a component set from the original project for each pkgDir */
+const componentSetFromPackageDirectory =
+  (projectDir: string) =>
+  (metadataEntries: string[]) =>
+  async (packageDir: string): Promise<ComponentSetAndPackageDirPath> => ({
+    packageDirPath: packageDir,
+    cs: await ComponentSetBuilder.build({
+      metadata: {
+        metadataEntries,
+        directoryPaths: [packageDir],
+      },
+      projectDir,
+    }),
+  });
+
+const convertToSource = async ({
+  packageDirsWithPreset,
   projectDir,
   dryRunDir,
 }: {
-  packageDirsWithDecomposable: ComponentSetAndPackageDirPath[];
+  packageDirsWithPreset: ComponentSetAndPackageDirPath[];
   projectDir: string;
   dryRunDir?: string;
 }): Promise<ConvertResult[]> => {
@@ -82,7 +142,7 @@ export const convertToSource = async ({
   // it's a new converter because the project has changed and it should reload the project's registry.
   const converter = new MetadataConverter(new RegistryAccess(undefined, projectDir));
   return Promise.all(
-    packageDirsWithDecomposable.map(async (pd) =>
+    packageDirsWithPreset.map(async (pd) =>
       converter.convert(
         // cs from the mdapi folder
         await ComponentSetBuilder.build({ sourcepath: [join(TMP_DIR, pd.packageDirPath)], projectDir }),
@@ -104,65 +164,6 @@ export const convertToSource = async ({
     )
   );
 };
-
-/** build a component set from the original project for each pkgDir */
-export const componentSetFromPackageDirectory =
-  (projectDir: string) =>
-  (metadataEntries: string[]) =>
-  async (packageDir: string): Promise<ComponentSetAndPackageDirPath> => ({
-    packageDirPath: packageDir,
-    cs: await ComponentSetBuilder.build({
-      metadata: {
-        metadataEntries,
-        directoryPaths: [packageDir],
-      },
-      projectDir,
-    }),
-  });
-
-/** get the LOCAL project json, throws if not present OR the preset already exists */
-export const getValidatedProjectJson = (preset: string, project: SfProject): SfProjectJson => {
-  const projectJson = project.getSfProjectJson(false);
-  if (projectJson.get<string[]>(PRESETS_PROP)?.includes(preset)) {
-    throw SfError.create({
-      name: 'sourceBehaviorOptionAlreadyExists',
-      message: `sourceBehaviorOption ${preset} already exists in sfdx-project.json`,
-    });
-  }
-  return projectJson;
-};
-
-const getSourceComponentFiles = (c: SourceComponent): string[] =>
-  [
-    c.xml,
-    ...(c.content ? readdirSync(c.content, { withFileTypes: true }).map((d) => join(d.path, d.name)) : []),
-  ].filter(isString);
-
-/** converts the temporary mdapi back to source, return a list of the created files */
-export const convertBackToSource = async ({
-  packageDirsWithDecomposable,
-  projectDir,
-  dryRun,
-}: {
-  packageDirsWithDecomposable: ComponentSetAndPackageDirPath[];
-  projectDir: string;
-  /** if provided, will output the results into a separate directory outside the project's packageDirectories */
-  dryRun: boolean;
-}): Promise<string[]> => [
-  ...new Set(
-    (
-      await convertToSource({
-        packageDirsWithDecomposable,
-        projectDir,
-        dryRunDir: dryRun ? DRY_RUN_DIR : undefined,
-      })
-    )
-      .flatMap((cr) => cr.converted ?? [])
-      // we can't use walkContent because there's a conditional inside it
-      .flatMap(getSourceComponentFiles)
-      .filter(isString)
-  ),
-];
 
 const getTypesFromPreset = async (preset: string): Promise<string[]> =>
   Object.values(

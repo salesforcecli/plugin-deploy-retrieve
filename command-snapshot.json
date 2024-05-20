@@ -38,7 +38,7 @@
   },
   {
     "alias": [],
-    "command": "project:decompose",
+    "command": "project:convert:source-behavior",
     "flagAliases": [],
     "flagChars": ["o", "p"],
     "flags": ["behavior", "dry-run", "flags-dir", "json", "preserve-temp-dir", "target-org"],

@@ -15,20 +15,20 @@ import {
   DRY_RUN_DIR,
   PRESETS_PROP,
   PRESET_CHOICES,
-  getDecomposablePackageDirectories,
+  getPackageDirectoriesForPreset,
   convertBackToSource,
-} from '../../utils/decomposition.js';
+} from '../../../utils/decomposition.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
-const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'project.decompose');
+const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source-behavior');
 
-export type ProjectDecomposeResult = {
+export type SourceBehaviorResult = {
   [PRESETS_PROP]: string[];
   deletedFiles: string[];
   createdFiles: string[];
 };
 
-export default class ProjectDecompose extends SfCommand<ProjectDecomposeResult> {
+export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResult> {
   public static readonly summary = messages.getMessage('summary');
   public static readonly description = messages.getMessage('description');
   public static readonly examples = messages.getMessages('examples');
@@ -51,15 +51,17 @@ export default class ProjectDecompose extends SfCommand<ProjectDecomposeResult> 
     'target-org': Flags.optionalOrg(),
   };
 
-  public async run(): Promise<ProjectDecomposeResult> {
-    const { flags } = await this.parse(ProjectDecompose);
+  public async run(): Promise<SourceBehaviorResult> {
+    const { flags } = await this.parse(ConvertSourceBehavior);
     if (await flags['target-org']?.supportsSourceTracking()) {
       throw messages.createError('error.trackingNotSupported');
     }
     const projectJson = getValidatedProjectJson(flags.behavior, this.project!);
-    const packageDirsWithDecomposable = await getDecomposablePackageDirectories(this.project!, flags.behavior);
+    const [backupPjsonContents, packageDirsWithDecomposable] = await Promise.all([
+      flags['dry-run'] ? readFile(projectJson.getPath()) : '',
+      getPackageDirectoriesForPreset(this.project!, flags.behavior),
+    ]);
     const filesToDelete = await convertToMdapi(packageDirsWithDecomposable);
-    const backupPjsonContents = flags['dry-run'] ? await readFile(projectJson.getPath()) : '';
 
     // flip the preset in the sfdx-project.json, even for dry-run, since the registry will need for conversions
     projectJson.set(PRESETS_PROP, [...(projectJson.get<string[]>(PRESETS_PROP) ?? []), flags.behavior]);
@@ -70,7 +72,7 @@ export default class ProjectDecompose extends SfCommand<ProjectDecomposeResult> 
     await Promise.all(flags['dry-run'] ? [] : filesToDelete.map((f) => rm(f)));
 
     const createdFiles = await convertBackToSource({
-      packageDirsWithDecomposable,
+      packageDirsWithPreset: packageDirsWithDecomposable,
       projectDir: this.project!.getPath(),
       dryRun: flags['dry-run'],
     });
