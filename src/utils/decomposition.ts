@@ -165,7 +165,7 @@ const convertToSource = async ({
   );
 };
 
-const getTypesFromPreset = async (preset: string): Promise<string[]> =>
+export const getTypesFromPreset = async (preset: string): Promise<string[]> =>
   Object.values(
     (JSON.parse(await readFile(join(PRESET_DIR, `${preset}.json`), 'utf-8')) as MetadataRegistry).types
   ).map((t) => t.name);
