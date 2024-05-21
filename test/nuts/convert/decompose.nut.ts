@@ -11,7 +11,7 @@ import { expect } from 'chai';
 import { TestSession, execCmd } from '@salesforce/cli-plugins-testkit';
 import { type ProjectJson } from '@salesforce/schemas';
 import { SourceBehaviorResult } from '../../../src/commands/project/convert/source-behavior.js';
-import { DRY_RUN_DIR } from '../../../src/utils/convertBehavior.js';
+import { DRY_RUN_DIR, PRESETS_PROP } from '../../../src/utils/convertBehavior.js';
 
 describe('source behavior changes', () => {
   let session: TestSession;
@@ -37,11 +37,11 @@ describe('source behavior changes', () => {
       }
     );
     expect(result.jsonOutput?.result.deletedFiles).to.deep.equal([
-      'force-app/main/default/labels/CustomLabels.labels-meta.xml',
+      path.join(session.project.dir, 'force-app', 'main', 'default', 'labels', 'CustomLabels.labels-meta.xml'),
     ]);
-    expect(result.jsonOutput?.result.createdFiles).to.have.length(1);
+    expect(result.jsonOutput?.result.createdFiles).to.have.length(4);
     result.jsonOutput?.result.createdFiles.map((f) =>
-      expect(f.startsWith(path.join(DRY_RUN_DIR, 'force-app', 'main', 'default')))
+      expect(f.startsWith(path.join(session.project.dir, DRY_RUN_DIR, 'force-app', 'main', 'default')))
     );
     expect(result.jsonOutput?.result.createdFiles);
     // no change because dry run
@@ -51,6 +51,7 @@ describe('source behavior changes', () => {
     );
     // dry run dir exists
     expect(fs.existsSync(path.join(session.project.dir, DRY_RUN_DIR, 'force-app', 'main'))).to.be.true;
+    await fs.promises.rm(path.join(session.project.dir, DRY_RUN_DIR), { recursive: true });
   });
 
   it('throws on a packageDir not using main/default', async () => {
@@ -93,20 +94,26 @@ describe('source behavior changes', () => {
       }
     );
     expect(result.jsonOutput?.result.deletedFiles).to.deep.equal([
-      'force-app/main/default/labels/CustomLabels.labels-meta.xml',
+      path.join(session.project.dir, 'force-app', 'main', 'default', 'labels', 'CustomLabels.labels-meta.xml'),
     ]);
-    expect(result.jsonOutput?.result.createdFiles).to.have.length(1);
-    expect(result.jsonOutput?.result.createdFiles).to.deep.equal([]);
-    // no change because dry run
-    expect(await getProject(session)).to.deep.equal(originalProject);
-    expect(await fs.promises.readdir(path.join(session.project.dir, 'force-app'), { recursive: true })).to.deep.equal(
-      originalFileList
-    );
-    // dry run dir exists
-    expect(fs.existsSync(path.join(session.project.dir, DRY_RUN_DIR, 'force-app', 'main'))).to.be.true;
+    expect(result.jsonOutput?.result.createdFiles).to.have.length(4);
+    // it modified the project json
+    expect((await getProject(session))[PRESETS_PROP]).to.deep.equal(['decomposeCustomLabelsBeta']);
+
+    // no dry run dir
+    expect(fs.existsSync(path.join(session.project.dir, DRY_RUN_DIR))).to.be.false;
   });
 
-  it("throws on repeated preset that's already done");
+  it("throws on repeated preset that's already done", () => {
+    const err = execCmd<SourceBehaviorResult>(
+      'project convert source-behavior --behavior decomposeCustomLabelsBeta --json',
+      {
+        ensureExitCode: 1,
+      }
+    );
+    expect(err.jsonOutput?.name).to.equal('sourceBehaviorOptionAlreadyExists');
+  });
+
   after(async () => {
     await session?.clean();
   });
