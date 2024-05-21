@@ -23,13 +23,14 @@ import { isString } from '@salesforce/ts-types';
 export type ComponentSetAndPackageDirPath = { packageDirPath: string; cs: ComponentSet };
 
 // TODO: there could be a cleaner way to read this
-const PRESET_DIR = join(import.meta.resolve('@salesforce/source-deploy-retrieve'), '..', 'registry', 'presets');
+const PRESET_DIR = join(import.meta.resolve('@salesforce/source-deploy-retrieve'), '..', 'registry', 'presets').replace(
+  'file:',
+  platform() === 'win32' ? 'file:' : ''
+);
 // .replace( 'file:', '' );
 
 export const PRESETS_PROP = 'sourceBehaviorOptions';
-export const PRESET_CHOICES = (
-  await readdir(platform() === 'win32' ? PRESET_DIR : PRESET_DIR.replace('file:', ''))
-).map((f) => f.replace('.json', ''));
+export const PRESET_CHOICES = (await readdir(PRESET_DIR)).map((f) => f.replace('.json', ''));
 export const TMP_DIR = process.env.SF_MDAPI_TEMP_DIR ?? 'decompositionConverterTempDir';
 export const DRY_RUN_DIR = 'DRY-RUN-RESULTS';
 
