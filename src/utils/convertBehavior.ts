@@ -29,6 +29,7 @@ const PRESET_DIR = join(import.meta.resolve('@salesforce/source-deploy-retrieve'
 export const PRESETS_PROP = 'sourceBehaviorOptions';
 export const PRESET_CHOICES = (await readdir(PRESET_DIR)).map((f) => f.replace('.json', ''));
 export const TMP_DIR = process.env.SF_MDAPI_TEMP_DIR ?? 'decompositionConverterTempDir';
+export const DRY_RUN_DIR = 'DRY-RUN-RESULTS';
 
 /** returns packageDirectories and ComponentsSets where there is metadata of the type we'll change the behavior for */
 export const getPackageDirectoriesForPreset = async (
@@ -149,7 +150,12 @@ const convertToSource = async ({
         'source',
         dryRunDir
           ? // dryRun outputs to a dir outside the real packageDirs folder to avoid changing real stuff
-            { type: 'directory', genUniqueDir: false, outputDirectory: join(dryRunDir, pd.packageDirPath) }
+            {
+              type: 'directory',
+              outputDirectory: join(projectDir, dryRunDir),
+              packageName: pd.packageDirPath,
+              genUniqueDir: false,
+            }
           : {
               type: 'merge',
               mergeWith: (
@@ -194,7 +200,6 @@ const getComponentSetFiles = (cs: ComponentSet): string[] =>
 
 const loadMessages = (): Messages<string> => {
   Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
-  return Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'project.decompose');
+  return Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source-behavior');
 };
 const componentSetIsNonEmpty = (i: ComponentSetAndPackageDirPath): boolean => i.cs.size > 0;
-export const DRY_RUN_DIR = 'DRY-RUN-RESULTS';

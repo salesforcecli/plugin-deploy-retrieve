@@ -6,7 +6,7 @@
  */
 
 import { expect, assert } from 'chai';
-import { getTypesFromPreset } from '../../src/utils/decomposition.js';
+import { getTypesFromPreset } from '../../src/utils/convertBehavior.js';
 
 describe('source behavior changes', () => {
   describe('getTypesFromPreset', () => {

@@ -17,7 +17,7 @@ import {
   PRESET_CHOICES,
   getPackageDirectoriesForPreset,
   convertBackToSource,
-} from '../../../utils/decomposition.js';
+} from '../../../utils/convertBehavior.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source-behavior');
