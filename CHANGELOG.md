@@ -1,3 +1,33 @@
+## [3.7.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.3...3.7.4) (2024-05-21)
+
+### Bug Fixes
+
+- **deps:** bump sdr for new types ([#1014](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1014)) ([13bd802](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/13bd802bea7e43d8bd811a6e2cd7bf4a2781a9b4))
+
+## [3.7.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.2...3.7.3) (2024-05-19)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 9.0.7 to 9.0.10 ([45044fe](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/45044fef9fdd8ab054d179930407ff62ce8b7402))
+
+## [3.7.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.1...3.7.2) (2024-05-18)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 6.2.0 to 6.2.1 ([cbe85c4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/cbe85c4db5c48ea09e144a2cd9d67760be85059b))
+
+## [3.7.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.0...3.7.1) (2024-05-18)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 7.3.5 to 7.3.8 ([51ebdcf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/51ebdcff8e9722ca2183993507148051e6cccd9a))
+
+# [3.7.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.15...3.7.0) (2024-05-15)
+
+### Features
+
+- detect file moves ([ca3b6d4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ca3b6d47aeeb46ec5d83a6ce19113a795a28a3df))
+
 ## [3.6.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.6.14...3.6.15) (2024-05-11)
 
 ### Bug Fixes
