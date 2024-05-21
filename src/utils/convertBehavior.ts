@@ -6,7 +6,7 @@
  */
 import { existsSync, readdirSync } from 'node:fs';
 import { readFile, readdir } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { SfError, SfProject, SfProjectJson, Messages } from '@salesforce/core';
 import {
   ComponentSet,
@@ -69,7 +69,9 @@ export const convertToMdapi = async (packageDirsWithDecomposable: ComponentSetAn
         return getComponentSetFiles(pd.cs);
       })
     )
-  ).flat();
+  )
+    .flat()
+    .map((f) => resolve(f));
 
 /** get the LOCAL project json, throws if not present OR the preset already exists */
 export const getValidatedProjectJson = (preset: string, project: SfProject): SfProjectJson => {
@@ -145,7 +147,7 @@ const convertToSource = async ({
   return Promise.all(
     packageDirsWithPreset.map(async (pd) =>
       converter.convert(
-        // cs from the mdapi folder
+        // componentSet based on each mdapi folder
         await ComponentSetBuilder.build({ sourcepath: [join(TMP_DIR, pd.packageDirPath)], projectDir }),
         'source',
         dryRunDir
@@ -164,7 +166,7 @@ const convertToSource = async ({
                   projectDir,
                 })
               ).getSourceComponents(),
-              defaultDirectory: pd.packageDirPath,
+              defaultDirectory: join(projectDir, pd.packageDirPath),
             }
       )
     )
