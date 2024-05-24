@@ -43,6 +43,15 @@ describe('deploy mdapi format without tracking', () => {
     expect(result?.numberTestsCompleted).to.equal(7);
   });
 
+  it('deploy dir and run 2 specified tests using the installed CLI', () => {
+    const result = execCmd<DeployResultJson>(
+      'project:deploy:start --source-dir force-app --test-level RunSpecifiedTests --tests FileUtilitiesTest --tests GeocodingServiceTest  --json',
+      { cli: 'sf' }
+    ).jsonOutput?.result;
+    expect(result?.files).to.not.be.empty;
+    expect(result?.numberTestsCompleted).to.equal(7);
+  });
+
   it('deploy a bit of metadata and run all tests', () => {
     // the project hasn't really deployed because tests keep failing coverage, etc.  Deploy so all components are in the org
     execCmd<DeployResultJson>('project:deploy:start  --source-dir force-app', { ensureExitCode: 0 });
