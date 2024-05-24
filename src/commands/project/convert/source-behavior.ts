@@ -38,7 +38,7 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
   public static readonly flags = {
     behavior: Flags.option({
       summary: messages.getMessage('flags.behavior.summary'),
-      char: 'p',
+      char: 'b',
       required: true,
       options: PRESET_CHOICES,
     })(),
