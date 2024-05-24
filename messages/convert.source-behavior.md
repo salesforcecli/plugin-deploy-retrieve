@@ -1,60 +1,70 @@
 # summary
 
-Enable a sourceBehaviorOption in sfdx-project.json and update your project source to use it.
+Enable a behavior of your project source files, and then update your Salesforce DX project to implement the behavior.
 
 # description
 
-Makes local changes to your project based on the chosen sourceBehaviorOption.
+Specifically, this command updates the "sourceBehaviorOption" option in the "sfdx-project.json" file and then converts the associated local source files in your project as needed.
+
+For example, run this command with the "--behavior decomposePermissionSet" flag to start decomposing permission sets when you deploy or retrieve them. Decomposing means breaking up the monolithic metadata API format XML file that corresponds to a metadata component into smaller XML files and directories based on its subtypes. Permission sets are not decomposed by default; you must opt-in to start decomposing them by using this command. When the command finishes, your "sfdx-project.json" file is updated to always decompose permission sets, and the existing permission set files in your local package directories are converted into the new decomposed format. You run this command only once for a given behavior change.
+
+For more information about the possible values for the --behavior flag, see the "sourceBehaviorOptions" section in the https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm topic.
 
 # flags.behavior.summary
 
-Which sourceBehaviorOption to enable.
+Behavior to enable; the values correspond to the possible values of the "sourceBehaviorOption" option in the "sfdx-project.json" file.
 
 # examples
 
-- Switch the project to use decomposed custom labels
-  <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels
+- Update your Salesforce DX project to decompose custom labels:
 
-- Without changing any existing files, see what the command would have produced.
-  <%= config.bin %> <%= command.id %> --behavior DecomposeCustomLabels --dry-run
+  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabels
+
+- Display what the command would do, but don't change any existing files:
+
+  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabels --dry-run
+
+- Keep the temporary directory that contains the interim metadata API formatted files:
+
+  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabels --dry-run --preserve-temp-dir
 
 # flags.dry-run.summary
 
-Explain what the command would do.
+Display what the command would do, but don't make any actual changes.
 
 # flags.dry-run.description
 
-Doesn't modify existing files. Lists files that would be deleted, explains modifications to sfdx-project.json, and outputs the resulting modifications to a new folder for review.
+Doesn't modify the existing files in your project, including the "sfdx-project.json" file. Instead, the command lists the files that would be deleted, explains the modifications to the "sfdx-project.json" file, and outputs the resulting modifications to a new directory for review.
 
 # flags.preserve-temp-dir.summary
 
-Don't delete the metadata API format temp dir that this command creates. Useful for debugging.
+Don't delete the metadata API format temporary directory that this command creates. Useful for debugging.
 
 # error.trackingNotSupported
 
-The project has a target-org that uses source tracking. This operation will cause changes to the local project that can't be properly tracked.
+Your project has a default org (target-org) that uses source tracking. This operation will cause changes to the local project source files that can't be properly tracked.
 
 # error.trackingNotSupported.actions
 
-- Get any changes or data you need from the org
-- Delete the org (`sf org delete scratch` or `sf org delete sandbox`)
-- Run the command again
-- Create a new org and deploy the modified source
+- Retrieve any changes or data you need from the org that you haven't already retrieved.
+- Delete the org ("sf org delete scratch" or "sf org delete sandbox").
+- Run this command again.
+- Create a new org ("sf org create scratch" or "sf org create sandbox") and deploy the modified source.
 
 # error.packageDirectoryNeedsMainDefault
 
-The package directory %s does not have a main/default structure.
-The command will move metadata into main/default which doesn't seem like what you'd want.
+The package directory %s doesn't have a main/default structure.
+This command moves metadata into a main/default structure, but your package directories aren't ready for it.
 
 # error.packageDirectoryNeedsMainDefault.actions
 
-- Update %s to have all its metadata inside main/default.
+- Update %s to have all its metadata inside a main/default directory structure.
 - Run the command again.
 
 # success.dryRun
 
-Files were created in %s outside your package directories for inspection.
+Files were created in %s outside your package directories for you to inspect.
 
 # error.noTargetTypes
 
-The project contains no packageDirectories with metadata that matches the specified behavior %s.
+The project doesn't contain any package directories with metadata that matches the specified behavior %s.

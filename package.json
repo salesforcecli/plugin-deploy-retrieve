@@ -76,7 +76,7 @@
             "description": "Commands to retrieve metadata from a Salesforce org"
           },
           "convert": {
-            "description": "Commands to convert metadata from one format to another."
+            "description": "Commands to change the format of your project source files."
           },
           "delete": {
             "description": "Commands to delete metadata from a Salesforce org."
