@@ -40,7 +40,7 @@
     "alias": [],
     "command": "project:convert:source-behavior",
     "flagAliases": [],
-    "flagChars": ["o", "p"],
+    "flagChars": ["b", "o"],
     "flags": ["behavior", "dry-run", "flags-dir", "json", "preserve-temp-dir", "target-org"],
     "plugin": "@salesforce/plugin-deploy-retrieve"
   },
