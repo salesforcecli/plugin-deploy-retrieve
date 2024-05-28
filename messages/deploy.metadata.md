@@ -8,7 +8,7 @@ You must run this command from within a project.
 
 Metadata components are deployed in source format by default. Deploy them in metadata format by specifying the --metadata-dir flag, which specifies the root directory or ZIP file that contains the metadata formatted files you want to deploy.
 
-If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production orgs, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "<%= config.bin %> org create scratch|sandbox" commands.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production orgs, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "sf org create scratch|sandbox" commands.
 
 To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
@@ -16,45 +16,45 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 - Deploy local changes not in the org; uses your default org:
 
-      <%= config.bin %> <%= command.id %>
+      sf <%= command.id %>
 
 - Deploy all source files in the "force-app" directory to an org with alias "my-scratch"; show only concise output, in other words don't print a list of all the source that was deployed:
 
-      <%= config.bin %> <%= command.id %>  --source-dir force-app --target-org my-scratch --concise
+      sf <%= command.id %>  --source-dir force-app --target-org my-scratch --concise
 
 - Deploy all the Apex classes and custom objects that are in the "force-app" directory. The list views, layouts, etc, that are associated with the custom objects are also deployed. Both examples are equivalent:
 
-      <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes force-app/main/default/objects
-      <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes --source-dir force-app/main/default/objects
+      sf <%= command.id %> --source-dir force-app/main/default/classes force-app/main/default/objects
+      sf <%= command.id %> --source-dir force-app/main/default/classes --source-dir force-app/main/default/objects
 
 - Deploy all Apex classes that are in all package directories defined in the "sfdx-project.json" file:
 
-      <%= config.bin %> <%= command.id %> --metadata ApexClass
+      sf <%= command.id %> --metadata ApexClass
 
 - Deploy a specific Apex class; ignore any conflicts between the local project and org (be careful with this flag, because it will overwrite the Apex class in the org if there are conflicts!):
 
-      <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass --ignore-conflicts
+      sf <%= command.id %> --metadata ApexClass:MyApexClass --ignore-conflicts
 
 - Deploy specific Apex classes that match a pattern; in this example, deploy Apex classes whose names contain the string "MyApex". Also ignore any deployment warnings (again, be careful with this flag! You typically want to see the warnings):
 
-      <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*' --ignore-warnings
+      sf <%= command.id %> --metadata 'ApexClass:MyApex*' --ignore-warnings
 
 - Deploy all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
-      <%= config.bin %> <%= command.id %> --metadata CustomObject ApexClass
-      <%= config.bin %> <%= command.id %> --metadata CustomObject --metadata ApexClass
+      sf <%= command.id %> --metadata CustomObject ApexClass
+      sf <%= command.id %> --metadata CustomObject --metadata ApexClass
 
 - Deploy all Apex classes and a profile that has a space in its name:
 
-      <%= config.bin %> <%= command.id %> --metadata ApexClass --metadata "Profile:My Profile"
+      sf <%= command.id %> --metadata ApexClass --metadata "Profile:My Profile"
 
 - Deploy all components listed in a manifest:
 
-      <%= config.bin %> <%= command.id %> --manifest path/to/package.xml
+      sf <%= command.id %> --manifest path/to/package.xml
 
 - Run the tests that aren’t in any managed packages as part of a deployment:
 
-      <%= config.bin %> <%= command.id %> --metadata ApexClass --test-level RunLocalTests
+      sf <%= command.id %> --metadata ApexClass --test-level RunLocalTests
 
 # flags.target-org.summary
 
@@ -114,7 +114,7 @@ Number of minutes to wait for command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume the deployment, run "<%= config.bin %> project deploy resume". To check the status of the deployment, run "<%= config.bin %> project deploy report".
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you and returns the job ID. To resume the deployment, run "sf project deploy resume". To check the status of the deployment, run "sf project deploy report".
 
 # flags.manifest.summary
 
@@ -176,7 +176,7 @@ Run the command asynchronously.
 
 # flags.async.description
 
-The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume the deployment, run "<%= config.bin %> project deploy resume". To check the status of the deployment, run "<%= config.bin %> project deploy report".
+The command immediately returns the job ID and control of the terminal to you. This way, you can continue to use the CLI. To resume the deployment, run "sf project deploy resume". To check the status of the deployment, run "sf project deploy report".
 
 # flags.metadata-dir.summary
 
@@ -201,7 +201,7 @@ You must specify tests using the --tests flag if the --test-level flag is set to
 
 # error.ClientTimeout
 
-The command has timed out, although the deployment is still running. Use "%s project deploy resume" to resume watching the deployment.
+The command has timed out, although the deployment is still running. Use "sf project deploy resume" to resume watching the deployment.
 
 # error.Conflicts
 
@@ -211,7 +211,7 @@ There are changes in the org that conflict with the local changes you're trying 
 
 - To overwrite the remote changes, rerun this command with the --ignore-conflicts flag.
 
-- To overwrite the local changes, run the "%s project retrieve start" command with the --ignore-conflicts flag.
+- To overwrite the local changes, run the "sf project retrieve start" command with the --ignore-conflicts flag.
 
 # error.nothingToDeploy
 
@@ -219,7 +219,7 @@ No local changes to deploy.
 
 # error.nothingToDeploy.Actions
 
-- To see conflicts and ignored files, run "%s project deploy preview" with any of the manifest, directory, or metadata flags.
+- To see conflicts and ignored files, run "sf project deploy preview" with any of the manifest, directory, or metadata flags.
 
 # error.InvalidDeployId
 

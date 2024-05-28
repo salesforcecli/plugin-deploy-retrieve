@@ -6,7 +6,7 @@ Convert metadata retrieved via Metadata API into the source format used in Sales
 
 To use Salesforce CLI to work with components that you retrieved via Metadata API, first convert your files from the metadata format to the source format using this command.
 
-To convert files from the source format back to the metadata format, run "<%= config.bin %> project convert source".
+To convert files from the source format back to the metadata format, run "sf project convert source".
 
 To convert multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
@@ -14,11 +14,11 @@ To convert multiple metadata components, either set multiple --metadata <name> f
 
 - Convert metadata formatted files in the specified directory into source formatted files; writes converted files to your default package directory:
 
-  $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata
+  $ sf <%= command.id %> --root-dir path/to/metadata
 
 - Similar to previous example, but writes converted files to the specified output directory:
 
-  $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata --output-dir path/to/outputdir
+  $ sf <%= command.id %> --root-dir path/to/metadata --output-dir path/to/outputdir
 
 # flags.root-dir.summary
 

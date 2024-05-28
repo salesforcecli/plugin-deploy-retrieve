@@ -12,11 +12,11 @@ Run this command by either passing it a job ID or specifying the --use-most-rece
 
 - Resume watching a deploy operation using a job ID:
 
-      <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2
+      sf <%= command.id %> --job-id 0Af0x000017yLUFCA2
 
 - Resume watching the most recent deploy operation:
 
-      <%= config.bin %> <%= command.id %> --use-most-recent
+      sf <%= command.id %> --use-most-recent
 
 # flags.job-id.summary
 
@@ -26,10 +26,10 @@ Job ID of the deploy operation you want to resume.
 
 These commands return a job ID if they time out or you specified the --async flag:
 
-- <%= config.bin %> project deploy start
-- <%= config.bin %> project deploy validate
-- <%= config.bin %> project deploy quick
-- <%= config.bin %> project deploy cancel
+- sf project deploy start
+- sf project deploy validate
+- sf project deploy quick
+- sf project deploy cancel
 
 The job ID is valid for 10 days from when you started the deploy operation.
 
@@ -47,7 +47,7 @@ Number of minutes to wait for the command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the deploy operation, run this command again. To check the status of the deploy operation, run "<%= config.bin %> project deploy report".
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the deploy operation, run this command again. To check the status of the deploy operation, run "sf project deploy report".
 
 # flags.verbose.summary
 

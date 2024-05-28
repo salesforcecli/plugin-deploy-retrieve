@@ -4,23 +4,23 @@ Quickly deploy a validated deployment to an org.
 
 # description
 
-Before you run this command, first create a validated deployment with the "<%= config.bin %> project deploy validate" command, which returns a job ID. Validated deployments haven't been deployed to the org yet; you deploy them with this command. Either pass the job ID to this command or use the --use-most-recent flag to use the job ID of the most recently validated deployment. For the quick deploy to succeed, the associated validated deployment must also have succeeded.
+Before you run this command, first create a validated deployment with the "sf project deploy validate" command, which returns a job ID. Validated deployments haven't been deployed to the org yet; you deploy them with this command. Either pass the job ID to this command or use the --use-most-recent flag to use the job ID of the most recently validated deployment. For the quick deploy to succeed, the associated validated deployment must also have succeeded.
 
 Executing this quick deploy command takes less time than a standard deploy because it skips running Apex tests. These tests were previously run as part of the validation. Validating first and then running a quick deploy is useful if the deployment to your production org take several hours and you don’t want to risk a failed deploy.
 
 This command doesn't support source-tracking. The source you deploy overwrites the corresponding metadata in your org. This command doesn’t attempt to merge your source with the versions in your org.
 
-Note: Don't use this command on sandboxes; the command is intended to be used on production orgs.  By default, sandboxes don't run tests during a deploy. Use `sf project deploy start` instead.
+Note: Don't use this command on sandboxes; the command is intended to be used on production orgs. By default, sandboxes don't run tests during a deploy. Use `sf project deploy start` instead.
 
 # examples
 
 - Run a quick deploy to your default org using a job ID:
 
-      <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2
+      sf <%= command.id %> --job-id 0Af0x000017yLUFCA2
 
 - Asynchronously run a quick deploy of the most recently validated deployment to an org with alias "my-prod-org":
 
-      <%= config.bin %> <%= command.id %> --async --use-most-recent --target-org my-prod-org
+      sf <%= command.id %> --async --use-most-recent --target-org my-prod-org
 
 # flags.job-id.summary
 
@@ -52,7 +52,7 @@ Number of minutes to wait for the command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the deploy, run "<%= config.bin %> project deploy resume". To check the status of the deploy, run "<%= config.bin %> project deploy report".
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the deploy, run "sf project deploy resume". To check the status of the deploy, run "sf project deploy report".
 
 # flags.verbose.summary
 
@@ -68,7 +68,7 @@ Run the command asynchronously.
 
 # flags.async.description
 
-The command immediately returns the control of the terminal to you. This way, you can continue to use the CLI. To resume watching the deploy, run "<%= config.bin %> project deploy resume". To check the status of the deploy, run "<%= config.bin %> project deploy report".
+The command immediately returns the control of the terminal to you. This way, you can continue to use the CLI. To resume watching the deploy, run "sf project deploy resume". To check the status of the deploy, run "sf project deploy report".
 
 # flags.target-org.summary
 

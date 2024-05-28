@@ -8,7 +8,7 @@ You must run this command from within a project.
 
 Metadata components are retrieved in source format by default. Retrieve them in metadata format by specifying the --target-metadata-dir flag, which retrieves the components into a ZIP file in the specified directory.
 
-If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production orgs, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "<%= config.bin %> org create scratch|sandbox" commands.
+If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production orgs, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "sf org create scratch|sandbox" commands.
 
 To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
 
@@ -16,54 +16,54 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 - Retrieve all remote changes from your default org:
 
-  <%= config.bin %> <%= command.id %>
+  sf <%= command.id %>
 
 - Retrieve the source files in the "force-app" directory from an org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --source-dir force-app --target-org my-scratch
+  sf <%= command.id %> --source-dir force-app --target-org my-scratch
 
 - Retrieve all the Apex classes and custom objects whose source is in the "force-app" directory. The list views, layouts, etc, that are associated with the custom objects are also retrieved. Both examples are equivalent:
 
-  <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes force-app/main/default/objects
-  <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes --source-dir force-app/main/default/objects
+  sf <%= command.id %> --source-dir force-app/main/default/classes force-app/main/default/objects
+  sf <%= command.id %> --source-dir force-app/main/default/classes --source-dir force-app/main/default/objects
 
 - Retrieve all Apex classes that are in all package directories defined in the "sfdx-project.json" file:
 
-  <%= config.bin %> <%= command.id %> --metadata ApexClass
+  sf <%= command.id %> --metadata ApexClass
 
 - Retrieve a specific Apex class; ignore any conflicts between the local project and org (be careful with this flag, because it will overwrite the Apex class source files in your local project if there are conflicts!):
 
-  <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass --ignore-conflicts
+  sf <%= command.id %> --metadata ApexClass:MyApexClass --ignore-conflicts
 
 - Retrieve specific Apex classes that match a pattern; in this example, retrieve Apex classes whose names contain the string "MyApex":
 
-      <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
+      sf <%= command.id %> --metadata 'ApexClass:MyApex*'
 
 - Retrieve all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
-  <%= config.bin %> <%= command.id %> --metadata CustomObject ApexClass
-  <%= config.bin %> <%= command.id %> --metadata CustomObject --metadata ApexClass
+  sf <%= command.id %> --metadata CustomObject ApexClass
+  sf <%= command.id %> --metadata CustomObject --metadata ApexClass
 
 - Retrieve all metadata components listed in a manifest:
 
-  <%= config.bin %> <%= command.id %> --manifest path/to/package.xml
+  sf <%= command.id %> --manifest path/to/package.xml
 
 - Retrieve metadata from a package:
 
-  <%= config.bin %> <%= command.id %> --package-name MyPackageName
+  sf <%= command.id %> --package-name MyPackageName
 
 - Retrieve metadata from multiple packages, one of which has a space in its name (both examples are equivalent):
 
-  <%= config.bin %> <%= command.id %> --package-name Package1 "PackageName With Spaces" Package3
-  <%= config.bin %> <%= command.id %> --package-name Package1 --package-name "PackageName With Spaces" --package-name Package3
+  sf <%= command.id %> --package-name Package1 "PackageName With Spaces" Package3
+  sf <%= command.id %> --package-name Package1 --package-name "PackageName With Spaces" --package-name Package3
 
 - Retrieve the metadata components listed in the force-app directory, but retrieve them in metadata format into a ZIP file in the "output" directory:
 
-  <%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output
+  sf <%= command.id %> --source-dir force-app --target-metadata-dir output
 
 - Retrieve in metadata format and automatically extract the contents into the "output" directory:
 
-  <%= config.bin %> <%= command.id %> --source-dir force-app --target-metadata-dir output --unzip
+  sf <%= command.id %> --source-dir force-app --target-metadata-dir output --unzip
 
 # flags.api-version.summary
 
@@ -161,7 +161,7 @@ There are changes in your local files that conflict with the org changes you're 
 
 - To overwrite the local changes, rerun this command with the --ignore-conflicts flag.
 
-- To overwrite the remote changes, run the "%s project deploy start" command with the --ignore-conflicts flag.
+- To overwrite the remote changes, run the "sf project deploy start" command with the --ignore-conflicts flag.
 
 # info.WroteZipFile
 

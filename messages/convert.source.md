@@ -4,9 +4,9 @@ Convert source-formatted files into metadata that you can deploy using Metadata 
 
 # description
 
-To convert source-formatted files into the metadata format, so that you can deploy them using Metadata API, run this command. Then deploy the metadata using "<%= config.bin %> project deploy".
+To convert source-formatted files into the metadata format, so that you can deploy them using Metadata API, run this command. Then deploy the metadata using "sf project deploy".
 
-To convert Metadata API–formatted files into the source format, run "<%= config.bin %> project convert mdapi".
+To convert Metadata API–formatted files into the source format, run "sf project convert mdapi".
 
 To specify a package name that includes spaces, enclose the name in single quotes.
 
@@ -16,11 +16,11 @@ To convert multiple components, either set multiple --metadata <name> flags or a
 
 - Convert source-formatted files in the specified directory into metadata-formatted files; writes converted files into a new directory:
 
-  $ <%= config.bin %> <%= command.id %> --root-dir path/to/source
+  $ sf <%= command.id %> --root-dir path/to/source
 
 - Similar to previous example, but writes converted files to the specified output directory and associates the files with the specified package:
 
-  $ <%= config.bin %> <%= command.id %> --root-dir path/to/source --output-dir path/to/outputdir --package-name 'My Package'
+  $ sf <%= command.id %> --root-dir path/to/source --output-dir path/to/outputdir --package-name 'My Package'
 
 # flags.api-version.summary
 

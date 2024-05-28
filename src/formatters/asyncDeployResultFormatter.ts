@@ -10,7 +10,7 @@ import { Messages } from '@salesforce/core';
 import { AsyncDeployResultJson, Formatter } from '../utils/types.js';
 
 export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJson> {
-  public constructor(private id: string, private bin: string) {}
+  public constructor(private id: string) {}
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getJson(): Promise<AsyncDeployResultJson> {
@@ -23,8 +23,8 @@ export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJs
 
     ux.log(deployAsyncMessages.getMessage('info.AsyncDeployQueued'));
     ux.log();
-    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.bin, this.id]));
-    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.bin, this.id]));
-    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancel', [this.bin, this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployResume', [this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployStatus', [this.id]));
+    ux.log(deployAsyncMessages.getMessage('info.AsyncDeployCancel', [this.id]));
   }
 }
