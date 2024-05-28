@@ -120,7 +120,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
           // in deploy~L140, it checks the if the id is present, so this metadata-dir value is never _really_ used
           'metadata-dir': deployOpts.isMdapi ? { type: 'file', path: 'testing' } : undefined,
         },
-        this.config.bin,
         this.project,
         jobId
       );

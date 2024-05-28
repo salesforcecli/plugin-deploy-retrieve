@@ -10,15 +10,15 @@ When deploying or retrieving metadata between your local project and an org, you
 
 - List all the files in all package directories that are ignored:
 
-  <%= config.bin %> <%= command.id %>
+  sf <%= command.id %>
 
 - List all the files in a specific directory that are ignored:
 
-  <%= config.bin %> <%= command.id %> --source-dir force-app
+  sf <%= command.id %> --source-dir force-app
 
 - Check if a particular file is ignored:
 
-  <%= config.bin %> <%= command.id %> --source-dir package.xml
+  sf <%= command.id %> --source-dir package.xml
 
 # flags.source-dir.summary
 

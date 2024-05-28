@@ -23,19 +23,19 @@ To include multiple metadata components, either set multiple --metadata <name> f
 
 - Create a manifest for deploying or retrieving all Apex classes and custom objects:
 
-  $ <%= config.bin %> <%= command.id %> --metadata ApexClass --metadata CustomObject
+  $ sf <%= command.id %> --metadata ApexClass --metadata CustomObject
 
 - Create a manifest for deleting the specified Apex class:
 
-  $ <%= config.bin %> <%= command.id %> --metadata ApexClass:MyApexClass --type destroy
+  $ sf <%= command.id %> --metadata ApexClass:MyApexClass --type destroy
 
 - Create a manifest for deploying or retrieving all the metadata components in the specified local directory; name the file myNewManifest.xml:
 
-  $ <%= config.bin %> <%= command.id %> --source-dir force-app --name myNewManifest
+  $ sf <%= command.id %> --source-dir force-app --name myNewManifest
 
 - Create a manifest from the metadata components in the specified org and include metadata in any unlocked packages:
 
-  $ <%= config.bin %> <%= command.id %> --from-org test@myorg.com --include-packages unlocked
+  $ sf <%= command.id %> --from-org test@myorg.com --include-packages unlocked
 
 # flags.include-packages.summary
 

@@ -1,3 +1,27 @@
+## [3.7.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.9...3.7.10) (2024-05-28)
+
+### Bug Fixes
+
+- remove dynamic bin ([9ecf576](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9ecf5760863ed214a27b86cd32797c566272b365))
+
+## [3.7.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.8...3.7.9) (2024-05-25)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.2.7 to 3.3.0 ([78e0528](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/78e0528f702701fd527a53364ab5ae20383cf668))
+
+## [3.7.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.7...3.7.8) (2024-05-25)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 9.0.10 to 9.0.12 ([64a8cb7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/64a8cb72352e95d575844768ee2322e771875088))
+
+## [3.7.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.6...3.7.7) (2024-05-25)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/kit from 3.1.1 to 3.1.2 ([5944695](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/59446955abc897d9d343c5caa4ff9137fb2f9845))
+
 ## [3.7.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.5...3.7.6) (2024-05-23)
 
 ### Bug Fixes
