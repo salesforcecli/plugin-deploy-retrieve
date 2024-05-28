@@ -34,7 +34,7 @@ Display what the command would do, but don't make any actual changes.
 
 # flags.dry-run.description
 
-Doesn't modify the existing files in your project, including the "sfdx-project.json" file. Instead, the command lists the files that would be deleted, explains the modifications to the "sfdx-project.json" file, and outputs the resulting modifications to a new directory for review.
+Doesn't modify the existing files in your project, including the "sfdx-project.json" file. Instead, the command lists the files that would be deleted, explains the modifications to the "sfdx-project.json" file, and outputs the resulting modifications to a new directory named `DRY-RUN-RESULTS` for review.
 
 # flags.preserve-temp-dir.summary
 
