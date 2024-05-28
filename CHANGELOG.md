@@ -1,3 +1,9 @@
+## [3.7.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.9...3.7.10) (2024-05-28)
+
+### Bug Fixes
+
+- remove dynamic bin ([9ecf576](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9ecf5760863ed214a27b86cd32797c566272b365))
+
 ## [3.7.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.8...3.7.9) (2024-05-25)
 
 ### Bug Fixes
