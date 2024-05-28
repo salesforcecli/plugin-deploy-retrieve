@@ -110,14 +110,12 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
 
 export async function executeDeploy(
   opts: Partial<DeployOptions>,
-  bin?: string,
   project?: SfProject,
   id?: string,
   throwOnEmpty?: true
 ): Promise<{ deploy: MetadataApiDeploy; componentSet?: ComponentSet }>;
 export async function executeDeploy(
   opts: Partial<DeployOptions>,
-  bin = 'sf',
   project?: SfProject,
   id?: string,
   throwOnEmpty = false
@@ -162,7 +160,7 @@ export async function executeDeploy(
         throw new SfError(
           deployMessages.getMessage('error.nothingToDeploy'),
           'NothingToDeploy',
-          deployMessages.getMessages('error.nothingToDeploy.Actions', [bin])
+          deployMessages.getMessages('error.nothingToDeploy.Actions')
         );
       } else {
         // this is a push-like "deploy changes" but there aren't any.

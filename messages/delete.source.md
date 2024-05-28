@@ -4,7 +4,7 @@ Delete source from your project and from a non-source-tracked org.
 
 # description
 
-Use this command to delete components from orgs that don’t have source tracking. To remove deleted items from orgs that have source tracking enabled, "<%= config.bin %> project deploy start".
+Use this command to delete components from orgs that don’t have source tracking. To remove deleted items from orgs that have source tracking enabled, "sf project deploy start".
 
 When you run this command, both the local source file and the metadata component in the org are deleted.
 
@@ -14,19 +14,19 @@ To delete multiple metadata components, either set multiple --metadata <name> fl
 
 - Delete all local Apex source files and all Apex classes from the org with alias "my-scratch":
 
-  <%= config.bin %> <%= command.id %> --metadata ApexClass --target-org my-scratch
+  sf <%= command.id %> --metadata ApexClass --target-org my-scratch
 
 - Delete a specific Apex class and a Profile that has a space in it from your default org; don't prompt for confirmation:
 
-  <%= config.bin %> <%= command.id %> --metadata ApexClass:MyFabulousApexClass --metadata "Profile: My Profile" --no-prompt
+  sf <%= command.id %> --metadata ApexClass:MyFabulousApexClass --metadata "Profile: My Profile" --no-prompt
 
 - Run the tests that aren’t in any managed packages as part of the deletion; if the delete succeeds, and the org has source-tracking enabled, update the source tracking information:
 
-  <%= config.bin %> <%= command.id %> --metadata ApexClass --test-level RunLocalTests --track-source
+  sf <%= command.id %> --metadata ApexClass --test-level RunLocalTests --track-source
 
 - Delete the Apex source files in a directory and the corresponding components from your default org:
 
-  <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes
+  sf <%= command.id %> --source-dir force-app/main/default/classes
 
 # flags.source-dir.summary
 
@@ -70,7 +70,7 @@ IMPORTANT: Where possible, we changed noninclusive terms to align with our compa
 
 Validates the deleted metadata and runs all Apex tests, but prevents the deletion from being saved to the org.
 
-If you change a field type from Master-Detail to Lookup or vice versa, that change isn’t supported when using the --chec-konly parameter to test a deletion (validation). This kind of change isn’t supported for test deletions to avoid the risk of data loss or corruption. If a change that isn’t supported for test deletions is included in a deletion package, the test deletion fails and issues an error.
+If you change a field type from Master-Detail to Lookup or vice versa, that change isn’t supported when using the --check-only parameter to test a deletion (validation). This kind of change isn’t supported for test deletions to avoid the risk of data loss or corruption. If a change that isn’t supported for test deletions is included in a deletion package, the test deletion fails and issues an error.
 
 If your deletion package changes a field type from Master-Detail to Lookup or vice versa, you can still validate the changes prior to deploying to Production by performing a full deletion to another test Sandbox. A full deletion includes a validation of the changes as part of the deletion process.
 

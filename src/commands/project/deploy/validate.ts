@@ -190,7 +190,6 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
         'target-org': username,
         api,
       },
-      this.config.bin,
       this.project,
       undefined,
       true
@@ -202,7 +201,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     this.log(`Deploy ID: ${chalk.bold(deploy.id)}`);
 
     if (flags.async) {
-      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id, this.config.bin);
+      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
     }
@@ -222,7 +221,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     if (result.response.status === RequestStatus.Succeeded) {
       this.log();
       this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
-      this.log(messages.getMessage('info.suggestedQuickDeploy', [this.config.bin, deploy.id]));
+      this.log(messages.getMessage('info.suggestedQuickDeploy', [deploy.id]));
     } else {
       let componentDeployErrors = result.response.errorMessage;
       if (!result.response.errorMessage) {

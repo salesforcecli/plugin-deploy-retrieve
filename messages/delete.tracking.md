@@ -10,23 +10,23 @@ Resets local and remote source tracking so that Salesforce CLI no longer registe
 
 Use the --revision parameter to reset source tracking to a specific revision number of an org source member. To get the revision number, query the SourceMember Tooling API object with the 'data soql' command. For example:
 
-    <%= config.bin %> data query --query "SELECT MemberName, MemberType, RevisionCounter FROM SourceMember" --use-tooling-api --target-org my-scratch
+    sf data query --query "SELECT MemberName, MemberType, RevisionCounter FROM SourceMember" --use-tooling-api --target-org my-scratch
 
 # resetExample
 
 - Reset source tracking for the org with alias "my-scratch":
 
-  $ <%= config.bin %> <%= command.id %> --target-org my-scratch
+  $ sf <%= command.id %> --target-org my-scratch
 
 - Reset source tracking to revision number 30 for your default org:
 
-  $ <%= config.bin %> <%= command.id %> --revision 30
+  $ sf <%= command.id %> --revision 30
 
 # deleteExample
 
 - Delete local source tracking for the org with alias "my-scratch":
 
-  $ <%= config.bin %> <%= command.id %> --target-org my-scratch
+  $ sf <%= command.id %> --target-org my-scratch
 
 # deleteSummary
 
