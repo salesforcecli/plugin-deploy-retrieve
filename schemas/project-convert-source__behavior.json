@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/SourceBehaviorResult",
+  "definitions": {
+    "SourceBehaviorResult": {
+      "type": "object",
+      "properties": {
+        "sourceBehaviorOptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deletedFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["sourceBehaviorOptions", "deletedFiles", "createdFiles"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -37,6 +37,14 @@
     "plugin": "@salesforce/plugin-deploy-retrieve"
   },
   {
+    "alias": [],
+    "command": "project:convert:source-behavior",
+    "flagAliases": [],
+    "flagChars": ["b", "o"],
+    "flags": ["behavior", "dry-run", "flags-dir", "json", "preserve-temp-dir", "target-org"],
+    "plugin": "@salesforce/plugin-deploy-retrieve"
+  },
+  {
     "alias": ["force:source:delete"],
     "command": "project:delete:source",
     "flagAliases": [
