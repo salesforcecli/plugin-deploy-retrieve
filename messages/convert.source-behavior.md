@@ -6,7 +6,7 @@ Enable a behavior of your project source files, and then update your Salesforce 
 
 Specifically, this command updates the "sourceBehaviorOption" option in the "sfdx-project.json" file and then converts the associated local source files in your project as needed.
 
-For example, run this command with the "--behavior decomposePermissionSet" flag to start decomposing permission sets when you deploy or retrieve them. Decomposing means breaking up the monolithic metadata API format XML file that corresponds to a metadata component into smaller XML files and directories based on its subtypes. Permission sets are not decomposed by default; you must opt-in to start decomposing them by using this command. When the command finishes, your "sfdx-project.json" file is updated to always decompose permission sets, and the existing permission set files in your local package directories are converted into the new decomposed format. You run this command only once for a given behavior change.
+For example, run this command with the "--behavior decomposePermissionSetBeta" flag to start decomposing permission sets when you deploy or retrieve them. Decomposing means breaking up the monolithic metadata API format XML file that corresponds to a metadata component into smaller XML files and directories based on its subtypes. Permission sets are not decomposed by default; you must opt-in to start decomposing them by using this command. When the command finishes, your "sfdx-project.json" file is updated to always decompose permission sets, and the existing permission set files in your local package directories are converted into the new decomposed format. You run this command only once for a given behavior change.
 
 For more information about the possible values for the --behavior flag, see the "sourceBehaviorOptions" section in the https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm topic.
 
@@ -18,15 +18,15 @@ Behavior to enable; the values correspond to the possible values of the "sourceB
 
 - Update your Salesforce DX project to decompose custom labels:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabels
+  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta
 
 - Display what the command would do, but don't change any existing files:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabels --dry-run
+  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta --dry-run
 
 - Keep the temporary directory that contains the interim metadata API formatted files:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabels --dry-run --preserve-temp-dir
+  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta --dry-run --preserve-temp-dir
 
 # flags.dry-run.summary
 
