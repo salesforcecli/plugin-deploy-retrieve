@@ -39,6 +39,10 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
       sf <%= command.id %> --metadata 'ApexClass:MyApex*' --ignore-warnings
 
+- Deploy namespaced custom objects using a wildcard:
+
+      sf <%= command.id %> --metadata 'CustomObject:SBQQ__*'
+
 - Deploy all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
       sf <%= command.id %> --metadata CustomObject ApexClass
