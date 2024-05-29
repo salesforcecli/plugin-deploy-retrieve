@@ -1522,12 +1522,30 @@
     "@salesforce/ts-types" "^2.0.9"
     chalk "^5.3.0"
 
-"@salesforce/source-deploy-retrieve@^11.3.0", "@salesforce/source-deploy-retrieve@^11.4.4", "@salesforce/source-deploy-retrieve@^11.6.2":
+"@salesforce/source-deploy-retrieve@^11.3.0":
   version "11.6.2"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-11.6.2.tgz#2d4faf3c00cc38dad0245f07a9b978131b845a5e"
   integrity sha512-GEDTo4JCgisQt2hVyRY4Tu/ivEt2u9hJRzNn7A6ZDu668/0Ufq04YhdZfmSJePXAAtrtd9OqYfj8aJO5AOk1+g==
   dependencies:
     "@salesforce/core" "^7.3.5"
+    "@salesforce/kit" "^3.1.1"
+    "@salesforce/ts-types" "^2.0.9"
+    fast-levenshtein "^3.0.0"
+    fast-xml-parser "^4.3.6"
+    got "^11.8.6"
+    graceful-fs "^4.2.11"
+    ignore "^5.3.1"
+    jszip "^3.10.1"
+    mime "2.6.0"
+    minimatch "^5.1.6"
+    proxy-agent "^6.4.0"
+
+"@salesforce/source-deploy-retrieve@^11.6.3":
+  version "11.6.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-11.6.3.tgz#24ff55a17f8d7862b1467e40968707fedaa3e624"
+  integrity sha512-6h/KJV8cRfzLZ3aE6PP76oP1bz28zRxL9wtCx6yD+jz4GRdIxHNjNQhiKJJI9m2Z+npWl/sjth8aHB7rrSgSrg==
+  dependencies:
+    "@salesforce/core" "^7.3.9"
     "@salesforce/kit" "^3.1.1"
     "@salesforce/ts-types" "^2.0.9"
     fast-levenshtein "^3.0.0"
@@ -1556,15 +1574,15 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^6.2.3":
-  version "6.2.3"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.2.3.tgz#5fe4e8d3704b74fdda1f3893412c8e2a0694f3a5"
-  integrity sha512-XFoRjhpVAiNyMmXqVIAte3yPaRBu5ZDlU0YzYAGfS0TJ82c+Iy2SYRDOI8pWJ29gIj8PsrQm5c1xBsVFI5eiew==
+"@salesforce/source-tracking@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.3.0.tgz#b915614c4b8eacec27ae864155ff07ad573a3953"
+  integrity sha512-4o/HUDrEF7/WLZQxs9WWDBmwp0QhrvjewFp1OPFtY4HtcjUTu2yXuOUpgByHrKGQevmq2yfua9VccV3TV3SNjg==
   dependencies:
     "@oclif/core" "^3.26.6"
-    "@salesforce/core" "^7.3.8"
-    "@salesforce/kit" "^3.1.1"
-    "@salesforce/source-deploy-retrieve" "^11.4.4"
+    "@salesforce/core" "^7.3.9"
+    "@salesforce/kit" "^3.1.2"
+    "@salesforce/source-deploy-retrieve" "^11.6.3"
     "@salesforce/ts-types" "^2.0.9"
     fast-xml-parser "^4.3.6"
     graceful-fs "^4.2.11"
