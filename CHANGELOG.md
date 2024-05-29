@@ -1,3 +1,9 @@
+# [3.8.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.10...3.8.0) (2024-05-29)
+
+### Features
+
+- convert project to use a new source behavior ([#1015](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1015)) ([014500e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/014500e2387b07cfbf7b07339a98c06e81f0e2dd)), closes [#1018](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1018)
+
 ## [3.7.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.7.9...3.7.10) (2024-05-28)
 
 ### Bug Fixes
