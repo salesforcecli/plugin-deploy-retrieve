@@ -110,12 +110,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       exclusive: exclusiveFlags.filter((f) => f !== 'source-dir'),
       helpGroup: sourceFormatFlags,
     }),
-    'target-org': Flags.requiredOrg({
-      char: 'o',
-      description: messages.getMessage('flags.target-org.description'),
-      summary: messages.getMessage('flags.target-org.summary'),
-      required: true,
-    }),
+    'target-org': Flags.requiredOrg(),
     tests: testsFlag({ helpGroup: testFlags }),
     'test-level': testLevelFlag({
       description: messages.getMessage('flags.test-level.description'),

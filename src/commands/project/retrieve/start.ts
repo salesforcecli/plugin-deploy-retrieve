@@ -110,12 +110,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       exclusive: ['ignore-conflicts'],
       helpGroup: mdapiFlagGroup,
     }),
-    'target-org': Flags.requiredOrg({
-      char: 'o',
-      summary: messages.getMessage('flags.target-org.summary'),
-      description: messages.getMessage('flags.target-org.description'),
-      required: true,
-    }),
+    'target-org': Flags.requiredOrg(),
     wait: Flags.duration({
       char: 'w',
       defaultValue: 33,

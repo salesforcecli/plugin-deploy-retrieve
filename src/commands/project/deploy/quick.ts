@@ -45,11 +45,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       summary: messages.getMessage('flags.job-id.summary'),
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
-    'target-org': Flags.optionalOrg({
-      char: 'o',
-      description: messages.getMessage('flags.target-org.description'),
-      summary: messages.getMessage('flags.target-org.summary'),
-    }),
+    'target-org': Flags.optionalOrg(),
     'use-most-recent': Flags.boolean({
       char: 'r',
       description: messages.getMessage('flags.use-most-recent.description'),
