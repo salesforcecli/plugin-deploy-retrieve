@@ -39,7 +39,11 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
       sf <%= command.id %> --metadata 'ApexClass:MyApex*'
 
-- Retrieve namespaced custom objects using a wildcard:
+- Retrieve a custom object called ExcitingObject that's in the SBQQ namespace:
+
+      sf <%= command.id %> --metadata CustomObject:SBQQ__ExcitingObject
+      
+- Retrieve all custom objects in the SBQQ namespace by using a wildcard and quotes:
 
       sf <%= command.id %> --metadata 'CustomObject:SBQQ__*'
 
