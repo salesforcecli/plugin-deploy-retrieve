@@ -6,19 +6,19 @@ Preview a retrieval to see what will be retrieved from the org, the potential co
 
 You must run this command from within a project.
 
-The command outputs a table that describes what will happen if you run the "sf project retrieve start" command. The table lists the metadata components that will be retrieved and deleted. The table also lists the current conflicts between files in your local project and components in the org. Finally, the table lists the files that won't be retrieved because they're included in your .forceignore file.
+The command outputs a table that describes what will happen if you run the "<%= config.bin %> project retrieve start" command. The table lists the metadata components that will be retrieved and deleted. The table also lists the current conflicts between files in your local project and components in the org. Finally, the table lists the files that won't be retrieved because they're included in your .forceignore file.
 
-If your org allows source tracking, then this command displays potential conflicts between the org and your local project. Some orgs, such as production org, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "sf org create scratch|sandbox" commands.
+If your org allows source tracking, then this command displays potential conflicts between the org and your local project. Some orgs, such as production org, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "<%= config.bin %> org create scratch|sandbox" commands.
 
 # examples
 
 - Preview the retrieve of all changes from your default org:
 
-  sf <%= command.id %>
+  <%= config.bin %> <%= command.id %>
 
 - Preview the retrieve when ignoring any conflicts from an org with alias "my-scratch":
 
-  sf <%= command.id %> --ignore-conflicts --target-org my-scratch
+  <%= config.bin %> <%= command.id %> --ignore-conflicts --target-org my-scratch
 
 # flags.target-org.summary
 
