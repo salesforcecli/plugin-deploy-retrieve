@@ -34,14 +34,6 @@ Note: Don't use this command on sandboxes; the command is intended to be used on
 
       sf <%= command.id %> --manifest path/to/package.xml
 
-# flags.target-org.summary
-
-Login username or alias for the target org.
-
-# flags.target-org.description
-
-Overrides your default org.
-
 # flags.metadata.summary
 
 Metadata component names to validate for deployment.

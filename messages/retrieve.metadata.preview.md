@@ -20,14 +20,6 @@ If your org allows source tracking, then this command displays potential conflic
 
   sf <%= command.id %> --ignore-conflicts --target-org my-scratch
 
-# flags.target-org.summary
-
-Login username or alias for the target org.
-
-# flags.target-org.description
-
-Overrides your default org.
-
 # flags.ignore-conflicts.summary
 
 Don't display conflicts in the preview of the retrieval.

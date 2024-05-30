@@ -42,7 +42,7 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 - Deploy a custom object called ExcitingObject that's in the SBQQ namespace:
 
       sf <%= command.id %> --metadata CustomObject:SBQQ__ExcitingObject
-    
+
 - Deploy all custom objects in the SBQQ namespace by using a wildcard and quotes:
 
       sf <%= command.id %> --metadata 'CustomObject:SBQQ__*'
@@ -64,10 +64,6 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
       sf <%= command.id %> --metadata ApexClass --test-level RunLocalTests
 
-# flags.target-org.summary
-
-Login username or alias for the target org.
-
 # flags.pre-destructive-changes.summary
 
 File path for a manifest (destructiveChangesPre.xml) of components to delete before the deploy.
@@ -79,10 +75,6 @@ File path for a manifest (destructiveChangesPost.xml) of components to delete af
 # flags.purge-on-delete.summary
 
 Specify that deleted components in the destructive changes manifest file are immediately eligible for deletion rather than being stored in the Recycle Bin.
-
-# flags.target-org.description
-
-Overrides your default org.
 
 # flags.metadata.summary
 

@@ -52,12 +52,7 @@ export default class DeployMetadataPreview extends SfCommand<PreviewResult> {
       multiple: true,
       exclusive: exclusiveFlags.filter((f) => f !== 'source-dir'),
     }),
-    'target-org': Flags.requiredOrg({
-      char: 'o',
-      description: messages.getMessage('flags.target-org.description'),
-      summary: messages.getMessage('flags.target-org.summary'),
-      required: true,
-    }),
+    'target-org': Flags.requiredOrg(),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
       default: false,

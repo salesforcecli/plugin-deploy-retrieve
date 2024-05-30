@@ -84,12 +84,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       dependsOn: ['metadata-dir'],
       helpGroup: mdapiFormatFlags,
     }),
-    'target-org': Flags.requiredOrg({
-      char: 'o',
-      description: messages.getMessage('flags.target-org.description'),
-      summary: messages.getMessage('flags.target-org.summary'),
-      required: true,
-    }),
+    'target-org': Flags.requiredOrg(),
     tests: testsFlag({ helpGroup: testFlags }),
     'test-level': testLevelFlag({
       options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],

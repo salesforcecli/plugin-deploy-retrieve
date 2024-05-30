@@ -70,14 +70,6 @@ Run the command asynchronously.
 
 The command immediately returns the control of the terminal to you. This way, you can continue to use the CLI. To resume watching the deploy, run "sf project deploy resume". To check the status of the deploy, run "sf project deploy report".
 
-# flags.target-org.summary
-
-Login username or alias for the target org.
-
-# flags.target-org.description
-
-Overrides your default org.
-
 # error.CannotQuickDeploy
 
 Job ID can't be used for quick deployment. Possible reasons include the deployment hasn't been validated, has already been deployed, or the validation expired because you ran it more than 10 days ago.

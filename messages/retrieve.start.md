@@ -42,7 +42,7 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 - Retrieve a custom object called ExcitingObject that's in the SBQQ namespace:
 
       sf <%= command.id %> --metadata CustomObject:SBQQ__ExcitingObject
-      
+
 - Retrieve all custom objects in the SBQQ namespace by using a wildcard and quotes:
 
       sf <%= command.id %> --metadata 'CustomObject:SBQQ__*'
@@ -112,14 +112,6 @@ File paths for source to retrieve from the org.
 # flags.source-dir.description
 
 The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder (in which case the operation is applied to all source files in the directory and its subdirectories).
-
-# flags.target-org.summary
-
-Login username or alias for the target org.
-
-# flags.target-org.description
-
-Overrides your default org.
 
 # flags.wait.summary
 

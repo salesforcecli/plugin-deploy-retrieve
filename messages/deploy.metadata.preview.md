@@ -32,17 +32,9 @@ To preview the deployment of multiple metadata components, either set multiple -
 
       sf <%= command.id %> --manifest path/to/package.xml
 
-# flags.target-org.summary
-
-Login username or alias for the target org.
-
 # flags.only-ignored.summary
 
 Preview files to be ignored in a deployment.
-
-# flags.target-org.description
-
-Overrides your default org.
 
 # flags.metadata.summary
 

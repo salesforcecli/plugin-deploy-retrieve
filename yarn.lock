@@ -1509,38 +1509,20 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.9.0.tgz#ba477a112653a20b4edcf989c61c57bdff9aa3ca"
   integrity sha512-LiN37zG5ODT6z70sL1fxF7BQwtCX9JOWofSU8iliSNIM+WDEeinnoFtVqPInRSNt8I0RiJxIKCrqstsmQRBNvA==
 
-"@salesforce/sf-plugins-core@^9.0.11", "@salesforce/sf-plugins-core@^9.0.12", "@salesforce/sf-plugins-core@^9.0.7":
-  version "9.0.12"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-9.0.12.tgz#8bcacdb412c3570f66220acd6346636d86f81d62"
-  integrity sha512-KtZErzUdBrDDONpE6ZbW3V5WfBwUwo07Snttnu4IFs82rbsOkyCG/m02b+mbnGBrwWWy7auZW4e2ciRrmbZGDQ==
+"@salesforce/sf-plugins-core@^9.0.11", "@salesforce/sf-plugins-core@^9.0.7", "@salesforce/sf-plugins-core@^9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-9.1.0.tgz#eb5a3456322cb6232cfb30da30277a92bd666bb9"
+  integrity sha512-tBfbsJ0jUv/UtvbzY8wClNVagBA10mzs61BRI5nMpNlrYppRD3domGIOaOXchldO7XsYkrUnzkJVOuungPgu8A==
   dependencies:
     "@inquirer/confirm" "^2.0.17"
     "@inquirer/password" "^1.1.16"
     "@oclif/core" "^3.26.6"
-    "@salesforce/core" "^7.3.8"
-    "@salesforce/kit" "^3.1.1"
+    "@salesforce/core" "^7.3.9"
+    "@salesforce/kit" "^3.1.2"
     "@salesforce/ts-types" "^2.0.9"
     chalk "^5.3.0"
 
-"@salesforce/source-deploy-retrieve@^11.3.0":
-  version "11.6.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-11.6.2.tgz#2d4faf3c00cc38dad0245f07a9b978131b845a5e"
-  integrity sha512-GEDTo4JCgisQt2hVyRY4Tu/ivEt2u9hJRzNn7A6ZDu668/0Ufq04YhdZfmSJePXAAtrtd9OqYfj8aJO5AOk1+g==
-  dependencies:
-    "@salesforce/core" "^7.3.5"
-    "@salesforce/kit" "^3.1.1"
-    "@salesforce/ts-types" "^2.0.9"
-    fast-levenshtein "^3.0.0"
-    fast-xml-parser "^4.3.6"
-    got "^11.8.6"
-    graceful-fs "^4.2.11"
-    ignore "^5.3.1"
-    jszip "^3.10.1"
-    mime "2.6.0"
-    minimatch "^5.1.6"
-    proxy-agent "^6.4.0"
-
-"@salesforce/source-deploy-retrieve@^11.6.3":
+"@salesforce/source-deploy-retrieve@^11.3.0", "@salesforce/source-deploy-retrieve@^11.6.3":
   version "11.6.3"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-11.6.3.tgz#24ff55a17f8d7862b1467e40968707fedaa3e624"
   integrity sha512-6h/KJV8cRfzLZ3aE6PP76oP1bz28zRxL9wtCx6yD+jz4GRdIxHNjNQhiKJJI9m2Z+npWl/sjth8aHB7rrSgSrg==
