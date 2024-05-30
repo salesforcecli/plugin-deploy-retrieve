@@ -141,7 +141,7 @@ FLAG DESCRIPTIONS
     If you specify this parameter, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/convert/mdapi.ts)_
+_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/convert/mdapi.ts)_
 
 ## `sf project convert source`
 
@@ -153,7 +153,7 @@ USAGE
     [-p <value> | -x <value> | -m <value>]
 
 FLAGS
-  -d, --output-dir=<value>     [default: metadataPackage_1717025350376] Output directory to store the Metadata
+  -d, --output-dir=<value>     [default: metadataPackage_1717102344546] Output directory to store the Metadata
                                API–formatted files in.
   -m, --metadata=<value>...    Metadata component names to convert.
   -n, --package-name=<value>   Name of the package to associate with the metadata-formatted files.
@@ -214,7 +214,7 @@ FLAG DESCRIPTIONS
     Override the api version used for api requests made by this command
 ```
 
-_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/convert/source.ts)_
+_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/convert/source.ts)_
 
 ## `sf project convert source-behavior`
 
@@ -231,7 +231,7 @@ FLAGS
                             "sourceBehaviorOption" option in the "sfdx-project.json" file.
                             <options: decomposeCustomLabelsBeta|decomposePermissionSetBeta|decomposeSharingRulesBeta|dec
                             omposeWorkflowBeta>
-  -o, --target-org=<value>
+  -o, --target-org=<value>  Username or alias of the target org.
       --dry-run             Display what the command would do, but don't make any actual changes.
       --preserve-temp-dir   Don't delete the metadata API format temporary directory that this command creates. Useful
                             for debugging.
@@ -271,7 +271,7 @@ EXAMPLES
     $ sf project convert source-behavior --behavior decomposeCustomLabelsBeta --dry-run --preserve-temp-dir
 ```
 
-_See code: [src/commands/project/convert/source-behavior.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/convert/source-behavior.ts)_
+_See code: [src/commands/project/convert/source-behavior.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/convert/source-behavior.ts)_
 
 ## `sf project delete source`
 
@@ -411,7 +411,7 @@ FLAG DESCRIPTIONS
     - Separate the test names with spaces: --tests Test1 Test2 "Test With Space"
 ```
 
-_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/delete/source.ts)_
+_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/delete/source.ts)_
 
 ## `sf project delete tracking`
 
@@ -448,7 +448,7 @@ EXAMPLES
     $ sf project delete tracking --target-org my-scratch
 ```
 
-_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/delete/tracking.ts)_
+_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/delete/tracking.ts)_
 
 ## `sf project deploy cancel`
 
@@ -460,7 +460,7 @@ USAGE
 
 FLAGS
   -i, --job-id=<value>      Job ID of the deploy operation you want to cancel.
-  -o, --target-org=<value>  Login username or alias for the target org.
+  -o, --target-org=<value>  Username or alias of the target org.
   -r, --use-most-recent     Use the job ID of the most recent deploy operation.
   -w, --wait=<minutes>      Number of minutes to wait for the command to complete and display results.
       --async               Run the command asynchronously.
@@ -502,10 +502,6 @@ FLAG DESCRIPTIONS
 
     The job ID is valid for 10 days from when you started the deploy operation.
 
-  -o, --target-org=<value>  Login username or alias for the target org.
-
-    Overrides your default org.
-
   -r, --use-most-recent  Use the job ID of the most recent deploy operation.
 
     For performance reasons, this flag uses job IDs for deploy operations that started only in the past 3 days or less.
@@ -524,7 +520,7 @@ FLAG DESCRIPTIONS
     project deploy report".
 ```
 
-_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/deploy/cancel.ts)_
+_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/deploy/cancel.ts)_
 
 ## `sf project deploy preview`
 
@@ -539,7 +535,8 @@ FLAGS
   -c, --ignore-conflicts       Don't display conflicts in preview of the deployment.
   -d, --source-dir=<value>...  Path to the local source files to preview.
   -m, --metadata=<value>...    Metadata component names to preview.
-  -o, --target-org=<value>     (required) Login username or alias for the target org.
+  -o, --target-org=<value>     (required) Username or alias of the target org. Not required if the `target-org`
+                               configuration variable is already set.
   -x, --manifest=<value>       Full file path for manifest (package.xml) of components to preview.
       --concise                Show only the changes that will be deployed; omits files that are forceignored.
 
@@ -601,16 +598,12 @@ FLAG DESCRIPTIONS
 
     If you specify this flag, don’t specify --metadata or --manifest.
 
-  -o, --target-org=<value>  Login username or alias for the target org.
-
-    Overrides your default org.
-
   -x, --manifest=<value>  Full file path for manifest (package.xml) of components to preview.
 
     All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/deploy/preview.ts)_
+_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/deploy/preview.ts)_
 
 ## `sf project deploy quick`
 
@@ -624,7 +617,7 @@ USAGE
 FLAGS
   -a, --api-version=<value>  Target API version for the deploy.
   -i, --job-id=<value>       Job ID of the deployment you want to quick deploy.
-  -o, --target-org=<value>   Login username or alias for the target org.
+  -o, --target-org=<value>   Username or alias of the target org.
   -r, --use-most-recent      Use the job ID of the most recently validated deployment.
   -w, --wait=<minutes>       [default: 33 minutes] Number of minutes to wait for the command to complete and display
                              results.
@@ -676,10 +669,6 @@ FLAG DESCRIPTIONS
 
     The job ID is valid for 10 days from when you started the validation.
 
-  -o, --target-org=<value>  Login username or alias for the target org.
-
-    Overrides your default org.
-
   -r, --use-most-recent  Use the job ID of the most recently validated deployment.
 
     For performance reasons, this flag uses only job IDs that were validated in the past 3 days or less. If your most
@@ -698,7 +687,7 @@ FLAG DESCRIPTIONS
     deploy report".
 ```
 
-_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/deploy/quick.ts)_
+_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/deploy/quick.ts)_
 
 ## `sf project deploy report`
 
@@ -712,7 +701,7 @@ USAGE
 
 FLAGS
   -i, --job-id=<value>      Job ID of the deploy operation you want to check the status of.
-  -o, --target-org=<value>  Login username or alias for the target org.
+  -o, --target-org=<value>  Username or alias of the target org.
   -r, --use-most-recent     Use the job ID of the most recent deploy operation.
   -w, --wait=<minutes>      Number of minutes to wait for command to complete and display results.
 
@@ -771,10 +760,6 @@ FLAG DESCRIPTIONS
 
     The job ID is valid for 10 days from when you started the deploy operation.
 
-  -o, --target-org=<value>  Login username or alias for the target org.
-
-    Overrides your default org.
-
   -r, --use-most-recent  Use the job ID of the most recent deploy operation.
 
     For performance reasons, this flag uses job IDs for deploy operations that started only in the past 3 days or less.
@@ -794,7 +779,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/deploy/report.ts)_
+_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/deploy/report.ts)_
 
 ## `sf project deploy resume`
 
@@ -879,7 +864,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/deploy/resume.ts)_
+_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/deploy/resume.ts)_
 
 ## `sf project deploy start`
 
@@ -898,7 +883,8 @@ FLAGS
   -a, --api-version=<value>  Target API version for the deploy.
   -c, --ignore-conflicts     Ignore conflicts and deploy local files, even if they overwrite changes in the org.
   -g, --ignore-warnings      Ignore warnings and allow a deployment to complete successfully.
-  -o, --target-org=<value>   (required) Login username or alias for the target org.
+  -o, --target-org=<value>   (required) Username or alias of the target org. Not required if the `target-org`
+                             configuration variable is already set.
   -r, --ignore-errors        Ignore any errors and don’t roll back deployment.
   -w, --wait=<minutes>       Number of minutes to wait for command to complete and display results.
       --async                Run the command asynchronously.
@@ -992,6 +978,14 @@ EXAMPLES
 
     $ sf project deploy start --metadata 'ApexClass:MyApex*' --ignore-warnings
 
+  Deploy a custom object called ExcitingObject that's in the SBQQ namespace:
+
+    $ sf project deploy start --metadata CustomObject:SBQQ__ExcitingObject
+
+  Deploy all custom objects in the SBQQ namespace by using a wildcard and quotes:
+
+    $ sf project deploy start --metadata 'CustomObject:SBQQ__*'
+
   Deploy all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
     $ sf project deploy start --metadata CustomObject ApexClass
@@ -1059,10 +1053,6 @@ FLAG DESCRIPTIONS
     Deployment](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm)
     in the "Metadata API Developer Guide".
 
-  -o, --target-org=<value>  Login username or alias for the target org.
-
-    Overrides your default org.
-
   -r, --ignore-errors  Ignore any errors and don’t roll back deployment.
 
     Never use this flag when deploying to a production org. If you specify it, components without errors are deployed
@@ -1100,7 +1090,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/deploy/start.ts)_
+_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/deploy/start.ts)_
 
 ## `sf project deploy validate`
 
@@ -1117,7 +1107,8 @@ USAGE
 FLAGS
   -a, --api-version=<value>  Target API version for the validation.
   -g, --ignore-warnings      Ignore warnings and allow a deployment to complete successfully.
-  -o, --target-org=<value>   (required) Login username or alias for the target org.
+  -o, --target-org=<value>   (required) Username or alias of the target org. Not required if the `target-org`
+                             configuration variable is already set.
   -w, --wait=<minutes>       Number of minutes to wait for the command to complete and display results.
       --async                Run the command asynchronously.
       --concise              Show concise output of the validation result.
@@ -1239,10 +1230,6 @@ FLAG DESCRIPTIONS
 
     - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
 
-  -o, --target-org=<value>  Login username or alias for the target org.
-
-    Overrides your default org.
-
   -t, --tests=<value>...  Apex tests to run when --test-level is RunSpecifiedTests.
 
     If a test name contains a space, enclose it in double quotes.
@@ -1275,7 +1262,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/deploy/validate.ts)_
+_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/deploy/validate.ts)_
 
 ## `sf project generate manifest`
 
@@ -1352,7 +1339,7 @@ EXAMPLES
     $ sf project generate manifest --from-org test@myorg.com --include-packages unlocked
 ```
 
-_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/generate/manifest.ts)_
+_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/generate/manifest.ts)_
 
 ## `sf project list ignored`
 
@@ -1394,7 +1381,7 @@ EXAMPLES
     $ sf project list ignored --source-dir package.xml
 ```
 
-_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/list/ignored.ts)_
+_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/list/ignored.ts)_
 
 ## `sf project reset tracking`
 
@@ -1443,7 +1430,7 @@ EXAMPLES
     $ sf project reset tracking --revision 30
 ```
 
-_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/reset/tracking.ts)_
+_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/reset/tracking.ts)_
 
 ## `sf project retrieve preview`
 
@@ -1455,7 +1442,8 @@ USAGE
 
 FLAGS
   -c, --ignore-conflicts    Don't display conflicts in the preview of the retrieval.
-  -o, --target-org=<value>  (required) Login username or alias for the target org.
+  -o, --target-org=<value>  (required) Username or alias of the target org. Not required if the `target-org`
+                            configuration variable is already set.
       --concise             Show only the changes that will be retrieved; omits files that are forceignored.
 
 GLOBAL FLAGS
@@ -1494,13 +1482,9 @@ FLAG DESCRIPTIONS
 
     This flag applies only to orgs that allow source tracking. It has no effect on orgs that don't allow it, such as
     production orgs.
-
-  -o, --target-org=<value>  Login username or alias for the target org.
-
-    Overrides your default org.
 ```
 
-_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/retrieve/preview.ts)_
+_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/retrieve/preview.ts)_
 
 ## `sf project retrieve start`
 
@@ -1519,7 +1503,8 @@ FLAGS
   -m, --metadata=<value>...      Metadata component names to retrieve. Wildcards (`*`) supported as long as you use
                                  quotes, such as `ApexClass:MyClass*`.
   -n, --package-name=<value>...  Package names to retrieve.
-  -o, --target-org=<value>       (required) Login username or alias for the target org.
+  -o, --target-org=<value>       (required) Username or alias of the target org. Not required if the `target-org`
+                                 configuration variable is already set.
   -r, --output-dir=<value>       Directory root for the retrieved source files.
   -w, --wait=<value>             [default: 33 minutes] Number of minutes to wait for the command to complete and display
                                  results to the terminal window.
@@ -1585,6 +1570,14 @@ EXAMPLES
 
     $ sf project retrieve start --metadata 'ApexClass:MyApex*'
 
+  Retrieve a custom object called ExcitingObject that's in the SBQQ namespace:
+
+    $ sf project retrieve start --metadata CustomObject:SBQQ__ExcitingObject
+
+  Retrieve all custom objects in the SBQQ namespace by using a wildcard and quotes:
+
+    $ sf project retrieve start --metadata 'CustomObject:SBQQ__*'
+
   Retrieve all custom objects and Apex classes found in all defined package directories (both examples are
   equivalent):
 
@@ -1632,10 +1625,6 @@ FLAG DESCRIPTIONS
     The supplied paths can be to a single file (in which case the operation is applied to only one file) or to a folder
     (in which case the operation is applied to all source files in the directory and its subdirectories).
 
-  -o, --target-org=<value>  Login username or alias for the target org.
-
-    Overrides your default org.
-
   -r, --output-dir=<value>  Directory root for the retrieved source files.
 
     The root of the directory structure into which the source files are retrieved.
@@ -1651,6 +1640,6 @@ FLAG DESCRIPTIONS
     If you specify this parameter, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.1/src/commands/project/retrieve/start.ts)_
+_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.8.2/src/commands/project/retrieve/start.ts)_
 
 <!-- commandsstop -->

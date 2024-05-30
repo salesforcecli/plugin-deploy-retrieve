@@ -1,3 +1,9 @@
+## [3.8.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.8.1...3.8.2) (2024-05-30)
+
+### Bug Fixes
+
+- use standard target-org flag messages ([#1028](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1028)) ([004d275](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/004d275ef49da8738a3e7b4ac65a41eba678094f))
+
 ## [3.8.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.8.0...3.8.1) (2024-05-29)
 
 ### Bug Fixes
