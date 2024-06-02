@@ -1151,7 +1151,7 @@
   resolved "https://registry.yarnpkg.com/@inquirer/figures/-/figures-1.0.3.tgz#1227cc980f88e6d6ab85abadbf164f5038041edd"
   integrity sha512-ErXXzENMH5pJt5/ssXV0DfWUZqly8nGzf0UcBV9xTnP+KyffE2mqyxIMBrZ8ijQck2nU0TQm40EQB53YreyWHw==
 
-"@inquirer/input@^2.1.6", "@inquirer/input@^2.1.8":
+"@inquirer/input@^2.1.8":
   version "2.1.9"
   resolved "https://registry.yarnpkg.com/@inquirer/input/-/input-2.1.9.tgz#ac47671bfdfb0ae99411c644aadf783ae946e168"
   integrity sha512-1xTCHmIe48x9CG1+8glAHrVVdH+QfYhzgBUbgyoVpp5NovnXgRcjSn/SNulepxf9Ol8HDq3gzw3ZCAUr+h1Eyg==
@@ -1435,7 +1435,7 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.1"
 
-"@salesforce/core@^7.2.0", "@salesforce/core@^7.3.5", "@salesforce/core@^7.3.6", "@salesforce/core@^7.3.8", "@salesforce/core@^7.3.9":
+"@salesforce/core@^7.2.0", "@salesforce/core@^7.3.6", "@salesforce/core@^7.3.8", "@salesforce/core@^7.3.9":
   version "7.3.9"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-7.3.9.tgz#8abe2b3e2393989d11e92b7a6b96043fc9d5b9c8"
   integrity sha512-eJqDiA5b7wU50Ee/xjmGzSnHrNVJ8S77B7enfX30gm7gxU3i3M3QeBdiV6XAOPLSIL96DseofP6Tv6c+rljlKA==
@@ -1517,15 +1517,15 @@
     debug "^4.3.4"
     handlebars "^4.7.8"
 
-"@salesforce/plugin-info@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.3.0.tgz#087a9d6fd17975fca376e5de9745aa699e86ede8"
-  integrity sha512-/UZX3wFFAwu7RG9fIflRB6ljwJ55jva9wfEN2RUnd+A5+01WTrekX+SNbE9etKqdVS06UF/BfpCqNrgGw/98GQ==
+"@salesforce/plugin-info@^3.3.4":
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.3.4.tgz#647e4dd81edde045eadbcf27c042803e36c4f899"
+  integrity sha512-qZPexFxE3YE0TVWgDJLTMLrpMtSw8SJm70x8Z/Y99CQQtxCBGnVOYx+H8KMw7zc30ki/CaUDJnSbnJNSrDDgOQ==
   dependencies:
-    "@inquirer/input" "^2.1.6"
+    "@inquirer/input" "^2.1.8"
     "@jsforce/jsforce-node" "^3.2.0"
     "@oclif/core" "^3.26.5"
-    "@salesforce/core" "^7.3.5"
+    "@salesforce/core" "^7.3.9"
     "@salesforce/kit" "^3.1.0"
     "@salesforce/sf-plugins-core" "^9.0.7"
     got "^13.0.0"
