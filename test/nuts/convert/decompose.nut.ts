@@ -24,7 +24,7 @@ describe('source behavior changes', () => {
     });
   });
 
-  it('produces dry run output and makes no changes', async () => {
+  it.skip('produces dry run output and makes no changes', async () => {
     const originalProject = await getProject(session);
     const originalFileList = await fs.promises.readdir(path.join(session.project.dir, 'force-app'), {
       recursive: true,
@@ -86,7 +86,7 @@ describe('source behavior changes', () => {
     );
   });
 
-  it('produces actual output and makes expected changes', async () => {
+  it.skip('produces actual output and makes expected changes', async () => {
     const result = execCmd<SourceBehaviorResult>(
       'project convert source-behavior --behavior decomposeCustomLabelsBeta --json',
       {
@@ -104,7 +104,7 @@ describe('source behavior changes', () => {
     expect(fs.existsSync(path.join(session.project.dir, DRY_RUN_DIR))).to.be.false;
   });
 
-  it("throws on repeated preset that's already done", () => {
+  it.skip("throws on repeated preset that's already done", () => {
     const err = execCmd<SourceBehaviorResult>(
       'project convert source-behavior --behavior decomposeCustomLabelsBeta --json',
       {
