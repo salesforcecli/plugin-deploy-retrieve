@@ -16,7 +16,7 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
 - Deploy local changes not in the org; uses your default org:
 
-      sf <%= command.id %>
+      <%= config.bin %> <%= command.id %>
 
 - Deploy all source files in the "force-app" directory to an org with alias "my-scratch"; show only concise output, in other words don't print a list of all the source that was deployed:
 
