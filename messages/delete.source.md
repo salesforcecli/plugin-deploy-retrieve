@@ -4,7 +4,7 @@ Delete source from your project and from a non-source-tracked org.
 
 # description
 
-Use this command to delete components from orgs that don’t have source tracking. To remove deleted items from orgs that have source tracking enabled, "sf project deploy start".
+Use this command to delete components from orgs that don’t have source tracking. To remove deleted items from orgs that have source tracking enabled, "<%= config.bin %> project deploy start".
 
 When you run this command, both the local source file and the metadata component in the org are deleted.
 
@@ -14,19 +14,19 @@ To delete multiple metadata components, either set multiple --metadata <name> fl
 
 - Delete all local Apex source files and all Apex classes from the org with alias "my-scratch":
 
-  sf <%= command.id %> --metadata ApexClass --target-org my-scratch
+  <%= config.bin %> <%= command.id %> --metadata ApexClass --target-org my-scratch
 
 - Delete a specific Apex class and a Profile that has a space in it from your default org; don't prompt for confirmation:
 
-  sf <%= command.id %> --metadata ApexClass:MyFabulousApexClass --metadata "Profile: My Profile" --no-prompt
+  <%= config.bin %> <%= command.id %> --metadata ApexClass:MyFabulousApexClass --metadata "Profile: My Profile" --no-prompt
 
 - Run the tests that aren’t in any managed packages as part of the deletion; if the delete succeeds, and the org has source-tracking enabled, update the source tracking information:
 
-  sf <%= command.id %> --metadata ApexClass --test-level RunLocalTests --track-source
+  <%= config.bin %> <%= command.id %> --metadata ApexClass --test-level RunLocalTests --track-source
 
 - Delete the Apex source files in a directory and the corresponding components from your default org:
 
-  sf <%= command.id %> --source-dir force-app/main/default/classes
+  <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes
 
 # flags.source-dir.summary
 

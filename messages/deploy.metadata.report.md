@@ -16,15 +16,15 @@ This command doesn't update source tracking information.
 
 - Check the status using a job ID:
 
-      sf <%= command.id %> --job-id 0Af0x000017yLUFCA2
+      <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2
 
 - Check the status of the most recent deploy operation:
 
-      sf <%= command.id %> --use-most-recent
+      <%= config.bin %> <%= command.id %> --use-most-recent
 
 - Poll for the status using a job ID and target org:
 
-      sf <%= command.id %> --job-id 0Af0x000017yLUFCA2 --target-org me@my.org --wait 30
+      <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2 --target-org me@my.org --wait 30
 
 # flags.job-id.summary
 
@@ -34,10 +34,10 @@ Job ID of the deploy operation you want to check the status of.
 
 These commands return a job ID if they time out or you specified the --async flag:
 
-- sf project deploy start
-- sf project deploy validate
-- sf project deploy quick
-- sf project deploy cancel
+- <%= config.bin %> project deploy start
+- <%= config.bin %> project deploy validate
+- <%= config.bin %> project deploy quick
+- <%= config.bin %> project deploy cancel
 
 The job ID is valid for 10 days from when you started the deploy operation.
 

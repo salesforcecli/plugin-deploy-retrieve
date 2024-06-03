@@ -12,11 +12,11 @@ Run this command by either passing it a job ID or specifying the --use-most-rece
 
 - Cancel a deploy operation using a job ID:
 
-      sf <%= command.id %> --job-id 0Af0x000017yLUFCA2
+      <%= config.bin %> <%= command.id %> --job-id 0Af0x000017yLUFCA2
 
 - Cancel the most recent deploy operation:
 
-      sf <%= command.id %> --use-most-recent
+      <%= config.bin %> <%= command.id %> --use-most-recent
 
 # flags.job-id.summary
 
@@ -26,10 +26,10 @@ Job ID of the deploy operation you want to cancel.
 
 These commands return a job ID if they time out or you specified the --async flag:
 
-- sf project deploy start
-- sf project deploy validate
-- sf project deploy quick
-- sf project deploy cancel
+- <%= config.bin %> project deploy start
+- <%= config.bin %> project deploy validate
+- <%= config.bin %> project deploy quick
+- <%= config.bin %> project deploy cancel
 
 The job ID is valid for 10 days from when you started the deploy operation.
 
@@ -47,7 +47,7 @@ Number of minutes to wait for the command to complete and display results.
 
 # flags.wait.description
 
-If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the cancellation, run "sf project deploy resume". To check the status of the cancellation, run "sf project deploy report".
+If the command continues to run after the wait period, the CLI returns control of the terminal window to you. To resume watching the cancellation, run "<%= config.bin %> project deploy resume". To check the status of the cancellation, run "<%= config.bin %> project deploy report".
 
 # flags.async.summary
 
@@ -55,7 +55,7 @@ Run the command asynchronously.
 
 # flags.async.description
 
-The command immediately returns the control of the terminal to you. This way, you can continue to use the CLI. To resume watching the cancellation, run "sf project deploy resume". To check the status of the cancellation, run "sf project deploy report".
+The command immediately returns the control of the terminal to you. This way, you can continue to use the CLI. To resume watching the cancellation, run "<%= config.bin %> project deploy resume". To check the status of the cancellation, run "<%= config.bin %> project deploy report".
 
 # error.CannotCancelDeploy
 

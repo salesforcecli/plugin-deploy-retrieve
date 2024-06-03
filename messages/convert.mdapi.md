@@ -14,11 +14,11 @@ To convert multiple metadata components, either set multiple --metadata <name> f
 
 - Convert metadata formatted files in the specified directory into source formatted files; writes converted files to your default package directory:
 
-  $ sf <%= command.id %> --root-dir path/to/metadata
+  $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata
 
 - Similar to previous example, but writes converted files to the specified output directory:
 
-  $ sf <%= command.id %> --root-dir path/to/metadata --output-dir path/to/outputdir
+  $ <%= config.bin %> <%= command.id %> --root-dir path/to/metadata --output-dir path/to/outputdir
 
 # flags.root-dir.summary
 
