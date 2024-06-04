@@ -6,7 +6,7 @@
  */
 import { isAbsolute, relative, resolve } from 'node:path';
 
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import chalk from 'chalk';
 import { Messages } from '@salesforce/core';
@@ -24,6 +24,8 @@ import { filePathsFromMetadataComponent } from '@salesforce/source-deploy-retrie
 
 import { SourceTracking } from '@salesforce/source-tracking';
 import { isSourceComponentWithXml } from './types.js';
+
+const ux = new Ux();
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'previewMessages');

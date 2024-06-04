@@ -4,11 +4,11 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'node:path';
+import path from 'node:path';
 import { assert, expect, config } from 'chai';
 import sinon from 'sinon';
 import { DeployMessage, DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { getCoverageFormattersOptions } from '../../src/utils/coverage.js';
 import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter.js';
 import { getDeployResult } from './deployResponses.js';
@@ -27,7 +27,7 @@ describe('deployResultFormatter', () => {
     let tableStub: sinon.SinonStub;
 
     beforeEach(() => {
-      tableStub = sandbox.stub(ux, 'table');
+      tableStub = sandbox.stub(Ux.prototype, 'table');
     });
 
     it('prints file responses, and messages from server', () => {
@@ -125,7 +125,7 @@ describe('deployResultFormatter', () => {
       it('will warn when code coverage warning present from server', () => {
         const deployResult = getDeployResult('codeCoverageWarning');
         const formatter = new DeployResultFormatter(deployResult, {});
-        const warnStub = sandbox.stub(ux, 'warn');
+        const warnStub = sandbox.stub(Ux.prototype, 'warn');
         formatter.display();
         expect(warnStub.callCount).to.equal(1);
         expect(warnStub.firstCall.args[0]).to.equal(

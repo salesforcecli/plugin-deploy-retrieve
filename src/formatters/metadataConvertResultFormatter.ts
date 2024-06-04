@@ -4,10 +4,12 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'node:path';
-import { ux } from '@oclif/core';
+import path from 'node:path';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { ConvertResult } from '@salesforce/source-deploy-retrieve';
 import { Formatter, ConvertMdapiJson } from '../utils/types.js';
+
+const ux = new Ux();
 
 export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJson> {
   private convertResults!: ConvertMdapiJson;

@@ -6,11 +6,13 @@
  */
 import { resolve } from 'node:path';
 
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { ConvertResult } from '@salesforce/source-deploy-retrieve';
 import { SfError, Messages } from '@salesforce/core';
 import { ConvertResultJson, Formatter } from '../utils/types.js';
 import { exitCodeAsNumber } from '../utils/output.js';
+
+const ux = new Ux();
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 export const convertMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'convert.source');

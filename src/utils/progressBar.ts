@@ -5,11 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { envVars as env, EnvironmentVariable, Lifecycle, Messages } from '@salesforce/core';
+import { envVars as env, EnvironmentVariable, Lifecycle, Messages, Logger } from '@salesforce/core';
 import { MetadataApiDeploy, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { Progress } from '@salesforce/sf-plugins-core';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
-import { ux } from '@oclif/core';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
@@ -17,6 +16,8 @@ const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retr
 const showBar = Boolean(
   process.env.TERM !== 'dumb' && process.stdin.isTTY && env.getBoolean(EnvironmentVariable.SF_USE_PROGRESS_BAR, true)
 );
+
+const logger = await Logger.child('deploy-progress');
 
 export class DeployProgress extends Progress {
   private static OPTIONS = {
@@ -88,7 +89,7 @@ export class DeployProgress extends Progress {
       try {
         status = mdTransferMessages.getMessage(data.status);
       } catch (e) {
-        ux.debug(`data.status message lookup failed for: ${data.status}`);
+        logger.debug(`data.status message lookup failed for: ${data.status}`);
         status = 'Waiting';
       }
       this.update(0, { errorInfo, testInfo, status });

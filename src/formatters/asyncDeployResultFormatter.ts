@@ -5,9 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import { AsyncDeployResultJson, Formatter } from '../utils/types.js';
+
+const ux = new Ux();
 
 export class AsyncDeployResultFormatter implements Formatter<AsyncDeployResultJson> {
   public constructor(private id: string) {}
