@@ -1,3 +1,9 @@
+# [3.9.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.8.4...3.9.0) (2024-06-06)
+
+### Features
+
+- use oclif/core v4 and sf-plugins-core v10 ([#1038](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1038)) ([a09c197](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a09c19752db4c793af5f90a70c42dba29bbb1eb3))
+
 ## [3.8.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.8.3...3.8.4) (2024-06-02)
 
 ### Bug Fixes
