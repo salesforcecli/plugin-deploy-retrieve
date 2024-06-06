@@ -4,12 +4,14 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { Duration } from '@salesforce/kit';
 import { tableHeader } from '../utils/output.js';
 import { DeployResultFormatter } from './deployResultFormatter.js';
+
+const ux = new Ux();
 
 export class DeployReportResultFormatter extends DeployResultFormatter {
   public display(): void {

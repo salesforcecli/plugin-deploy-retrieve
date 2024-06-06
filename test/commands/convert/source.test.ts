@@ -6,13 +6,14 @@
  */
 
 import { join, resolve, sep } from 'node:path';
+import fs from 'node:fs/promises';
+import { Stats } from 'node:fs';
 import { ComponentSetBuilder, ComponentSetOptions, MetadataConverter } from '@salesforce/source-deploy-retrieve';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { stubMethod } from '@salesforce/ts-sinon';
+import { stubMethod, stubInterface } from '@salesforce/ts-sinon';
 import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
-import oclifUtils from '@oclif/core/lib/util/fs.js';
 import { SfProject } from '@salesforce/core';
 import { Source } from '../../../src/commands/project/convert/source.js';
 
@@ -50,8 +51,13 @@ describe('project convert source', () => {
     SfProject.instances.clear();
     stubSfCommandUx($$.SANDBOX);
     // the 2 oclif flags should act as if the dir/file is there and ok
-    $$.SANDBOX.stub(oclifUtils, 'fileExists').callsFake((path: string) => Promise.resolve(path));
-    $$.SANDBOX.stub(oclifUtils, 'dirExists').callsFake((path: string) => Promise.resolve(path));
+    $$.SANDBOX.stub(fs, 'stat').resolves(
+      stubInterface<Stats>($$.SANDBOX, {
+        isDirectory: () => true,
+        isFile: () => true,
+      })
+    );
+
     $$.setConfigStubContents('SfProjectJson', {
       contents: {
         packageDirectories: [{ path: defaultDir, default: true }],

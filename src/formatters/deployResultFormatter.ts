@@ -4,11 +4,11 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as path from 'node:path';
+import path from 'node:path';
 import { EOL } from 'node:os';
-import * as fs from 'node:fs';
+import fs from 'node:fs';
 import { join } from 'node:path';
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import {
   ComponentStatus,
   DeployResult,
@@ -50,6 +50,8 @@ import {
   makePathRelative,
 } from '../utils/output.js';
 import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
+
+const ux = new Ux();
 
 export class DeployResultFormatter extends TestResultsFormatter implements Formatter<DeployResultJson> {
   private readonly relativeFiles: FileResponse[];

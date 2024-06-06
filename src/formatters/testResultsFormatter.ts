@@ -4,8 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as os from 'node:os';
-import { ux } from '@oclif/core';
+import os from 'node:os';
+import { Ux } from '@salesforce/sf-plugins-core';
 import chalk from 'chalk';
 import {
   CodeCoverage,
@@ -20,6 +20,8 @@ import { ensureArray } from '@salesforce/kit';
 import { TestLevel, Verbosity } from '../utils/types.js';
 import { tableHeader, error, success, check } from '../utils/output.js';
 import { coverageOutput } from '../utils/coverage.js';
+
+const ux = new Ux();
 
 export class TestResultsFormatter {
   public testLevel: TestLevel | undefined;

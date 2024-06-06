@@ -6,11 +6,13 @@
  */
 import { join, parse } from 'node:path';
 
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { FileResponse, RetrieveResult } from '@salesforce/source-deploy-retrieve';
 import { Messages } from '@salesforce/core';
 import { Formatter, MetadataRetrieveResultJson } from '../utils/types.js';
 import { fileResponseSortFn, makePathRelative } from '../utils/output.js';
+
+const ux = new Ux();
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 export const retrieveMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');

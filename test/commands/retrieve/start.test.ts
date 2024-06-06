@@ -7,6 +7,8 @@
 
 import { resolve } from 'node:path';
 
+import fs from 'node:fs/promises';
+import { Stats } from 'node:fs';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import {
@@ -19,10 +21,9 @@ import {
   RetrieveOptions,
 } from '@salesforce/source-deploy-retrieve';
 import { Messages, SfProject } from '@salesforce/core';
-import { stubMethod } from '@salesforce/ts-sinon';
+import { stubMethod, stubInterface } from '@salesforce/ts-sinon';
 import { stubSfCommandUx, stubSpinner, stubUx } from '@salesforce/sf-plugins-core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
-import oclifUtils from '@oclif/core/lib/util/fs.js';
 import { RetrieveResultFormatter } from '../../../src/formatters/retrieveResultFormatter.js';
 import { getRetrieveResult } from '../../utils/retrieveResponse.js';
 import { RetrieveResultJson } from '../../../src/utils/types.js';
@@ -62,8 +63,12 @@ describe('project retrieve start', () => {
     await $$.stubConfig({ 'target-org': testOrg.username });
 
     // the 2 oclif flags should act as if the dir/file is there and ok
-    $$.SANDBOX.stub(oclifUtils, 'fileExists').callsFake((p: string) => Promise.resolve(p));
-    $$.SANDBOX.stub(oclifUtils, 'dirExists').callsFake((p: string) => Promise.resolve(p));
+    $$.SANDBOX.stub(fs, 'stat').resolves(
+      stubInterface<Stats>($$.SANDBOX, {
+        isDirectory: () => true,
+        isFile: () => true,
+      })
+    );
 
     sfCommandUxStubs = stubSfCommandUx($$.SANDBOX);
     stubUx($$.SANDBOX);

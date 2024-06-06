@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { ux } from '@oclif/core';
+import { Ux } from '@salesforce/sf-plugins-core';
 import { DeployResult, FileResponse, FileResponseSuccess, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
 import chalk from 'chalk';
@@ -17,6 +17,8 @@ import {
   makePathRelative,
 } from '../utils/output.js';
 import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
+
+const ux = new Ux();
 
 export class DeleteResultFormatter extends TestResultsFormatter implements Formatter<DeleteSourceJson> {
   public constructor(
@@ -99,20 +101,18 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
     const failures = ensureArray(this.result.response.details.componentFailures);
     if (!failures.length) return;
 
-    const columns = {
-      problemType: { header: 'Type' },
-      fullName: { header: 'Name' },
-      error: { header: 'Problem' },
-    };
-    const options: ux.Table.table.Options = {
-      title: StandardColors.error(chalk.bold(`Component Failures [${failures.length}]`)),
-      'no-truncate': true,
-    };
     ux.log();
     ux.table(
       failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.problem })),
-      columns,
-      options
+      {
+        problemType: { header: 'Type' },
+        fullName: { header: 'Name' },
+        error: { header: 'Problem' },
+      },
+      {
+        title: StandardColors.error(chalk.bold(`Component Failures [${failures.length}]`)),
+        'no-truncate': true,
+      }
     );
   }
 }
