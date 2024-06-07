@@ -49,11 +49,11 @@ export const getFileResponseSuccessProps = (
 });
 
 export function error(message: string): string {
-  return StandardColors.error(ansis.bold(message));
+  return StandardColors.error(message);
 }
 
 export function success(message: string): string {
-  return StandardColors.success(ansis.bold(message));
+  return StandardColors.success(message);
 }
 
 export const check = StandardColors.success('✓');

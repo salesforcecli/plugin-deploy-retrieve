@@ -8,7 +8,6 @@ import { isAbsolute, relative, resolve } from 'node:path';
 
 import { Ux } from '@salesforce/sf-plugins-core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import ansis from 'ansis';
 import { Messages } from '@salesforce/core';
 import {
   ComponentSet,
@@ -214,7 +213,7 @@ const printDeployTable = (files: PreviewFile[]): void => {
     ux.log(StandardColors.info(messages.getMessage('deploy.none')));
   } else {
     // not using table title property to avoid all the ASCII art
-    ux.log(StandardColors.success(ansis.bold(messages.getMessage('deploy.header', [files.length]))));
+    ux.log(StandardColors.success(messages.getMessage('deploy.header', [files.length])));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -225,7 +224,7 @@ const printRetrieveTable = (files: PreviewFile[]): void => {
     ux.log(StandardColors.info(messages.getMessage('retrieve.none')));
   } else {
     // not using table title property to avoid all the ASCII art
-    ux.log(StandardColors.success(ansis.bold(messages.getMessage('retrieve.header', [files.length]))));
+    ux.log(StandardColors.success(messages.getMessage('retrieve.header', [files.length])));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -235,7 +234,7 @@ const printDeleteTable = (files: PreviewFile[]): void => {
   if (files.length === 0) {
     ux.log(StandardColors.info(messages.getMessage('delete.none')));
   } else {
-    ux.log(StandardColors.warning(ansis.bold(messages.getMessage('delete.header', [files.length]))));
+    ux.log(StandardColors.warning(messages.getMessage('delete.header', [files.length])));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -245,7 +244,7 @@ const printConflictsTable = (files: PreviewFile[]): void => {
   if (files.length === 0) {
     ux.log(StandardColors.info(messages.getMessage('conflicts.none')));
   } else {
-    ux.log(StandardColors.error(ansis.bold(messages.getMessage('conflicts.header', [files.length]))));
+    ux.log(StandardColors.error(messages.getMessage('conflicts.header', [files.length])));
     ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };

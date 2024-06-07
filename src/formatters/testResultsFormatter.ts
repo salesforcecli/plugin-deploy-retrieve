@@ -5,7 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import os from 'node:os';
-import { StandardColors, Ux } from '@salesforce/sf-plugins-core';
+import { StandardColors } from '@salesforce/sf-plugins-core/StandardColors';
+import { Ux } from '@salesforce/sf-plugins-core/Ux';
 import ansis from 'ansis';
 import {
   CodeCoverage,

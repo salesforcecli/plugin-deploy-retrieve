@@ -110,7 +110,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
         error: { header: 'Problem' },
       },
       {
-        title: StandardColors.error(ansis.bold(`Component Failures [${failures.length}]`)),
+        title: StandardColors.error(`Component Failures [${failures.length}]`),
         'no-truncate': true,
       }
     );
