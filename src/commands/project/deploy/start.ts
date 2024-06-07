@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import chalk from 'chalk';
+import ansis from 'ansis';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { DeployVersionData } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
@@ -228,7 +228,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${chalk.bold(deploy.id)}`);
+    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
 
     if (flags.async) {
       if (flags['coverage-formatters']) {
