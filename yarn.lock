@@ -1329,10 +1329,10 @@
     wordwrap "^1.0.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/core@^4", "@oclif/core@^4.0.0-beat.13", "@oclif/core@^4.0.0-beta.12", "@oclif/core@^4.0.0-beta.13":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-4.0.0.tgz#c47783c9803cb440e3fd325157437400765eae3f"
-  integrity sha512-BMWGvJrzn5PnG60gTNFEvaBT0jvGNiJCKN4aJBYP6E7Bq/Y5XPnxPrkj7ZZs/Jsd1oVn6K/JRmF6gWpv72DOew==
+"@oclif/core@^4", "@oclif/core@^4.0.0-beat.13", "@oclif/core@^4.0.0-beta.12", "@oclif/core@^4.0.0-beta.13", "@oclif/core@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-4.0.3.tgz#6231272447c7057813986860448613ed38cfdc47"
+  integrity sha512-yM8R/M2WfSNfL9eF8clS/SbQvanvHZJgoij5bLs3ro7uAFCkL/LYcagyj0UVGbysx5AI+SNIof6OHQUXYZpOZw==
   dependencies:
     ansi-escapes "^4.3.2"
     ansis "^3.1.1"
@@ -1606,15 +1606,15 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^6.3.4":
-  version "6.3.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.3.4.tgz#e881f58d4263e9ec427592cec32dfdb73daacf67"
-  integrity sha512-3WaoTCsWyq1GOlThUqMjON1/CTFk/ifpuvlcoyLWPno5PQe6FhxAcaGR/aRnEjuYTeClJ4rgNOFxrjcHORFCdw==
+"@salesforce/source-tracking@^6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-6.4.0.tgz#86b5007559528396fafbb3b0e8becdc8d9d1b84a"
+  integrity sha512-5kBjmxOMLEF+bxHdwNgTBZMM0+zra9MIbUFfm8+6da8fF1L8/+WKeebasLwA7b35WTYe4aH6YcCx6ijzkya++Q==
   dependencies:
-    "@oclif/core" "^3.26.6"
-    "@salesforce/core" "^7.3.9"
+    "@oclif/core" "^4.0.3"
+    "@salesforce/core" "^7.3.10"
     "@salesforce/kit" "^3.1.2"
-    "@salesforce/source-deploy-retrieve" "^11.6.4"
+    "@salesforce/source-deploy-retrieve" "^11.6.5"
     "@salesforce/ts-types" "^2.0.9"
     fast-xml-parser "^4.3.6"
     graceful-fs "^4.2.11"
