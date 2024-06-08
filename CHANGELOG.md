@@ -1,3 +1,9 @@
+## [3.9.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.1...3.9.2) (2024-06-08)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 6.0.0 to 6.1.2 ([432f58c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/432f58cc79a2520fe51f63a3c40f6dc4e4e551f1))
+
 ## [3.9.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.0...3.9.1) (2024-06-08)
 
 ### Bug Fixes
