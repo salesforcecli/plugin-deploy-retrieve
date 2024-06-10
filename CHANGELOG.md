@@ -1,3 +1,9 @@
+## [3.9.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.3...3.9.4) (2024-06-10)
+
+### Bug Fixes
+
+- **deps:** reduce chalk ([#1042](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1042)) ([d09203a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d09203a8671db752ceb5abc43a2adbc59a5aa44e))
+
 ## [3.9.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.2...3.9.3) (2024-06-10)
 
 ### Bug Fixes
