@@ -8,7 +8,6 @@ import { isAbsolute, relative, resolve } from 'node:path';
 
 import { Ux } from '@salesforce/sf-plugins-core';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import chalk from 'chalk';
 import { Messages } from '@salesforce/core';
 import {
   ComponentSet,
@@ -211,10 +210,10 @@ export const compileResults = ({
 const printDeployTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(chalk.dim(messages.getMessage('deploy.none')));
+    ux.log(StandardColors.info(messages.getMessage('deploy.none')));
   } else {
     // not using table title property to avoid all the ASCII art
-    ux.log(StandardColors.success(chalk.bold(messages.getMessage('deploy.header', [files.length]))));
+    ux.log(StandardColors.success(messages.getMessage('deploy.header', [files.length])));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -222,10 +221,10 @@ const printDeployTable = (files: PreviewFile[]): void => {
 const printRetrieveTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(chalk.dim(messages.getMessage('retrieve.none')));
+    ux.log(StandardColors.info(messages.getMessage('retrieve.none')));
   } else {
     // not using table title property to avoid all the ASCII art
-    ux.log(StandardColors.success(chalk.bold(messages.getMessage('retrieve.header', [files.length]))));
+    ux.log(StandardColors.success(messages.getMessage('retrieve.header', [files.length])));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -233,9 +232,9 @@ const printRetrieveTable = (files: PreviewFile[]): void => {
 const printDeleteTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(chalk.dim(messages.getMessage('delete.none')));
+    ux.log(StandardColors.info(messages.getMessage('delete.none')));
   } else {
-    ux.log(StandardColors.warning(chalk.bold(messages.getMessage('delete.header', [files.length]))));
+    ux.log(StandardColors.warning(messages.getMessage('delete.header', [files.length])));
     ux.table<PreviewFile>(files, columns);
   }
 };
@@ -243,9 +242,9 @@ const printDeleteTable = (files: PreviewFile[]): void => {
 const printConflictsTable = (files: PreviewFile[]): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(chalk.dim(messages.getMessage('conflicts.none')));
+    ux.log(StandardColors.info(messages.getMessage('conflicts.none')));
   } else {
-    ux.log(StandardColors.error(chalk.bold(messages.getMessage('conflicts.header', [files.length]))));
+    ux.log(StandardColors.error(messages.getMessage('conflicts.header', [files.length])));
     ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };
@@ -253,9 +252,9 @@ const printConflictsTable = (files: PreviewFile[]): void => {
 const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): void => {
   ux.log();
   if (files.length === 0) {
-    ux.log(chalk.dim(messages.getMessage('ignored.none')));
+    ux.log(StandardColors.info(messages.getMessage('ignored.none')));
   } else {
-    ux.log(chalk.dim(messages.getMessage('ignored.header', [files.length, baseOperation])));
+    ux.log(StandardColors.info(messages.getMessage('ignored.header', [files.length, baseOperation])));
     ux.table<PreviewFile>(files, columns, { sort: 'path' });
   }
 };

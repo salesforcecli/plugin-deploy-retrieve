@@ -5,8 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import os from 'node:os';
-import { Ux } from '@salesforce/sf-plugins-core';
-import chalk from 'chalk';
+import { StandardColors } from '@salesforce/sf-plugins-core/StandardColors';
+import { Ux } from '@salesforce/sf-plugins-core/Ux';
+import ansis from 'ansis';
 import {
   CodeCoverage,
   CodeCoverageWarnings,
@@ -77,7 +78,7 @@ const displayVerboseTestSuccesses = (resultSuccesses: RunTestResult['successes']
     ux.log();
     ux.log(success(`Test Success [${successes.length}]`));
     for (const test of successes) {
-      const testName = chalk.underline(`${test.name}.${test.methodName}`);
+      const testName = ansis.underline(`${test.name}.${test.methodName}`);
       ux.log(`${check} ${testName}`);
     }
   }
@@ -91,12 +92,12 @@ const displayVerboseTestFailures = (response: MetadataApiDeployStatus): void => 
   ux.log();
   ux.log(error(`Test Failures [${failureCount}]`));
   for (const test of failures) {
-    const testName = chalk.underline(`${test.name}.${test.methodName}`);
+    const testName = ansis.underline(`${test.name}.${test.methodName}`);
     ux.log(`• ${testName}`);
-    ux.log(`  ${chalk.dim('message')}: ${test.message}`);
+    ux.log(`  ${StandardColors.info('message')}: ${test.message}`);
     if (test.stackTrace) {
       const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
-      ux.log(`  ${chalk.dim('stacktrace')}: ${os.EOL}    ${stackTrace}`);
+      ux.log(`  ${StandardColors.info('stacktrace')}: ${os.EOL}    ${stackTrace}`);
     }
     ux.log();
   }

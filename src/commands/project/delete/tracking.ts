@@ -6,7 +6,6 @@
  */
 
 import { Messages } from '@salesforce/core';
-import chalk from 'chalk';
 import { SourceTracking } from '@salesforce/source-tracking';
 import {
   Flags,
@@ -14,6 +13,7 @@ import {
   orgApiVersionFlagWithDeprecations,
   requiredOrgFlagWithDeprecations,
   SfCommand,
+  StandardColors,
 } from '@salesforce/sf-plugins-core';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -47,7 +47,10 @@ export class DeleteTracking extends SfCommand<DeleteTrackingResult> {
     const { flags } = await this.parse(DeleteTracking);
 
     let clearedFiles: string[] = [];
-    if (flags['no-prompt'] || (await this.confirm({ message: chalk.dim(messages.getMessage('promptMessage')) }))) {
+    if (
+      flags['no-prompt'] ||
+      (await this.confirm({ message: StandardColors.info(messages.getMessage('promptMessage')) }))
+    ) {
       const sourceTracking = await SourceTracking.create({
         project: this.project!,
         org: flags['target-org'],

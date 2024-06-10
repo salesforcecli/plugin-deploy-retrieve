@@ -6,7 +6,7 @@
  */
 import * as os from 'node:os';
 
-import chalk from 'chalk';
+import ansis from 'ansis';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { CodeCoverageWarnings, DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration, ensureArray } from '@salesforce/kit';
@@ -193,7 +193,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${chalk.bold(deploy.id)}`);
+    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
