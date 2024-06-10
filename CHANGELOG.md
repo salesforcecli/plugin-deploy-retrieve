@@ -1,3 +1,9 @@
+## [3.9.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.2...3.9.3) (2024-06-10)
+
+### Bug Fixes
+
+- **deps:** new core and STL ([#1043](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1043)) ([a50d101](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a50d10171ff43576bc00081583f60027cb0288f4))
+
 ## [3.9.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.1...3.9.2) (2024-06-08)
 
 ### Bug Fixes
