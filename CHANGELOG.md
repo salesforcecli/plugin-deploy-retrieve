@@ -1,3 +1,15 @@
+## [3.9.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.1...3.9.2) (2024-06-08)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 6.0.0 to 6.1.2 ([432f58c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/432f58cc79a2520fe51f63a3c40f6dc4e4e551f1))
+
+## [3.9.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.0...3.9.1) (2024-06-08)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 4.0.0 to 4.0.3 ([fafeebf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fafeebfce0734bdc9773a8c7ee1edf7f55b09153))
+
 # [3.9.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.8.4...3.9.0) (2024-06-06)
 
 ### Features
