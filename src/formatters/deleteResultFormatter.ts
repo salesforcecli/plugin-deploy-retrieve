@@ -7,7 +7,7 @@
 import { Ux } from '@salesforce/sf-plugins-core';
 import { DeployResult, FileResponse, FileResponseSuccess, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
-import chalk from 'chalk';
+import ansis from 'ansis';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { DeleteSourceJson, Formatter, TestLevel, isSdrSuccess } from '../utils/types.js';
 import {
@@ -80,7 +80,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
       }
 
       ux.log('');
-      ux.styledHeader(chalk.blue('Deleted Source'));
+      ux.styledHeader(ansis.blue('Deleted Source'));
       ux.table(
         successes.map(getFileResponseSuccessProps),
         {
@@ -110,7 +110,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
         error: { header: 'Problem' },
       },
       {
-        title: StandardColors.error(chalk.bold(`Component Failures [${failures.length}]`)),
+        title: StandardColors.error(`Component Failures [${failures.length}]`),
         'no-truncate': true,
       }
     );

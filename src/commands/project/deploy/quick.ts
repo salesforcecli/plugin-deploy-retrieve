@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import chalk from 'chalk';
+import ansis from 'ansis';
 import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
@@ -90,7 +90,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       id: jobId,
       rest: api === API['REST'],
     });
-    this.log(`Deploy ID: ${chalk.bold(deployId)}`);
+    this.log(`Deploy ID: ${ansis.bold(deployId)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deployId);

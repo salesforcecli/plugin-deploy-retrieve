@@ -33,7 +33,7 @@ import {
   requiredOrgFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
-import chalk from 'chalk';
+import ansis from 'ansis';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { isNonDecomposedCustomLabel, isNonDecomposedCustomLabelsOrCustomLabel } from '../../../utils/metadataTypes.js';
 import { getFileResponseSuccessProps } from '../../../utils/output.js';
@@ -187,7 +187,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
     if (!this.components.length) {
       // if we didn't find any components to delete, let the user know and exit
-      this.styledHeader(chalk.blue('Deleted Source'));
+      this.styledHeader(ansis.blue('Deleted Source'));
       this.log('No results found');
       return;
     }
