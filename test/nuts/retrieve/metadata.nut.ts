@@ -8,7 +8,6 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import * as os from 'node:os';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
@@ -69,7 +68,7 @@ describe('retrieve metadata NUTs', () => {
             ),
             'utf8'
           )
-          .split(os.EOL).length
+          .split('\n').length
         // 4 lines would be overwritten - ensures like W-15896939 is fixed
       ).to.be.greaterThanOrEqual(30);
     });
