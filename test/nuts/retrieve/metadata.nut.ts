@@ -15,7 +15,7 @@ import { RetrieveResultJson } from '../../../src/utils/types.js';
 
 const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
 
-describe.only('retrieve metadata NUTs', () => {
+describe('retrieve metadata NUTs', () => {
   let testkit: SourceTestkit;
 
   before(async () => {
