@@ -49,6 +49,30 @@ describe('retrieve metadata NUTs', () => {
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/GeocodingService.cls']);
     });
 
+    it('should retrieve named CustomField', async () => {
+      await testkit.retrieve({ args: '--metadata CustomField:Broker__c.Email__c ' });
+      await testkit.expect.filesToBeRetrieved([
+        'force-app/main/default/objects/Broker__c/fields/Email__c.field-meta.xml',
+      ]);
+      expect(
+        fs
+          .readFileSync(
+            path.join(
+              testkit.projectDir,
+              'force-app',
+              'main',
+              'default',
+              'objects',
+              'Broker__c',
+              'Broker__c.object-meta.xml'
+            ),
+            'utf8'
+          )
+          .split('\n').length
+        // 4 lines would be overwritten - ensures like W-15896939 is fixed
+      ).to.be.greaterThanOrEqual(30);
+    });
+
     it('should retrieve multiple metadata types', async () => {
       await testkit.retrieve({ args: '--metadata ApexClass AuraDefinitionBundle' });
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/*', 'force-app/main/default/aura/**/*']);
