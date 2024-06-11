@@ -15,7 +15,7 @@ import { RetrieveResultJson } from '../../../src/utils/types.js';
 
 const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
 
-describe('retrieve metadata NUTs', () => {
+describe.only('retrieve metadata NUTs', () => {
   let testkit: SourceTestkit;
 
   before(async () => {
@@ -47,6 +47,13 @@ describe('retrieve metadata NUTs', () => {
     it('should retrieve named ApexClass', async () => {
       await testkit.retrieve({ args: '--metadata ApexClass:GeocodingService' });
       await testkit.expect.filesToBeRetrieved(['force-app/main/default/classes/GeocodingService.cls']);
+    });
+
+    it('should retrieve named CustomField', async () => {
+      await testkit.retrieve({ args: '--metadata CustomField:Broker__c.Email__c ' });
+      await testkit.expect.filesToBeRetrieved([
+        'force-app/main/default/objects/Broker__c/fields/Email__c.field-meta.xml',
+      ]);
     });
 
     it('should retrieve multiple metadata types', async () => {
