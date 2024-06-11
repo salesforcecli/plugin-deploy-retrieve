@@ -8,7 +8,6 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import * as os from 'node:os';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { expect } from 'chai';
@@ -55,29 +54,21 @@ describe('retrieve metadata NUTs', () => {
       await testkit.expect.filesToBeRetrieved([
         'force-app/main/default/objects/Broker__c/fields/Email__c.field-meta.xml',
       ]);
-      const content = fs.readFileSync(
-        path.join(
-          testkit.projectDir,
-          'force-app',
-          'main',
-          'default',
-          'objects',
-          'Broker__c',
-          'Broker__c.object-meta.xml'
-        ),
-        'utf8'
-      );
-      // eslint-disable-next-line no-console
-      console.log('content', content);
-      // eslint-disable-next-line no-console
-      console.log('length', content.split(os.EOL).length);
-      // eslint-disable-next-line no-console
-      console.log(
-        'split',
-        content.split(os.EOL).map((c) => c)
-      );
       expect(
-        content.split(os.EOL).length
+        fs
+          .readFileSync(
+            path.join(
+              testkit.projectDir,
+              'force-app',
+              'main',
+              'default',
+              'objects',
+              'Broker__c',
+              'Broker__c.object-meta.xml'
+            ),
+            'utf8'
+          )
+          .split('\n').length
         // 4 lines would be overwritten - ensures like W-15896939 is fixed
       ).to.be.greaterThanOrEqual(30);
     });
