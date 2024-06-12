@@ -33,10 +33,9 @@ import {
   requiredOrgFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
-import ansis from 'ansis';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { isNonDecomposedCustomLabel, isNonDecomposedCustomLabelsOrCustomLabel } from '../../../utils/metadataTypes.js';
-import { getFileResponseSuccessProps } from '../../../utils/output.js';
+import { getFileResponseSuccessProps, tableHeader } from '../../../utils/output.js';
 import { API, DeleteSourceJson, isFileResponseDeleted, isSdrSuccess, isSourceComponent } from '../../../utils/types.js';
 import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
 import { resolveApi, validateTests } from '../../../utils/deploy.js';
@@ -187,7 +186,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
     if (!this.components.length) {
       // if we didn't find any components to delete, let the user know and exit
-      this.styledHeader(ansis.blue('Deleted Source'));
+      this.styledHeader(tableHeader('Deleted Source'));
       this.log('No results found');
       return;
     }

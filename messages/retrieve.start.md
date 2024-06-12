@@ -191,7 +191,7 @@ The retrieve target directory [%s] overlaps one of your package directories. Spe
 
 # wantsToRetrieveCustomFields
 
-Because you're retrieving one or more CustomFields, we're also retrieving the CustomObject to which it's associated.
+Because you're retrieving one or more CustomFields that you didn't specify the name for, we're also retrieving the CustomObject to which they're associated.
 
 # noSourceTracking
 

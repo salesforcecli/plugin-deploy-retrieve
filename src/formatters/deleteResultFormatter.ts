@@ -7,7 +7,6 @@
 import { Ux } from '@salesforce/sf-plugins-core';
 import { DeployResult, FileResponse, FileResponseSuccess, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
-import ansis from 'ansis';
 import { StandardColors } from '@salesforce/sf-plugins-core';
 import { DeleteSourceJson, Formatter, TestLevel, isSdrSuccess } from '../utils/types.js';
 import {
@@ -15,6 +14,7 @@ import {
   fileResponseSortFn,
   getFileResponseSuccessProps,
   makePathRelative,
+  tableHeader,
 } from '../utils/output.js';
 import { TestResultsFormatter } from '../formatters/testResultsFormatter.js';
 
@@ -80,7 +80,7 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
       }
 
       ux.log('');
-      ux.styledHeader(ansis.blue('Deleted Source'));
+      ux.styledHeader(tableHeader('Deleted Source'));
       ux.table(
         successes.map(getFileResponseSuccessProps),
         {
