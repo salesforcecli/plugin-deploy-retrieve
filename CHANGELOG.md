@@ -1,3 +1,9 @@
+## [3.9.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.4...3.9.5) (2024-06-12)
+
+### Bug Fixes
+
+- **deps:** bump braces from 3.0.2 to 3.0.3 ([b626d62](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b626d6252e8bfe248c2d70e41732c54fc9e733b7))
+
 ## [3.9.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.3...3.9.4) (2024-06-10)
 
 ### Bug Fixes
