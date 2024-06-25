@@ -6,7 +6,7 @@
  */
 
 import * as path from 'node:path';
-import fs, { writeFileSync } from 'node:fs';
+import { copyFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { assert, expect } from 'chai';
@@ -246,11 +246,11 @@ describe('project deploy start --destructive NUTs', () => {
       createManifest(`ApexClass:${post}`, 'post');
       createManifest(`ApexClass:${pre}`, 'pre');
       // move the destructive changes files into the mdapi dirt
-      fs.copyFileSync(
+      copyFileSync(
         join(testkit.projectDir, 'destructiveChangesPre.xml'),
         join(testkit.projectDir, 'mdapi', 'destructiveChangesPre.xml')
       );
-      fs.copyFileSync(
+      copyFileSync(
         join(testkit.projectDir, 'destructiveChangesPost.xml'),
         join(testkit.projectDir, 'mdapi', 'destructiveChangesPost.xml')
       );
