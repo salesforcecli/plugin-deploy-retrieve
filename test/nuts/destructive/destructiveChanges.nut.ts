@@ -6,8 +6,9 @@
  */
 
 import * as path from 'node:path';
-import { writeFileSync } from 'node:fs';
+import fs, { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { assert, expect } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
@@ -224,6 +225,38 @@ describe('project deploy start --destructive NUTs', () => {
           ensureExitCode: 0,
         }
       );
+
+      preDeleted = await isNameObsolete(testkit.username, 'ApexClass', pre);
+      postDeleted = await isNameObsolete(testkit.username, 'ApexClass', post);
+      expect(preDeleted).to.be.true;
+      expect(postDeleted).to.be.true;
+    });
+
+    it('should delete a class in metadata api format with --purge-on-delete', async () => {
+      const pre = createApexClass('pre').apexName;
+      const post = createApexClass('post').apexName;
+      let preDeleted = await isNameObsolete(testkit.username, 'ApexClass', pre);
+      let postDeleted = await isNameObsolete(testkit.username, 'ApexClass', post);
+
+      expect(preDeleted).to.be.false;
+      expect(postDeleted).to.be.false;
+      // convert file to deploy to MDAPI format
+      execCmd('project:convert:source --output-dir mdapi --metadata ApexClass:GeocodingService');
+
+      createManifest(`ApexClass:${post}`, 'post');
+      createManifest(`ApexClass:${pre}`, 'pre');
+      // move the destructive changes files into the mdapi dirt
+      fs.copyFileSync(
+        join(testkit.projectDir, 'destructiveChangesPre.xml'),
+        join(testkit.projectDir, 'mdapi', 'destructiveChangesPre.xml')
+      );
+      fs.copyFileSync(
+        join(testkit.projectDir, 'destructiveChangesPost.xml'),
+        join(testkit.projectDir, 'mdapi', 'destructiveChangesPost.xml')
+      );
+      execCmd('project:deploy:start --json --metadata-dir mdapi --purge-on-delete', {
+        ensureExitCode: 0,
+      });
 
       preDeleted = await isNameObsolete(testkit.username, 'ApexClass', pre);
       postDeleted = await isNameObsolete(testkit.username, 'ApexClass', post);
