@@ -64,11 +64,11 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
       <%= config.bin %> <%= command.id %> --metadata ApexClass --test-level RunLocalTests
 
-- Deploy all "metadata formatted" metadata in the "MDAPI" directory:
+- Deploy all metadata formatted files in the "MDAPI" directory:
 
       <%= config.bin %> <%= command.id %> --metadata-dir MDAPI
 
-- Deploy all "metadata formatted" metadata in the "MDAPI" directory while hard deleting any items listed in MDAPI/destructiveChangesPre.xml or MDAPI/destructiveChangesPost.xml manifests:
+- Deploy all metadata formatted files in the "MDAPI" directory; items listed in the MDAPI/destructiveChangesPre.xml and MDAPI/destructiveChangesPost.xml manifests are immediately eligible for deletion rather than stored in the Recycle Bin:
 
       <%= config.bin %> <%= command.id %> --metadata-dir MDAPI --purge-on-delete
 
