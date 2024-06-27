@@ -1,3 +1,9 @@
+## [3.9.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.9...3.9.10) (2024-06-27)
+
+### Bug Fixes
+
+- allow purge-on-delete with mdapi dirs ([1ae35bb](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1ae35bb68241db1de1af446c2ad4e5e053f63f79))
+
 ## [3.9.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.8...3.9.9) (2024-06-22)
 
 ### Bug Fixes
