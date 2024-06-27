@@ -134,8 +134,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }),
     'purge-on-delete': Flags.boolean({
       summary: messages.getMessage('flags.purge-on-delete.summary'),
-      dependsOn: ['manifest'],
-      relationships: [{ type: 'some', flags: ['pre-destructive-changes', 'post-destructive-changes'] }],
+      relationships: [
+        { type: 'some', flags: ['pre-destructive-changes', 'manifest', 'metadata-dir', 'post-destructive-changes'] },
+      ],
       helpGroup: destructiveFlags,
     }),
     'pre-destructive-changes': Flags.file({
