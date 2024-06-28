@@ -69,7 +69,10 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
       if (deployMessages.length >= successes.length) {
         // if there's additional successes in the API response, find the success and add it to the output
         deployMessages.map((deployMessage) => {
-          if (!fileResponseSuccesses.has(`${deployMessage.componentType}#${deployMessage.fullName}`)) {
+          if (
+            deployMessage.componentType &&
+            !fileResponseSuccesses.has(`${deployMessage.componentType}#${deployMessage.fullName}`)
+          ) {
             successes.push(
               Object.assign(deployMessage, {
                 type: deployMessage.componentType,

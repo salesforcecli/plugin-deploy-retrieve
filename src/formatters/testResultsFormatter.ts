@@ -90,7 +90,7 @@ const displayVerboseTestFailures = (response: MetadataApiDeployStatus): void => 
   const failures = ensureArray(response.details.runTestResult?.failures).sort(testResultSort);
   const failureCount = response.details.runTestResult?.numFailures;
   ux.log();
-  ux.log(error(`Test Failures [${failureCount}]`));
+  ux.log(error(`Test Failures [${failureCount ?? 0}]`));
   for (const test of failures) {
     const testName = ansis.underline(`${test.name}.${test.methodName}`);
     ux.log(`• ${testName}`);

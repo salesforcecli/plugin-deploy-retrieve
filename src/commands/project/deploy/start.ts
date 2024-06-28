@@ -204,6 +204,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       this.log(
         messages.getMessage('apiVersionMsgDetailed', [
           action,
+          // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
           username,
           apiData.apiVersion,
