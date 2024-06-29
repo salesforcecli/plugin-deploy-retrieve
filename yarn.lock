@@ -1453,22 +1453,22 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oclif/core@^4", "@oclif/core@^4.0.0-beat.13", "@oclif/core@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-4.0.3.tgz#6231272447c7057813986860448613ed38cfdc47"
-  integrity sha512-yM8R/M2WfSNfL9eF8clS/SbQvanvHZJgoij5bLs3ro7uAFCkL/LYcagyj0UVGbysx5AI+SNIof6OHQUXYZpOZw==
+"@oclif/core@^4", "@oclif/core@^4.0.0-beat.13", "@oclif/core@^4.0.3", "@oclif/core@^4.0.6":
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-4.0.7.tgz#e624fa6e91ddcd84ebd0aa9e6efbe17b94f2dd1f"
+  integrity sha512-sU4Dx+RXCWAkrMw8tQFYAL6VfcHYKLPxVC9iKfgTXr4aDhcCssDwrbgpx0Di1dnNxvQlDGUhuCEInZuIY/nNfw==
   dependencies:
     ansi-escapes "^4.3.2"
     ansis "^3.1.1"
     clean-stack "^3.0.1"
     cli-spinners "^2.9.2"
-    cosmiconfig "^9.0.0"
     debug "^4.3.5"
     ejs "^3.1.10"
     get-package-type "^0.1.0"
     globby "^11.1.0"
     indent-string "^4.0.0"
     is-wsl "^2.2.0"
+    lilconfig "^3.1.2"
     minimatch "^9.0.4"
     string-width "^4.2.3"
     supports-color "^8"
@@ -1580,7 +1580,7 @@
     semver "^7.6.2"
     ts-retry-promise "^0.8.1"
 
-"@salesforce/core@^8.0.1", "@salesforce/core@^8.0.2", "@salesforce/core@^8.0.3":
+"@salesforce/core@^8.0.1", "@salesforce/core@^8.0.3", "@salesforce/core@^8.1.0":
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-8.1.0.tgz#8ee25acdacf9d70a6249907a2fe3503461f18766"
   integrity sha512-oItr8cdeMe67glJN3dP1Gh/kasD0DUT6S6RfcLTH32wwuZNQAwMXNgBOCvlskr8nxPZ+YSSw7CVuqYMUmCtUXA==
@@ -1726,14 +1726,14 @@
     minimatch "^5.1.6"
     proxy-agent "^6.4.0"
 
-"@salesforce/source-deploy-retrieve@^12.0.1":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.0.1.tgz#9cfcde127e0bf57a76beb2b1450edf2d44957d0f"
-  integrity sha512-LwbOBwmkXk+zYQBU7VfmlLA8jSF7vgdaSSVzKtqaQDWbHUms+EW5oNMr2ELD8wN7Grh0tlTcHA4sSP305jqdXA==
+"@salesforce/source-deploy-retrieve@^12.0.1", "@salesforce/source-deploy-retrieve@^12.1.0":
+  version "12.1.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.1.4.tgz#c4cbb181b72bb215e24c3591df560f9bd40998b1"
+  integrity sha512-fsf/sH504dffjcWQsiILz6DUIi3YryyJiBqkYmLeQ+kx9G+r+ToFzZBO2NMn6vp8EYE+qPmpbHiV/Qpf4y5dpw==
   dependencies:
-    "@salesforce/core" "^8.0.1"
+    "@salesforce/core" "^8.1.0"
     "@salesforce/kit" "^3.1.6"
-    "@salesforce/ts-types" "^2.0.9"
+    "@salesforce/ts-types" "^2.0.10"
     fast-levenshtein "^3.0.0"
     fast-xml-parser "^4.3.6"
     got "^11.8.6"
@@ -1741,7 +1741,7 @@
     ignore "^5.3.1"
     jszip "^3.10.1"
     mime "2.6.0"
-    minimatch "^5.1.6"
+    minimatch "^9.0.5"
     proxy-agent "^6.4.0"
 
 "@salesforce/source-testkit@^2.2.26":
@@ -1760,15 +1760,15 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^7.0.1":
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.0.1.tgz#d01dda86b6126f0ff2f0b871626dca8fd403c6d6"
-  integrity sha512-GRGlKDexp2sdTrtdE8cNnvLOdpo1r970OKw6Prmt0Ef3e1c/mlcu4do1QM6Pb5ydJwZl8UCGknu0NLeG8rRIUA==
+"@salesforce/source-tracking@^7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.0.4.tgz#d44872c9503c254ffb6e8ccdad93c6fafe518388"
+  integrity sha512-j7psC52kQ7yX1OZYY5UoBvQc2RKKL/mKuh1OwaeOFkGqJOf0D/b4osRPjHVN6ljN9Zwj5OavGpvi9CA8L4evxQ==
   dependencies:
-    "@oclif/core" "^4.0.3"
-    "@salesforce/core" "^8.0.2"
+    "@oclif/core" "^4.0.6"
+    "@salesforce/core" "^8.1.0"
     "@salesforce/kit" "^3.1.6"
-    "@salesforce/source-deploy-retrieve" "^12.0.1"
+    "@salesforce/source-deploy-retrieve" "^12.1.0"
     "@salesforce/ts-types" "^2.0.10"
     fast-xml-parser "^4.4.0"
     graceful-fs "^4.2.11"
@@ -3504,16 +3504,6 @@ cosmiconfig@^8.0.0, cosmiconfig@^8.3.6:
     parse-json "^5.2.0"
     path-type "^4.0.0"
 
-cosmiconfig@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-9.0.0.tgz#34c3fc58287b915f3ae905ab6dc3de258b55ad9d"
-  integrity sha512-itvL5h8RETACmOTFc4UfIyB2RfEHi71Ax6E/PivVxq9NseKbOWpeyHEOIbmAw1rs8Ak0VursQNww7lf7YtUwzg==
-  dependencies:
-    env-paths "^2.2.1"
-    import-fresh "^3.3.0"
-    js-yaml "^4.1.0"
-    parse-json "^5.2.0"
-
 crc-32@^1.2.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/crc-32/-/crc-32-1.2.2.tgz#3cad35a934b8bf71f25ca524b6da51fb7eace2ff"
@@ -3870,11 +3860,6 @@ entities@^4.2.0, entities@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/entities/-/entities-4.5.0.tgz#5d268ea5e7113ec74c4d033b79ea5a35a488fb48"
   integrity sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
-
-env-paths@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-2.2.1.tgz#420399d416ce1fbe9bc0a07c62fa68d67fd0f8f2"
-  integrity sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==
 
 error-ex@^1.3.1:
   version "1.3.2"
@@ -5678,6 +5663,11 @@ lie@~3.3.0:
   dependencies:
     immediate "~3.0.5"
 
+lilconfig@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/lilconfig/-/lilconfig-3.1.2.tgz#e4a7c3cb549e3a606c8dcc32e5ae1005e62c05cb"
+  integrity sha512-eop+wDAvpItUys0FWkHIKeC9ybYrTGbU41U5K7+bttZZeohvnY7M9dZ5kB21GNWiFT2q1OoPTvncPCgSOVO5ow==
+
 lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
@@ -6061,6 +6051,13 @@ minimatch@^9.0.3, minimatch@^9.0.4:
   version "9.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.4.tgz#8e49c731d1749cbec05050ee5145147b32496a51"
   integrity sha512-KqWh+VchfxcMNRAJjj2tnsSJdNbHsVgnkBhTNrW7AjVo6OvLtxw8zfT9oLw1JSohlFzJ8jCoTgaoXvJ+kHt6fw==
+  dependencies:
+    brace-expansion "^2.0.1"
+
+minimatch@^9.0.5:
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.5.tgz#d74f9dd6b57d83d8e98cfb82133b03978bc929e5"
+  integrity sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==
   dependencies:
     brace-expansion "^2.0.1"
 
