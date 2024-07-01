@@ -236,7 +236,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
     if (!(await this.handlePrompt())) {
       await Promise.all(
         this.mixedDeployDelete.delete.map(async (file) => {
-          await restoreFileFromStash(this.stashPath, file.filePath as string);
+          await restoreFileFromStash(this.stashPath, file.filePath);
         })
       );
       throw messages.createError('prompt.delete.cancel');
@@ -282,7 +282,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       process.exitCode = 1;
       await Promise.all(
         this.mixedDeployDelete.delete.map(async (file) => {
-          await restoreFileFromStash(this.stashPath, file.filePath as string);
+          await restoreFileFromStash(this.stashPath, file.filePath);
         })
       );
     } else if (this.mixedDeployDelete.delete.length) {
@@ -337,10 +337,8 @@ export class Source extends SfCommand<DeleteSourceJson> {
         this.tracking?.updateLocalTracking({
           files: successes
             .filter((fileResponse) => fileResponse.state !== ComponentStatus.Deleted)
-            .map((fileResponse) => fileResponse.filePath) as string[],
-          deletedFiles: successes
-            .filter(isFileResponseDeleted)
-            .map((fileResponse) => fileResponse.filePath) as string[],
+            .map((fileResponse) => fileResponse.filePath),
+          deletedFiles: successes.filter(isFileResponseDeleted).map((fileResponse) => fileResponse.filePath),
         }),
         this.tracking?.updateRemoteTracking(successes.map(getFileResponseSuccessProps)),
       ]);
