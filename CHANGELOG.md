@@ -1,3 +1,9 @@
+## [3.9.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.11...3.9.12) (2024-07-01)
+
+### Bug Fixes
+
+- **deps:** new SDR with fileResponseSuccess required filepath ([#1076](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1076)) ([85f5264](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/85f52644ea9b33ddebeac7c4164342eb9ee53e1f))
+
 ## [3.9.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.10...3.9.11) (2024-06-27)
 
 ### Bug Fixes
