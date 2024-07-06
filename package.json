@@ -7,7 +7,7 @@
   "dependencies": {
     "@oclif/core": "^4.0.3",
     "@salesforce/apex-node": "^7.0.2",
-    "@salesforce/core": "^8.1.0",
+    "@salesforce/core": "^8.1.1",
     "@salesforce/kit": "^3.1.6",
     "@salesforce/plugin-info": "^3.3.15",
     "@salesforce/sf-plugins-core": "^11.1.1",
