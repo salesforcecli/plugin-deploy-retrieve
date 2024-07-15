@@ -90,6 +90,10 @@ describe('project convert mdapi NUTs', () => {
       expect(result.jsonOutput?.status).to.equal(0);
       expect(result.jsonOutput?.result).to.be.an('array').with.length.greaterThan(10);
       expect(fs.existsSync(convertedToSrcPath)).to.be.true;
+      expect(result.jsonOutput).to.not.be.undefined;
+      result.jsonOutput?.result.forEach((md) => {
+        expect(md.filePath.startsWith(convertedToSrcPath)).to.be.true;
+      });
     });
 
     it('should convert the dreamhouse project using metadatapath flag', () => {
