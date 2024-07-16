@@ -1,3 +1,9 @@
+## [3.9.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.14...3.9.15) (2024-07-16)
+
+### Bug Fixes
+
+- sdr bump for oom bug fix ([#1092](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1092)) ([270de61](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/270de61a0676282feb44e13f696839237ec4bd45))
+
 ## [3.9.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.13...3.9.14) (2024-07-13)
 
 ### Bug Fixes
