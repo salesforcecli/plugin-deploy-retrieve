@@ -1,3 +1,9 @@
+## [3.9.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.16...3.9.17) (2024-07-16)
+
+### Bug Fixes
+
+- append test info to validate error ([3ec9baf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3ec9bafca94d7401df9b480eb761887608213e19))
+
 ## [3.9.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.15...3.9.16) (2024-07-16)
 
 ### Bug Fixes
