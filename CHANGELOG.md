@@ -1,3 +1,9 @@
+## [3.9.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.15...3.9.16) (2024-07-16)
+
+### Bug Fixes
+
+- preset help from exported SDR type ([#1079](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1079)) ([8b9feba](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8b9feba76cab0ed74f5b48046396b860d242c477))
+
 ## [3.9.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.14...3.9.15) (2024-07-16)
 
 ### Bug Fixes
