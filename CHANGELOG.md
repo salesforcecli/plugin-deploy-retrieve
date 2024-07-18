@@ -1,3 +1,9 @@
+## [3.9.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.17...3.9.18) (2024-07-18)
+
+### Bug Fixes
+
+- use full output-path on `mdapi convert` ([357e721](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/357e721b320445dbeae113ecfba99059e5245e92))
+
 ## [3.9.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.16...3.9.17) (2024-07-16)
 
 ### Bug Fixes
