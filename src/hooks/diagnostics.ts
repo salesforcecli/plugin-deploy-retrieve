@@ -138,6 +138,7 @@ const getMaxApiVersion = async (aggregator: ConfigAggregator, aliasOrUsername: s
 //   Comparing 55.0 with 55.0 would return false.
 //   Comparing 55.0 with 56.0 would return true.
 const diff = (version1: string | undefined, version2: string | undefined): boolean => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   getLogger().debug(`Comparing API versions: [${version1},${version2}]`);
   return !!version1?.length && !!version2?.length && version1 !== version2;
 };
