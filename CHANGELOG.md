@@ -1,3 +1,51 @@
+## [3.9.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.17...3.9.18) (2024-07-18)
+
+### Bug Fixes
+
+- use full output-path on `mdapi convert` ([357e721](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/357e721b320445dbeae113ecfba99059e5245e92))
+
+## [3.9.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.16...3.9.17) (2024-07-16)
+
+### Bug Fixes
+
+- append test info to validate error ([3ec9baf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3ec9bafca94d7401df9b480eb761887608213e19))
+
+## [3.9.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.15...3.9.16) (2024-07-16)
+
+### Bug Fixes
+
+- preset help from exported SDR type ([#1079](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1079)) ([8b9feba](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8b9feba76cab0ed74f5b48046396b860d242c477))
+
+## [3.9.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.14...3.9.15) (2024-07-16)
+
+### Bug Fixes
+
+- sdr bump for oom bug fix ([#1092](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1092)) ([270de61](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/270de61a0676282feb44e13f696839237ec4bd45))
+
+## [3.9.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.13...3.9.14) (2024-07-13)
+
+### Bug Fixes
+
+- **deps:** bump ansis from 3.2.0 to 3.2.1 ([0bac22b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0bac22b8ebb2d4c0fe95b094a4063b5629802497))
+
+## [3.9.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.12...3.9.13) (2024-07-06)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 7.0.2 to 7.0.4 ([0d73752](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0d73752c38476765ae95676673a025b86c91ee03))
+
+## [3.9.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.11...3.9.12) (2024-07-01)
+
+### Bug Fixes
+
+- **deps:** new SDR with fileResponseSuccess required filepath ([#1076](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1076)) ([85f5264](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/85f52644ea9b33ddebeac7c4164342eb9ee53e1f))
+
+## [3.9.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.10...3.9.11) (2024-06-27)
+
+### Bug Fixes
+
+- bump core to 8.0.3 ([1da35a8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1da35a8ef27abee0ae2435130a64fd94104059ed))
+
 ## [3.9.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.9...3.9.10) (2024-06-27)
 
 ### Bug Fixes

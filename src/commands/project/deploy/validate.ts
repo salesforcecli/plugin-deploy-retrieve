@@ -240,6 +240,9 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
             ),
             componentDeployErrors,
             result.response.numberComponentErrors ? `${result.response.numberComponentErrors} component error(s)` : '',
+            ensureArray(result.response.details.runTestResult?.failures).map(
+              (f) => `${f.name}.${f.methodName} - ${f.message}`
+            ),
           ]
             .join(os.EOL)
             .trim(),
