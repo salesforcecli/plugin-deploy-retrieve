@@ -1,3 +1,9 @@
+## [3.9.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.18...3.9.19) (2024-07-19)
+
+### Bug Fixes
+
+- reduce undefined in template literals ([#1093](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1093)) ([f4a0384](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f4a038402c7839cd8bab6c02874ac2aea01ca5c8))
+
 ## [3.9.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.17...3.9.18) (2024-07-18)
 
 ### Bug Fixes
