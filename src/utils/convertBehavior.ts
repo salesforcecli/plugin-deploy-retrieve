@@ -5,8 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { existsSync, readdirSync } from 'node:fs';
-// import { platform } from 'node:os';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SfError, SfProject, SfProjectJson, Messages } from '@salesforce/core';
@@ -18,6 +17,7 @@ import {
   MetadataRegistry,
   RegistryAccess,
   SourceComponent,
+  presetMap,
 } from '@salesforce/source-deploy-retrieve';
 import { isString } from '@salesforce/ts-types';
 
@@ -28,7 +28,7 @@ const PRESET_DIR = fileURLToPath(
   join(import.meta.resolve('@salesforce/source-deploy-retrieve'), '..', 'registry', 'presets')
 );
 export const PRESETS_PROP = 'sourceBehaviorOptions';
-export const PRESET_CHOICES = (await readdir(PRESET_DIR)).map((f) => f.replace('.json', ''));
+export const PRESET_CHOICES = [...presetMap.keys()];
 export const TMP_DIR = process.env.SF_MDAPI_TEMP_DIR ?? 'decompositionConverterTempDir';
 export const DRY_RUN_DIR = 'DRY-RUN-RESULTS';
 

@@ -202,8 +202,13 @@ const ensureFlagPath = async (options: EnsureFsFlagOptions): Promise<string> => 
         throw new SfError(messages.getMessage('InvalidFlagPath', [flagName, path, enoent]), 'InvalidFlagPath');
       }
       const dir = type === 'dir' ? resolvedPath : dirname(resolvedPath);
-      // using as because fs promises always returns a string when recursive is true
-      return fs.promises.mkdir(dir, { recursive: true }) as Promise<string>;
+
+      await fs.promises.mkdir(dir, { recursive: true }).catch((err) => {
+        throw SfError.wrap(err);
+      });
+
+      // `fs.mkdir` will return only the first dir in the path so we return the full path here
+      return dir;
     }
   }
 };
