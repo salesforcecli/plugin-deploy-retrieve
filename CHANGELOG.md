@@ -1,3 +1,9 @@
+## [3.9.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.20...3.9.21) (2024-07-20)
+
+### Bug Fixes
+
+- **deps:** bump ansis from 3.2.1 to 3.3.1 ([ee88e46](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ee88e46d14cb696427810997f3c1b7dae0f4cd70))
+
 ## [3.9.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.19...3.9.20) (2024-07-20)
 
 ### Bug Fixes
