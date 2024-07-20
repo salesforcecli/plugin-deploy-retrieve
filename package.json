@@ -14,7 +14,7 @@
     "@salesforce/source-deploy-retrieve": "^12.1.6",
     "@salesforce/source-tracking": "^7.0.9",
     "@salesforce/ts-types": "^2.0.10",
-    "ansis": "^3.2.1"
+    "ansis": "^3.3.1"
   },
   "devDependencies": {
     "@oclif/plugin-command-snapshot": "^5.2.5",
