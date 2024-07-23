@@ -1,3 +1,21 @@
+## [3.9.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.20...3.9.21) (2024-07-20)
+
+### Bug Fixes
+
+- **deps:** bump ansis from 3.2.1 to 3.3.1 ([ee88e46](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ee88e46d14cb696427810997f3c1b7dae0f4cd70))
+
+## [3.9.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.19...3.9.20) (2024-07-20)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.3.18 to 3.3.19 ([970b04c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/970b04cd41e33f19133682062d89bacfe580b4ee))
+
+## [3.9.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.18...3.9.19) (2024-07-19)
+
+### Bug Fixes
+
+- reduce undefined in template literals ([#1093](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1093)) ([f4a0384](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f4a038402c7839cd8bab6c02874ac2aea01ca5c8))
+
 ## [3.9.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.17...3.9.18) (2024-07-18)
 
 ### Bug Fixes
