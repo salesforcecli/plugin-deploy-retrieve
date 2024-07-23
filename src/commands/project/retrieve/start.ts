@@ -164,23 +164,35 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const stages = ['Preparing retrieve request', 'Sending request to org', 'Waiting for the org to respond', 'Done'];
     const ms = new MultiStageComponent<{
       status: string;
-      apiVersion: string;
-      metadataApiVersion: string;
-      targetOrg: string;
+      apiData: RetrieveVersionData;
     }>({
       stages,
       title: 'Retrieving Metadata',
       jsonEnabled: this.jsonEnabled(),
-      info: [
+      preInfoBlock: [
+        {
+          type: 'message',
+          get: (data) =>
+            data?.apiData &&
+            messages.getMessage('apiVersionMsgDetailed', [
+              'Retrieving',
+              `v${data.apiData.manifestVersion}`,
+              flags['target-org'].getUsername(),
+              data.apiData.apiVersion,
+            ]),
+        },
+      ],
+      postInfoBlock: [
         {
           label: 'Status',
           get: (data) => data?.status,
           bold: true,
+          type: 'dynamic-key-value',
         },
       ],
     });
 
-    ms.goto(messages.getMessage('spinner.start'), { targetOrg: flags['target-org'].getUsername() });
+    ms.goto(messages.getMessage('spinner.start'));
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
       flags,
@@ -203,17 +215,9 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
     if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
-      // eslint-disable-next-line @typescript-eslint/require-await
-      Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) => {
-        ms.addMessage(
-          messages.getMessage('apiVersionMsgDetailed', [
-            'Retrieving',
-            `v${apiData.manifestVersion}`,
-            flags['target-org'].getUsername(),
-            apiData.apiVersion,
-          ])
-        );
-      });
+      Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) =>
+        Promise.resolve(ms.updateData({ apiData }))
+      );
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
       ms.goto(messages.getMessage('spinner.polling'), { status: 'Pending' });
 

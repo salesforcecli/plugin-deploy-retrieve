@@ -210,23 +210,41 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       title,
       stages: ['Preparing', 'Deploying Metadata', 'Running Tests', 'Updating Source Tracking', 'Done'],
       jsonEnabled: this.jsonEnabled(),
-      info: [
+      preInfoBlock: [
         {
-          label: 'Status',
-          get: (data) => data?.mdapiDeploy && mdTransferMessages.getMessage(data?.mdapiDeploy?.status),
-          bold: true,
+          type: 'message',
+          get: (data) =>
+            data?.apiData &&
+            messages.getMessage('apiVersionMsgDetailed', [
+              flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
+              // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              flags['metadata-dir'] ? '<version specified in manifest>' : `v${data.apiData.manifestVersion}`,
+              username,
+              data.apiData.apiVersion,
+              data.apiData.webService,
+            ]),
         },
-
         {
           label: 'Deploy ID',
           get: (data) => data?.mdapiDeploy?.id,
-          static: true,
+          type: 'static-key-value',
         },
         {
           label: 'Target Org',
           get: (data) => data?.targetOrg,
-          static: true,
+          type: 'static-key-value',
         },
+      ],
+      postInfoBlock: [
+        {
+          label: 'Status',
+          get: (data) => data?.mdapiDeploy && mdTransferMessages.getMessage(data?.mdapiDeploy?.status),
+          bold: true,
+          type: 'dynamic-key-value',
+        },
+      ],
+      stageInfoBlock: [
         {
           label: 'Components',
           get: (data) =>
@@ -237,6 +255,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
                 )}%)`
               : undefined,
           stage: 'Deploying Metadata',
+          type: 'dynamic-key-value',
         },
         {
           label: 'Tests',
@@ -247,6 +266,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
                 }`
               : undefined,
           stage: 'Running Tests',
+          type: 'dynamic-key-value',
         },
         {
           label: 'Members',
@@ -256,25 +276,13 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
               data.sourceMemberPolling.original
             }`,
           stage: 'Updating Source Tracking',
+          type: 'dynamic-key-value',
         },
       ],
     });
 
     const lifecycle = Lifecycle.getInstance();
-    // eslint-disable-next-line @typescript-eslint/require-await
-    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) => {
-      ms.addMessage(
-        messages.getMessage('apiVersionMsgDetailed', [
-          flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
-          // technically manifestVersion can be undefined, but only on raw mdapi deployments.
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
-          username,
-          apiData.apiVersion,
-          apiData.webService,
-        ])
-      );
-    });
+    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) => Promise.resolve(ms.updateData({ apiData })));
 
     const { deploy } = await executeDeploy(
       {
