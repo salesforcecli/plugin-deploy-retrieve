@@ -5,15 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import ansis from 'ansis';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployVersionData } from '@salesforce/source-deploy-retrieve';
+import { DeployVersionData, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { SourceConflictError } from '@salesforce/source-tracking';
+import { SourceConflictError, SourceMemberPollingEvent } from '@salesforce/source-tracking';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
@@ -22,9 +20,12 @@ import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { getOptionalProject } from '../../../utils/project.js';
+import { MultiStageComponent } from '../../../components/stages.js';
+import { round } from '../../../components/utils.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
+const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 const mdapiFormatFlags = 'Metadata API Format';
@@ -197,13 +198,76 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const api = await resolveApi(this.configAggregator);
     const username = flags['target-org'].getUsername();
-    const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
+    const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
+    const ms = new MultiStageComponent<{
+      mdapiDeploy: MetadataApiDeployStatus;
+      sourceMemberPolling: SourceMemberPollingEvent;
+      status: string;
+      apiData: DeployVersionData;
+      targetOrg: string;
+    }>({
+      title,
+      stages: ['Preparing', 'Deploying Metadata', 'Running Tests', 'Updating Source Tracking', 'Done'],
+      jsonEnabled: this.jsonEnabled(),
+      info: [
+        {
+          label: 'Status',
+          get: (data) => data?.mdapiDeploy && mdTransferMessages.getMessage(data?.mdapiDeploy?.status),
+          bold: true,
+        },
+
+        {
+          label: 'Deploy ID',
+          get: (data) => data?.mdapiDeploy?.id,
+          static: true,
+        },
+        {
+          label: 'Target Org',
+          get: (data) => data?.targetOrg,
+          static: true,
+        },
+        {
+          label: 'Components',
+          get: (data) =>
+            data?.mdapiDeploy?.numberComponentsTotal
+              ? `${data?.mdapiDeploy?.numberComponentsDeployed}/${data?.mdapiDeploy?.numberComponentsTotal} (${round(
+                  (data?.mdapiDeploy?.numberComponentsDeployed / data?.mdapiDeploy?.numberComponentsTotal) * 100,
+                  0
+                )}%)`
+              : undefined,
+          stage: 'Deploying Metadata',
+        },
+        {
+          label: 'Tests',
+          get: (data) =>
+            data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
+              ? `${data?.mdapiDeploy?.numberTestsCompleted ?? 0}/${data?.mdapiDeploy?.numberTestsTotal ?? 0} ${
+                  data?.mdapiDeploy?.numberTestErrors ? `(Errors: ${data?.mdapiDeploy?.numberTestErrors})` : ''
+                }`
+              : undefined,
+          stage: 'Running Tests',
+        },
+        {
+          label: 'Members',
+          get: (data) =>
+            data?.sourceMemberPolling &&
+            `${data.sourceMemberPolling.original - data.sourceMemberPolling.remaining}/${
+              data.sourceMemberPolling.original
+            }`,
+          stage: 'Updating Source Tracking',
+        },
+      ],
+    });
+
+    const lifecycle = Lifecycle.getInstance();
     // eslint-disable-next-line @typescript-eslint/require-await
-    Lifecycle.getInstance().on('apiVersionDeploy', async (apiData: DeployVersionData) => {
-      this.log(
+    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) => {
+      ms.addMessage(
         messages.getMessage('apiVersionMsgDetailed', [
-          action,
+          flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
+          // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
           username,
           apiData.apiVersion,
@@ -222,6 +286,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     );
 
     if (!deploy) {
+      ms.stop();
       this.log('No changes to deploy');
       return { status: 'Nothing to deploy', files: [] };
     }
@@ -229,7 +294,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+    // this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
 
     if (flags.async) {
       if (flags['coverage-formatters']) {
@@ -240,7 +305,36 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return asyncFormatter.getJson();
     }
 
-    new DeployProgress(deploy, this.jsonEnabled()).start();
+    ms.goto('Preparing', { targetOrg: username });
+
+    // for sourceMember polling events
+    lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
+      Promise.resolve(ms.goto('Updating Source Tracking', { sourceMemberPolling: event }))
+    );
+
+    deploy.onUpdate((data) => {
+      if (
+        data.numberComponentsDeployed === data.numberComponentsTotal &&
+        data.numberTestsTotal > 0 &&
+        data.numberComponentsDeployed > 0
+      ) {
+        ms.goto('Running Tests', { mdapiDeploy: data });
+      } else {
+        ms.goto('Deploying Metadata', { mdapiDeploy: data });
+      }
+    });
+
+    deploy.onFinish((data) => {
+      ms.goto('Done', { mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
+      ms.stop();
+    });
+
+    deploy.onCancel(() => ms.stop());
+
+    deploy.onError((error: Error) => {
+      ms.stop();
+      throw error;
+    });
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
     process.exitCode = determineExitCode(result);

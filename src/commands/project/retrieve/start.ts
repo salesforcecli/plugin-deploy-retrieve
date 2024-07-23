@@ -27,6 +27,7 @@ import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking
 import { Duration } from '@salesforce/kit';
 import { Interfaces } from '@oclif/core';
 
+import { MultiStageComponent } from '../../../components/stages.js';
 import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags.js';
 import { RetrieveResultFormatter } from '../../../formatters/retrieveResultFormatter.js';
 import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter.js';
@@ -160,7 +161,26 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
-    this.spinner.start(messages.getMessage('spinner.start'));
+    const stages = ['Preparing retrieve request', 'Sending request to org', 'Waiting for the org to respond', 'Done'];
+    const ms = new MultiStageComponent<{
+      status: string;
+      apiVersion: string;
+      metadataApiVersion: string;
+      targetOrg: string;
+    }>({
+      stages,
+      title: 'Retrieving Metadata',
+      jsonEnabled: this.jsonEnabled(),
+      info: [
+        {
+          label: 'Status',
+          get: (data) => data?.status,
+          bold: true,
+        },
+      ],
+    });
+
+    ms.goto(messages.getMessage('spinner.start'), { targetOrg: flags['target-org'].getUsername() });
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
       flags,
@@ -178,14 +198,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     }
     const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName, resolvedTargetDir);
 
-    this.spinner.status = messages.getMessage('spinner.sending');
+    ms.goto(messages.getMessage('spinner.sending'));
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
     if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
       // eslint-disable-next-line @typescript-eslint/require-await
       Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) => {
-        this.log(
+        ms.addMessage(
           messages.getMessage('apiVersionMsgDetailed', [
             'Retrieving',
             `v${apiData.manifestVersion}`,
@@ -195,23 +215,25 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         );
       });
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
-      this.spinner.status = messages.getMessage('spinner.polling');
+      ms.goto(messages.getMessage('spinner.polling'), { status: 'Pending' });
 
       retrieve.onUpdate((data) => {
-        this.spinner.status = mdTransferMessages.getMessage(data.status);
+        ms.goto(messages.getMessage('spinner.polling'), { status: mdTransferMessages.getMessage(data.status) });
       });
       // any thing else should stop the progress bar
-      retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
-      retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
+      retrieve.onFinish((data) => ms.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) }));
+      retrieve.onCancel((data) =>
+        ms.goto('Done', { status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') })
+      );
       retrieve.onError((error: Error) => {
-        this.spinner.stop(error.name);
+        ms.stop(error);
         throw error;
       });
 
       this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
     }
 
-    this.spinner.stop();
+    ms.stop();
 
     // flags['output-dir'] will set resolvedTargetDir var, so this check is redundant, but allows for nice typings in the moveResultsForRetrieveTargetDir method
     if (flags['output-dir'] && resolvedTargetDir) {
