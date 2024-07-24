@@ -210,7 +210,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       title,
       stages: ['Preparing', 'Deploying Metadata', 'Running Tests', 'Updating Source Tracking', 'Done'],
       jsonEnabled: this.jsonEnabled(),
-      preInfoBlock: [
+      preStagesBlock: [
         {
           type: 'message',
           get: (data) =>
@@ -225,6 +225,14 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
               data.apiData.webService,
             ]),
         },
+      ],
+      postStagesBlock: [
+        {
+          label: 'Status',
+          get: (data) => data?.mdapiDeploy && mdTransferMessages.getMessage(data?.mdapiDeploy?.status),
+          bold: true,
+          type: 'dynamic-key-value',
+        },
         {
           label: 'Deploy ID',
           get: (data) => data?.mdapiDeploy?.id,
@@ -236,15 +244,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
           type: 'static-key-value',
         },
       ],
-      postInfoBlock: [
-        {
-          label: 'Status',
-          get: (data) => data?.mdapiDeploy && mdTransferMessages.getMessage(data?.mdapiDeploy?.status),
-          bold: true,
-          type: 'dynamic-key-value',
-        },
-      ],
-      stageInfoBlock: [
+      stageSpecificBlock: [
         {
           label: 'Components',
           get: (data) =>

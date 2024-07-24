@@ -169,7 +169,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       stages,
       title: 'Retrieving Metadata',
       jsonEnabled: this.jsonEnabled(),
-      preInfoBlock: [
+      preStagesBlock: [
         {
           type: 'message',
           get: (data) =>
@@ -182,7 +182,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
             ]),
         },
       ],
-      postInfoBlock: [
+      postStagesBlock: [
         {
           label: 'Status',
           get: (data) => data?.status,
