@@ -143,7 +143,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 /** Resolve a job ID for a validated deploy using cache, most recent, or a job ID flag. */
 const resolveJobId = (cache: DeployCache, useMostRecentFlag: boolean, jobIdFlag?: string): string => {
   try {
-    return cache.resolveLatest((!useMostRecentFlag && jobIdFlag !== undefined) || useMostRecentFlag, jobIdFlag);
+    return cache.resolveLatest((!useMostRecentFlag && jobIdFlag === undefined) || useMostRecentFlag, jobIdFlag);
   } catch (e) {
     if (e instanceof Error && e.name === 'NoMatchingJobIdError' && jobIdFlag) {
       return jobIdFlag; // Use the specified 15 char job ID
