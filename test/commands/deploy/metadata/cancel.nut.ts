@@ -65,7 +65,7 @@ describe('deploy metadata cancel NUTs', () => {
       }
     });
 
-    it.skip('should cancel most recently started deployment without specifying the flag', () => {
+    it('should cancel most recently started deployment without specifying the flag', () => {
       const first = execCmd<DeployResultJson>(
         'deploy:metadata --source-dir force-app --async --ignore-conflicts --json',
         {

@@ -43,14 +43,14 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       length: 'both',
       description: messages.getMessage('flags.job-id.description'),
       summary: messages.getMessage('flags.job-id.summary'),
-      exactlyOne: ['use-most-recent', 'job-id'],
+      exclusive: ['use-most-recent'],
     }),
     'target-org': Flags.optionalOrg(),
     'use-most-recent': Flags.boolean({
       char: 'r',
       description: messages.getMessage('flags.use-most-recent.description'),
       summary: messages.getMessage('flags.use-most-recent.summary'),
-      exactlyOne: ['use-most-recent', 'job-id'],
+      exclusive: ['job-id'],
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
@@ -143,7 +143,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 /** Resolve a job ID for a validated deploy using cache, most recent, or a job ID flag. */
 const resolveJobId = (cache: DeployCache, useMostRecentFlag: boolean, jobIdFlag?: string): string => {
   try {
-    return cache.resolveLatest(useMostRecentFlag, jobIdFlag, true);
+    return cache.resolveLatest((!useMostRecentFlag && jobIdFlag !== undefined) || useMostRecentFlag, jobIdFlag);
   } catch (e) {
     if (e instanceof Error && e.name === 'NoMatchingJobIdError' && jobIdFlag) {
       return jobIdFlag; // Use the specified 15 char job ID

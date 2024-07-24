@@ -41,13 +41,13 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       length: 'both',
       description: messages.getMessage('flags.job-id.description'),
       summary: messages.getMessage('flags.job-id.summary'),
-      exactlyOne: ['use-most-recent', 'job-id'],
+      exclusive: ['use-most-recent'],
     }),
     'use-most-recent': Flags.boolean({
       char: 'r',
       description: messages.getMessage('flags.use-most-recent.description'),
       summary: messages.getMessage('flags.use-most-recent.summary'),
-      exactlyOne: ['use-most-recent', 'job-id'],
+      exclusive: ['job-id'],
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
@@ -81,7 +81,10 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataResume), DeployCache.create()]);
-    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], true);
+    const jobId = cache.resolveLatest(
+      (!flags['use-most-recent'] && !flags['job-id']) || flags['use-most-recent'],
+      flags['job-id']
+    );
 
     // if it was async before, then it should not be async now.
     const deployOpts = { ...cache.maybeGet(jobId), async: false };

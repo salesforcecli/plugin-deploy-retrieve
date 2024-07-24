@@ -48,7 +48,7 @@ describe('deploy metadata quick NUTs', () => {
       await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
     });
 
-    it.skip('should deploy previously validated deployment without specifying the flag', async () => {
+    it('should deploy previously validated deployment without specifying the flag', async () => {
       const validation = await testkit.execute<DeployResultJson>('project:deploy:validate', {
         args: '--source-dir force-app',
         json: true,

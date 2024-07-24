@@ -62,6 +62,32 @@ describe('[project deploy resume] NUTs', () => {
       expect(cacheAfter[first.result.id]).have.property('status');
       expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Succeeded);
     });
+
+    it('should resume most recently started deployment without flag', async () => {
+      const first = await testkit.execute<DeployResultJson>('project deploy start', {
+        args: '--source-dir force-app --async',
+        json: true,
+        exitCode: 0,
+      });
+      assert(first);
+      assert(first.result.id);
+
+      const cacheBefore = readDeployCache(testkit.projectDir);
+      expect(cacheBefore).to.have.property(first.result.id);
+
+      const deploy = await testkit.execute<DeployResultJson>('project deploy resume', {
+        json: true,
+        exitCode: 0,
+      });
+      assert(deploy);
+      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+
+      const cacheAfter = readDeployCache(testkit.projectDir);
+
+      expect(cacheAfter).to.have.property(first.result.id);
+      expect(cacheAfter[first.result.id]).have.property('status');
+      expect(cacheAfter[first.result.id].status).to.equal(RequestStatus.Succeeded);
+    });
   });
 
   describe('--job-id', () => {

@@ -38,13 +38,13 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
       length: 'both',
       description: messages.getMessage('flags.job-id.description'),
       summary: messages.getMessage('flags.job-id.summary'),
-      exactlyOne: ['use-most-recent', 'job-id'],
+      exclusive: ['use-most-recent'],
     }),
     'use-most-recent': Flags.boolean({
       char: 'r',
       description: messages.getMessage('flags.use-most-recent.description'),
       summary: messages.getMessage('flags.use-most-recent.summary'),
-      exactlyOne: ['use-most-recent', 'job-id'],
+      exclusive: ['job-id'],
     }),
     // we want to allow undefined to use the value from the cache
     // eslint-disable-next-line sf-plugin/flag-min-max-default
@@ -61,7 +61,10 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
 
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataCancel), DeployCache.create()]);
-    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id']);
+    const jobId = cache.resolveLatest(
+      (!flags['use-most-recent'] && !flags['job-id']) || flags['use-most-recent'],
+      flags['job-id']
+    );
 
     // cancel don't care about your tracking conflicts
     const deployOpts = {

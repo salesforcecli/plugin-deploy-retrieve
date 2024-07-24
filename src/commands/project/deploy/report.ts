@@ -35,13 +35,13 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       length: 'both',
       description: messages.getMessage('flags.job-id.description'),
       summary: messages.getMessage('flags.job-id.summary'),
-      exactlyOne: ['use-most-recent', 'job-id'],
+      exclusive: ['use-most-recent'],
     }),
     'use-most-recent': Flags.boolean({
       char: 'r',
       description: messages.getMessage('flags.use-most-recent.description'),
       summary: messages.getMessage('flags.use-most-recent.summary'),
-      exactlyOne: ['use-most-recent', 'job-id'],
+      exclusive: ['job-id'],
     }),
     'coverage-formatters': coverageFormattersFlag({ helpGroup: testFlags }),
     junit: Flags.boolean({
@@ -67,7 +67,10 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
 
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataReport), DeployCache.create()]);
-    const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
+    const jobId = cache.resolveLatest(
+      (!flags['use-most-recent'] && !flags['job-id']) || flags['use-most-recent'],
+      flags['job-id']
+    );
 
     const deployOpts = cache.maybeGet(jobId);
     const wait = flags['wait'];

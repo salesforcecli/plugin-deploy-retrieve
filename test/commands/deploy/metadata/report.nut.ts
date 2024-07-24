@@ -46,6 +46,21 @@ describe('[project deploy report] NUTs with source-dir', () => {
       assert(isObject(deploy));
       await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
     });
+
+    it('should report most recently started deployment without flag', async () => {
+      await testkit.execute<DeployResultJson>('project deploy start', {
+        args: '--source-dir force-app --async',
+        json: true,
+        exitCode: 0,
+      });
+
+      const deploy = await testkit.execute<DeployResultJson>('project deploy report', {
+        json: true,
+        exitCode: 0,
+      });
+      assert(isObject(deploy));
+      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+    });
   });
 
   describe('--job-id', () => {
