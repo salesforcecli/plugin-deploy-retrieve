@@ -49,7 +49,8 @@ describe('[project deploy report] NUTs with source-dir', () => {
 
     it('should report most recently started deployment without flag', async () => {
       await testkit.execute<DeployResultJson>('project deploy start', {
-        args: '--source-dir force-app --async',
+        // this might be conflicting with other deploys to the org
+        args: '--source-dir force-app --async --ignore-conflicts',
         json: true,
         exitCode: 0,
       });
