@@ -1202,7 +1202,7 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsforce/jsforce-node@^3.2.0", "@jsforce/jsforce-node@^3.2.2", "@jsforce/jsforce-node@^3.2.3":
+"@jsforce/jsforce-node@^3.2.0", "@jsforce/jsforce-node@^3.2.2":
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.2.3.tgz#9758cfe3ce7a2d884a621b5eb9b69db8eeb79da4"
   integrity sha512-kYjWAll0OYdFY3nYmCzvZZgioJqxhKkVp3FbqDnEdwoGTQlBFFInrrEf2PyNKSN2MB6/GxWGyUjtd+7/ttmBwA==
@@ -1216,6 +1216,24 @@
     faye "^1.4.0"
     form-data "^4.0.0"
     fs-extra "^8.1.0"
+    https-proxy-agent "^5.0.0"
+    multistream "^3.1.0"
+    node-fetch "^2.6.1"
+    strip-ansi "^6.0.0"
+    xml2js "^0.6.2"
+
+"@jsforce/jsforce-node@^3.2.4":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.3.2.tgz#79c1e5946233546253a61978d820e2b10e760d81"
+  integrity sha512-LyC6Sb7jSVg3lM7MbkXdFK2EhMGdNNy+U4dauoMv1Va8cUXnr2KIxvIP2Y+6/kccttvsugCE1DUkhkWgWSW2HQ==
+  dependencies:
+    "@sindresorhus/is" "^4"
+    abort-controller "^3.0.0"
+    base64url "^3.0.1"
+    csv-parse "^5.5.2"
+    csv-stringify "^6.4.4"
+    faye "^1.4.0"
+    form-data "^4.0.0"
     https-proxy-agent "^5.0.0"
     multistream "^3.1.0"
     node-fetch "^2.6.1"
@@ -1330,12 +1348,12 @@
     istanbul-lib-report "^3.0.1"
     istanbul-reports "^3.1.7"
 
-"@salesforce/cli-plugins-testkit@^5.3.17", "@salesforce/cli-plugins-testkit@^5.3.18":
-  version "5.3.18"
-  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.3.18.tgz#f36ae6ed8573b18396668a4d38b4effe0bd1a2bf"
-  integrity sha512-9+Yvmw5idIQryJcXVKZ2HASLKj2RUJizDuDFPq5ut9X+8y8MTWAkO0hO6OSj3IPkV+LTo8QF7QOCl16R2PWpMw==
+"@salesforce/cli-plugins-testkit@^5.3.18", "@salesforce/cli-plugins-testkit@^5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.3.19.tgz#495e7516a6046c42fc7cf60b11894d8922dd01aa"
+  integrity sha512-4mRlszh1q6bPw7dF4EHbYJ2IFxAanzKBbauZ5pSUHt+++otASmANoPc3TZ4CzNDG3rbt+5qFLnhhaQWMli0Nqw==
   dependencies:
-    "@salesforce/core" "^8.1.1"
+    "@salesforce/core" "^8.2.1"
     "@salesforce/kit" "^3.1.6"
     "@salesforce/ts-types" "^2.0.10"
     "@types/shelljs" "^0.8.15"
@@ -1346,12 +1364,12 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.1"
 
-"@salesforce/core@^8.0.3", "@salesforce/core@^8.1.0", "@salesforce/core@^8.1.1", "@salesforce/core@^8.1.2", "@salesforce/core@^8.1.3":
-  version "8.1.3"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-8.1.3.tgz#73347ac70ad94c4b5824257472d7c2f4fb17c562"
-  integrity sha512-Lt+xiD9BJpW7KpLYPnxwuIJAloUmxMn52vxM0eNDPnp8ienuq9Zv0FvH6qI3oEdjqxBlwg9bkOKNVzv6PELpHQ==
+"@salesforce/core@^8.0.3", "@salesforce/core@^8.1.0", "@salesforce/core@^8.1.1", "@salesforce/core@^8.1.2", "@salesforce/core@^8.1.3", "@salesforce/core@^8.2.1":
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-8.2.3.tgz#4714e5ca046c6fcdcffb91aad151affa9e7a0e88"
+  integrity sha512-epkV2ZU+WQFgxb6q98+9vAp9Qo1bUnCOyk1VyVr2XycJk6BkC0fBE188KpvH0/nqB2+0p2K4Cd3x1/+oC7HYvQ==
   dependencies:
-    "@jsforce/jsforce-node" "^3.2.3"
+    "@jsforce/jsforce-node" "^3.2.4"
     "@salesforce/kit" "^3.1.6"
     "@salesforce/schemas" "^1.9.0"
     "@salesforce/ts-types" "^2.0.10"
