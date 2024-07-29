@@ -19,7 +19,7 @@
   "devDependencies": {
     "@oclif/plugin-command-snapshot": "^5.2.5",
     "@salesforce/cli-plugins-testkit": "^5.3.19",
-    "@salesforce/dev-scripts": "^10.2.4",
+    "@salesforce/dev-scripts": "^10.2.5",
     "@salesforce/plugin-command-reference": "^3.1.8",
     "@salesforce/schemas": "^1.9.0",
     "@salesforce/source-testkit": "^2.2.39",
@@ -28,7 +28,7 @@
     "eslint-plugin-sf-plugin": "^1.18.11",
     "oclif": "^4.14.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "config": {},
   "engines": {
