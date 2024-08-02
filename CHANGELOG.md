@@ -1,3 +1,9 @@
+## [3.9.24](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.23...3.9.24) (2024-08-02)
+
+### Bug Fixes
+
+- **deps:** bump apex lib ([#1113](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1113)) ([b724309](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b7243096fb1a9b25f77c1536ceb1ff970df095b2))
+
 ## [3.9.23](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.22...3.9.23) (2024-07-27)
 
 ### Bug Fixes
