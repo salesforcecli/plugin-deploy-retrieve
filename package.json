@@ -17,7 +17,7 @@
     "ansis": "^3.3.2"
   },
   "devDependencies": {
-    "@oclif/plugin-command-snapshot": "^5.2.5",
+    "@oclif/plugin-command-snapshot": "^5.2.10",
     "@salesforce/cli-plugins-testkit": "^5.3.20",
     "@salesforce/dev-scripts": "^10.2.9",
     "@salesforce/plugin-command-reference": "^3.1.13",
