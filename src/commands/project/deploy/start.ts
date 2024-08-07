@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { DeployVersionData, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
@@ -20,8 +21,6 @@ import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { getOptionalProject } from '../../../utils/project.js';
-import { MultiStageComponent } from '../../../components/stages.js';
-import { round } from '../../../components/utils.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -32,6 +31,11 @@ const mdapiFormatFlags = 'Metadata API Format';
 const sourceFormatFlags = 'Source Format';
 const testFlags = 'Test';
 const destructiveFlags = 'Delete';
+
+function round(value: number, precision: number): number {
+  const multiplier = Math.pow(10, precision || 0);
+  return Math.round(value * multiplier) / multiplier;
+}
 
 export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -200,7 +204,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     const username = flags['target-org'].getUsername();
     const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
-    const ms = new MultiStageComponent<{
+    const ms = new MultiStageOutput<{
       mdapiDeploy: MetadataApiDeployStatus;
       sourceMemberPolling: SourceMemberPollingEvent;
       status: string;
@@ -302,7 +306,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    // this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
 
     if (flags.async) {
       if (flags['coverage-formatters']) {

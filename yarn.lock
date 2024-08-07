@@ -1696,6 +1696,18 @@
     wordwrap "^1.0.0"
     wrap-ansi "^7.0.0"
 
+"@oclif/multi-stage-output@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@oclif/multi-stage-output/-/multi-stage-output-0.1.2.tgz#06977cde8888fce916d5ffc2ec8aeac92eb2ff5a"
+  integrity sha512-U9wWtg9YeFFNg1HsT7TUh23e9+OGdexzsP5EF2qNNwFkzIh7vY9jqpC5//XnYftxqqYpxJ+ehRC4yPaFMeZZJQ==
+  dependencies:
+    "@oclif/core" "^4"
+    change-case "^5.4.4"
+    cli-spinners "^2"
+    figures "^6.1.0"
+    ink "^5.0.1"
+    react "^18.3.1"
+
 "@oclif/plugin-command-snapshot@^5.2.5":
   version "5.2.5"
   resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-5.2.5.tgz#c1a473d1650fba73e6c0bcf53f52cabcaa4794e4"

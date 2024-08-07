@@ -9,6 +9,7 @@ import { rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import * as fs from 'node:fs';
 
+import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
 import {
   RetrieveResult,
@@ -27,7 +28,6 @@ import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking
 import { Duration } from '@salesforce/kit';
 import { Interfaces } from '@oclif/core';
 
-import { MultiStageComponent } from '../../../components/stages.js';
 import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags.js';
 import { RetrieveResultFormatter } from '../../../formatters/retrieveResultFormatter.js';
 import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter.js';
@@ -162,7 +162,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
     const stages = ['Preparing retrieve request', 'Sending request to org', 'Waiting for the org to respond', 'Done'];
-    const ms = new MultiStageComponent<{
+    const ms = new MultiStageOutput<{
       status: string;
       apiData: RetrieveVersionData;
     }>({
