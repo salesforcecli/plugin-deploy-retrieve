@@ -58,8 +58,8 @@ This command moves metadata into a main/default structure, but your package dire
 
 # error.packageDirectoryNeedsMainDefault.actions
 
-- Update %s to have all its metadata inside a main/default directory structure.
-- Run the command again.
+- Update %s to have all its metadata inside a main/default directory structure, then run the command again.
+- Use the `--dry-run` flag. You can move the files in the output directory to wherever you want them. Please read the dry-run results carefully in case files need to be deleted from your project.
 
 # success.dryRun
 

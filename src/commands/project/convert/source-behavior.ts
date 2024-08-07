@@ -59,7 +59,7 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
     const projectJson = getValidatedProjectJson(flags.behavior, this.project!);
     const [backupPjsonContents, packageDirsWithDecomposable] = await Promise.all([
       flags['dry-run'] ? readFile(projectJson.getPath()) : '',
-      getPackageDirectoriesForPreset(this.project!, flags.behavior),
+      getPackageDirectoriesForPreset({ project: this.project!, preset: flags.behavior, dryRun: flags['dry-run'] }),
     ]);
     const filesToDelete = await convertToMdapi(packageDirsWithDecomposable);
 
