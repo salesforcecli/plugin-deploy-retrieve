@@ -33,10 +33,15 @@ export const TMP_DIR = process.env.SF_MDAPI_TEMP_DIR ?? 'decompositionConverterT
 export const DRY_RUN_DIR = 'DRY-RUN-RESULTS';
 
 /** returns packageDirectories and ComponentsSets where there is metadata of the type we'll change the behavior for */
-export const getPackageDirectoriesForPreset = async (
-  project: SfProject,
-  preset: string
-): Promise<ComponentSetAndPackageDirPath[]> => {
+export const getPackageDirectoriesForPreset = async ({
+  project,
+  preset,
+  dryRun,
+}: {
+  project: SfProject;
+  preset: string;
+  dryRun: boolean;
+}): Promise<ComponentSetAndPackageDirPath[]> => {
   const projectDir = project.getPath();
   const output = (
     await Promise.all(
@@ -45,14 +50,16 @@ export const getPackageDirectoriesForPreset = async (
         .map((pd) => pd.path)
         .map(componentSetFromPackageDirectory(projectDir)(await getTypesFromPreset(preset)))
     )
-  )
-    .filter(componentSetIsNonEmpty)
-    // we do this after filtering componentSets to reduce false positives (ex: dir does not have main/default but also has nothing to decompose)
-    .map(validateMainDefault(projectDir));
+  ).filter(componentSetIsNonEmpty);
+
   if (output.length === 0) {
     loadMessages().createError('error.noTargetTypes', [preset]);
   }
-  return output;
+
+  return dryRun
+    ? output // dryRun isn't modifying the project, so we don't need to validate the structure
+    : // we do this after filtering componentSets to reduce false positives (ex: dir does not have main/default but also has nothing to decompose)
+      output.map(validateMainDefault(projectDir));
 };
 
 /** converts the composed metadata to mdapi format in a temp dir */
