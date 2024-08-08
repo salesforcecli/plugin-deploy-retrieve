@@ -1242,10 +1242,10 @@
     wordwrap "^1.0.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/multi-stage-output@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@oclif/multi-stage-output/-/multi-stage-output-0.1.2.tgz#06977cde8888fce916d5ffc2ec8aeac92eb2ff5a"
-  integrity sha512-U9wWtg9YeFFNg1HsT7TUh23e9+OGdexzsP5EF2qNNwFkzIh7vY9jqpC5//XnYftxqqYpxJ+ehRC4yPaFMeZZJQ==
+"@oclif/multi-stage-output@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@oclif/multi-stage-output/-/multi-stage-output-0.1.4.tgz#c36e6addadbe5796f3a9ba8c6a1515f2bcd72166"
+  integrity sha512-fZQHKQjC2wyLjTkyNra2rcAN4p2m7WSTi5kubY7SrLVrckC8oQO2ia/Wq1kafscmEhhTwC3Pn0CgGidpXU2Azw==
   dependencies:
     "@oclif/core" "^4"
     change-case "^5.4.4"
