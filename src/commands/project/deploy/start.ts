@@ -320,7 +320,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (flags.async) {
       ms.goto('Done', { status: 'Queued', targetOrg: username });
       ms.stop();
-      this.log();
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
@@ -337,7 +336,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     );
 
     deploy.onUpdate((data) => {
-      // if (!this.jsonEnabled()) console.log(data);
       if (
         data.numberComponentsDeployed === data.numberComponentsTotal &&
         data.numberTestsTotal > 0 &&
@@ -359,9 +357,17 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       ms.stop();
     });
 
-    deploy.onCancel(() => ms.stop());
+    deploy.onCancel((data) => {
+      ms.updateData({ mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
+
+      ms.stop(new Error('Deploy canceled'));
+    });
 
     deploy.onError((error: Error) => {
+      if (error.message.includes('client has timed out')) {
+        ms.updateData({ status: 'Client Timeout' });
+      }
+
       ms.stop(error);
       throw error;
     });

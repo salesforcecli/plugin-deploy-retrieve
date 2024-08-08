@@ -227,10 +227,15 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       retrieve.onFinish((data) => {
         ms.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
       });
-      retrieve.onCancel((data) =>
-        ms.goto('Done', { status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') })
-      );
+      retrieve.onCancel((data) => {
+        ms.updateData({ status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
+        ms.stop(new Error('Retrieve canceled'));
+      });
       retrieve.onError((error: Error) => {
+        if (error.message.includes('client has timed out')) {
+          ms.updateData({ status: 'Client Timeout' });
+        }
+
         ms.stop(error);
         throw error;
       });
