@@ -185,6 +185,14 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  protected ms!: MultiStageOutput<{
+    mdapiDeploy: MetadataApiDeployStatus;
+    sourceMemberPolling: SourceMemberPollingEvent;
+    status: string;
+    apiData: DeployVersionData;
+    targetOrg: string;
+  }>;
+
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
     const project = await getOptionalProject();
@@ -208,7 +216,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     const username = flags['target-org'].getUsername();
     const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
-    const ms = new MultiStageOutput<{
+    this.ms = new MultiStageOutput<{
       mdapiDeploy: MetadataApiDeployStatus;
       sourceMemberPolling: SourceMemberPollingEvent;
       status: string;
@@ -296,7 +304,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     });
 
     const lifecycle = Lifecycle.getInstance();
-    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) => Promise.resolve(ms.updateData({ apiData })));
+    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) =>
+      Promise.resolve(this.ms.updateData({ apiData }))
+    );
 
     const { deploy } = await executeDeploy(
       {
@@ -308,7 +318,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     );
 
     if (!deploy) {
-      ms.stop();
+      this.ms.stop();
       this.log('No changes to deploy');
       return { status: 'Nothing to deploy', files: [] };
     }
@@ -318,8 +328,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
 
     if (flags.async) {
-      ms.goto('Done', { status: 'Queued', targetOrg: username });
-      ms.stop();
+      this.ms.goto('Done', { status: 'Queued', targetOrg: username });
+      this.ms.stop();
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
@@ -328,11 +338,11 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return asyncFormatter.getJson();
     }
 
-    ms.goto('Preparing', { targetOrg: username });
+    this.ms.goto('Preparing', { targetOrg: username });
 
     // for sourceMember polling events
     lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
-      Promise.resolve(ms.goto('Updating Source Tracking', { sourceMemberPolling: event }))
+      Promise.resolve(this.ms.goto('Updating Source Tracking', { sourceMemberPolling: event }))
     );
 
     deploy.onUpdate((data) => {
@@ -341,34 +351,34 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         data.numberTestsTotal > 0 &&
         data.numberComponentsDeployed > 0
       ) {
-        ms.goto('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+        this.ms.goto('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
       } else if (data.status === RequestStatus.Pending) {
-        ms.goto('Waiting for the org to respond', {
+        this.ms.goto('Waiting for the org to respond', {
           mdapiDeploy: data,
           status: mdTransferMessages.getMessage(data?.status),
         });
       } else {
-        ms.goto('Deploying Metadata', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+        this.ms.goto('Deploying Metadata', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
       }
     });
 
     deploy.onFinish((data) => {
-      ms.goto('Done', { mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
-      ms.stop();
+      this.ms.goto('Done', { mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
+      this.ms.stop();
     });
 
     deploy.onCancel((data) => {
-      ms.updateData({ mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
+      this.ms.updateData({ mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
 
-      ms.stop(new Error('Deploy canceled'));
+      this.ms.stop(new Error('Deploy canceled'));
     });
 
     deploy.onError((error: Error) => {
       if (error.message.includes('client has timed out')) {
-        ms.updateData({ status: 'Client Timeout' });
+        this.ms.updateData({ status: 'Client Timeout' });
       }
 
-      ms.stop(error);
+      this.ms.stop(error);
       throw error;
     });
 
@@ -389,6 +399,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   protected catch(error: Error | SfError): Promise<never> {
     if (error instanceof SourceConflictError && error.data) {
       if (!this.jsonEnabled()) {
+        this.ms.updateData({ status: 'Failed' });
+        this.ms.stop(error);
         writeConflictTable(error.data);
         // set the message and add plugin-specific actions
         return super.catch({

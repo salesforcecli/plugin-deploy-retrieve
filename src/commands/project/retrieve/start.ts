@@ -147,6 +147,10 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   );
 
   protected retrieveResult!: RetrieveResult;
+  protected ms!: MultiStageOutput<{
+    status: string;
+    apiData: RetrieveVersionData;
+  }>;
 
   // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
@@ -162,7 +166,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
     const stages = ['Preparing retrieve request', 'Sending request to org', 'Waiting for the org to respond', 'Done'];
-    const ms = new MultiStageOutput<{
+    this.ms = new MultiStageOutput<{
       status: string;
       apiData: RetrieveVersionData;
     }>({
@@ -192,13 +196,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       ],
     });
 
-    ms.goto('Preparing retrieve request');
+    this.ms.goto('Preparing retrieve request');
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
       flags,
       format
     );
     if (format === 'source' && (Boolean(flags.manifest) || Boolean(flags.metadata))) {
+      // TODO: test this
       const access = new RegistryAccess(undefined, SfProject.getInstance()?.getPath());
       if (wantsToRetrieveCustomFields(componentSetFromNonDeletes, access)) {
         this.warn(messages.getMessage('wantsToRetrieveCustomFields'));
@@ -210,40 +215,40 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     }
     const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName, resolvedTargetDir);
 
-    ms.goto('Sending request to org');
+    this.ms.goto('Sending request to org');
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
     if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
       Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) =>
-        Promise.resolve(ms.updateData({ apiData }))
+        Promise.resolve(this.ms.updateData({ apiData }))
       );
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
-      ms.goto('Waiting for the org to respond', { status: 'Pending' });
+      this.ms.goto('Waiting for the org to respond', { status: 'Pending' });
 
       retrieve.onUpdate((data) => {
-        ms.goto('Waiting for the org to respond', { status: mdTransferMessages.getMessage(data.status) });
+        this.ms.goto('Waiting for the org to respond', { status: mdTransferMessages.getMessage(data.status) });
       });
       retrieve.onFinish((data) => {
-        ms.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
+        this.ms.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
       });
       retrieve.onCancel((data) => {
-        ms.updateData({ status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
-        ms.stop(new Error('Retrieve canceled'));
+        this.ms.updateData({ status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
+        this.ms.stop(new Error('Retrieve canceled'));
       });
       retrieve.onError((error: Error) => {
         if (error.message.includes('client has timed out')) {
-          ms.updateData({ status: 'Client Timeout' });
+          this.ms.updateData({ status: 'Client Timeout' });
         }
 
-        ms.stop(error);
+        this.ms.stop(error);
         throw error;
       });
 
       this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
     }
 
-    ms.stop();
+    this.ms.stop();
 
     // flags['output-dir'] will set resolvedTargetDir var, so this check is redundant, but allows for nice typings in the moveResultsForRetrieveTargetDir method
     if (flags['output-dir'] && resolvedTargetDir) {
@@ -294,6 +299,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected catch(error: Error | SfError): Promise<never> {
     if (!this.jsonEnabled() && error instanceof SourceConflictError && error.data) {
+      this.ms.updateData({ status: 'Failed' });
+      this.ms.stop(error);
       writeConflictTable(error.data);
       // set the message and add plugin-specific actions
       return super.catch({
@@ -301,6 +308,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         message: messages.getMessage('error.Conflicts'),
         actions: messages.getMessages('error.Conflicts.Actions'),
       });
+    } else {
+      this.ms.stop(error);
     }
 
     return super.catch(error);
