@@ -82,7 +82,7 @@ describe('project convert mdapi NUTs', () => {
       expect(fs.existsSync(convertedToSrcPath)).to.be.true;
     });
 
-    it('should convert the dreamhouse project using metadata flag', () => {
+    it('should convert the dreamhouse project using metadata flag', async () => {
       const convertedToSrcPath = path.join(session.dir, 'convertedToSrcPath_metadataFlag');
       const result = execCmd<ConvertMdapiJson>(
         `project:convert:mdapi -r ${convertedToMdPath} -d ${convertedToSrcPath} -m ApexClass --json`
@@ -90,6 +90,9 @@ describe('project convert mdapi NUTs', () => {
       expect(result.jsonOutput?.status).to.equal(0);
       expect(result.jsonOutput?.result).to.be.an('array').with.length.greaterThan(10);
       expect(fs.existsSync(convertedToSrcPath)).to.be.true;
+
+      const files = await fs.promises.readdir(path.join(convertedToSrcPath, 'main', 'default', 'classes'));
+      expect(files.length).to.equal(result.jsonOutput?.result.length);
     });
 
     it('should convert the dreamhouse project using metadatapath flag', () => {

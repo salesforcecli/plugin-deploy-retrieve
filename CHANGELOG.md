@@ -1,3 +1,51 @@
+## [3.9.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.24...3.9.25) (2024-08-03)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve ([47e12fa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/47e12fa42901013b51af31a6f0e153c51505060a))
+
+## [3.9.24](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.23...3.9.24) (2024-08-02)
+
+### Bug Fixes
+
+- **deps:** bump apex lib ([#1113](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1113)) ([b724309](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b7243096fb1a9b25f77c1536ceb1ff970df095b2))
+
+## [3.9.23](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.22...3.9.23) (2024-07-27)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.0.9 to 7.1.0 ([593bbeb](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/593bbeb1a79ad6d3b69b07170358c53414bed736))
+
+## [3.9.22](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.21...3.9.22) (2024-07-27)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 11.1.9 to 11.2.1 ([18f005f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/18f005f7af34d31cc533498f6182978868679712))
+
+## [3.9.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.20...3.9.21) (2024-07-20)
+
+### Bug Fixes
+
+- **deps:** bump ansis from 3.2.1 to 3.3.1 ([ee88e46](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ee88e46d14cb696427810997f3c1b7dae0f4cd70))
+
+## [3.9.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.19...3.9.20) (2024-07-20)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.3.18 to 3.3.19 ([970b04c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/970b04cd41e33f19133682062d89bacfe580b4ee))
+
+## [3.9.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.18...3.9.19) (2024-07-19)
+
+### Bug Fixes
+
+- reduce undefined in template literals ([#1093](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1093)) ([f4a0384](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f4a038402c7839cd8bab6c02874ac2aea01ca5c8))
+
+## [3.9.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.17...3.9.18) (2024-07-18)
+
+### Bug Fixes
+
+- use full output-path on `mdapi convert` ([357e721](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/357e721b320445dbeae113ecfba99059e5245e92))
+
 ## [3.9.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.16...3.9.17) (2024-07-16)
 
 ### Bug Fixes

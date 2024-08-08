@@ -176,7 +176,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     // only generate reports if test results are presented
     if (this.coverageOptions.reportFormats?.length) {
       ux.log(
-        `Code Coverage formats, [${this.flags['coverage-formatters']?.join(', ')}], written to ${join(
+        `Code Coverage formats, [${(this.flags['coverage-formatters'] ?? []).join(', ')}], written to ${join(
           this.resultsDir,
           'coverage'
         )}/`
@@ -325,7 +325,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         problemType: f.problemType,
         fullName: f.fullName,
         error: f.error,
-        loc: f.lineNumber ? `${f.lineNumber}:${f.columnNumber}` : '',
+        loc: f.lineNumber ? `${f.lineNumber}:${f.columnNumber ?? ''}` : '',
       })),
       columns,
       options
