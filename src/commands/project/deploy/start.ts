@@ -7,7 +7,7 @@
 
 import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployVersionData, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
+import { DeployVersionData, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError, SourceMemberPollingEvent } from '@salesforce/source-tracking';
@@ -35,6 +35,10 @@ const destructiveFlags = 'Delete';
 function round(value: number, precision: number): number {
   const multiplier = Math.pow(10, precision || 0);
   return Math.round(value * multiplier) / multiplier;
+}
+
+function formatProgress(current: number, total: number): string {
+  return `${current}/${total} (${round((current / total) * 100, 0)}%)`;
 }
 
 export default class DeployMetadata extends SfCommand<DeployResultJson> {
@@ -212,7 +216,14 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       targetOrg: string;
     }>({
       title,
-      stages: ['Preparing', 'Deploying Metadata', 'Running Tests', 'Updating Source Tracking', 'Done'],
+      stages: [
+        'Preparing',
+        'Waiting for the org to respond',
+        'Deploying Metadata',
+        'Running Tests',
+        'Updating Source Tracking',
+        'Done',
+      ],
       jsonEnabled: this.jsonEnabled(),
       preStagesBlock: [
         {
@@ -233,7 +244,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       postStagesBlock: [
         {
           label: 'Status',
-          get: (data) => data?.mdapiDeploy && mdTransferMessages.getMessage(data?.mdapiDeploy?.status),
+          get: (data) => data?.status,
           bold: true,
           type: 'dynamic-key-value',
         },
@@ -253,10 +264,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
           label: 'Components',
           get: (data) =>
             data?.mdapiDeploy?.numberComponentsTotal
-              ? `${data?.mdapiDeploy?.numberComponentsDeployed}/${data?.mdapiDeploy?.numberComponentsTotal} (${round(
-                  (data?.mdapiDeploy?.numberComponentsDeployed / data?.mdapiDeploy?.numberComponentsTotal) * 100,
-                  0
-                )}%)`
+              ? formatProgress(
+                  data?.mdapiDeploy?.numberComponentsDeployed ?? 0,
+                  data?.mdapiDeploy?.numberComponentsTotal
+                )
               : undefined,
           stage: 'Deploying Metadata',
           type: 'dynamic-key-value',
@@ -265,9 +276,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
           label: 'Tests',
           get: (data) =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
-              ? `${data?.mdapiDeploy?.numberTestsCompleted ?? 0}/${data?.mdapiDeploy?.numberTestsTotal ?? 0} ${
-                  data?.mdapiDeploy?.numberTestErrors ? `(Errors: ${data?.mdapiDeploy?.numberTestErrors})` : ''
-                }`
+              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
               : undefined,
           stage: 'Running Tests',
           type: 'dynamic-key-value',
@@ -276,9 +285,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
           label: 'Members',
           get: (data) =>
             data?.sourceMemberPolling &&
-            `${data.sourceMemberPolling.original - data.sourceMemberPolling.remaining}/${
+            formatProgress(
+              data.sourceMemberPolling.original - data.sourceMemberPolling.remaining,
               data.sourceMemberPolling.original
-            }`,
+            ),
           stage: 'Updating Source Tracking',
           type: 'dynamic-key-value',
         },
@@ -308,6 +318,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
 
     if (flags.async) {
+      ms.goto('Done', { status: 'Queued', targetOrg: username });
+      ms.stop();
+      this.log();
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
@@ -324,14 +337,20 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     );
 
     deploy.onUpdate((data) => {
+      // if (!this.jsonEnabled()) console.log(data);
       if (
         data.numberComponentsDeployed === data.numberComponentsTotal &&
         data.numberTestsTotal > 0 &&
         data.numberComponentsDeployed > 0
       ) {
-        ms.goto('Running Tests', { mdapiDeploy: data });
+        ms.goto('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+      } else if (data.status === RequestStatus.Pending) {
+        ms.goto('Waiting for the org to respond', {
+          mdapiDeploy: data,
+          status: mdTransferMessages.getMessage(data?.status),
+        });
       } else {
-        ms.goto('Deploying Metadata', { mdapiDeploy: data });
+        ms.goto('Deploying Metadata', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
       }
     });
 
@@ -343,7 +362,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     deploy.onCancel(() => ms.stop());
 
     deploy.onError((error: Error) => {
-      ms.stop();
+      ms.stop(error);
       throw error;
     });
 

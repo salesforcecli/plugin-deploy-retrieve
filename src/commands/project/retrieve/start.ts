@@ -192,7 +192,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       ],
     });
 
-    ms.goto(messages.getMessage('spinner.start'));
+    ms.goto('Preparing retrieve request');
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
       flags,
@@ -210,7 +210,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     }
     const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName, resolvedTargetDir);
 
-    ms.goto(messages.getMessage('spinner.sending'));
+    ms.goto('Sending request to org');
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
@@ -219,13 +219,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         Promise.resolve(ms.updateData({ apiData }))
       );
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
-      ms.goto(messages.getMessage('spinner.polling'), { status: 'Pending' });
+      ms.goto('Waiting for the org to respond', { status: 'Pending' });
 
       retrieve.onUpdate((data) => {
-        ms.goto(messages.getMessage('spinner.polling'), { status: mdTransferMessages.getMessage(data.status) });
+        ms.goto('Waiting for the org to respond', { status: mdTransferMessages.getMessage(data.status) });
       });
-      // any thing else should stop the progress bar
-      retrieve.onFinish((data) => ms.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) }));
+      retrieve.onFinish((data) => {
+        ms.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
+      });
       retrieve.onCancel((data) =>
         ms.goto('Done', { status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') })
       );
