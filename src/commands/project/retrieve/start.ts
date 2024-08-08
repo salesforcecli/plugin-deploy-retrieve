@@ -165,6 +165,21 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
 
+    const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
+      flags,
+      format
+    );
+    if (format === 'source' && (Boolean(flags.manifest) || Boolean(flags.metadata))) {
+      const access = new RegistryAccess(undefined, SfProject.getInstance()?.getPath());
+      if (wantsToRetrieveCustomFields(componentSetFromNonDeletes, access)) {
+        this.warn(messages.getMessage('wantsToRetrieveCustomFields'));
+        componentSetFromNonDeletes.add({
+          fullName: ComponentSet.WILDCARD,
+          type: access.getTypeByName('CustomObject'),
+        });
+      }
+    }
+
     const stages = ['Preparing retrieve request', 'Sending request to org', 'Waiting for the org to respond', 'Done'];
     this.ms = new MultiStageOutput<{
       status: string;
@@ -198,20 +213,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     this.ms.goto('Preparing retrieve request');
 
-    const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
-      flags,
-      format
-    );
-    if (format === 'source' && (Boolean(flags.manifest) || Boolean(flags.metadata))) {
-      const access = new RegistryAccess(undefined, SfProject.getInstance()?.getPath());
-      if (wantsToRetrieveCustomFields(componentSetFromNonDeletes, access)) {
-        this.warn(messages.getMessage('wantsToRetrieveCustomFields'));
-        componentSetFromNonDeletes.add({
-          fullName: ComponentSet.WILDCARD,
-          type: access.getTypeByName('CustomObject'),
-        });
-      }
-    }
     const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName, resolvedTargetDir);
 
     this.ms.goto('Sending request to org');
