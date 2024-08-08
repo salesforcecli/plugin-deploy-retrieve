@@ -5,15 +5,14 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import ansis from 'ansis';
+import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployVersionData } from '@salesforce/source-deploy-retrieve';
+import { DeployVersionData, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { SourceConflictError } from '@salesforce/source-tracking';
+import { SourceConflictError, SourceMemberPollingEvent } from '@salesforce/source-tracking';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
@@ -25,12 +24,22 @@ import { getOptionalProject } from '../../../utils/project.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
+const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 const mdapiFormatFlags = 'Metadata API Format';
 const sourceFormatFlags = 'Source Format';
 const testFlags = 'Test';
 const destructiveFlags = 'Delete';
+
+function round(value: number, precision: number): number {
+  const multiplier = Math.pow(10, precision || 0);
+  return Math.round(value * multiplier) / multiplier;
+}
+
+function formatProgress(current: number, total: number): string {
+  return `${current}/${total} (${round((current / total) * 100, 0)}%)`;
+}
 
 export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -176,6 +185,14 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  protected ms!: MultiStageOutput<{
+    mdapiDeploy: MetadataApiDeployStatus;
+    sourceMemberPolling: SourceMemberPollingEvent;
+    status: string;
+    apiData: DeployVersionData;
+    targetOrg: string;
+  }>;
+
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
     const project = await getOptionalProject();
@@ -197,22 +214,99 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const api = await resolveApi(this.configAggregator);
     const username = flags['target-org'].getUsername();
-    const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
+    const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    Lifecycle.getInstance().on('apiVersionDeploy', async (apiData: DeployVersionData) => {
-      this.log(
-        messages.getMessage('apiVersionMsgDetailed', [
-          action,
-          // technically manifestVersion can be undefined, but only on raw mdapi deployments.
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
-          username,
-          apiData.apiVersion,
-          apiData.webService,
-        ])
-      );
+    this.ms = new MultiStageOutput<{
+      mdapiDeploy: MetadataApiDeployStatus;
+      sourceMemberPolling: SourceMemberPollingEvent;
+      status: string;
+      apiData: DeployVersionData;
+      targetOrg: string;
+    }>({
+      title,
+      stages: [
+        'Preparing',
+        'Waiting for the org to respond',
+        'Deploying Metadata',
+        'Running Tests',
+        'Updating Source Tracking',
+        'Done',
+      ],
+      jsonEnabled: this.jsonEnabled(),
+      preStagesBlock: [
+        {
+          type: 'message',
+          get: (data) =>
+            data?.apiData &&
+            messages.getMessage('apiVersionMsgDetailed', [
+              flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
+              // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              flags['metadata-dir'] ? '<version specified in manifest>' : `v${data.apiData.manifestVersion}`,
+              username,
+              data.apiData.apiVersion,
+              data.apiData.webService,
+            ]),
+        },
+      ],
+      postStagesBlock: [
+        {
+          label: 'Status',
+          get: (data) => data?.status,
+          bold: true,
+          type: 'dynamic-key-value',
+        },
+        {
+          label: 'Deploy ID',
+          get: (data) => data?.mdapiDeploy?.id,
+          type: 'static-key-value',
+        },
+        {
+          label: 'Target Org',
+          get: (data) => data?.targetOrg,
+          type: 'static-key-value',
+        },
+      ],
+      stageSpecificBlock: [
+        {
+          label: 'Components',
+          get: (data) =>
+            data?.mdapiDeploy?.numberComponentsTotal
+              ? formatProgress(
+                  data?.mdapiDeploy?.numberComponentsDeployed ?? 0,
+                  data?.mdapiDeploy?.numberComponentsTotal
+                )
+              : undefined,
+          stage: 'Deploying Metadata',
+          type: 'dynamic-key-value',
+        },
+        {
+          label: 'Tests',
+          get: (data) =>
+            data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
+              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
+              : undefined,
+          stage: 'Running Tests',
+          type: 'dynamic-key-value',
+        },
+        {
+          label: 'Members',
+          get: (data) =>
+            data?.sourceMemberPolling &&
+            formatProgress(
+              data.sourceMemberPolling.original - data.sourceMemberPolling.remaining,
+              data.sourceMemberPolling.original
+            ),
+          stage: 'Updating Source Tracking',
+          type: 'dynamic-key-value',
+        },
+      ],
     });
+
+    const lifecycle = Lifecycle.getInstance();
+    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) =>
+      Promise.resolve(this.ms.updateData({ apiData }))
+    );
 
     const { deploy } = await executeDeploy(
       {
@@ -224,6 +318,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     );
 
     if (!deploy) {
+      this.ms.stop();
       this.log('No changes to deploy');
       return { status: 'Nothing to deploy', files: [] };
     }
@@ -231,9 +326,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
 
     if (flags.async) {
+      this.ms.goto('Done', { status: 'Queued', targetOrg: username });
+      this.ms.stop();
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
@@ -242,7 +338,49 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return asyncFormatter.getJson();
     }
 
-    new DeployProgress(deploy, this.jsonEnabled()).start();
+    this.ms.goto('Preparing', { targetOrg: username });
+
+    // for sourceMember polling events
+    lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
+      Promise.resolve(this.ms.goto('Updating Source Tracking', { sourceMemberPolling: event }))
+    );
+
+    deploy.onUpdate((data) => {
+      if (
+        data.numberComponentsDeployed === data.numberComponentsTotal &&
+        data.numberTestsTotal > 0 &&
+        data.numberComponentsDeployed > 0
+      ) {
+        this.ms.goto('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+      } else if (data.status === RequestStatus.Pending) {
+        this.ms.goto('Waiting for the org to respond', {
+          mdapiDeploy: data,
+          status: mdTransferMessages.getMessage(data?.status),
+        });
+      } else {
+        this.ms.goto('Deploying Metadata', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+      }
+    });
+
+    deploy.onFinish((data) => {
+      this.ms.goto('Done', { mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
+      this.ms.stop();
+    });
+
+    deploy.onCancel((data) => {
+      this.ms.updateData({ mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
+
+      this.ms.stop(new Error('Deploy canceled'));
+    });
+
+    deploy.onError((error: Error) => {
+      if (error.message.includes('client has timed out')) {
+        this.ms.updateData({ status: 'Client Timeout' });
+      }
+
+      this.ms.stop(error);
+      throw error;
+    });
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
     process.exitCode = determineExitCode(result);
@@ -261,6 +399,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   protected catch(error: Error | SfError): Promise<never> {
     if (error instanceof SourceConflictError && error.data) {
       if (!this.jsonEnabled()) {
+        this.ms.updateData({ status: 'Failed' });
+        this.ms.stop(error);
         writeConflictTable(error.data);
         // set the message and add plugin-specific actions
         return super.catch({
