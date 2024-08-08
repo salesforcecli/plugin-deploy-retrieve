@@ -103,7 +103,11 @@ Metadata component names to retrieve. Wildcards (`*`) supported as long as you u
 
 # flags.package-name.summary
 
-Package names to retrieve.
+Package names to retrieve. Note that this is for reference only and not meant to retrieve packaged metadata for development.
+
+# flags.package-name.description
+
+The metadata of the supplied package name(s) will be retrieved into a child directory of the project. The name of that child directory matches the name of the package. The retrieved metadata is meant for reference only and should not be added to a source control system for development and deployment. For package development the metadata should be retrieved using a manifest or by targeting a source controlled package directory within your project.
 
 # flags.source-dir.summary
 

@@ -80,9 +80,9 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
         name: { header: 'Package Name' },
         fullPath: { header: 'Converted Location' },
       };
-      const title = 'Retrieved Packages';
-      const options = { title: tableHeader(title), 'no-truncate': true };
+      const options = { title: tableHeader('Retrieved Packages'), 'no-truncate': true };
       this.ux.log();
+      this.ux.warn('Metadata from retrieved packages is meant for reference only, not development');
       this.ux.table(packages, columns, options);
     }
   }
