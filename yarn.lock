@@ -1298,7 +1298,7 @@
     istanbul-lib-report "^3.0.1"
     istanbul-reports "^3.1.7"
 
-"@salesforce/cli-plugins-testkit@^5.3.18", "@salesforce/cli-plugins-testkit@^5.3.23":
+"@salesforce/cli-plugins-testkit@^5.3.20", "@salesforce/cli-plugins-testkit@^5.3.23":
   version "5.3.23"
   resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.3.23.tgz#a7591d9f59fd312e04534082ae78035ad2faa241"
   integrity sha512-6z5qi2mM6yPNorbicq/AWRDLSTN0q4h8UdmdFBGvhs7JlVpxRg93YLEchVsVrcifXKXwmBONm7KXMLF5GUP8fA==
@@ -1314,7 +1314,7 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.1"
 
-"@salesforce/core@^8.0.3", "@salesforce/core@^8.1.1", "@salesforce/core@^8.2.3", "@salesforce/core@^8.2.7", "@salesforce/core@^8.2.8":
+"@salesforce/core@^8.1.1", "@salesforce/core@^8.2.3", "@salesforce/core@^8.2.7", "@salesforce/core@^8.2.8":
   version "8.2.8"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-8.2.8.tgz#1e93ddd8b9f348f1e20547de4cdff30062520fd9"
   integrity sha512-Fyy1TG9cUtQV+YAjyYCHerZ0K/t9fuB6dU9HrXFvcjMKorMS5JaI1wkZh8w1+zfvu6GY/MOzeqVZCq2W+9ShLA==
@@ -1442,7 +1442,7 @@
     string-width "^7.2.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.1.11", "@salesforce/source-deploy-retrieve@^12.1.5", "@salesforce/source-deploy-retrieve@^12.1.8":
+"@salesforce/source-deploy-retrieve@^12.1.11", "@salesforce/source-deploy-retrieve@^12.1.8":
   version "12.1.11"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.1.11.tgz#ad3c390c7df37241eb7c62fc342db7e83305a41b"
   integrity sha512-dtd6WWfb5LKrJeWSwkPedOnIbvJwSum31PkMSu/foqXGGBQowXBhK7RXL5L3YxlOev4di2TmL5pVh9QLycYH9A==
@@ -1460,18 +1460,18 @@
     minimatch "^9.0.5"
     proxy-agent "^6.4.0"
 
-"@salesforce/source-testkit@^2.2.39":
-  version "2.2.39"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.39.tgz#633dd43fd992fddba87a74209f0eb0c87b750658"
-  integrity sha512-mWt9hb7DAT64vPknikMTGWnna/+JWf9u31ER1U6bMSnPjz4X69H1GyyD/E8bHOFl8piurjT7pB+6Rwl4JGPDjA==
+"@salesforce/source-testkit@^2.2.50":
+  version "2.2.50"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.50.tgz#bd910086a454f2b343fc89430363224b1d687b6d"
+  integrity sha512-PU5kw2ZZMleHwVbytZUvvH94ZOhzGQdWejXMVSRaNQNqbLHDyxp2BQecMWNZEj8VQaZ67J/kK/j+Pbglcv0OgA==
   dependencies:
-    "@salesforce/cli-plugins-testkit" "^5.3.18"
-    "@salesforce/core" "^8.0.3"
+    "@salesforce/cli-plugins-testkit" "^5.3.20"
+    "@salesforce/core" "^8.2.3"
     "@salesforce/kit" "^3.1.6"
-    "@salesforce/source-deploy-retrieve" "^12.1.5"
-    "@salesforce/ts-types" "^2.0.10"
-    chai "^4.4.1"
-    debug "^4.3.5"
+    "@salesforce/source-deploy-retrieve" "^12.1.11"
+    "@salesforce/ts-types" "^2.0.12"
+    chai "^4.5.0"
+    debug "^4.3.6"
     fast-glob "^3.3.2"
     shelljs "^0.8.4"
     sinon "^10.0.0"
@@ -2946,10 +2946,10 @@ cardinal@^2.1.1:
     ansicolors "~0.3.2"
     redeyed "~2.1.0"
 
-chai@^4.3.10, chai@^4.4.1:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/chai/-/chai-4.4.1.tgz#3603fa6eba35425b0f2ac91a009fe924106e50d1"
-  integrity sha512-13sOfMv2+DWduEU+/xbun3LScLoqN17nBeTLUsmDfKdoiC1fr0n9PU4guu4AhRcOVFk/sW8LyZWHuhWtQZiF+g==
+chai@^4.3.10, chai@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/chai/-/chai-4.5.0.tgz#707e49923afdd9b13a8b0b47d33d732d13812fd8"
+  integrity sha512-RITGBfijLkBddZvnn8jdqoTypxvqbOLYQkGGxXzeFjVHvudaPw0HNFD9x928/eUwYWd2dPCugVqspGALTZZQKw==
   dependencies:
     assertion-error "^1.1.0"
     check-error "^1.0.3"
@@ -2957,7 +2957,7 @@ chai@^4.3.10, chai@^4.4.1:
     get-func-name "^2.0.2"
     loupe "^2.3.6"
     pathval "^1.1.1"
-    type-detect "^4.0.8"
+    type-detect "^4.1.0"
 
 chalk@^2.4.2:
   version "2.4.2"
@@ -7579,6 +7579,11 @@ type-detect@4.0.8, type-detect@^4.0.0, type-detect@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
   integrity sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==
+
+type-detect@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.1.0.tgz#deb2453e8f08dcae7ae98c626b13dddb0155906c"
+  integrity sha512-Acylog8/luQ8L7il+geoSxhEkazvkslg7PSNKOX59mbB9cOveP5aq9h74Y7YU8yDpJwetzQQrfIwtf4Wp4LKcw==
 
 type-fest@^0.18.0:
   version "0.18.1"
