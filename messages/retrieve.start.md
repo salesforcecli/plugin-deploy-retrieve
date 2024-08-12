@@ -103,7 +103,7 @@ Metadata component names to retrieve. Wildcards (`*`) supported as long as you u
 
 # flags.package-name.summary
 
-Package names to retrieve. Note that this is for reference only and not meant to retrieve packaged metadata for development.
+Package names to retrieve. Use of this flag is for reference only; don't use it to retrieve packaged metadata for development.
 
 # flags.package-name.description
 
