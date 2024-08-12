@@ -82,7 +82,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
       };
       const options = { title: tableHeader('Retrieved Packages'), 'no-truncate': true };
       this.ux.log();
-      this.ux.warn('Metadata from retrieved packages is meant for reference only, not development');
+      this.ux.warn('Metadata from retrieved packages is meant for your reference only, not development.');
       this.ux.table(packages, columns, options);
     }
   }
