@@ -254,7 +254,7 @@ describe('project retrieve start', () => {
   it('should display warning when using package-name flag', async () => {
     await RetrieveMetadata.run(['--package-name', 'package1']);
     expect(uxStubs.warn.firstCall.args[0]).to.equal(
-      'Metadata from retrieved packages is meant for reference only, not development'
+      'Metadata from retrieved packages is meant for your reference only, not development.'
     );
   });
 
