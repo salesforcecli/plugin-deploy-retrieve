@@ -81,7 +81,7 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
     // delete the “original” files that no longer work because of project update
     await Promise.all(flags['dry-run'] ? [] : filesToDelete.map((f) => rm(f)));
 
-    // @ts-expect-error there's publicly accessible way to clear a project's instance
+    // @ts-expect-error there's no publicly accessible way to clear a project's instance
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     SfProject.instances.clear();
 
