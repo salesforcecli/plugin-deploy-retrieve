@@ -1,3 +1,9 @@
+## [3.9.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.26...3.9.27) (2024-08-13)
+
+### Bug Fixes
+
+- clarify help docs and command output for package-name flag ([16b2993](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/16b29938835bf09ad91e05385a5d1650325334ae))
+
 ## [3.9.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.25...3.9.26) (2024-08-10)
 
 ### Bug Fixes
