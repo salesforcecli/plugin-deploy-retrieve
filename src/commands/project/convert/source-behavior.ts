@@ -65,12 +65,13 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
       getPackageDirectoriesForPreset(this.project!, flags.behavior),
     ]);
 
-    this.warn(messages.getMessage('basicConfirmation'));
-    if (!packageDirsWithDecomposable.every(hasMainDefault(this.project!.getPath()))) {
-      this.warn(messages.getMessage('mainDefaultConfirmation'));
+    if (!flags['dry-run']) {
+      this.warn(messages.getMessage('basicConfirmation'));
+      if (!packageDirsWithDecomposable.every(hasMainDefault(this.project!.getPath()))) {
+        this.warn(messages.getMessage('mainDefaultConfirmation'));
+      }
+      await this.confirm({ message: 'Proceed' });
     }
-    await this.confirm({ message: 'Proceed' });
-
     const filesToDelete = await convertToMdapi(packageDirsWithDecomposable);
 
     // flip the preset in the sfdx-project.json, even for dry-run, since the registry will need for conversions
