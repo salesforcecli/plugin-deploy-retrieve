@@ -15,6 +15,7 @@ import {
   ConvertResult,
   MetadataConverter,
   MetadataRegistry,
+  RegistryAccess,
   SourceComponent,
   presetMap,
 } from '@salesforce/source-deploy-retrieve';
@@ -142,7 +143,8 @@ const convertToSource = async ({
 }): Promise<ConvertResult[]> => {
   // mdapi=>source convert the target dir back to the project
   // it's a new converter because the project has changed and it should reload the project's registry.
-  const converter = new MetadataConverter();
+  SfProject.clearInstances(); // break the singleton so SDR will re-read to get the new preset
+  const converter = new MetadataConverter(new RegistryAccess(undefined, projectDir));
   return Promise.all(
     packageDirsWithPreset.map(async (pd) =>
       converter.convert(

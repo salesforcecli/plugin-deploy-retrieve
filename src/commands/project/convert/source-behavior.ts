@@ -9,7 +9,7 @@ import { rm, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { existsSync } from 'node:fs';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
-import { Messages, SfProject } from '@salesforce/core';
+import { Messages } from '@salesforce/core';
 import {
   getValidatedProjectJson,
   TMP_DIR,
@@ -81,8 +81,6 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
 
     // delete the “original” files that no longer work because of project update
     await Promise.all(flags['dry-run'] ? [] : filesToDelete.map((f) => rm(f)));
-
-    SfProject.clearInstances(); // break the singleton so SDR will re-read to get the new preset
 
     const createdFiles = await convertBackToSource({
       packageDirsWithPreset: packageDirsWithDecomposable,
