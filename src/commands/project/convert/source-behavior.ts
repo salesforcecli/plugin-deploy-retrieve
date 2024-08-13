@@ -6,8 +6,10 @@
  */
 
 import { rm, readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { existsSync } from 'node:fs';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
-import { Messages } from '@salesforce/core';
+import { Messages, SfProject } from '@salesforce/core';
 import {
   getValidatedProjectJson,
   TMP_DIR,
@@ -17,6 +19,7 @@ import {
   PRESET_CHOICES,
   getPackageDirectoriesForPreset,
   convertBackToSource,
+  ComponentSetAndPackageDirPath,
 } from '../../../utils/convertBehavior.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -61,6 +64,13 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
       flags['dry-run'] ? readFile(projectJson.getPath()) : '',
       getPackageDirectoriesForPreset(this.project!, flags.behavior),
     ]);
+
+    this.warn(messages.getMessage('basicConfirmation'));
+    if (!packageDirsWithDecomposable.every(hasMainDefault(this.project!.getPath()))) {
+      this.warn(messages.getMessage('mainDefaultConfirmation'));
+    }
+    await this.confirm({ message: 'Proceed' });
+
     const filesToDelete = await convertToMdapi(packageDirsWithDecomposable);
 
     // flip the preset in the sfdx-project.json, even for dry-run, since the registry will need for conversions
@@ -70,6 +80,10 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
 
     // delete the “original” files that no longer work because of project update
     await Promise.all(flags['dry-run'] ? [] : filesToDelete.map((f) => rm(f)));
+
+    // @ts-expect-error there's publicly accessible way to clear a project's instance
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    SfProject.instances.clear();
 
     const createdFiles = await convertBackToSource({
       packageDirsWithPreset: packageDirsWithDecomposable,
@@ -103,3 +117,10 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
     };
   }
 }
+
+/** convert will put things in /main/default.  If the packageDirs aren't configured that way, we'll need to warn the user
+ * See https://salesforce.quip.com/va5IAgXmTMWF for details on that issue */
+const hasMainDefault =
+  (projectDir: string) =>
+  (i: ComponentSetAndPackageDirPath): boolean =>
+    existsSync(join(projectDir, i.packageDirPath, 'main', 'default'));
