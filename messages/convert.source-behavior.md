@@ -53,11 +53,11 @@ Your project has a default org (target-org) that uses source tracking. This oper
 
 # mainDefaultConfirmation
 
-- This command will put components in a newly created `main/default` folder in each package directory. You might need to re-organize them into your preferred structure.
+- This command puts components in a newly created `main/default` folder in each package directory. You might need to re-organize them into your preferred structure.
 
 # basicConfirmation
 
-- This command will make changes to your project. Be sure you've committed any source changes before continuing so you can easily revert if necessary.
+- This command makes changes to your project. Be sure you've committed any source changes before continuing so you can easily revert if necessary.
 
 # success.dryRun
 
