@@ -7,7 +7,7 @@
 
 import ansis from 'ansis';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployVersionData } from '@salesforce/source-deploy-retrieve';
+import { type DeployVersionData, DeployZipData } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
@@ -22,6 +22,7 @@ import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { getOptionalProject } from '../../../utils/project.js';
+import { getZipFileSize } from '../../../utils/output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -213,6 +214,16 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         ])
       );
     });
+
+    if (flags.verbose) {
+      // eslint-disable-next-line @typescript-eslint/require-await
+      Lifecycle.getInstance().on('deployZipData', async (zipData: DeployZipData) => {
+        this.log(`Deploy size: ${getZipFileSize(zipData.zipSize)} of ~39 MB limit`);
+        if (zipData.zipFileCount) {
+          this.log(`Deployed files count: ${zipData.zipFileCount} of 10,000 limit`);
+        }
+      });
+    }
 
     const { deploy } = await executeDeploy(
       {
