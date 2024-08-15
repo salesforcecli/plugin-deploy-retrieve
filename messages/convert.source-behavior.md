@@ -16,17 +16,17 @@ Behavior to enable; the values correspond to the possible values of the "sourceB
 
 # examples
 
-- Update your Salesforce DX project to decompose custom labels:
+- Update your Salesforce DX project to decompose custom permission sets:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta
+  <%= config.bin %> <%= command.id %> --behavior decomposePermissionSetBeta
 
 - Display what the command would do, but don't change any existing files:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta --dry-run
+  <%= config.bin %> <%= command.id %> --behavior decomposePermissionSetBeta --dry-run
 
 - Keep the temporary directory that contains the interim metadata API formatted files:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta --dry-run --preserve-temp-dir
+  <%= config.bin %> <%= command.id %> --behavior decomposePermissionSetBeta --dry-run --preserve-temp-dir
 
 # flags.dry-run.summary
 
