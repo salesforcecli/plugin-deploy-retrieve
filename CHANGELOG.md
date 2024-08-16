@@ -1,3 +1,14 @@
+# [3.10.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.27...3.10.0) (2024-08-16)
+
+### Bug Fixes
+
+- always display the "no main/default" warning even in dry-run ([e122e72](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e122e725bd8cf0efce0a3f4c76e053ab718f897a))
+- stl fix and other deps ([13462f0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/13462f0cd7856935130e95a7f92fcbc379aa29a2))
+
+### Features
+
+- confirmation and warnings for convert behavior ([29d8309](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/29d83095b273114bd084188563734be7b768266a))
+
 ## [3.9.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.26...3.9.27) (2024-08-13)
 
 ### Bug Fixes
