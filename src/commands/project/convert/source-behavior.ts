@@ -65,11 +65,12 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
       getPackageDirectoriesForPreset(this.project!, flags.behavior),
     ]);
 
+    if (!packageDirsWithDecomposable.every(hasMainDefault(this.project!.getPath()))) {
+      this.warn(messages.getMessage('mainDefaultConfirmation'));
+    }
+
     if (!flags['dry-run']) {
       this.warn(messages.getMessage('basicConfirmation'));
-      if (!packageDirsWithDecomposable.every(hasMainDefault(this.project!.getPath()))) {
-        this.warn(messages.getMessage('mainDefaultConfirmation'));
-      }
       await this.confirm({ message: 'Proceed' });
     }
     const filesToDelete = await convertToMdapi(packageDirsWithDecomposable);
