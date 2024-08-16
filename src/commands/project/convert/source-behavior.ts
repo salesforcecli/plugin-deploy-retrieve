@@ -6,6 +6,8 @@
  */
 
 import { rm, readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { existsSync } from 'node:fs';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import {
@@ -17,6 +19,7 @@ import {
   PRESET_CHOICES,
   getPackageDirectoriesForPreset,
   convertBackToSource,
+  ComponentSetAndPackageDirPath,
 } from '../../../utils/convertBehavior.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -61,6 +64,15 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
       flags['dry-run'] ? readFile(projectJson.getPath()) : '',
       getPackageDirectoriesForPreset(this.project!, flags.behavior),
     ]);
+
+    if (!packageDirsWithDecomposable.every(hasMainDefault(this.project!.getPath()))) {
+      this.warn(messages.getMessage('mainDefaultConfirmation'));
+    }
+
+    if (!flags['dry-run']) {
+      this.warn(messages.getMessage('basicConfirmation'));
+      await this.confirm({ message: 'Proceed' });
+    }
     const filesToDelete = await convertToMdapi(packageDirsWithDecomposable);
 
     // flip the preset in the sfdx-project.json, even for dry-run, since the registry will need for conversions
@@ -103,3 +115,10 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
     };
   }
 }
+
+/** convert will put things in /main/default.  If the packageDirs aren't configured that way, we'll need to warn the user
+ * See https://salesforce.quip.com/va5IAgXmTMWF for details on that issue */
+const hasMainDefault =
+  (projectDir: string) =>
+  (i: ComponentSetAndPackageDirPath): boolean =>
+    existsSync(join(projectDir, i.packageDirPath, 'main', 'default'));

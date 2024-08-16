@@ -16,17 +16,17 @@ Behavior to enable; the values correspond to the possible values of the "sourceB
 
 # examples
 
-- Update your Salesforce DX project to decompose custom labels:
+- Update your Salesforce DX project to decompose custom permission sets:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta
+  <%= config.bin %> <%= command.id %> --behavior decomposePermissionSetBeta
 
 - Display what the command would do, but don't change any existing files:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta --dry-run
+  <%= config.bin %> <%= command.id %> --behavior decomposePermissionSetBeta --dry-run
 
 - Keep the temporary directory that contains the interim metadata API formatted files:
 
-  <%= config.bin %> <%= command.id %> --behavior decomposeCustomLabelsBeta --dry-run --preserve-temp-dir
+  <%= config.bin %> <%= command.id %> --behavior decomposePermissionSetBeta --dry-run --preserve-temp-dir
 
 # flags.dry-run.summary
 
@@ -51,15 +51,13 @@ Your project has a default org (target-org) that uses source tracking. This oper
 - Run this command again.
 - Create a new org ("sf org create scratch" or "sf org create sandbox") and deploy the modified source.
 
-# error.packageDirectoryNeedsMainDefault
+# mainDefaultConfirmation
 
-The package directory %s doesn't have a main/default structure.
-This command moves metadata into a main/default structure, but your package directories aren't ready for it.
+- This command puts components in a newly created `main/default` folder in each package directory. You might need to re-organize them into your preferred structure.
 
-# error.packageDirectoryNeedsMainDefault.actions
+# basicConfirmation
 
-- Update %s to have all its metadata inside a main/default directory structure.
-- Run the command again.
+- This command makes changes to your project. Be sure you've committed any source changes before continuing so you can easily revert if necessary.
 
 # success.dryRun
 
