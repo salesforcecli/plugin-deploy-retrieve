@@ -38,6 +38,7 @@ describe('project retrieve start', () => {
   const testOrg = new MockTestOrgData();
   testOrg.tracksSource = true;
   let sfCommandUxStubs: ReturnType<typeof stubSfCommandUx>;
+  let uxStubs: ReturnType<typeof stubUx>;
 
   testOrg.username = 'retrieve-test@org.com';
   const packageXml = 'package.xml';
@@ -71,7 +72,7 @@ describe('project retrieve start', () => {
     );
 
     sfCommandUxStubs = stubSfCommandUx($$.SANDBOX);
-    stubUx($$.SANDBOX);
+    uxStubs = stubUx($$.SANDBOX);
     stubSpinner($$.SANDBOX);
     $$.setConfigStubContents('SfProjectJson', {
       contents: {
@@ -248,6 +249,13 @@ describe('project retrieve start', () => {
       },
     });
     ensureRetrieveArgs({ packageOptions: packagenames, format: 'source' });
+  });
+
+  it('should display warning when using package-name flag', async () => {
+    await RetrieveMetadata.run(['--package-name', 'package1']);
+    expect(uxStubs.warn.firstCall.args[0]).to.equal(
+      'Metadata from retrieved packages is meant for your reference only, not development.'
+    );
   });
 
   it('should pass along multiple packagenames', async () => {

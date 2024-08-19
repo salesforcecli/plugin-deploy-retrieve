@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { existsSync, readdirSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -38,6 +38,7 @@ export const getPackageDirectoriesForPreset = async (
   preset: string
 ): Promise<ComponentSetAndPackageDirPath[]> => {
   const projectDir = project.getPath();
+  const messages = loadMessages();
   const output = (
     await Promise.all(
       project
@@ -45,13 +46,11 @@ export const getPackageDirectoriesForPreset = async (
         .map((pd) => pd.path)
         .map(componentSetFromPackageDirectory(projectDir)(await getTypesFromPreset(preset)))
     )
-  )
-    .filter(componentSetIsNonEmpty)
-    // we do this after filtering componentSets to reduce false positives (ex: dir does not have main/default but also has nothing to decompose)
-    .map(validateMainDefault(projectDir));
+  ).filter(componentSetIsNonEmpty);
   if (output.length === 0) {
-    loadMessages().createError('error.noTargetTypes', [preset]);
+    messages.createError('error.noTargetTypes', [preset]);
   }
+
   return output;
 };
 
@@ -144,6 +143,7 @@ const convertToSource = async ({
 }): Promise<ConvertResult[]> => {
   // mdapi=>source convert the target dir back to the project
   // it's a new converter because the project has changed and it should reload the project's registry.
+  SfProject.clearInstances(); // break the singleton so SDR will re-read to get the new preset
   const converter = new MetadataConverter(new RegistryAccess(undefined, projectDir));
   return Promise.all(
     packageDirsWithPreset.map(async (pd) =>
@@ -178,21 +178,6 @@ export const getTypesFromPreset = async (preset: string): Promise<string[]> =>
   Object.values(
     (JSON.parse(await readFile(join(PRESET_DIR, `${preset}.json`), 'utf-8')) as MetadataRegistry).types
   ).map((t) => t.name);
-
-/** convert will put things in /main/default.  If the packageDirs aren't configured that way, we don't want to make a mess.
- * See https://salesforce.quip.com/va5IAgXmTMWF for details on that issue */
-const validateMainDefault =
-  (projectDir: string) =>
-  (i: ComponentSetAndPackageDirPath): ComponentSetAndPackageDirPath => {
-    if (!existsSync(join(projectDir, i.packageDirPath, 'main', 'default'))) {
-      throw loadMessages().createError(
-        'error.packageDirectoryNeedsMainDefault',
-        [i.packageDirPath],
-        [i.packageDirPath]
-      );
-    }
-    return i;
-  };
 
 const getComponentSetFiles = (cs: ComponentSet): string[] =>
   cs
