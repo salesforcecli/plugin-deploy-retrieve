@@ -240,8 +240,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       project
     );
 
-    this.stages.start(username, deploy);
-
     if (!deploy) {
       this.stages.stop();
       this.log('No changes to deploy');
@@ -251,6 +249,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
+
+    this.stages.start(username, deploy);
 
     if (flags.async) {
       this.stages.done({ status: 'Queued', username });
