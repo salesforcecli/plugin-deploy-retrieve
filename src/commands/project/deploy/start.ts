@@ -7,10 +7,11 @@
 
 import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployVersionData, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { DeployVersionData, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError, SourceMemberPollingEvent } from '@salesforce/source-tracking';
+import { DeployStages } from '../../../utils/multiStageOutput.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
@@ -24,22 +25,12 @@ import { getOptionalProject } from '../../../utils/project.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
-const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
 
 const exclusiveFlags = ['manifest', 'source-dir', 'metadata', 'metadata-dir'];
 const mdapiFormatFlags = 'Metadata API Format';
 const sourceFormatFlags = 'Source Format';
 const testFlags = 'Test';
 const destructiveFlags = 'Delete';
-
-function round(value: number, precision: number): number {
-  const multiplier = Math.pow(10, precision || 0);
-  return Math.round(value * multiplier) / multiplier;
-}
-
-function formatProgress(current: number, total: number): string {
-  return `${current}/${total} (${round((current / total) * 100, 0)}%)`;
-}
 
 export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
@@ -193,6 +184,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     targetOrg: string;
   }>;
 
+  protected stages!: DeployStages;
+
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
     const project = await getOptionalProject();
@@ -216,96 +209,26 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     const username = flags['target-org'].getUsername();
     const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
-    this.ms = new MultiStageOutput<{
-      mdapiDeploy: MetadataApiDeployStatus;
-      sourceMemberPolling: SourceMemberPollingEvent;
-      status: string;
-      apiData: DeployVersionData;
-      targetOrg: string;
-    }>({
+    this.stages = new DeployStages({
       title,
-      stages: [
-        'Preparing',
-        'Waiting for the org to respond',
-        'Deploying Metadata',
-        'Running Tests',
-        'Updating Source Tracking',
-        'Done',
-      ],
       jsonEnabled: this.jsonEnabled(),
-      preStagesBlock: [
-        {
-          type: 'message',
-          get: (data) =>
-            data?.apiData &&
-            messages.getMessage('apiVersionMsgDetailed', [
-              flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
-              // technically manifestVersion can be undefined, but only on raw mdapi deployments.
-              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              flags['metadata-dir'] ? '<version specified in manifest>' : `v${data.apiData.manifestVersion}`,
-              username,
-              data.apiData.apiVersion,
-              data.apiData.webService,
-            ]),
-        },
-      ],
-      postStagesBlock: [
-        {
-          label: 'Status',
-          get: (data) => data?.status,
-          bold: true,
-          type: 'dynamic-key-value',
-        },
-        {
-          label: 'Deploy ID',
-          get: (data) => data?.mdapiDeploy?.id,
-          type: 'static-key-value',
-        },
-        {
-          label: 'Target Org',
-          get: (data) => data?.targetOrg,
-          type: 'static-key-value',
-        },
-      ],
-      stageSpecificBlock: [
-        {
-          label: 'Components',
-          get: (data) =>
-            data?.mdapiDeploy?.numberComponentsTotal
-              ? formatProgress(
-                  data?.mdapiDeploy?.numberComponentsDeployed ?? 0,
-                  data?.mdapiDeploy?.numberComponentsTotal
-                )
-              : undefined,
-          stage: 'Deploying Metadata',
-          type: 'dynamic-key-value',
-        },
-        {
-          label: 'Tests',
-          get: (data) =>
-            data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
-              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
-              : undefined,
-          stage: 'Running Tests',
-          type: 'dynamic-key-value',
-        },
-        {
-          label: 'Members',
-          get: (data) =>
-            data?.sourceMemberPolling &&
-            formatProgress(
-              data.sourceMemberPolling.original - data.sourceMemberPolling.remaining,
-              data.sourceMemberPolling.original
-            ),
-          stage: 'Updating Source Tracking',
-          type: 'dynamic-key-value',
-        },
-      ],
     });
 
     const lifecycle = Lifecycle.getInstance();
     lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) =>
-      Promise.resolve(this.ms.updateData({ apiData }))
+      Promise.resolve(
+        this.stages.update({
+          apiMessage: messages.getMessage('apiVersionMsgDetailed', [
+            flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
+            // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
+            username,
+            apiData.apiVersion,
+            apiData.webService,
+          ]),
+        })
+      )
     );
 
     const { deploy } = await executeDeploy(
@@ -317,8 +240,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       project
     );
 
+    this.stages.start(username, deploy);
+
     if (!deploy) {
-      this.ms.stop();
+      this.stages.stop();
       this.log('No changes to deploy');
       return { status: 'Nothing to deploy', files: [] };
     }
@@ -328,8 +253,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
 
     if (flags.async) {
-      this.ms.goto('Done', { status: 'Queued', targetOrg: username });
-      this.ms.stop();
+      this.stages.done({ status: 'Queued', username });
+      this.stages.stop();
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
@@ -337,50 +262,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       if (!this.jsonEnabled()) asyncFormatter.display();
       return asyncFormatter.getJson();
     }
-
-    this.ms.goto('Preparing', { targetOrg: username });
-
-    // for sourceMember polling events
-    lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
-      Promise.resolve(this.ms.goto('Updating Source Tracking', { sourceMemberPolling: event }))
-    );
-
-    deploy.onUpdate((data) => {
-      if (
-        data.numberComponentsDeployed === data.numberComponentsTotal &&
-        data.numberTestsTotal > 0 &&
-        data.numberComponentsDeployed > 0
-      ) {
-        this.ms.goto('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
-      } else if (data.status === RequestStatus.Pending) {
-        this.ms.goto('Waiting for the org to respond', {
-          mdapiDeploy: data,
-          status: mdTransferMessages.getMessage(data?.status),
-        });
-      } else {
-        this.ms.goto('Deploying Metadata', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
-      }
-    });
-
-    deploy.onFinish((data) => {
-      this.ms.goto('Done', { mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
-      this.ms.stop();
-    });
-
-    deploy.onCancel((data) => {
-      this.ms.updateData({ mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
-
-      this.ms.stop(new Error('Deploy canceled'));
-    });
-
-    deploy.onError((error: Error) => {
-      if (error.message.includes('client has timed out')) {
-        this.ms.updateData({ status: 'Client Timeout' });
-      }
-
-      this.ms.stop(error);
-      throw error;
-    });
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
     process.exitCode = determineExitCode(result);
@@ -399,8 +280,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   protected catch(error: Error | SfError): Promise<never> {
     if (error instanceof SourceConflictError && error.data) {
       if (!this.jsonEnabled()) {
-        this.ms.updateData({ status: 'Failed' });
-        this.ms.stop(error);
+        this.stages.update({ status: 'Failed' });
+        this.stages.stop(error);
         writeConflictTable(error.data);
         // set the message and add plugin-specific actions
         return super.catch({

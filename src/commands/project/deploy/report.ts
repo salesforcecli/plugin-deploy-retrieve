@@ -70,7 +70,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], false);
 
     const deployOpts = cache.maybeGet(jobId);
-    const wait = flags['wait'];
+    const { wait } = flags;
     const org = deployOpts?.['target-org']
       ? await Org.create({ aliasOrUsername: deployOpts['target-org'] })
       : flags['target-org'];
