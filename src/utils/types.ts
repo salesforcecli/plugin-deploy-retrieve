@@ -72,7 +72,10 @@ export type DeleteSourceJson = {
 export type CoverageResultsFileInfo = Record<keyof Partial<typeof DefaultReportOptions>, string>;
 
 export type DeployResultJson =
-  | (MetadataApiDeployStatus & { files: FileResponse[] } & { replacements?: Record<string, string[]> })
+  | (MetadataApiDeployStatus & { files: FileResponse[] } & { replacements?: Record<string, string[]> } & {
+      zipSize?: number;
+      zipFileCount?: number;
+    })
   | AsyncDeployResultJson;
 
 export type MetadataRetrieveResultJson = Omit<MetadataApiRetrieveStatus, 'zipFile'> & {
