@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { assert } from 'chai';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { TEST_REPOS_MAP } from '../testMatrix.js';
-import { DeployResultJson } from '../../../src/utils/types.js';
+import { DeployResultJson, isSdrSuccess } from '../../../src/utils/types.js';
 
 // DO NOT TOUCH. generateNuts.ts will insert these values
 const REPO = TEST_REPOS_MAP.get('%REPO_URL%');
@@ -41,7 +41,11 @@ context('deploy metadata --source-dir NUTs [name: %REPO_NAME%]', () => {
         const args = testCase.toDeploy.map((t) => `--source-dir ${path.normalize(t)}`).join(' ');
         const deploy = await testkit.deploy<DeployResultJson>({ args });
         assert(deploy);
-        await testkit.expect.filesToBeDeployedViaResult(testCase.toVerify, testCase.toIgnore, deploy.result.files);
+        await testkit.expect.filesToBeDeployedViaResult(
+          testCase.toVerify,
+          testCase.toIgnore,
+          deploy.result.files.filter(isSdrSuccess)
+        );
       });
     }
 
