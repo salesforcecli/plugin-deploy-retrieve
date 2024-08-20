@@ -11,7 +11,7 @@ import { SourceTestkit } from '@salesforce/source-testkit';
 import { isObject } from '@salesforce/ts-types';
 import { assert, expect } from 'chai';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
-import { DeployResultJson } from '../../../../src/utils/types.js';
+import { DeployResultJson, isSdrSuccess } from '../../../../src/utils/types.js';
 
 describe('deploy metadata validate NUTs', () => {
   let testkit: SourceTestkit;
@@ -35,7 +35,11 @@ describe('deploy metadata validate NUTs', () => {
         exitCode: 0,
       });
       assert(isObject(deploy));
-      await testkit.expect.filesToBeDeployedViaResult(['force-app/**/*'], ['force-app/test/**/*'], deploy.result.files);
+      await testkit.expect.filesToBeDeployedViaResult(
+        ['force-app/**/*'],
+        ['force-app/test/**/*'],
+        deploy.result.files.filter(isSdrSuccess)
+      );
     });
   });
 
