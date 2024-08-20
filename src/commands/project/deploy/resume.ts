@@ -5,13 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import ansis from 'ansis';
 import { EnvironmentVariable, Messages, Org, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
 import { buildComponentSet, determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
@@ -124,8 +123,12 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
         jobId
       );
 
-      this.log(`Deploy ID: ${ansis.bold(jobId)}`);
-      new DeployProgress(deploy, this.jsonEnabled()).start();
+      const stages = new DeployStages({
+        title: 'Resuming Deploy',
+        jsonEnabled: this.jsonEnabled(),
+      });
+
+      stages.start({ deploy, username: deployOpts['target-org'] });
       result = await deploy.pollStatus(500, wait.seconds);
 
       if (!deploy.id) {

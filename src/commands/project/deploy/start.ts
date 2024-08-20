@@ -11,7 +11,7 @@ import { DeployVersionData, MetadataApiDeployStatus } from '@salesforce/source-d
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError, SourceMemberPollingEvent } from '@salesforce/source-tracking';
-import { DeployStages } from '../../../utils/multiStageOutput.js';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
@@ -250,7 +250,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       throw new SfError('The deploy id is not available.');
     }
 
-    this.stages.start(username, deploy);
+    this.stages.start({ username, deploy });
 
     if (flags.async) {
       this.stages.done({ status: 'Queued', username });

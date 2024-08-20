@@ -23,6 +23,7 @@ type Data = {
   status: string;
   apiMessage: string;
   username: string;
+  id: string;
 };
 
 function round(value: number, precision: number): number {
@@ -64,7 +65,7 @@ export class DeployStages {
         },
         {
           label: 'Deploy ID',
-          get: (data): string | undefined => data?.mdapiDeploy?.id,
+          get: (data): string | undefined => data?.id,
           type: 'static-key-value',
         },
         {
@@ -110,10 +111,10 @@ export class DeployStages {
     });
   }
 
-  public start(username: string | undefined, deploy: MetadataApiDeploy): void {
+  public start({ username, deploy }: { username?: string | undefined; deploy: MetadataApiDeploy }): void {
     const lifecycle = Lifecycle.getInstance();
 
-    this.ms.goto('Preparing', { username });
+    this.ms.goto('Preparing', { username, id: deploy.id });
 
     // for sourceMember polling events
     lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
