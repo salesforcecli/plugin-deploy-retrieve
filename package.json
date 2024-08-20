@@ -11,7 +11,7 @@
     "@salesforce/kit": "^3.2.1",
     "@salesforce/plugin-info": "^3.3.28",
     "@salesforce/sf-plugins-core": "^11.3.2",
-    "@salesforce/source-deploy-retrieve": "^12.4.0",
+    "@salesforce/source-deploy-retrieve": "^12.5.1",
     "@salesforce/source-tracking": "^7.1.7",
     "@salesforce/ts-types": "^2.0.12",
     "ansis": "^3.3.2"
@@ -22,7 +22,7 @@
     "@salesforce/dev-scripts": "^10.2.9",
     "@salesforce/plugin-command-reference": "^3.1.16",
     "@salesforce/schemas": "^1.9.0",
-    "@salesforce/source-testkit": "^2.2.39",
+    "@salesforce/source-testkit": "^2.2.57",
     "@salesforce/ts-sinon": "^1.4.24",
     "cross-env": "^7.0.3",
     "eslint-plugin-sf-plugin": "^1.20.4",
