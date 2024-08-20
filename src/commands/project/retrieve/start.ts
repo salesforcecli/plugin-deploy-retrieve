@@ -78,6 +78,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     'package-name': Flags.string({
       char: 'n',
       summary: messages.getMessage('flags.package-name.summary'),
+      description: messages.getMessage('flags.package-name.description'),
       multiple: true,
     }),
     'output-dir': Flags.directory({

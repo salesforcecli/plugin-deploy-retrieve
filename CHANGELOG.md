@@ -1,3 +1,26 @@
+# [3.10.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.27...3.10.0) (2024-08-16)
+
+### Bug Fixes
+
+- always display the "no main/default" warning even in dry-run ([e122e72](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e122e725bd8cf0efce0a3f4c76e053ab718f897a))
+- stl fix and other deps ([13462f0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/13462f0cd7856935130e95a7f92fcbc379aa29a2))
+
+### Features
+
+- confirmation and warnings for convert behavior ([29d8309](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/29d83095b273114bd084188563734be7b768266a))
+
+## [3.9.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.26...3.9.27) (2024-08-13)
+
+### Bug Fixes
+
+- clarify help docs and command output for package-name flag ([16b2993](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/16b29938835bf09ad91e05385a5d1650325334ae))
+
+## [3.9.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.25...3.9.26) (2024-08-10)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 11.2.4 to 11.3.0 ([3ed5999](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3ed59999fc2d6c11f1ad625d85ed1978bbeb0f05))
+
 ## [3.9.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.9.24...3.9.25) (2024-08-03)
 
 ### Bug Fixes
