@@ -123,12 +123,11 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
         jobId
       );
 
-      const stages = new DeployStages({
+      new DeployStages({
         title: 'Resuming Deploy',
         jsonEnabled: this.jsonEnabled(),
-      });
+      }).start({ deploy, username: deployOpts['target-org'] });
 
-      stages.start({ deploy, username: deployOpts['target-org'] });
       result = await deploy.pollStatus(500, wait.seconds);
 
       if (!deploy.id) {

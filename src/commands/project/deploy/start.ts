@@ -218,7 +218,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) =>
       Promise.resolve(
         this.stages.update({
-          apiMessage: messages.getMessage('apiVersionMsgDetailed', [
+          message: messages.getMessage('apiVersionMsgDetailed', [
             flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
             // technically manifestVersion can be undefined, but only on raw mdapi deployments.
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

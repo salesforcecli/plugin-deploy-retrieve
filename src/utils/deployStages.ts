@@ -21,7 +21,7 @@ type Data = {
   mdapiDeploy: MetadataApiDeployStatus;
   sourceMemberPolling: SourceMemberPollingEvent;
   status: string;
-  apiMessage: string;
+  message: string;
   username: string;
   id: string;
 };
@@ -53,7 +53,7 @@ export class DeployStages {
       preStagesBlock: [
         {
           type: 'message',
-          get: (data): string | undefined => data?.apiMessage,
+          get: (data): string | undefined => data?.message,
         },
       ],
       postStagesBlock: [
@@ -139,8 +139,13 @@ export class DeployStages {
     });
 
     deploy.onFinish((data) => {
-      this.ms.goto('Done', { mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
-      this.ms.stop();
+      this.ms.updateData({ mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
+      if (data.response.status === RequestStatus.Failed) {
+        this.ms.stop(new Error('Failed to deploy metadata'));
+      } else {
+        this.ms.goto('Done');
+        this.ms.stop();
+      }
     });
 
     deploy.onCancel((data) => {

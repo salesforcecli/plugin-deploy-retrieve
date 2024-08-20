@@ -8,8 +8,8 @@
 import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { buildComponentSet } from '../../../utils/deploy.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DeployReportResultFormatter } from '../../../formatters/deployReportResultFormatter.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
@@ -124,7 +124,10 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     if (wait) {
       // poll for deploy results
       try {
-        new DeployProgress(mdapiDeploy, this.jsonEnabled()).start();
+        new DeployStages({
+          title: 'Deploying Metadata',
+          jsonEnabled: this.jsonEnabled(),
+        }).start({ deploy: mdapiDeploy, username: org.getUsername() });
         result = await mdapiDeploy.pollStatus(500, wait.seconds);
       } catch (error) {
         if (error instanceof Error && error.message.includes('The client has timed out')) {
