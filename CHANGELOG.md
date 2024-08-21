@@ -1,3 +1,21 @@
+# [3.11.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.10.1...3.11.0) (2024-08-21)
+
+### Bug Fixes
+
+- dont start unless deploy exists ([4715c03](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4715c03f2b18333995bae88f505ec391eaceb447))
+- handle source conflicts ([bb63b2e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/bb63b2e1a8758683221c31e5fd79cfee0aaf2d34))
+- move CustomField warning ([360c2c7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/360c2c782ea92d3a6f6aa0a41fe51da734a1d2ac))
+
+### Features
+
+- abstract out multi stage output ([f09be60](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f09be60d212faa525456f4984192b414bb0bd207))
+- more flexibility ([5487d58](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5487d5831dee3c493afeba9aa07271f397a31294))
+- use @oclif/multi-stage-output ([85d77de](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/85d77deeb018d60b348ec4b2ae38d7c9d852257a))
+- use DeployStages on all deploy commands ([8786aa3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8786aa357a89656189c4ebcb045ffd7a5c5b211d))
+- use ink ([c293e50](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c293e5057c97215e4d165dce57fb2428f2bf9968))
+- use oclif/multi-stage-output ([c567be8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c567be80eb4ec619cee92ab1a7cee8e9627c6017))
+- use on deploy resume ([75fd0c3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/75fd0c3e94f4fa34231f5992e0f6e8fbec9baa03))
+
 ## [3.10.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.10.0...3.10.1) (2024-08-20)
 
 ### Bug Fixes
