@@ -215,11 +215,15 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       );
     });
 
+    let zipSize: number | undefined;
+    let zipFileCount: number | undefined;
     if (flags.verbose) {
       // eslint-disable-next-line @typescript-eslint/require-await
       Lifecycle.getInstance().on('deployZipData', async (zipData: DeployZipData) => {
+        zipSize = zipData.zipSize;
         this.log(`Deploy size: ${getZipFileSize(zipData.zipSize)} of ~39 MB limit`);
         if (zipData.zipFileCount) {
+          zipFileCount = zipData.zipFileCount;
           this.log(`Deployed files count: ${zipData.zipFileCount} of 10,000 limit`);
         }
       });
@@ -250,7 +254,14 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       }
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
-      return asyncFormatter.getJson();
+      const json = await asyncFormatter.getJson();
+      if (zipSize) {
+        json.zipSize = zipSize;
+      }
+      if (zipFileCount) {
+        json.zipFileCount = zipFileCount;
+      }
+      return json;
     }
 
     new DeployProgress(deploy, this.jsonEnabled()).start();

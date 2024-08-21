@@ -33,15 +33,37 @@ describe('Deploy --verbose', () => {
       }
     ).jsonOutput;
 
-    // @ts-expect-error TS thinks zipSize is not on DeployResultJson for some reason
     expect(cmdJson?.result.zipSize).to.equal(1776);
-    // @ts-expect-error TS thinks zipFileCount is not on DeployResultJson for some reason
     expect(cmdJson?.result.zipFileCount).to.equal(5);
   });
 
   it('should have zip file size and file count in the output', () => {
     const shellOutput = execCmd<DeployResultJson>(
       'project deploy start --source-dir force-app/main/default/apex --verbose',
+      {
+        ensureExitCode: 0,
+      }
+    ).shellOutput;
+
+    expect(shellOutput.stdout).to.contain('Deploy size: 1.73 KB of ~39 MB limit');
+    expect(shellOutput.stdout).to.contain('Deployed files count: 5 of 10,000 limit');
+  });
+
+  it('should have zip file size and file count returned with --json --async', () => {
+    const cmdJson = execCmd<DeployResultJson>(
+      'project deploy start --source-dir force-app/main/default/apex --verbose --async --json',
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput;
+
+    expect(cmdJson?.result.zipSize).to.equal(1776);
+    expect(cmdJson?.result.zipFileCount).to.equal(5);
+  });
+
+  it('should have zip file size and file count in the output with --async', () => {
+    const shellOutput = execCmd<DeployResultJson>(
+      'project deploy start --source-dir force-app/main/default/apex --verbose --async',
       {
         ensureExitCode: 0,
       }
