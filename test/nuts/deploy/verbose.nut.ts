@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2023, salesforce.com, inc.
+ * All rights reserved.
+ * Licensed under the BSD 3-Clause license.
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
+import { join as pathJoin } from 'node:path';
+import { expect } from 'chai';
+import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
+import { type DeployResultJson } from '../../../src/utils/types.js';
+
+describe('Deploy --verbose', () => {
+  let testkit: TestSession;
+
+  before(async () => {
+    testkit = await TestSession.create({
+      project: { gitClone: 'https://github.com/salesforcecli/sample-project-multiple-packages' },
+      scratchOrgs: [{ setDefault: true, config: pathJoin('config', 'project-scratch-def.json') }],
+      devhubAuthStrategy: 'AUTO',
+    });
+  });
+
+  after(async () => {
+    await testkit?.clean();
+  });
+
+  it('should have zip file size and file count returned with --json', () => {
+    const cmdJson = execCmd<DeployResultJson>(
+      'project deploy start --source-dir force-app/main/default/apex --verbose --json',
+      {
+        ensureExitCode: 0,
+      }
+    ).jsonOutput;
+
+    // @ts-expect-error TS thinks zipSize is not on DeployResultJson for some reason
+    expect(cmdJson?.result.zipSize).to.equal(1776);
+    // @ts-expect-error TS thinks zipFileCount is not on DeployResultJson for some reason
+    expect(cmdJson?.result.zipFileCount).to.equal(5);
+  });
+
+  it('should have zip file size and file count in the output', () => {
+    const shellOutput = execCmd<DeployResultJson>(
+      'project deploy start --source-dir force-app/main/default/apex --verbose',
+      {
+        ensureExitCode: 0,
+      }
+    ).shellOutput;
+
+    expect(shellOutput.stdout).to.contain('Deploy size: 1.73 KB of ~39 MB limit');
+    expect(shellOutput.stdout).to.contain('Deployed files count: 5 of 10,000 limit');
+  });
+});
