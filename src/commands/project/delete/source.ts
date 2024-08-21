@@ -33,6 +33,7 @@ import {
   requiredOrgFlagWithDeprecations,
   SfCommand,
 } from '@salesforce/sf-plugins-core';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { isNonDecomposedCustomLabel, isNonDecomposedCustomLabelsOrCustomLabel } from '../../../utils/metadataTypes.js';
 import { getFileResponseSuccessProps, tableHeader } from '../../../utils/output.js';
@@ -41,7 +42,6 @@ import { getPackageDirs, getSourceApiVersion } from '../../../utils/project.js';
 import { resolveApi, validateTests } from '../../../utils/deploy.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { testLevelFlag, testsFlag } from '../../../utils/flags.js';
 const testFlags = 'Test';
@@ -244,8 +244,14 @@ export class Source extends SfCommand<DeleteSourceJson> {
 
     // fire predeploy event for the delete
     await Lifecycle.getInstance().emit('predeploy', this.components);
+
+    const stages = new DeployStages({
+      title: 'Deleting Metadata',
+      jsonEnabled: this.jsonEnabled(),
+    });
+
     const isRest = (await resolveApi()) === API['REST'];
-    this.log(`*** Deleting with ${isRest ? 'REST' : 'SOAP'} API ***`);
+    stages.update({ message: `Deleting with ${isRest ? 'REST' : 'SOAP'} API` });
 
     const deploy = await this.componentSet.deploy({
       usernameOrConnection: this.org.getUsername() as string,
@@ -257,7 +263,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
       },
     });
 
-    new DeployProgress(deploy, this.jsonEnabled()).start();
+    stages.start({ deploy, username: this.org.getUsername() });
     this.deployResult = await deploy.pollStatus({ timeout: this.flags.wait });
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
