@@ -145,18 +145,6 @@ Extract all files from the retrieved zip file.
 
 File name to use for the retrieved zip file.
 
-# spinner.start
-
-Preparing retrieve request
-
-# spinner.sending
-
-Sending request to org
-
-# spinner.polling
-
-Waiting for the org to respond
-
 # error.Conflicts
 
 There are changes in your local files that conflict with the org changes you're trying to retrieve.
