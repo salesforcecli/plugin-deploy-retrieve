@@ -184,7 +184,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     targetOrg: string;
   }>;
 
-  protected stages!: DeployStages;
+  protected stages: DeployStages | undefined;
 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
@@ -209,27 +209,21 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     const username = flags['target-org'].getUsername();
     const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
-    this.stages = new DeployStages({
-      title,
-      jsonEnabled: this.jsonEnabled(),
-    });
-
     const lifecycle = Lifecycle.getInstance();
-    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) =>
-      Promise.resolve(
-        this.stages.update({
-          message: messages.getMessage('apiVersionMsgDetailed', [
-            flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
-            // technically manifestVersion can be undefined, but only on raw mdapi deployments.
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
-            username,
-            apiData.apiVersion,
-            apiData.webService,
-          ]),
-        })
-      )
-    );
+    let message: string = '';
+    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) => {
+      message = messages.getMessage('apiVersionMsgDetailed', [
+        flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
+        // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
+        username,
+        apiData.apiVersion,
+        apiData.webService,
+      ]);
+
+      return Promise.resolve();
+    });
 
     const { deploy } = await executeDeploy(
       {
@@ -241,7 +235,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     );
 
     if (!deploy) {
-      this.stages.stop();
       this.log('No changes to deploy');
       return { status: 'Nothing to deploy', files: [] };
     }
@@ -250,7 +243,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       throw new SfError('The deploy id is not available.');
     }
 
-    this.stages.start({ username, deploy });
+    this.stages = new DeployStages({
+      title,
+      jsonEnabled: this.jsonEnabled(),
+    });
+
+    this.stages.start({ username, deploy }, { message });
 
     if (flags.async) {
       this.stages.done({ status: 'Queued', username });
@@ -280,8 +278,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   protected catch(error: Error | SfError): Promise<never> {
     if (error instanceof SourceConflictError && error.data) {
       if (!this.jsonEnabled()) {
-        this.stages.update({ status: 'Failed' });
-        this.stages.stop(error);
+        this.stages?.update({ status: 'Failed' });
+        this.stages?.stop(error);
         writeConflictTable(error.data);
         // set the message and add plugin-specific actions
         return super.catch({

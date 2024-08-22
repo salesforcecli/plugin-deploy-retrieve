@@ -116,15 +116,22 @@ export class DeployStages {
     });
   }
 
-  public start({ username, deploy }: { username?: string | undefined; deploy: MetadataApiDeploy }): void {
+  public start(
+    { username, deploy }: { username?: string | undefined; deploy: MetadataApiDeploy },
+    initialData?: Partial<Data>
+  ): void {
     const lifecycle = Lifecycle.getInstance();
-
+    if (initialData) this.ms.updateData(initialData);
     this.ms.goto('Preparing', { username, id: deploy.id });
 
     // for sourceMember polling events
-    lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
-      Promise.resolve(this.ms.goto('Updating Source Tracking', { sourceMemberPolling: event }))
-    );
+    lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) => {
+      if (event.original > 0) {
+        return Promise.resolve(this.ms.goto('Updating Source Tracking', { sourceMemberPolling: event }));
+      }
+
+      return Promise.resolve();
+    });
 
     deploy.onUpdate((data) => {
       if (
