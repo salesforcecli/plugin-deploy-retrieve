@@ -5,15 +5,15 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import ansis from 'ansis';
+import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { type DeployVersionData, DeployZipData } from '@salesforce/source-deploy-retrieve';
+import { type DeployVersionData, DeployZipData, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { SourceConflictError } from '@salesforce/source-tracking';
+import { SourceConflictError, SourceMemberPollingEvent } from '@salesforce/source-tracking';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { AsyncDeployResultJson, DeployResultJson, TestLevel } from '../../../utils/types.js';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
@@ -177,6 +177,16 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  protected ms!: MultiStageOutput<{
+    mdapiDeploy: MetadataApiDeployStatus;
+    sourceMemberPolling: SourceMemberPollingEvent;
+    status: string;
+    apiData: DeployVersionData;
+    targetOrg: string;
+  }>;
+
+  protected stages!: DeployStages;
+
   private zipSize?: number;
   private zipFileCount?: number;
 
@@ -201,21 +211,11 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const api = await resolveApi(this.configAggregator);
     const username = flags['target-org'].getUsername();
-    const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
+    const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    Lifecycle.getInstance().on('apiVersionDeploy', async (apiData: DeployVersionData) => {
-      this.log(
-        messages.getMessage('apiVersionMsgDetailed', [
-          action,
-          // technically manifestVersion can be undefined, but only on raw mdapi deployments.
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
-          username,
-          apiData.apiVersion,
-          apiData.webService,
-        ])
-      );
+    this.stages = new DeployStages({
+      title,
+      jsonEnabled: this.jsonEnabled(),
     });
 
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -227,6 +227,22 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         if (flags.verbose && this.zipSize) this.log(`Deployed files count: ${this.zipFileCount} of 10,000 limit`);
       }
     });
+    const lifecycle = Lifecycle.getInstance();
+    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) =>
+      Promise.resolve(
+        this.stages.update({
+          message: messages.getMessage('apiVersionMsgDetailed', [
+            flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
+            // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
+            username,
+            apiData.apiVersion,
+            apiData.webService,
+          ]),
+        })
+      )
+    );
 
     const { deploy } = await executeDeploy(
       {
@@ -238,6 +254,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     );
 
     if (!deploy) {
+      this.stages.stop();
       this.log('No changes to deploy');
       return { status: 'Nothing to deploy', files: [] };
     }
@@ -245,9 +262,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+
+    this.stages.start({ username, deploy });
 
     if (flags.async) {
+      this.stages.done({ status: 'Queued', username });
+      this.stages.stop();
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
@@ -256,8 +276,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
       return this.mixinZipMeta(await asyncFormatter.getJson());
     }
-
-    new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
     process.exitCode = determineExitCode(result);
@@ -276,6 +294,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   protected catch(error: Error | SfError): Promise<never> {
     if (error instanceof SourceConflictError && error.data) {
       if (!this.jsonEnabled()) {
+        this.stages.update({ status: 'Failed' });
+        this.stages.stop(error);
         writeConflictTable(error.data);
         // set the message and add plugin-specific actions
         return super.catch({
