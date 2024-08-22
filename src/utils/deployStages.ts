@@ -34,6 +34,10 @@ function round(value: number, precision: number): number {
 }
 
 function formatProgress(current: number, total: number): string {
+  if (total === 0) {
+    return '0/0 (0%)';
+  }
+
   return `${current}/${total} (${round((current / total) * 100, 0)}%)`;
 }
 
@@ -111,11 +115,12 @@ export class DeployStages {
         {
           label: 'Members',
           get: (data): string | undefined =>
-            data?.sourceMemberPolling &&
-            formatProgress(
-              data.sourceMemberPolling.original - data.sourceMemberPolling.remaining,
-              data.sourceMemberPolling.original
-            ),
+            data?.sourceMemberPolling?.original
+              ? formatProgress(
+                  data.sourceMemberPolling.original - data.sourceMemberPolling.remaining,
+                  data.sourceMemberPolling.original
+                )
+              : undefined,
           stage: 'Updating Source Tracking',
           type: 'dynamic-key-value',
         },
