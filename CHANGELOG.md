@@ -1,3 +1,9 @@
+## [3.11.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.0...3.11.1) (2024-08-22)
+
+### Bug Fixes
+
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([e426bf5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e426bf5aa43b6e07142ea6612c5dfa1865372810))
+
 # [3.11.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.10.1...3.11.0) (2024-08-21)
 
 ### Bug Fixes
