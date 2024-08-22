@@ -14,7 +14,7 @@ import { SourceConflictError } from '@salesforce/source-tracking';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployProgress } from '../../../utils/progressBar.js';
-import { DeployResultJson, TestLevel } from '../../../utils/types.js';
+import { AsyncDeployResultJson, DeployResultJson, TestLevel } from '../../../utils/types.js';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
@@ -177,6 +177,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  private zipSize?: number;
+  private zipFileCount?: number;
+
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
     const project = await getOptionalProject();
@@ -215,19 +218,15 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       );
     });
 
-    let zipSize: number | undefined;
-    let zipFileCount: number | undefined;
-    if (flags.verbose) {
-      // eslint-disable-next-line @typescript-eslint/require-await
-      Lifecycle.getInstance().on('deployZipData', async (zipData: DeployZipData) => {
-        zipSize = zipData.zipSize;
-        this.log(`Deploy size: ${getZipFileSize(zipData.zipSize)} of ~39 MB limit`);
-        if (zipData.zipFileCount) {
-          zipFileCount = zipData.zipFileCount;
-          this.log(`Deployed files count: ${zipData.zipFileCount} of 10,000 limit`);
-        }
-      });
-    }
+    // eslint-disable-next-line @typescript-eslint/require-await
+    Lifecycle.getInstance().on('deployZipData', async (zipData: DeployZipData) => {
+      this.zipSize = zipData.zipSize;
+      if (flags.verbose && this.zipSize) this.log(`Deploy size: ${getZipFileSize(this.zipSize)} of ~39 MB limit`);
+      if (zipData.zipFileCount) {
+        this.zipFileCount = zipData.zipFileCount;
+        if (flags.verbose && this.zipSize) this.log(`Deployed files count: ${this.zipFileCount} of 10,000 limit`);
+      }
+    });
 
     const { deploy } = await executeDeploy(
       {
@@ -254,14 +253,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       }
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
-      const json = await asyncFormatter.getJson();
-      if (zipSize) {
-        json.zipSize = zipSize;
-      }
-      if (zipFileCount) {
-        json.zipFileCount = zipFileCount;
-      }
-      return json;
+
+      return this.mixinZipMeta(await asyncFormatter.getJson());
     }
 
     new DeployProgress(deploy, this.jsonEnabled()).start();
@@ -277,7 +270,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     await DeployCache.update(deploy.id, { status: result.response.status });
 
-    return formatter.getJson();
+    return this.mixinZipMeta(await formatter.getJson());
   }
 
   protected catch(error: Error | SfError): Promise<never> {
@@ -302,5 +295,15 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       });
     }
     return super.catch(error);
+  }
+
+  private mixinZipMeta(json: AsyncDeployResultJson | DeployResultJson): AsyncDeployResultJson | DeployResultJson {
+    if (this.zipSize) {
+      json.zipSize = this.zipSize;
+    }
+    if (this.zipFileCount) {
+      json.zipFileCount = this.zipFileCount;
+    }
+    return json;
   }
 }

@@ -130,12 +130,6 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
               replacements: Object.fromEntries(this.result.replacements),
             }
           : {}),
-        ...(this.verbosity === 'verbose' && this.result.zipMeta
-          ? {
-              zipSize: this.result.zipMeta.zipSize,
-              zipFileCount: this.result.zipMeta.zipFileCount ?? 0,
-            }
-          : {}),
       };
     }
   }
