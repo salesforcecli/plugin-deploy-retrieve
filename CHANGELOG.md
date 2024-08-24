@@ -1,3 +1,9 @@
+## [3.11.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.2...3.11.3) (2024-08-24)
+
+### Bug Fixes
+
+- **deps:** bump micromatch from 4.0.7 to 4.0.8 ([eb4fb8f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/eb4fb8f6c8c7cc43bfd75b2ef197f1b44cafc001))
+
 ## [3.11.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.1...3.11.2) (2024-08-24)
 
 ### Bug Fixes
