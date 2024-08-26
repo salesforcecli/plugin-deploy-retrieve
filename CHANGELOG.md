@@ -1,3 +1,9 @@
+## [3.11.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.4...3.11.5) (2024-08-26)
+
+### Bug Fixes
+
+- revert MSO changes ([#1147](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1147)) ([afb625e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/afb625e6592374b2f9ef648195a709a96a28dd12)), closes [#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139) [#1123](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1123)
+
 ## [3.11.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.3...3.11.4) (2024-08-24)
 
 ### Bug Fixes
