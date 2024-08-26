@@ -9,7 +9,6 @@ import { rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import * as fs from 'node:fs';
 
-import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
 import {
   RetrieveResult,
@@ -148,10 +147,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   );
 
   protected retrieveResult!: RetrieveResult;
-  protected ms!: MultiStageOutput<{
-    status: string;
-    apiData: RetrieveVersionData;
-  }>;
 
   // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
@@ -165,6 +160,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     }
     const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
+
+    this.spinner.start(messages.getMessage('spinner.start'));
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
       flags,
@@ -180,76 +177,42 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         });
       }
     }
-
-    const stages = ['Preparing retrieve request', 'Sending request to org', 'Waiting for the org to respond', 'Done'];
-    this.ms = new MultiStageOutput<{
-      status: string;
-      apiData: RetrieveVersionData;
-    }>({
-      stages,
-      title: 'Retrieving Metadata',
-      jsonEnabled: this.jsonEnabled(),
-      preStagesBlock: [
-        {
-          type: 'message',
-          get: (data) =>
-            data?.apiData &&
-            messages.getMessage('apiVersionMsgDetailed', [
-              'Retrieving',
-              `v${data.apiData.manifestVersion}`,
-              flags['target-org'].getUsername(),
-              data.apiData.apiVersion,
-            ]),
-        },
-      ],
-      postStagesBlock: [
-        {
-          label: 'Status',
-          get: (data) => data?.status,
-          bold: true,
-          type: 'dynamic-key-value',
-        },
-      ],
-    });
-
-    this.ms.goto('Preparing retrieve request');
-
     const retrieveOpts = await buildRetrieveOptions(flags, format, zipFileName, resolvedTargetDir);
 
-    this.ms.goto('Sending request to org');
+    this.spinner.status = messages.getMessage('spinner.sending');
 
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
     if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
-      Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) =>
-        Promise.resolve(this.ms.updateData({ apiData }))
-      );
+      // eslint-disable-next-line @typescript-eslint/require-await
+      Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) => {
+        this.log(
+          messages.getMessage('apiVersionMsgDetailed', [
+            'Retrieving',
+            `v${apiData.manifestVersion}`,
+            flags['target-org'].getUsername(),
+            apiData.apiVersion,
+          ])
+        );
+      });
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
-      this.ms.goto('Waiting for the org to respond', { status: 'Pending' });
+      this.spinner.status = messages.getMessage('spinner.polling');
 
       retrieve.onUpdate((data) => {
-        this.ms.goto('Waiting for the org to respond', { status: mdTransferMessages.getMessage(data.status) });
+        this.spinner.status = mdTransferMessages.getMessage(data.status);
       });
-      retrieve.onFinish((data) => {
-        this.ms.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
-      });
-      retrieve.onCancel((data) => {
-        this.ms.updateData({ status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
-        this.ms.stop(new Error('Retrieve canceled'));
-      });
+      // any thing else should stop the progress bar
+      retrieve.onFinish((data) => this.spinner.stop(mdTransferMessages.getMessage(data.response.status)));
+      retrieve.onCancel((data) => this.spinner.stop(mdTransferMessages.getMessage(data?.status ?? 'Canceled')));
       retrieve.onError((error: Error) => {
-        if (error.message.includes('client has timed out')) {
-          this.ms.updateData({ status: 'Client Timeout' });
-        }
-
-        this.ms.stop(error);
+        this.spinner.stop(error.name);
         throw error;
       });
 
       this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
     }
 
-    this.ms.stop();
+    this.spinner.stop();
 
     // flags['output-dir'] will set resolvedTargetDir var, so this check is redundant, but allows for nice typings in the moveResultsForRetrieveTargetDir method
     if (flags['output-dir'] && resolvedTargetDir) {
@@ -300,8 +263,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected catch(error: Error | SfError): Promise<never> {
     if (!this.jsonEnabled() && error instanceof SourceConflictError && error.data) {
-      this.ms.updateData({ status: 'Failed' });
-      this.ms.stop(error);
       writeConflictTable(error.data);
       // set the message and add plugin-specific actions
       return super.catch({
@@ -309,8 +270,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         message: messages.getMessage('error.Conflicts'),
         actions: messages.getMessages('error.Conflicts.Actions'),
       });
-    } else {
-      this.ms.stop(error);
     }
 
     return super.catch(error);
