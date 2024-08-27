@@ -1,3 +1,9 @@
+# [3.12.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.5...3.12.0) (2024-08-27)
+
+### Features
+
+- zipSize and zipFileCount in DeployResult ([#1138](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1138)) ([a03a580](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a03a580afdd86d6a8d2aeff627b88396b87681fa))
+
 ## [3.11.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.4...3.11.5) (2024-08-26)
 
 ### Bug Fixes
