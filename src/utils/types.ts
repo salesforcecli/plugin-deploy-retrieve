@@ -43,6 +43,8 @@ export type Verbosity = 'verbose' | 'concise' | 'normal';
 export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'status'> & {
   status: RequestStatus | 'Queued' | 'Nothing to deploy';
   files: FileResponse[];
+  zipSize?: number;
+  zipFileCount?: number;
 };
 
 type ConvertEntry = {
@@ -72,7 +74,12 @@ export type DeleteSourceJson = {
 export type CoverageResultsFileInfo = Record<keyof Partial<typeof DefaultReportOptions>, string>;
 
 export type DeployResultJson =
-  | (MetadataApiDeployStatus & { files: FileResponse[] } & { replacements?: Record<string, string[]> })
+  | (MetadataApiDeployStatus & {
+      files: FileResponse[];
+      replacements?: Record<string, string[]>;
+      zipSize?: number;
+      zipFileCount?: number;
+    })
   | AsyncDeployResultJson;
 
 export type MetadataRetrieveResultJson = Omit<MetadataApiRetrieveStatus, 'zipFile'> & {

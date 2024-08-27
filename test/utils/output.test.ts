@@ -10,6 +10,7 @@ import sinon from 'sinon';
 import { DeployMessage, DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
 import { Ux } from '@salesforce/sf-plugins-core';
 import { getCoverageFormattersOptions } from '../../src/utils/coverage.js';
+import { getZipFileSize } from '../../src/utils/output.js';
 import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter.js';
 import { getDeployResult } from './deployResponses.js';
 
@@ -220,6 +221,26 @@ describe('deployResultFormatter', () => {
         formatter.display();
         expect(getStdout()).to.not.include('Metadata Replacements');
       });
+    });
+  });
+});
+
+describe('output util functions', () => {
+  describe('getZipFileSize', () => {
+    it('should return correct number of Bytes if 0', () => {
+      expect(getZipFileSize(0)).to.equal('0 B');
+    });
+    it('should return correct number of Bytes', () => {
+      expect(getZipFileSize(724)).to.equal('724 B');
+    });
+    it('should return correct number of KiloBytes', () => {
+      expect(getZipFileSize(46_694)).to.equal('45.6 KB');
+    });
+    it('should return correct number of MegaBytes', () => {
+      expect(getZipFileSize(724_992_234)).to.equal('691.41 MB');
+    });
+    it('should return correct number of GigaBytes', () => {
+      expect(getZipFileSize(724_844_993_378)).to.equal('675.06 GB');
     });
   });
 });

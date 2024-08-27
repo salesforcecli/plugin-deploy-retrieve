@@ -38,6 +38,15 @@ export const exitCodeAsNumber = (): number | undefined => {
   }
 };
 
+export const getZipFileSize = (bytes: number): string => {
+  const units = ['B', 'KB', 'MB', 'GB'];
+  while (bytes > 1024 && units.length) {
+    bytes /= 1024;
+    units.shift();
+  }
+  return parseFloat(bytes.toFixed(2)) + ' ' + units[0];
+};
+
 /** oclif table doesn't like "interface" but likes "type".  SDR exports an interface  */
 export const getFileResponseSuccessProps = (
   s: FileResponseSuccess
