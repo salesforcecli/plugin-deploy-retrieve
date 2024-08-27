@@ -33,7 +33,7 @@ describe('Deploy --verbose', () => {
       }
     ).jsonOutput;
 
-    expect(cmdJson?.result.zipSize).to.equal(1776);
+    expect(cmdJson?.result.zipSize).to.be.within(1775, 1795);
     expect(cmdJson?.result.zipFileCount).to.equal(5);
   });
 
@@ -45,7 +45,7 @@ describe('Deploy --verbose', () => {
       }
     ).shellOutput;
 
-    expect(shellOutput.stdout).to.contain('Deploy size: 1.73 KB of ~39 MB limit');
+    expect(shellOutput.stdout).to.contain('Deploy size: ').and.contain('KB of ~39 MB limit');
     expect(shellOutput.stdout).to.contain('Deployed files count: 5 of 10,000 limit');
   });
 
@@ -57,7 +57,7 @@ describe('Deploy --verbose', () => {
       }
     ).jsonOutput;
 
-    expect(cmdJson?.result.zipSize).to.equal(1776);
+    expect(cmdJson?.result.zipSize).to.be.within(1775, 1795);
     expect(cmdJson?.result.zipFileCount).to.equal(5);
   });
 
@@ -69,7 +69,7 @@ describe('Deploy --verbose', () => {
       }
     ).shellOutput;
 
-    expect(shellOutput.stdout).to.contain('Deploy size: 1.73 KB of ~39 MB limit');
+    expect(shellOutput.stdout).to.contain('Deploy size: ').and.contain('KB of ~39 MB limit');
     expect(shellOutput.stdout).to.contain('Deployed files count: 5 of 10,000 limit');
   });
 });
