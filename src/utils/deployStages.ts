@@ -71,6 +71,7 @@ export class DeployStages {
           label: 'Deploy ID',
           get: (data): string | undefined => data?.id,
           type: 'static-key-value',
+          neverCollapse: true,
         },
         {
           label: 'Target Org',
@@ -104,10 +105,7 @@ export class DeployStages {
           label: 'Members',
           get: (data): string | undefined =>
             data?.sourceMemberPolling?.original
-              ? formatProgress(
-                  data.sourceMemberPolling.original - data.sourceMemberPolling.remaining,
-                  data.sourceMemberPolling.original
-                )
+              ? formatProgress(data.sourceMemberPolling.remaining, data.sourceMemberPolling.original)
               : undefined,
           stage: 'Updating Source Tracking',
           type: 'dynamic-key-value',
