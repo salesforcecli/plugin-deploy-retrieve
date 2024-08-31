@@ -1355,7 +1355,7 @@
   resolved "https://registry.yarnpkg.com/@inquirer/figures/-/figures-1.0.5.tgz#57f9a996d64d3e3345d2a3ca04d36912e94f8790"
   integrity sha512-79hP/VWdZ2UVc9bFGJnoQ/lQMpL74mGgzSYX1xUqCVk7/v73vJCMw1VuyWN1jGkZ9B3z7THAbySqGbCNefcjfA==
 
-"@inquirer/input@^2.2.4", "@inquirer/input@^2.2.7":
+"@inquirer/input@^2.2.4", "@inquirer/input@^2.2.9":
   version "2.2.9"
   resolved "https://registry.yarnpkg.com/@inquirer/input/-/input-2.2.9.tgz#08fdf9a48e4f6fc64c2d508b9d10afac843f9bd8"
   integrity sha512-7Z6N+uzkWM7+xsE+3rJdhdG/+mQgejOVqspoW+w0AbSZnL6nq5tGMEVASaYVWbkoSzecABWwmludO2evU3d31g==
@@ -1682,12 +1682,12 @@
     debug "^4.3.6"
     handlebars "^4.7.8"
 
-"@salesforce/plugin-info@^3.3.28":
-  version "3.3.28"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.3.28.tgz#4cd1e234344ea835475775a28b276bad6e6a492c"
-  integrity sha512-4ulrmW3ldcDz2mcirGomgxnkhy5mPh5kc6iNXiENs4RsfNoKrKPBeB8jexk4BQFxlRBLEd2DbBR4np68Ys75kQ==
+"@salesforce/plugin-info@^3.4.2":
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.2.tgz#4f1cc845c0d4c79bdde5d3d870e1df9b783405a7"
+  integrity sha512-Rl2pA9jnJIU5bvE/GrVdpjdgsmRFlWcRiwND4usrmQPEfohViTPDhcV5RBjRb1wlXlsAVYrVD3dlB1tqVq8BmQ==
   dependencies:
-    "@inquirer/input" "^2.2.7"
+    "@inquirer/input" "^2.2.9"
     "@jsforce/jsforce-node" "^3.2.2"
     "@oclif/core" "^4"
     "@salesforce/core" "^8.3.0"
