@@ -8,6 +8,7 @@ import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { Lifecycle, Messages } from '@salesforce/core';
 import { MetadataApiDeploy, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
+import { getZipFileSize } from './output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
@@ -24,8 +25,8 @@ type Data = {
   message: string;
   username: string;
   id: string;
-  deploySize: string;
-  deployFileCount: string;
+  deploySize: number;
+  deployFileCount: number;
 };
 
 function round(value: number, precision: number): number {
@@ -81,13 +82,15 @@ export class DeployStages {
           type: 'static-key-value',
         },
         {
-          label: 'Deploy Size',
-          get: (data): string | undefined => data?.deploySize,
+          label: 'Size',
+          get: (data): string | undefined =>
+            data?.deploySize ? `${getZipFileSize(data.deploySize)} of ~39 MB limit` : undefined,
           type: 'static-key-value',
         },
         {
-          label: 'Deployed File Count',
-          get: (data): string | undefined => data?.deployFileCount,
+          label: 'Files',
+          get: (data): string | undefined =>
+            data?.deployFileCount ? `${data.deployFileCount} of 10,000 limit` : undefined,
           type: 'static-key-value',
         },
       ],
@@ -205,6 +208,6 @@ export class DeployStages {
   }
 
   public done(data?: Partial<Data>): void {
-    this.mso.goto('Done', data);
+    this.mso.skipTo('Done', data);
   }
 }

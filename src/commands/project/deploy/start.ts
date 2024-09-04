@@ -20,7 +20,6 @@ import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { getOptionalProject } from '../../../utils/project.js';
-import { getZipFileSize } from '../../../utils/output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -205,6 +204,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const lifecycle = Lifecycle.getInstance();
     let message: string = '';
+
     lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) => {
       message = messages.getMessage('apiVersionMsgDetailed', [
         flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
@@ -219,22 +219,13 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return Promise.resolve();
     });
 
-    // eslint-disable-next-line @typescript-eslint/require-await
     lifecycle.on('deployZipData', async (zipData: DeployZipData) => {
       this.zipSize = zipData.zipSize;
-      if (flags.verbose && this.zipSize) {
-        this.stages.update({
-          deploySize: `${getZipFileSize(this.zipSize)} of ~39 MB limit`,
-        });
-      }
       if (zipData.zipFileCount) {
         this.zipFileCount = zipData.zipFileCount;
-        if (flags.verbose && this.zipSize) {
-          this.stages.update({
-            deployFileCount: `${this.zipFileCount} of 10,000 limit`,
-          });
-        }
       }
+
+      return Promise.resolve();
     });
 
     const { deploy } = await executeDeploy(
@@ -260,7 +251,18 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       jsonEnabled: this.jsonEnabled(),
     });
 
-    this.stages.start({ username, deploy }, { message });
+    this.stages.start(
+      { username, deploy },
+      {
+        message,
+        ...(flags.verbose
+          ? {
+              deploySize: this.zipSize,
+              deployFileCount: this.zipFileCount,
+            }
+          : {}),
+      }
+    );
 
     if (flags.async) {
       this.stages.done({ status: 'Queued', username });
