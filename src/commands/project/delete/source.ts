@@ -266,9 +266,8 @@ export class Source extends SfCommand<DeleteSourceJson> {
     stages.start({ deploy, username: this.org.getUsername() });
     this.deployResult = await deploy.pollStatus({ timeout: this.flags.wait });
     if (!deploy.id) {
-      const err = new SfError('The deploy id is not available.');
       stages.error();
-      throw err;
+      throw new SfError('The deploy id is not available.');
     }
     await DeployCache.update(deploy.id, { status: this.deployResult.response.status });
 
