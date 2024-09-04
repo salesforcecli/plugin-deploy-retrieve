@@ -20,7 +20,6 @@ import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { getOptionalProject } from '../../../utils/project.js';
-import { getZipFileSize } from '../../../utils/output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -203,44 +202,31 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     const username = flags['target-org'].getUsername();
     const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
-    this.stages = new DeployStages({
-      title,
-      jsonEnabled: this.jsonEnabled(),
-    });
     const lifecycle = Lifecycle.getInstance();
-    // eslint-disable-next-line @typescript-eslint/require-await
-    lifecycle.on('deployZipData', async (zipData: DeployZipData) => {
-      this.zipSize = zipData.zipSize;
-      if (flags.verbose && this.zipSize) {
-        this.stages.update({
-          deploySize: `${getZipFileSize(this.zipSize)} of ~39 MB limit`,
-        });
-      }
-      if (zipData.zipFileCount) {
-        this.zipFileCount = zipData.zipFileCount;
-        if (flags.verbose && this.zipSize) {
-          this.stages.update({
-            deployFileCount: `${this.zipFileCount} of 10,000 limit`,
-          });
-        }
-      }
+    let message: string = '';
+
+    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) => {
+      message = messages.getMessage('apiVersionMsgDetailed', [
+        flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
+        // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
+        username,
+        apiData.apiVersion,
+        apiData.webService,
+      ]);
+
+      return Promise.resolve();
     });
 
-    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) =>
-      Promise.resolve(
-        this.stages.update({
-          message: messages.getMessage('apiVersionMsgDetailed', [
-            flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
-            // technically manifestVersion can be undefined, but only on raw mdapi deployments.
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
-            username,
-            apiData.apiVersion,
-            apiData.webService,
-          ]),
-        })
-      )
-    );
+    lifecycle.on('deployZipData', async (zipData: DeployZipData) => {
+      this.zipSize = zipData.zipSize;
+      if (zipData.zipFileCount) {
+        this.zipFileCount = zipData.zipFileCount;
+      }
+
+      return Promise.resolve();
+    });
 
     const { deploy } = await executeDeploy(
       {
@@ -252,7 +238,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     );
 
     if (!deploy) {
-      this.stages.stop();
       this.log('No changes to deploy');
       return { status: 'Nothing to deploy', files: [] };
     }
@@ -261,7 +246,23 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       throw new SfError('The deploy id is not available.');
     }
 
-    this.stages.start({ username, deploy });
+    this.stages = new DeployStages({
+      title,
+      jsonEnabled: this.jsonEnabled(),
+    });
+
+    this.stages.start(
+      { username, deploy },
+      {
+        message,
+        ...(flags.verbose
+          ? {
+              deploySize: this.zipSize,
+              deployFileCount: this.zipFileCount,
+            }
+          : {}),
+      }
+    );
 
     if (flags.async) {
       this.stages.done({ status: 'Queued', username });
@@ -292,8 +293,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   protected catch(error: Error | SfError): Promise<never> {
     if (error instanceof SourceConflictError && error.data) {
       if (!this.jsonEnabled()) {
-        this.stages.update({ status: 'Failed' });
-        this.stages.stop(error);
+        this.stages?.update({ status: 'Failed' });
+        this.stages?.error();
         writeConflictTable(error.data);
         // set the message and add plugin-specific actions
         return super.catch({

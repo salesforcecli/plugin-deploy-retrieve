@@ -8,6 +8,7 @@ import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { Lifecycle, Messages } from '@salesforce/core';
 import { MetadataApiDeploy, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
+import { getZipFileSize } from './output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
@@ -24,8 +25,8 @@ type Data = {
   message: string;
   username: string;
   id: string;
-  deploySize: string;
-  deployFileCount: string;
+  deploySize: number;
+  deployFileCount: number;
 };
 
 function round(value: number, precision: number): number {
@@ -42,10 +43,10 @@ function formatProgress(current: number, total: number): string {
 }
 
 export class DeployStages {
-  private ms: MultiStageOutput<Data>;
+  private mso: MultiStageOutput<Data>;
 
   public constructor({ title, jsonEnabled }: Options) {
-    this.ms = new MultiStageOutput<Data>({
+    this.mso = new MultiStageOutput<Data>({
       title,
       stages: [
         'Preparing',
@@ -73,6 +74,7 @@ export class DeployStages {
           label: 'Deploy ID',
           get: (data): string | undefined => data?.id,
           type: 'static-key-value',
+          neverCollapse: true,
         },
         {
           label: 'Target Org',
@@ -80,13 +82,15 @@ export class DeployStages {
           type: 'static-key-value',
         },
         {
-          label: 'Deploy Size',
-          get: (data): string | undefined => data?.deploySize,
+          label: 'Size',
+          get: (data): string | undefined =>
+            data?.deploySize ? `${getZipFileSize(data.deploySize)} of ~39 MB limit` : undefined,
           type: 'static-key-value',
         },
         {
-          label: 'Deployed File Count',
-          get: (data): string | undefined => data?.deployFileCount,
+          label: 'Files',
+          get: (data): string | undefined =>
+            data?.deployFileCount ? `${data.deployFileCount} of 10,000 limit` : undefined,
           type: 'static-key-value',
         },
       ],
@@ -128,15 +132,22 @@ export class DeployStages {
     });
   }
 
-  public start({ username, deploy }: { username?: string | undefined; deploy: MetadataApiDeploy }): void {
+  public start(
+    { username, deploy }: { username?: string | undefined; deploy: MetadataApiDeploy },
+    initialData?: Partial<Data>
+  ): void {
     const lifecycle = Lifecycle.getInstance();
-
-    this.ms.skipTo('Preparing', { username, id: deploy.id });
+    if (initialData) this.mso.updateData(initialData);
+    this.mso.skipTo('Preparing', { username, id: deploy.id });
 
     // for sourceMember polling events
-    lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) =>
-      Promise.resolve(this.ms.skipTo('Updating Source Tracking', { sourceMemberPolling: event }))
-    );
+    lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) => {
+      if (event.original > 0) {
+        return Promise.resolve(this.mso.skipTo('Updating Source Tracking', { sourceMemberPolling: event }));
+      }
+
+      return Promise.resolve();
+    });
 
     deploy.onUpdate((data) => {
       if (
@@ -144,14 +155,14 @@ export class DeployStages {
         data.numberTestsTotal > 0 &&
         data.numberComponentsDeployed > 0
       ) {
-        this.ms.skipTo('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+        this.mso.skipTo('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
       } else if (data.status === RequestStatus.Pending) {
-        this.ms.skipTo('Waiting for the org to respond', {
+        this.mso.skipTo('Waiting for the org to respond', {
           mdapiDeploy: data,
           status: mdTransferMessages.getMessage(data?.status),
         });
       } else {
-        this.ms.skipTo('Deploying Metadata', {
+        this.mso.skipTo('Deploying Metadata', {
           mdapiDeploy: data,
           status: mdTransferMessages.getMessage(data?.status),
         });
@@ -159,44 +170,44 @@ export class DeployStages {
     });
 
     deploy.onFinish((data) => {
-      this.ms.updateData({ mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
+      this.mso.updateData({ mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
       if (data.response.status === RequestStatus.Failed) {
-        this.ms.error();
+        this.mso.error();
       } else {
-        this.ms.skipTo('Done');
-        this.ms.stop();
+        this.mso.skipTo('Done');
+        this.mso.stop();
       }
     });
 
     deploy.onCancel((data) => {
-      this.ms.updateData({ mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
+      this.mso.updateData({ mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
 
-      this.ms.error();
+      this.mso.error();
     });
 
     deploy.onError((error: Error) => {
       if (error.message.includes('client has timed out')) {
-        this.ms.updateData({ status: 'Client Timeout' });
+        this.mso.updateData({ status: 'Client Timeout' });
       }
 
-      this.ms.error();
+      this.mso.error();
       throw error;
     });
   }
 
   public update(data: Partial<Data>): void {
-    this.ms.updateData(data);
+    this.mso.updateData(data);
   }
 
-  public stop(error?: Error): void {
-    if (error) {
-      this.ms.error();
-    } else {
-      this.ms.stop();
-    }
+  public stop(): void {
+    this.mso.stop();
+  }
+
+  public error(): void {
+    this.mso.error();
   }
 
   public done(data?: Partial<Data>): void {
-    this.ms.goto('Done', data);
+    this.mso.skipTo('Done', data);
   }
 }

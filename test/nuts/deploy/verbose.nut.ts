@@ -45,8 +45,8 @@ describe('Deploy --verbose', () => {
       }
     ).shellOutput;
 
-    expect(shellOutput.stdout).to.contain('Deploy size: ').and.contain('KB of ~39 MB limit');
-    expect(shellOutput.stdout).to.contain('Deployed files count: 5 of 10,000 limit');
+    expect(shellOutput.stdout).to.contain('Size: ').and.contain('KB of ~39 MB limit');
+    expect(shellOutput.stdout).to.contain('Files: 5 of 10,000 limit');
   });
 
   it('should have zip file size and file count returned with --json --async', () => {
@@ -69,7 +69,7 @@ describe('Deploy --verbose', () => {
       }
     ).shellOutput;
 
-    expect(shellOutput.stdout).to.contain('Deploy size: ').and.contain('KB of ~39 MB limit');
-    expect(shellOutput.stdout).to.contain('Deployed files count: 5 of 10,000 limit');
+    expect(shellOutput.stdout).to.contain('Size: ').and.contain('KB of ~39 MB limit');
+    expect(shellOutput.stdout).to.contain('Files: 5 of 10,000 limit');
   });
 });
