@@ -1,3 +1,45 @@
+## [3.12.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.1...3.12.2) (2024-08-31)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.1.7 to 7.1.10 ([4f8ff35](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f8ff353778047ce55a29939d35acb9ee978d360))
+
+## [3.12.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.0...3.12.1) (2024-08-31)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.3.28 to 3.4.2 ([5a4f629](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5a4f629801bf0b0f9207a7a263ac9d057af83501))
+
+# [3.12.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.5...3.12.0) (2024-08-27)
+
+### Features
+
+- zipSize and zipFileCount in DeployResult ([#1138](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1138)) ([a03a580](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a03a580afdd86d6a8d2aeff627b88396b87681fa))
+
+## [3.11.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.4...3.11.5) (2024-08-26)
+
+### Bug Fixes
+
+- revert MSO changes ([#1147](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1147)) ([afb625e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/afb625e6592374b2f9ef648195a709a96a28dd12)), closes [#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139) [#1123](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1123)
+
+## [3.11.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.3...3.11.4) (2024-08-24)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 4.0.17 to 4.0.18 ([939456f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/939456f558fadc2549a9609a64f293c843486f2e))
+
+## [3.11.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.2...3.11.3) (2024-08-24)
+
+### Bug Fixes
+
+- **deps:** bump micromatch from 4.0.7 to 4.0.8 ([eb4fb8f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/eb4fb8f6c8c7cc43bfd75b2ef197f1b44cafc001))
+
+## [3.11.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.1...3.11.2) (2024-08-24)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/multi-stage-output from 0.3.0 to 0.3.1 ([2a9db63](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2a9db63780ec2556d8923f5fbb0730ee0eebbc71))
+
 ## [3.11.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.11.0...3.11.1) (2024-08-22)
 
 ### Bug Fixes

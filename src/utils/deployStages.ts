@@ -24,6 +24,8 @@ type Data = {
   message: string;
   username: string;
   id: string;
+  deploySize: string;
+  deployFileCount: string;
 };
 
 function round(value: number, precision: number): number {
@@ -76,6 +78,16 @@ export class DeployStages {
         {
           label: 'Target Org',
           get: (data): string | undefined => data?.username,
+          type: 'static-key-value',
+        },
+        {
+          label: 'Deploy Size',
+          get: (data): string | undefined => data?.deploySize,
+          type: 'static-key-value',
+        },
+        {
+          label: 'Deployed File Count',
+          get: (data): string | undefined => data?.deployFileCount,
           type: 'static-key-value',
         },
       ],

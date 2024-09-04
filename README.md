@@ -62,23 +62,29 @@ sf plugins
 
 <!-- commands -->
 
-- [`sf project convert mdapi`](#sf-project-convert-mdapi)
-- [`sf project convert source`](#sf-project-convert-source)
-- [`sf project convert source-behavior`](#sf-project-convert-source-behavior)
-- [`sf project delete source`](#sf-project-delete-source)
-- [`sf project delete tracking`](#sf-project-delete-tracking)
-- [`sf project deploy cancel`](#sf-project-deploy-cancel)
-- [`sf project deploy preview`](#sf-project-deploy-preview)
-- [`sf project deploy quick`](#sf-project-deploy-quick)
-- [`sf project deploy report`](#sf-project-deploy-report)
-- [`sf project deploy resume`](#sf-project-deploy-resume)
-- [`sf project deploy start`](#sf-project-deploy-start)
-- [`sf project deploy validate`](#sf-project-deploy-validate)
-- [`sf project generate manifest`](#sf-project-generate-manifest)
-- [`sf project list ignored`](#sf-project-list-ignored)
-- [`sf project reset tracking`](#sf-project-reset-tracking)
-- [`sf project retrieve preview`](#sf-project-retrieve-preview)
-- [`sf project retrieve start`](#sf-project-retrieve-start)
+- [plugin-deploy-retrieve](#plugin-deploy-retrieve)
+  - [Install](#install)
+  - [Contributing](#contributing)
+    - [CLA](#cla)
+    - [Build](#build)
+  - [Commands](#commands)
+  - [`sf project convert mdapi`](#sf-project-convert-mdapi)
+  - [`sf project convert source`](#sf-project-convert-source)
+  - [`sf project convert source-behavior`](#sf-project-convert-source-behavior)
+  - [`sf project delete source`](#sf-project-delete-source)
+  - [`sf project delete tracking`](#sf-project-delete-tracking)
+  - [`sf project deploy cancel`](#sf-project-deploy-cancel)
+  - [`sf project deploy preview`](#sf-project-deploy-preview)
+  - [`sf project deploy quick`](#sf-project-deploy-quick)
+  - [`sf project deploy report`](#sf-project-deploy-report)
+  - [`sf project deploy resume`](#sf-project-deploy-resume)
+  - [`sf project deploy start`](#sf-project-deploy-start)
+  - [`sf project deploy validate`](#sf-project-deploy-validate)
+  - [`sf project generate manifest`](#sf-project-generate-manifest)
+  - [`sf project list ignored`](#sf-project-list-ignored)
+  - [`sf project reset tracking`](#sf-project-reset-tracking)
+  - [`sf project retrieve preview`](#sf-project-retrieve-preview)
+  - [`sf project retrieve start`](#sf-project-retrieve-start)
 
 ## `sf project convert mdapi`
 
@@ -141,7 +147,7 @@ FLAG DESCRIPTIONS
     If you specify this parameter, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/convert/mdapi.ts)_
+_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/convert/mdapi.ts)_
 
 ## `sf project convert source`
 
@@ -153,7 +159,7 @@ USAGE
     [-p <value>... | -x <value> | -m <value>...]
 
 FLAGS
-  -d, --output-dir=<value>     [default: metadataPackage_1725464077079] Output directory to store the Metadata
+  -d, --output-dir=<value>     [default: metadataPackage_1725104645659] Output directory to store the Metadata
                                API–formatted files in.
   -m, --metadata=<value>...    Metadata component names to convert.
   -n, --package-name=<value>   Name of the package to associate with the metadata-formatted files.
@@ -214,7 +220,7 @@ FLAG DESCRIPTIONS
     Override the api version used for api requests made by this command
 ```
 
-_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/convert/source.ts)_
+_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/convert/source.ts)_
 
 ## `sf project convert source-behavior`
 
@@ -271,7 +277,7 @@ EXAMPLES
     $ sf project convert source-behavior --behavior decomposePermissionSetBeta --dry-run --preserve-temp-dir
 ```
 
-_See code: [src/commands/project/convert/source-behavior.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/convert/source-behavior.ts)_
+_See code: [src/commands/project/convert/source-behavior.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/convert/source-behavior.ts)_
 
 ## `sf project delete source`
 
@@ -411,7 +417,7 @@ FLAG DESCRIPTIONS
     - Separate the test names with spaces: --tests Test1 Test2 "Test With Space"
 ```
 
-_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/delete/source.ts)_
+_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/delete/source.ts)_
 
 ## `sf project delete tracking`
 
@@ -448,7 +454,7 @@ EXAMPLES
     $ sf project delete tracking --target-org my-scratch
 ```
 
-_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/delete/tracking.ts)_
+_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/delete/tracking.ts)_
 
 ## `sf project deploy cancel`
 
@@ -520,7 +526,7 @@ FLAG DESCRIPTIONS
     project deploy report".
 ```
 
-_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/deploy/cancel.ts)_
+_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/deploy/cancel.ts)_
 
 ## `sf project deploy preview`
 
@@ -603,7 +609,7 @@ FLAG DESCRIPTIONS
     All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/deploy/preview.ts)_
+_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/deploy/preview.ts)_
 
 ## `sf project deploy quick`
 
@@ -687,7 +693,7 @@ FLAG DESCRIPTIONS
     deploy report".
 ```
 
-_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/deploy/quick.ts)_
+_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/deploy/quick.ts)_
 
 ## `sf project deploy report`
 
@@ -779,7 +785,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/deploy/report.ts)_
+_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/deploy/report.ts)_
 
 ## `sf project deploy resume`
 
@@ -864,7 +870,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/deploy/resume.ts)_
+_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/deploy/resume.ts)_
 
 ## `sf project deploy start`
 
@@ -1100,7 +1106,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/deploy/start.ts)_
+_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/deploy/start.ts)_
 
 ## `sf project deploy validate`
 
@@ -1273,7 +1279,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/deploy/validate.ts)_
+_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/deploy/validate.ts)_
 
 ## `sf project generate manifest`
 
@@ -1350,7 +1356,7 @@ EXAMPLES
     $ sf project generate manifest --from-org test@myorg.com --include-packages unlocked
 ```
 
-_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/generate/manifest.ts)_
+_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/generate/manifest.ts)_
 
 ## `sf project list ignored`
 
@@ -1392,7 +1398,7 @@ EXAMPLES
     $ sf project list ignored --source-dir package.xml
 ```
 
-_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/list/ignored.ts)_
+_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/list/ignored.ts)_
 
 ## `sf project reset tracking`
 
@@ -1441,7 +1447,7 @@ EXAMPLES
     $ sf project reset tracking --revision 30
 ```
 
-_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/reset/tracking.ts)_
+_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/reset/tracking.ts)_
 
 ## `sf project retrieve preview`
 
@@ -1495,7 +1501,7 @@ FLAG DESCRIPTIONS
     production orgs.
 ```
 
-_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/retrieve/preview.ts)_
+_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/retrieve/preview.ts)_
 
 ## `sf project retrieve start`
 
@@ -1664,6 +1670,6 @@ FLAG DESCRIPTIONS
     If you specify this parameter, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.11.2-beta.0/src/commands/project/retrieve/start.ts)_
+_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.12.2/src/commands/project/retrieve/start.ts)_
 
 <!-- commandsstop -->

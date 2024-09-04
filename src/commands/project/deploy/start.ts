@@ -4,17 +4,15 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-
-import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { DeployVersionData, MetadataApiDeployStatus } from '@salesforce/source-deploy-retrieve';
+import { type DeployVersionData, DeployZipData } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { SourceConflictError, SourceMemberPollingEvent } from '@salesforce/source-tracking';
+import { SourceConflictError } from '@salesforce/source-tracking';
 import { DeployStages } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
-import { DeployResultJson, TestLevel } from '../../../utils/types.js';
+import { AsyncDeployResultJson, DeployResultJson, TestLevel } from '../../../utils/types.js';
 import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
@@ -22,6 +20,7 @@ import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { getOptionalProject } from '../../../utils/project.js';
+import { getZipFileSize } from '../../../utils/output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -176,15 +175,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
-  protected ms!: MultiStageOutput<{
-    mdapiDeploy: MetadataApiDeployStatus;
-    sourceMemberPolling: SourceMemberPollingEvent;
-    status: string;
-    apiData: DeployVersionData;
-    targetOrg: string;
-  }>;
+  protected stages!: DeployStages;
 
-  protected stages: DeployStages | undefined;
+  private zipSize?: number;
+  private zipFileCount?: number;
 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
@@ -225,6 +219,24 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return Promise.resolve();
     });
 
+    // eslint-disable-next-line @typescript-eslint/require-await
+    lifecycle.on('deployZipData', async (zipData: DeployZipData) => {
+      this.zipSize = zipData.zipSize;
+      if (flags.verbose && this.zipSize) {
+        this.stages.update({
+          deploySize: `${getZipFileSize(this.zipSize)} of ~39 MB limit`,
+        });
+      }
+      if (zipData.zipFileCount) {
+        this.zipFileCount = zipData.zipFileCount;
+        if (flags.verbose && this.zipSize) {
+          this.stages.update({
+            deployFileCount: `${this.zipFileCount} of 10,000 limit`,
+          });
+        }
+      }
+    });
+
     const { deploy } = await executeDeploy(
       {
         ...flags,
@@ -258,7 +270,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       }
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
-      return asyncFormatter.getJson();
+
+      return this.mixinZipMeta(await asyncFormatter.getJson());
     }
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
@@ -272,7 +285,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     await DeployCache.update(deploy.id, { status: result.response.status });
 
-    return formatter.getJson();
+    return this.mixinZipMeta(await formatter.getJson());
   }
 
   protected catch(error: Error | SfError): Promise<never> {
@@ -299,5 +312,15 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       });
     }
     return super.catch(error);
+  }
+
+  private mixinZipMeta(json: AsyncDeployResultJson | DeployResultJson): AsyncDeployResultJson | DeployResultJson {
+    if (this.zipSize) {
+      json.zipSize = this.zipSize;
+    }
+    if (this.zipFileCount) {
+      json.zipFileCount = this.zipFileCount;
+    }
+    return json;
   }
 }
