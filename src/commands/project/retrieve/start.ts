@@ -235,14 +235,14 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       });
       retrieve.onCancel((data) => {
         this.ms.updateData({ status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
-        this.ms.stop(new Error('Retrieve canceled'));
+        this.ms.error();
       });
       retrieve.onError((error: Error) => {
         if (error.message.includes('client has timed out')) {
           this.ms.updateData({ status: 'Client Timeout' });
         }
 
-        this.ms.stop(error);
+        this.ms.error();
         throw error;
       });
 
@@ -301,7 +301,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   protected catch(error: Error | SfError): Promise<never> {
     if (!this.jsonEnabled() && error instanceof SourceConflictError && error.data) {
       this.ms.updateData({ status: 'Failed' });
-      this.ms.stop(error);
+      this.ms.error();
       writeConflictTable(error.data);
       // set the message and add plugin-specific actions
       return super.catch({
@@ -310,7 +310,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         actions: messages.getMessages('error.Conflicts.Actions'),
       });
     } else {
-      this.ms.stop(error);
+      this.ms.error();
     }
 
     return super.catch(error);
