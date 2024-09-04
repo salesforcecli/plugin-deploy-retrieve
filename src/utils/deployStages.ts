@@ -71,7 +71,7 @@ export class DeployStages {
           label: 'Deploy ID',
           get: (data): string | undefined => data?.id,
           type: 'static-key-value',
-          neverCollapse: true,
+          // neverCollapse: true,
         },
         {
           label: 'Target Org',
@@ -105,7 +105,10 @@ export class DeployStages {
           label: 'Members',
           get: (data): string | undefined =>
             data?.sourceMemberPolling?.original
-              ? formatProgress(data.sourceMemberPolling.remaining, data.sourceMemberPolling.original)
+              ? formatProgress(
+                  data.sourceMemberPolling.original - data.sourceMemberPolling.remaining,
+                  data.sourceMemberPolling.original
+                )
               : undefined,
           stage: 'Updating Source Tracking',
           type: 'dynamic-key-value',
@@ -120,12 +123,12 @@ export class DeployStages {
   ): void {
     const lifecycle = Lifecycle.getInstance();
     if (initialData) this.ms.updateData(initialData);
-    this.ms.goto('Preparing', { username, id: deploy.id });
+    this.ms.skipTo('Preparing', { username, id: deploy.id });
 
     // for sourceMember polling events
     lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) => {
       if (event.original > 0) {
-        return Promise.resolve(this.ms.goto('Updating Source Tracking', { sourceMemberPolling: event }));
+        return Promise.resolve(this.ms.skipTo('Updating Source Tracking', { sourceMemberPolling: event }));
       }
 
       return Promise.resolve();
@@ -137,23 +140,26 @@ export class DeployStages {
         data.numberTestsTotal > 0 &&
         data.numberComponentsDeployed > 0
       ) {
-        this.ms.goto('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+        this.ms.skipTo('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
       } else if (data.status === RequestStatus.Pending) {
-        this.ms.goto('Waiting for the org to respond', {
+        this.ms.skipTo('Waiting for the org to respond', {
           mdapiDeploy: data,
           status: mdTransferMessages.getMessage(data?.status),
         });
       } else {
-        this.ms.goto('Deploying Metadata', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+        this.ms.skipTo('Deploying Metadata', {
+          mdapiDeploy: data,
+          status: mdTransferMessages.getMessage(data?.status),
+        });
       }
     });
 
     deploy.onFinish((data) => {
       this.ms.updateData({ mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
       if (data.response.status === RequestStatus.Failed) {
-        this.ms.stop(new Error('Failed to deploy metadata'));
+        this.ms.error();
       } else {
-        this.ms.goto('Done');
+        this.ms.skipTo('Done');
         this.ms.stop();
       }
     });
@@ -161,7 +167,7 @@ export class DeployStages {
     deploy.onCancel((data) => {
       this.ms.updateData({ mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
 
-      this.ms.stop(new Error('Deploy canceled'));
+      this.ms.error();
     });
 
     deploy.onError((error: Error) => {
@@ -169,7 +175,7 @@ export class DeployStages {
         this.ms.updateData({ status: 'Client Timeout' });
       }
 
-      this.ms.stop(error);
+      this.ms.error();
       throw error;
     });
   }
@@ -178,8 +184,12 @@ export class DeployStages {
     this.ms.updateData(data);
   }
 
-  public stop(error?: Error): void {
-    this.ms.stop(error);
+  public stop(): void {
+    this.ms.stop();
+  }
+
+  public error(): void {
+    this.ms.error();
   }
 
   public done(data?: Partial<Data>): void {

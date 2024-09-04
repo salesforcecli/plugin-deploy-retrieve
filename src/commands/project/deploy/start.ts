@@ -279,7 +279,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (error instanceof SourceConflictError && error.data) {
       if (!this.jsonEnabled()) {
         this.stages?.update({ status: 'Failed' });
-        this.stages?.stop(error);
+        this.stages?.error();
         writeConflictTable(error.data);
         // set the message and add plugin-specific actions
         return super.catch({
