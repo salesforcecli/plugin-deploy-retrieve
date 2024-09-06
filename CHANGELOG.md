@@ -1,3 +1,9 @@
+## [3.12.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.4) (2024-09-06)
+
+### Bug Fixes
+
+- default hep value ([da267c2](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/da267c2d0fad2435f745d307da3315e9c169a086))
+
 ## [3.12.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3) (2024-09-04)
 
 ### Bug Fixes
