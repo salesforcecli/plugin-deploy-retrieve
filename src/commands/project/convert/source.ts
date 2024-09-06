@@ -52,6 +52,7 @@ export class Source extends SfCommand<ConvertResultJson> {
       aliases: ['outputdir'],
       deprecateAliases: true,
       default: `metadataPackage_${Date.now()}`,
+      defaultHelp: async () => Promise.resolve('metadataPackage_>timestamp<'),
       char: 'd',
       summary: messages.getMessage('flags.output-dir.summary'),
     }),
