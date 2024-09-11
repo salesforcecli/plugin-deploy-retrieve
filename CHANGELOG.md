@@ -1,3 +1,27 @@
+## [3.12.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.6...3.12.7) (2024-09-07)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve from 12.6.0 to 12.6.2 ([f8dc68d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f8dc68d4ff4722689b7bd2b0effdc53038586a6e))
+
+## [3.12.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.5...3.12.6) (2024-09-07)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.4.2 to 3.4.3 ([7d5a98e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7d5a98e7d1cc1059c91c2dba8c217140ab447767))
+
+## [3.12.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.4...3.12.5) (2024-09-07)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.1.11 to 7.1.12 ([9d74fe0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9d74fe03cb42bc304d0627d960b2af8bfab65fcb))
+
+## [3.12.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.4) (2024-09-06)
+
+### Bug Fixes
+
+- default hep value ([da267c2](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/da267c2d0fad2435f745d307da3315e9c169a086))
+
 ## [3.12.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3) (2024-09-04)
 
 ### Bug Fixes

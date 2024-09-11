@@ -1483,10 +1483,10 @@
     ink "^5.0.1"
     react "^18.3.1"
 
-"@oclif/plugin-command-snapshot@^5.2.13":
-  version "5.2.13"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-5.2.13.tgz#d0025844865c20e38d4198c43fd6a515fedfde06"
-  integrity sha512-oCCD5DqjbK0AKonhGI+qa7ZMhvLbmdJ0kvWCoDBJyyusuxPtsGKYGrBS5LLqn6eEFIvOLbW+ZVXSOUQNK+SHRg==
+"@oclif/plugin-command-snapshot@^5.2.15":
+  version "5.2.15"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-command-snapshot/-/plugin-command-snapshot-5.2.15.tgz#039e2457638d0d630a6006d67de329add6519f5f"
+  integrity sha512-nRyleFoNgyy8vLGlzE1ryjmlKA8E53NFqbgHl245Qgw9LbrC7czINnnyI2rkJLxxO0puGnJ5+qlz7bLDCwbSiw==
   dependencies:
     "@oclif/core" "^4"
     ansis "^3.3.2"
@@ -1563,7 +1563,7 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.1"
 
-"@salesforce/core@^8.2.8", "@salesforce/core@^8.3.0", "@salesforce/core@^8.4.0", "@salesforce/core@^8.5.4":
+"@salesforce/core@^8.2.8", "@salesforce/core@^8.3.0", "@salesforce/core@^8.4.0", "@salesforce/core@^8.5.1", "@salesforce/core@^8.5.2", "@salesforce/core@^8.5.4":
   version "8.5.4"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-8.5.4.tgz#1cdd669462d2c2859b72135d1138a1b790b1fbcc"
   integrity sha512-dO8tzFxq811qNPeKPPO2OA2KPYW5rO0YRinW/+7zmRJW3EtNpe93dsQVGwBSAAYrSbYeBwiKdliNqNTN7tKJ0A==
@@ -1592,10 +1592,10 @@
   resolved "https://registry.yarnpkg.com/@salesforce/dev-config/-/dev-config-4.3.1.tgz#4dac8245df79d675258b50e1d24e8c636eaa5e10"
   integrity sha512-rO6axodoRF2SA1kknGttIWuL7HhIwSmweGlBzM8y2m5TH8DeIv4xsqYc8Cu+SrR3JT1FN4nh6XgrogI83AJfKg==
 
-"@salesforce/dev-scripts@^10.2.9":
-  version "10.2.9"
-  resolved "https://registry.yarnpkg.com/@salesforce/dev-scripts/-/dev-scripts-10.2.9.tgz#c107c177de6c8b282d5eee95e1c04e71f80650b6"
-  integrity sha512-kjICKRzDmkyfB78D+mAoOxdKChv5NAAQMzGYqGIPxNHTG2f9J0/sfjEJsWt+4gZAnAD8unS0MsPoKQqi2BDMNg==
+"@salesforce/dev-scripts@^10.2.10":
+  version "10.2.10"
+  resolved "https://registry.yarnpkg.com/@salesforce/dev-scripts/-/dev-scripts-10.2.10.tgz#6aca3c6a0926b5ed0710d1f21a940687ff994e58"
+  integrity sha512-4vYRV5PvssKWfsnOOAXDvYfHaj2M3bCprlGcZBGnPAi52cNzoj9GcOmC1RRrPdQmHL4vWZvSiqgRgVLKQQdfkw==
   dependencies:
     "@commitlint/cli" "^17.1.2"
     "@commitlint/config-conventional" "^17.8.1"
@@ -1645,15 +1645,15 @@
     debug "^4.3.6"
     handlebars "^4.7.8"
 
-"@salesforce/plugin-info@^3.4.2":
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.2.tgz#4f1cc845c0d4c79bdde5d3d870e1df9b783405a7"
-  integrity sha512-Rl2pA9jnJIU5bvE/GrVdpjdgsmRFlWcRiwND4usrmQPEfohViTPDhcV5RBjRb1wlXlsAVYrVD3dlB1tqVq8BmQ==
+"@salesforce/plugin-info@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.3.tgz#1039ba25e78d035613c1b317241666d4d6e20998"
+  integrity sha512-/hdbDJoP6oorid43Iq4YkGVZw+RXyFmmK89qSVGxFlC0t3IDz/kVS4FUUCTXSCWY58dw/wXBrHGa95y8i6/W8w==
   dependencies:
     "@inquirer/input" "^2.2.9"
     "@jsforce/jsforce-node" "^3.2.2"
     "@oclif/core" "^4"
-    "@salesforce/core" "^8.3.0"
+    "@salesforce/core" "^8.5.2"
     "@salesforce/kit" "^3.2.1"
     "@salesforce/sf-plugins-core" "^11.2.4"
     got "^13.0.0"
@@ -1691,13 +1691,13 @@
     string-width "^7.2.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.4.0", "@salesforce/source-deploy-retrieve@^12.6.0":
-  version "12.6.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.6.0.tgz#0d2961fb2befeac0431fe8f6a70f439bc049fcea"
-  integrity sha512-gowMwjG93a8Bd5N05o46Z46TSsHZMeZXV3rQwMP3LXDnIhvSx3vxHJMzk0KKMOatfQFF2t+YI/6MR+47KWSblw==
+"@salesforce/source-deploy-retrieve@^12.4.0", "@salesforce/source-deploy-retrieve@^12.6.0", "@salesforce/source-deploy-retrieve@^12.6.2":
+  version "12.6.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.6.2.tgz#eb9ab120621c80a404b9ec45a2b102f3f2befbff"
+  integrity sha512-ucEt/CyzL4ovMc2cYREk4meQzKe6/FlY/D09yLmOQ118Oec680ehEhJ1kGRE/I7HTzfgQP3Fy2GzhQX1bOYC5Q==
   dependencies:
-    "@salesforce/core" "^8.4.0"
-    "@salesforce/kit" "^3.2.1"
+    "@salesforce/core" "^8.5.2"
+    "@salesforce/kit" "^3.2.2"
     "@salesforce/ts-types" "^2.0.12"
     fast-levenshtein "^3.0.0"
     fast-xml-parser "^4.4.1"
@@ -1726,12 +1726,12 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^7.1.11":
-  version "7.1.11"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.1.11.tgz#78f86549caeaf7e65fa5d87985ed6454d5f8abb6"
-  integrity sha512-LSnE1HH38wCEU4GXI/iF5dc7xcgwKASy7sH7PK3nqk7DOHrEz2iEJjFxI0pIFf4t+2uFmL6qmOHT6xBUlyZJsg==
+"@salesforce/source-tracking@^7.1.12":
+  version "7.1.12"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.1.12.tgz#0b25fae9ffa3b0f4d2545074b317a5a9b35566cd"
+  integrity sha512-TNrgseMgSPgBXFh7kgUqkeANetDPXkCzVt6ZLmTRpVF77J/j3L+4eXemSj+c7F6V0leqTstyp229dbbChMlFaQ==
   dependencies:
-    "@oclif/core" "^4.0.18"
+    "@oclif/core" "^4.0.19"
     "@salesforce/core" "^8.5.4"
     "@salesforce/kit" "^3.2.1"
     "@salesforce/source-deploy-retrieve" "^12.6.0"
@@ -4215,12 +4215,12 @@ eslint-plugin-jsdoc@^46.10.1:
     semver "^7.5.4"
     spdx-expression-parse "^4.0.0"
 
-eslint-plugin-sf-plugin@^1.20.5:
-  version "1.20.5"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-sf-plugin/-/eslint-plugin-sf-plugin-1.20.5.tgz#167657e6dd319e5e5bcc8a733668fff8e7a8089a"
-  integrity sha512-V8Y18rFPvVEIhWnXyQrgmdNKGFYRmDPY32lTN2vu0FCY9RkIF9ARDUAmGc5Zpz3J/faDNRtVQVra5dAJyqrMTA==
+eslint-plugin-sf-plugin@^1.20.6:
+  version "1.20.6"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-sf-plugin/-/eslint-plugin-sf-plugin-1.20.6.tgz#fe514d72537097eae05dccd6813b42fe32c1e7b1"
+  integrity sha512-xC7NP68EZflEN5HlmTtoVh6ofhf0HjPGjXHkuFfwOZNDF2jGF/+4f00Gg/Qk8FYugAmqx6TVQ0BNgtdys8Em1Q==
   dependencies:
-    "@salesforce/core" "^8.4.0"
+    "@salesforce/core" "^8.5.1"
     "@typescript-eslint/utils" "^7.18.0"
 
 eslint-plugin-unicorn@^50.0.1:
