@@ -1,3 +1,9 @@
+## [3.12.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.9...3.12.10) (2024-09-14)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/kit from 3.2.2 to 3.2.3 ([1c2c057](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1c2c0579453d4cc7e70e9e94682456c7c924298d))
+
 ## [3.12.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.8...3.12.9) (2024-09-14)
 
 ### Bug Fixes
