@@ -1,3 +1,21 @@
+## [3.12.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.13...3.12.14) (2024-09-28)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.1.12 to 7.1.16 ([9547fbf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9547fbfd1302349d70dd5d9d6ffc6ce7b27c1db0))
+
+## [3.12.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.12...3.12.13) (2024-09-28)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 8.1.7 to 8.1.9 ([47cf95d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/47cf95d14bdc124da729b6d972741d9c3d7caab2))
+
+## [3.12.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.11...3.12.12) (2024-09-28)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 8.5.7 to 8.6.1 ([f2bf581](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f2bf581cf75b61ce2dde9b8131d3bc51491f4fcf))
+
 ## [3.12.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.10...3.12.11) (2024-09-21)
 
 ### Bug Fixes
