@@ -1,3 +1,9 @@
+## [3.12.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.14...3.12.15) (2024-10-01)
+
+### Bug Fixes
+
+- bump SDR [skip-validate-pr] ([582b2d1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/582b2d1d3ed2ccf1849ee28037a57c6c823de0b3))
+
 ## [3.12.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.13...3.12.14) (2024-09-28)
 
 ### Bug Fixes
