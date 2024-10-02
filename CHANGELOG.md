@@ -1,3 +1,9 @@
+## [3.12.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.15...3.12.16) (2024-10-02)
+
+### Bug Fixes
+
+- fix generated code coverage result percent ([#1175](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1175)) ([d4cdac1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d4cdac1bbc321ed334955f335a7f85f6e81aacb8))
+
 ## [3.12.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.14...3.12.15) (2024-10-01)
 
 ### Bug Fixes
