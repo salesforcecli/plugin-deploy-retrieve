@@ -36,10 +36,10 @@ export const mapTestResults = <T extends Failures | Successes>(testResults: T[])
   }));
 
 export const generateCoveredLines = (cov: CodeCoverage): [number[], number[]] => {
-  const [lineCount, uncoveredLineCount] = getCoverageNumbers(cov);
+  const [lineCount] = getCoverageNumbers(cov);
   const uncoveredLines = ensureArray(cov.locationsNotCovered).map((location) => parseInt(location.line, 10));
   const minLineNumber = uncoveredLines.length ? Math.min(...uncoveredLines) : 1;
-  const lines = [...Array(lineCount + uncoveredLineCount).keys()].map((i) => i + minLineNumber);
+  const lines = [...Array(lineCount).keys()].map((i) => i + minLineNumber);
   const coveredLines = lines.filter((line) => !uncoveredLines.includes(line));
   return [uncoveredLines, coveredLines];
 };
