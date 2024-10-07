@@ -8,7 +8,7 @@
 import { expect } from 'chai';
 import { ApexTestResultOutcome } from '@salesforce/apex-node';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import { coverageOutput, getCoveragePct, mapTestResults } from '../../src/utils/coverage.js';
+import { coverageOutput, generateCoveredLines, getCoveragePct, mapTestResults } from '../../src/utils/coverage.js';
 
 // methods are mutating the object instead of returning new ones
 function getSampleTestResult() {
@@ -372,6 +372,9 @@ describe('coverage utils', () => {
   describe('coverage percent (the number)', () => {
     it('1 uncovered of 4', () => {
       expect(getCoveragePct(getSampleTestResult().codeCoverage[0])).equal(75);
+    });
+    it('will generate covered lines correctly', () => {
+      expect(generateCoveredLines(getSampleTestResult().codeCoverage[0])).to.deep.equal([[12], [13, 14, 15]]);
     });
     it('rounds 3 uncovered out of 44 to the nearest integer', () => {
       expect(getCoveragePct(getSampleTestResult().codeCoverage[1])).equal(93);

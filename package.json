@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-deploy-retrieve",
   "description": "deploy and retrieve commands for sf",
-  "version": "3.12.15-dev.0",
+  "version": "3.12.17",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
@@ -12,21 +12,21 @@
     "@salesforce/kit": "^3.2.3",
     "@salesforce/plugin-info": "^3.4.9",
     "@salesforce/sf-plugins-core": "^11.3.2",
-    "@salesforce/source-deploy-retrieve": "^12.6.3",
+    "@salesforce/source-deploy-retrieve": "^12.7.4",
     "@salesforce/source-tracking": "^7.1.16",
     "@salesforce/ts-types": "^2.0.12",
     "ansis": "^3.3.2"
   },
   "devDependencies": {
-    "@oclif/plugin-command-snapshot": "^5.2.15",
+    "@oclif/plugin-command-snapshot": "^5.2.17",
     "@salesforce/cli-plugins-testkit": "^5.3.32",
     "@salesforce/dev-scripts": "^10.2.10",
-    "@salesforce/plugin-command-reference": "^3.1.26",
+    "@salesforce/plugin-command-reference": "^3.1.27",
     "@salesforce/schemas": "^1.9.0",
     "@salesforce/source-testkit": "^2.2.57",
     "@salesforce/ts-sinon": "^1.4.24",
     "cross-env": "^7.0.3",
-    "eslint-plugin-sf-plugin": "^1.20.6",
+    "eslint-plugin-sf-plugin": "^1.20.8",
     "oclif": "^4.14.27",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"

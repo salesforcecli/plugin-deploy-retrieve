@@ -1,3 +1,21 @@
+## [3.12.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.16...3.12.17) (2024-10-05)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve from 12.7.3 to 12.7.4 ([174b993](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/174b993cb595a6d69a610c6548eb18a55e48925f))
+
+## [3.12.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.15...3.12.16) (2024-10-02)
+
+### Bug Fixes
+
+- fix generated code coverage result percent ([#1175](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1175)) ([d4cdac1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d4cdac1bbc321ed334955f335a7f85f6e81aacb8))
+
+## [3.12.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.14...3.12.15) (2024-10-01)
+
+### Bug Fixes
+
+- bump SDR [skip-validate-pr] ([582b2d1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/582b2d1d3ed2ccf1849ee28037a57c6c823de0b3))
+
 ## [3.12.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.13...3.12.14) (2024-09-28)
 
 ### Bug Fixes
