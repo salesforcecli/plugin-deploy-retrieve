@@ -1,11 +1,12 @@
 {
   "name": "@salesforce/plugin-deploy-retrieve",
   "description": "deploy and retrieve commands for sf",
-  "version": "3.12.17",
+  "version": "3.12.18-dev.0",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
     "@oclif/core": "^4.0.18",
+    "@oclif/multi-stage-output": "^0.7.0",
     "@salesforce/apex-node": "^8.1.9",
     "@salesforce/core": "^8.6.1",
     "@salesforce/kit": "^3.2.3",
