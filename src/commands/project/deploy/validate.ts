@@ -15,7 +15,7 @@ import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResul
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployProgress } from '../../../utils/progressBar.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
-import { executeDeploy, resolveApi, determineExitCode, validateTests } from '../../../utils/deploy.js';
+import { executeDeploy, resolveApi, determineExitCode, validateTests, buildDeployUrl } from '../../../utils/deploy.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
@@ -196,6 +196,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       throw new SfError('The deploy id is not available.');
     }
     this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+    const deployUrl = buildDeployUrl(deploy.id);
+    this.log(`Deploy URL: ${ansis.bold(deployUrl)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);

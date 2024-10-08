@@ -13,7 +13,13 @@ import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployProgress } from '../../../utils/progressBar.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
-import { buildComponentSet, determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy.js';
+import {
+  buildComponentSet,
+  determineExitCode,
+  executeDeploy,
+  isNotResumable,
+  buildDeployUrl,
+} from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { coverageFormattersFlag } from '../../../utils/flags.js';
@@ -125,6 +131,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       );
 
       this.log(`Deploy ID: ${ansis.bold(jobId)}`);
+      const deployUrl = buildDeployUrl(jobId);
+      this.log(`Deploy URL: ${ansis.bold(deployUrl)}`);
       new DeployProgress(deploy, this.jsonEnabled()).start();
       result = await deploy.pollStatus(500, wait.seconds);
 

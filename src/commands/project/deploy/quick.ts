@@ -10,7 +10,7 @@ import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { determineExitCode, resolveApi } from '../../../utils/deploy.js';
+import { determineExitCode, resolveApi, buildDeployUrl } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
@@ -91,6 +91,8 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       rest: api === API['REST'],
     });
     this.log(`Deploy ID: ${ansis.bold(deployId)}`);
+    const deployUrl = buildDeployUrl(deployId);
+    this.log(`Deploy URL: ${ansis.bold(deployUrl)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deployId);
