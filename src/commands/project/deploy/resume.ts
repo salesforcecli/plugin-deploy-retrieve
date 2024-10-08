@@ -6,7 +6,7 @@
  */
 
 import ansis from 'ansis';
-import { EnvironmentVariable, Messages, Org, SfError } from '@salesforce/core';
+import { EnvironmentVariable, Messages, Org, OrgConfigProperties, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
@@ -125,6 +125,9 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       );
 
       this.log(`Deploy ID: ${ansis.bold(jobId)}`);
+      const orgInstanceUrl = OrgConfigProperties.ORG_INSTANCE_URL;
+      const deployUrl = `${orgInstanceUrl}/changemgmt/monitorDeploymentsDetails.apexp?retURL=/changemgmt/monitorDeployment.apexp&asyncId=/${jobId}`;
+      this.log(`Deploy URL: ${ansis.bold(deployUrl)}`);
       new DeployProgress(deploy, this.jsonEnabled()).start();
       result = await deploy.pollStatus(500, wait.seconds);
 
