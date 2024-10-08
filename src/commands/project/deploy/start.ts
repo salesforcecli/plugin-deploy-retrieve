@@ -246,6 +246,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       throw new SfError('The deploy id is not available.');
     }
     this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+    const orgInstanceUrl = OrgConfigProperties.ORG_INSTANCE_URL;
+    const deployUrl = `${orgInstanceUrl}/changemgmt/monitorDeploymentsDetails.apexp?retURL=/changemgmt/monitorDeployment.apexp&asyncId=/${deploy.id}`;
+    this.log(`Deploy URL: ${ansis.bold(deployUrl)}`);
 
     if (flags.async) {
       if (flags['coverage-formatters']) {

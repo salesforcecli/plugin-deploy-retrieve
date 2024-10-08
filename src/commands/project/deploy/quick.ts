@@ -6,7 +6,7 @@
  */
 
 import ansis from 'ansis';
-import { Messages, Org } from '@salesforce/core';
+import { Messages, Org, OrgConfigProperties } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
@@ -91,6 +91,9 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       rest: api === API['REST'],
     });
     this.log(`Deploy ID: ${ansis.bold(deployId)}`);
+    const orgInstanceUrl = OrgConfigProperties.ORG_INSTANCE_URL;
+    const deployUrl = `${orgInstanceUrl}/changemgmt/monitorDeploymentsDetails.apexp?retURL=/changemgmt/monitorDeployment.apexp&asyncId=/${deployId}`;
+    this.log(`Deploy URL: ${ansis.bold(deployUrl)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deployId);
