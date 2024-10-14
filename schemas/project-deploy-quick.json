@@ -106,6 +106,9 @@
             },
             "stateDetail": {
               "type": "string"
+            },
+            "deployUrl": {
+              "type": "string"
             }
           },
           "required": [
@@ -579,6 +582,9 @@
         },
         "success": {
           "type": "boolean"
+        },
+        "deployUrl": {
+          "type": "string"
         },
         "done": {
           "type": "boolean"

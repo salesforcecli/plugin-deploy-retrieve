@@ -85,6 +85,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  private deployUrl?: string;
+
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataResume), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], true);
@@ -131,8 +133,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       );
 
       this.log(`Deploy ID: ${ansis.bold(jobId)}`);
-      const deployUrl = buildDeployUrl(jobId);
-      this.log(`Deploy URL: ${ansis.bold(deployUrl)}`);
+      this.deployUrl = buildDeployUrl(jobId);
+      this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
       new DeployProgress(deploy, this.jsonEnabled()).start();
       result = await deploy.pollStatus(500, wait.seconds);
 
@@ -154,6 +156,12 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) formatter.display();
 
-    return formatter.getJson();
+    return this.mixinUrlMeta(await formatter.getJson());
+  }
+  private mixinUrlMeta(json: DeployResultJson): DeployResultJson {
+    if (this.deployUrl) {
+      json.deployUrl = this.deployUrl;
+    }
+    return json;
   }
 }

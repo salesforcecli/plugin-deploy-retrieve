@@ -155,6 +155,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  private deployUrl?: string;
+
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, api] = await Promise.all([this.parse(DeployMetadataValidate), resolveApi(this.configAggregator)]);
 
@@ -196,13 +198,13 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       throw new SfError('The deploy id is not available.');
     }
     this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
-    const deployUrl = buildDeployUrl(deploy.id);
-    this.log(`Deploy URL: ${ansis.bold(deployUrl)}`);
+    this.deployUrl = buildDeployUrl(deploy.id);
+    this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
-      return asyncFormatter.getJson();
+      return this.mixinUrlMeta(await asyncFormatter.getJson());
     }
 
     new DeployProgress(deploy, this.jsonEnabled()).start();
@@ -252,6 +254,12 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
         .setData({ deployId: deploy.id });
     }
 
-    return formatter.getJson();
+    return this.mixinUrlMeta(await formatter.getJson());
+  }
+  private mixinUrlMeta(json: DeployResultJson): DeployResultJson {
+    if (this.deployUrl) {
+      json.deployUrl = this.deployUrl;
+    }
+    return json;
   }
 }
