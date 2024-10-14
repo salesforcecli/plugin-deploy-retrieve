@@ -247,7 +247,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       throw new SfError('The deploy id is not available.');
     }
     this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
-    this.deployUrl = buildDeployUrl(deploy.id);
+    this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
     this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
 
     if (flags.async) {

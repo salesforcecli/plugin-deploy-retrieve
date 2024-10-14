@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { ConfigAggregator, Messages, Org, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
+import { ConfigAggregator, Messages, Org, SfError, SfProject } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { Nullable } from '@salesforce/ts-types';
 import {
@@ -242,7 +242,7 @@ const buildApiOptions = (opts: Partial<DeployOptions>): MetadataApiDeployOptions
   purgeOnDelete: opts['purge-on-delete'] ?? false,
 });
 
-export function buildDeployUrl(deployId: string): string {
-  const orgInstanceUrl = OrgConfigProperties.ORG_INSTANCE_URL;
+export function buildDeployUrl(org: Org, deployId: string): string {
+  const orgInstanceUrl = String(org.getField(Org.Fields.INSTANCE_URL));
   return `${orgInstanceUrl}/lightning/setup/DeployStatus/page?address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D${deployId}%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp`;
 }

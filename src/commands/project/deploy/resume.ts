@@ -13,13 +13,7 @@ import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployProgress } from '../../../utils/progressBar.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
-import {
-  buildComponentSet,
-  determineExitCode,
-  executeDeploy,
-  isNotResumable,
-  buildDeployUrl,
-} from '../../../utils/deploy.js';
+import { buildComponentSet, determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { coverageFormattersFlag } from '../../../utils/flags.js';
@@ -85,8 +79,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
-  private deployUrl?: string;
-
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataResume), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], true);
@@ -133,8 +125,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       );
 
       this.log(`Deploy ID: ${ansis.bold(jobId)}`);
-      this.deployUrl = buildDeployUrl(jobId);
-      this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
       new DeployProgress(deploy, this.jsonEnabled()).start();
       result = await deploy.pollStatus(500, wait.seconds);
 
@@ -156,12 +146,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) formatter.display();
 
-    return this.mixinUrlMeta(await formatter.getJson());
-  }
-  private mixinUrlMeta(json: DeployResultJson): DeployResultJson {
-    if (this.deployUrl) {
-      json.deployUrl = this.deployUrl;
-    }
-    return json;
+    return formatter.getJson();
   }
 }

@@ -93,7 +93,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       rest: api === API['REST'],
     });
     this.log(`Deploy ID: ${ansis.bold(deployId)}`);
-    this.deployUrl = buildDeployUrl(deployId);
+    this.deployUrl = buildDeployUrl(flags['target-org'], deployId);
     this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
 
     if (flags.async) {
