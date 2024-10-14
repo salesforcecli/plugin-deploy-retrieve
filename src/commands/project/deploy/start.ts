@@ -15,7 +15,7 @@ import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResul
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { AsyncDeployResultJson, DeployResultJson, TestLevel } from '../../../utils/types.js';
 import { DeployProgress } from '../../../utils/progressBar.js';
-import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy.js';
+import { executeDeploy, resolveApi, validateTests, determineExitCode, buildDeployUrl } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { ConfigVars } from '../../../configMeta.js';
@@ -179,6 +179,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   private zipSize?: number;
   private zipFileCount?: number;
+  private deployUrl?: string;
 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
@@ -246,6 +247,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       throw new SfError('The deploy id is not available.');
     }
     this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+    this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
+    this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
 
     if (flags.async) {
       if (flags['coverage-formatters']) {
@@ -303,6 +306,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
     if (this.zipFileCount) {
       json.zipFileCount = this.zipFileCount;
+    }
+    if (this.deployUrl) {
+      json.deployUrl = this.deployUrl;
     }
     return json;
   }

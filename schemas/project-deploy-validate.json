@@ -71,6 +71,9 @@
             "errorStatusCode": {
               "type": "string"
             },
+            "deployUrl": {
+              "type": "string"
+            },
             "ignoreWarnings": {
               "type": "boolean"
             },
@@ -572,6 +575,9 @@
           "type": "string"
         },
         "stateDetail": {
+          "type": "string"
+        },
+        "deployUrl": {
           "type": "string"
         },
         "id": {

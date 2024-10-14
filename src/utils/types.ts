@@ -45,6 +45,7 @@ export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'stat
   files: FileResponse[];
   zipSize?: number;
   zipFileCount?: number;
+  deployUrl?: string;
 };
 
 type ConvertEntry = {
@@ -79,6 +80,7 @@ export type DeployResultJson =
       replacements?: Record<string, string[]>;
       zipSize?: number;
       zipFileCount?: number;
+      deployUrl?: string;
     })
   | AsyncDeployResultJson;
 

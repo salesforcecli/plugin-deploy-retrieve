@@ -10,7 +10,7 @@ import { Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { determineExitCode, resolveApi } from '../../../utils/deploy.js';
+import { determineExitCode, resolveApi, buildDeployUrl } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
@@ -76,6 +76,8 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  private deployUrl?: string;
+
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataQuick), DeployCache.create()]);
 
@@ -91,11 +93,13 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       rest: api === API['REST'],
     });
     this.log(`Deploy ID: ${ansis.bold(deployId)}`);
+    this.deployUrl = buildDeployUrl(flags['target-org'], deployId);
+    this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deployId);
       if (!this.jsonEnabled()) asyncFormatter.display();
-      return asyncFormatter.getJson();
+      return this.mixinUrlMeta(await asyncFormatter.getJson());
     }
 
     const mdapiDeploy = new MetadataApiDeploy({
@@ -123,7 +127,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       this.log(messages.getMessage('error.QuickDeployFailure', [deployId, result.response.status]));
     }
 
-    return formatter.getJson();
+    return this.mixinUrlMeta(await formatter.getJson());
   }
 
   protected catch(error: SfCommand.Error): Promise<never> {
@@ -137,6 +141,12 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       });
     }
     return super.catch(error);
+  }
+  private mixinUrlMeta(json: DeployResultJson): DeployResultJson {
+    if (this.deployUrl) {
+      json.deployUrl = this.deployUrl;
+    }
+    return json;
   }
 }
 
