@@ -1,3 +1,9 @@
+## [3.13.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.13.0...3.13.1) (2024-10-15)
+
+### Bug Fixes
+
+- deploy url in resume ([5c7b487](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5c7b48754b61d605d06f15833bbae47783cb23e2))
+
 # [3.13.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.19...3.13.0) (2024-10-14)
 
 ### Features
