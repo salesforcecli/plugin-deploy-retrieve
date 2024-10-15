@@ -13,7 +13,7 @@ import { DeployStages } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { AsyncDeployResultJson, DeployResultJson, TestLevel } from '../../../utils/types.js';
-import { executeDeploy, resolveApi, validateTests, determineExitCode } from '../../../utils/deploy.js';
+import { executeDeploy, resolveApi, validateTests, determineExitCode, buildDeployUrl } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { ConfigVars } from '../../../configMeta.js';
@@ -178,6 +178,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   private zipSize?: number;
   private zipFileCount?: number;
+  private deployUrl?: string;
 
   public async run(): Promise<DeployResultJson> {
     const { flags } = await this.parse(DeployMetadata);
@@ -251,6 +252,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       jsonEnabled: this.jsonEnabled(),
     });
 
+    this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
+
     this.stages.start(
       { username, deploy },
       {
@@ -259,6 +262,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
           ? {
               deploySize: this.zipSize,
               deployFileCount: this.zipFileCount,
+              deployUrl: this.deployUrl,
             }
           : {}),
       }
@@ -322,6 +326,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }
     if (this.zipFileCount) {
       json.zipFileCount = this.zipFileCount;
+    }
+    if (this.deployUrl) {
+      json.deployUrl = this.deployUrl;
     }
     return json;
   }

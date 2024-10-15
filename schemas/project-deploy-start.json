@@ -106,6 +106,9 @@
             },
             "stateDetail": {
               "type": "string"
+            },
+            "deployUrl": {
+              "type": "string"
             }
           },
           "required": [
@@ -572,6 +575,9 @@
           "type": "string"
         },
         "stateDetail": {
+          "type": "string"
+        },
+        "deployUrl": {
           "type": "string"
         },
         "id": {

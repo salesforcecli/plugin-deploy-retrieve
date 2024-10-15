@@ -1,3 +1,15 @@
+## [3.13.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.13.0...3.13.1) (2024-10-15)
+
+### Bug Fixes
+
+- deploy url in resume ([5c7b487](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5c7b48754b61d605d06f15833bbae47783cb23e2))
+
+# [3.13.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.19...3.13.0) (2024-10-14)
+
+### Features
+
+- build deploy URL using ID ([23bd739](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/23bd7399b787084c926ea34f2bd431eff73ef484))
+
 ## [3.12.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.18...3.12.19) (2024-10-12)
 
 ### Bug Fixes

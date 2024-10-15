@@ -15,7 +15,7 @@ import { DeployStages } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
-import { executeDeploy, resolveApi, determineExitCode, validateTests } from '../../../utils/deploy.js';
+import { executeDeploy, resolveApi, determineExitCode, validateTests, buildDeployUrl } from '../../../utils/deploy.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
@@ -155,6 +155,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  private deployUrl?: string;
+
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, api] = await Promise.all([this.parse(DeployMetadataValidate), resolveApi(this.configAggregator)]);
 
@@ -195,18 +197,29 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
+    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+    this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
 
     if (flags.async) {
       this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+      this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
-      return asyncFormatter.getJson();
+      return this.mixinUrlMeta(await asyncFormatter.getJson());
     }
 
     new DeployStages({
       title: 'Validating Deployment',
       jsonEnabled: this.jsonEnabled(),
-    }).start({ deploy, username });
+    }).start({
+      deploy,
+      username,
+      ...(flags.verbose
+        ? {
+            deployUrl: this.deployUrl,
+          }
+        : {}),
+    });
 
     const result = await deploy.pollStatus(500, flags.wait?.seconds);
     process.exitCode = determineExitCode(result);
@@ -253,6 +266,12 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
         .setData({ deployId: deploy.id });
     }
 
-    return formatter.getJson();
+    return this.mixinUrlMeta(await formatter.getJson());
+  }
+  private mixinUrlMeta(json: DeployResultJson): DeployResultJson {
+    if (this.deployUrl) {
+      json.deployUrl = this.deployUrl;
+    }
+    return json;
   }
 }

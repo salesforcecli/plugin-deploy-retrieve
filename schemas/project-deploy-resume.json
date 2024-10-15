@@ -106,6 +106,9 @@
             },
             "stateDetail": {
               "type": "string"
+            },
+            "deployUrl": {
+              "type": "string"
             }
           },
           "required": [
@@ -582,6 +585,9 @@
         },
         "done": {
           "type": "boolean"
+        },
+        "deployUrl": {
+          "type": "string"
         }
       },
       "required": ["files", "status"]

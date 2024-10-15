@@ -241,3 +241,8 @@ const buildApiOptions = (opts: Partial<DeployOptions>): MetadataApiDeployOptions
   ...(opts['test-level'] ? { testLevel: opts['test-level'] } : {}),
   purgeOnDelete: opts['purge-on-delete'] ?? false,
 });
+
+export function buildDeployUrl(org: Org, deployId: string): string {
+  const orgInstanceUrl = String(org.getField(Org.Fields.INSTANCE_URL));
+  return `${orgInstanceUrl}/lightning/setup/DeployStatus/page?address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D${deployId}%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp`;
+}
