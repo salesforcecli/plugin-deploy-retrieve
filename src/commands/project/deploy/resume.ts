@@ -13,7 +13,13 @@ import { Duration } from '@salesforce/kit';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployProgress } from '../../../utils/progressBar.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
-import { buildComponentSet, determineExitCode, executeDeploy, isNotResumable } from '../../../utils/deploy.js';
+import {
+  buildComponentSet,
+  buildDeployUrl,
+  determineExitCode,
+  executeDeploy,
+  isNotResumable,
+} from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { coverageFormattersFlag } from '../../../utils/flags.js';
@@ -79,6 +85,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  private deployUrl?: string;
+
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataResume), DeployCache.create()]);
     const jobId = cache.resolveLatest(flags['use-most-recent'], flags['job-id'], true);
@@ -87,11 +95,11 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     const deployOpts = { ...cache.maybeGet(jobId), async: false };
 
     let result: DeployResult;
+    const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
 
     // If we already have a status from cache that is not resumable, display a warning and the deploy result.
     if (isNotResumable(deployOpts.status)) {
       this.warn(messages.getMessage('warning.DeployNotResumable', [jobId, deployOpts.status]));
-      const org = await Org.create({ aliasOrUsername: deployOpts['target-org'] });
       const componentSet = await buildComponentSet({ ...deployOpts, wait: Duration.seconds(0) });
       const mdapiDeploy = new MetadataApiDeploy({
         // setting an API version here won't matter since we're just checking deploy status
@@ -125,6 +133,8 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       );
 
       this.log(`Deploy ID: ${ansis.bold(jobId)}`);
+      this.deployUrl = buildDeployUrl(org, jobId);
+      this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
       new DeployProgress(deploy, this.jsonEnabled()).start();
       result = await deploy.pollStatus(500, wait.seconds);
 
@@ -146,6 +156,13 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) formatter.display();
 
-    return formatter.getJson();
+    return this.mixinUrlMeta(await formatter.getJson());
+  }
+
+  private mixinUrlMeta(json: DeployResultJson): DeployResultJson {
+    if (this.deployUrl) {
+      json.deployUrl = this.deployUrl;
+    }
+    return json;
   }
 }
