@@ -8,6 +8,7 @@ import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { Lifecycle, Messages } from '@salesforce/core';
 import { MetadataApiDeploy, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
+import terminalLink from 'terminal-link';
 import { getZipFileSize } from './output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -28,6 +29,7 @@ type Data = {
   deploySize: number;
   deployFileCount: number;
   deployUrl: string;
+  verbose: boolean;
 };
 
 function round(value: number, precision: number): number {
@@ -67,7 +69,16 @@ export class DeployStages {
       postStagesBlock: [
         {
           label: 'Status',
-          get: (data): string | undefined => data?.status,
+          get: (data): string | undefined => {
+            if (!terminalLink.isSupported) return data?.status;
+            if (!data?.deployUrl) return data?.status;
+
+            return data?.status
+              ? terminalLink(data.status, data.deployUrl, {
+                  fallback: (text, url) => `${text} (${url})`,
+                })
+              : undefined;
+          },
           bold: true,
           type: 'dynamic-key-value',
         },
@@ -84,19 +95,22 @@ export class DeployStages {
         },
         {
           label: 'Deploy URL',
-          get: (data): string | undefined => data?.deployUrl,
+          get: (data): string | undefined => {
+            if (!data?.verbose) return;
+            return data?.deployUrl;
+          },
           type: 'static-key-value',
         },
         {
           label: 'Size',
           get: (data): string | undefined =>
-            data?.deploySize ? `${getZipFileSize(data.deploySize)} of ~39 MB limit` : undefined,
+            data?.deploySize && data?.verbose ? `${getZipFileSize(data.deploySize)} of ~39 MB limit` : undefined,
           type: 'static-key-value',
         },
         {
           label: 'Files',
           get: (data): string | undefined =>
-            data?.deployFileCount ? `${data.deployFileCount} of 10,000 limit` : undefined,
+            data?.deployFileCount && data?.verbose ? `${data.deployFileCount} of 10,000 limit` : undefined,
           type: 'static-key-value',
         },
       ],

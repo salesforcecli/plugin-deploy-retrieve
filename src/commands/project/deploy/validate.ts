@@ -197,7 +197,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+
     this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
 
     if (flags.async) {
@@ -211,15 +211,16 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     new DeployStages({
       title: 'Validating Deployment',
       jsonEnabled: this.jsonEnabled(),
-    }).start({
-      deploy,
-      username,
-      ...(flags.verbose
-        ? {
-            deployUrl: this.deployUrl,
-          }
-        : {}),
-    });
+    }).start(
+      {
+        deploy,
+        username,
+      },
+      {
+        deployUrl: this.deployUrl,
+        verbose: flags.verbose,
+      }
+    );
 
     const result = await deploy.pollStatus(500, flags.wait?.seconds);
     process.exitCode = determineExitCode(result);

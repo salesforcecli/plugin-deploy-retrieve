@@ -134,15 +134,16 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       new DeployStages({
         title: 'Resuming Deploy',
         jsonEnabled: this.jsonEnabled(),
-      }).start({
-        deploy,
-        username: deployOpts['target-org'],
-        ...(flags.verbose
-          ? {
-              deployUrl: this.deployUrl,
-            }
-          : {}),
-      });
+      }).start(
+        {
+          deploy,
+          username: deployOpts['target-org'],
+        },
+        {
+          deployUrl: this.deployUrl,
+          verbose: flags.verbose ?? deployOpts.verbose,
+        }
+      );
 
       result = await deploy.pollStatus(500, wait.seconds);
 

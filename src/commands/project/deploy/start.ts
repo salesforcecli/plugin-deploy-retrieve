@@ -258,13 +258,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       { username, deploy },
       {
         message,
-        ...(flags.verbose
-          ? {
-              deploySize: this.zipSize,
-              deployFileCount: this.zipFileCount,
-              deployUrl: this.deployUrl,
-            }
-          : {}),
+        deployUrl: this.deployUrl,
+        verbose: flags.verbose,
+        deploySize: this.zipSize,
+        deployFileCount: this.zipFileCount,
       }
     );
 
