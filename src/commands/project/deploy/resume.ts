@@ -5,13 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import ansis from 'ansis';
 import { EnvironmentVariable, Messages, Org, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
 import {
   buildComponentSet,
@@ -131,11 +130,21 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
         this.project,
         jobId
       );
-
-      this.log(`Deploy ID: ${ansis.bold(jobId)}`);
       this.deployUrl = buildDeployUrl(org, jobId);
-      this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
-      new DeployProgress(deploy, this.jsonEnabled()).start();
+      new DeployStages({
+        title: 'Resuming Deploy',
+        jsonEnabled: this.jsonEnabled(),
+      }).start(
+        {
+          deploy,
+          username: deployOpts['target-org'],
+        },
+        {
+          deployUrl: this.deployUrl,
+          verbose: flags.verbose ?? deployOpts.verbose,
+        }
+      );
+
       result = await deploy.pollStatus(500, wait.seconds);
 
       if (!deploy.id) {

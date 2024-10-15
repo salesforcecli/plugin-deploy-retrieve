@@ -11,9 +11,9 @@ import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError 
 import { CodeCoverageWarnings, DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration, ensureArray } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
 import { executeDeploy, resolveApi, determineExitCode, validateTests, buildDeployUrl } from '../../../utils/deploy.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
@@ -197,17 +197,30 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+
     this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
-    this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
 
     if (flags.async) {
+      this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+      this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
       if (!this.jsonEnabled()) asyncFormatter.display();
       return this.mixinUrlMeta(await asyncFormatter.getJson());
     }
 
-    new DeployProgress(deploy, this.jsonEnabled()).start();
+    new DeployStages({
+      title: 'Validating Deployment',
+      jsonEnabled: this.jsonEnabled(),
+    }).start(
+      {
+        deploy,
+        username,
+      },
+      {
+        deployUrl: this.deployUrl,
+        verbose: flags.verbose,
+      }
+    );
 
     const result = await deploy.pollStatus(500, flags.wait?.seconds);
     process.exitCode = determineExitCode(result);

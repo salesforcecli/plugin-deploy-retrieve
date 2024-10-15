@@ -4,17 +4,15 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-
-import ansis from 'ansis';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
 import { type DeployVersionData, DeployZipData } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { AsyncDeployResultJson, DeployResultJson, TestLevel } from '../../../utils/types.js';
-import { DeployProgress } from '../../../utils/progressBar.js';
 import { executeDeploy, resolveApi, validateTests, determineExitCode, buildDeployUrl } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
@@ -22,7 +20,6 @@ import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { getOptionalProject } from '../../../utils/project.js';
-import { getZipFileSize } from '../../../utils/output.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'deploy.metadata');
@@ -177,6 +174,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  protected stages!: DeployStages;
+
   private zipSize?: number;
   private zipFileCount?: number;
   private deployUrl?: string;
@@ -202,31 +201,32 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const api = await resolveApi(this.configAggregator);
     const username = flags['target-org'].getUsername();
-    const action = flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying';
+    const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    Lifecycle.getInstance().on('apiVersionDeploy', async (apiData: DeployVersionData) => {
-      this.log(
-        messages.getMessage('apiVersionMsgDetailed', [
-          action,
-          // technically manifestVersion can be undefined, but only on raw mdapi deployments.
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
-          username,
-          apiData.apiVersion,
-          apiData.webService,
-        ])
-      );
+    const lifecycle = Lifecycle.getInstance();
+    let message: string = '';
+
+    lifecycle.on('apiVersionDeploy', async (apiData: DeployVersionData) => {
+      message = messages.getMessage('apiVersionMsgDetailed', [
+        flags['dry-run'] ? 'Deploying (dry-run)' : 'Deploying',
+        // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
+        username,
+        apiData.apiVersion,
+        apiData.webService,
+      ]);
+
+      return Promise.resolve();
     });
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    Lifecycle.getInstance().on('deployZipData', async (zipData: DeployZipData) => {
+    lifecycle.on('deployZipData', async (zipData: DeployZipData) => {
       this.zipSize = zipData.zipSize;
-      if (flags.verbose && this.zipSize) this.log(`Deploy size: ${getZipFileSize(this.zipSize)} of ~39 MB limit`);
       if (zipData.zipFileCount) {
         this.zipFileCount = zipData.zipFileCount;
-        if (flags.verbose && this.zipSize) this.log(`Deployed files count: ${this.zipFileCount} of 10,000 limit`);
       }
+
+      return Promise.resolve();
     });
 
     const { deploy } = await executeDeploy(
@@ -246,11 +246,28 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
-    this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+
+    this.stages = new DeployStages({
+      title,
+      jsonEnabled: this.jsonEnabled(),
+    });
+
     this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
-    this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
+
+    this.stages.start(
+      { username, deploy },
+      {
+        message,
+        deployUrl: this.deployUrl,
+        verbose: flags.verbose,
+        deploySize: this.zipSize,
+        deployFileCount: this.zipFileCount,
+      }
+    );
 
     if (flags.async) {
+      this.stages.done({ status: 'Queued', username });
+      this.stages.stop();
       if (flags['coverage-formatters']) {
         this.warn(messages.getMessage('asyncCoverageJunitWarning'));
       }
@@ -259,8 +276,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
       return this.mixinZipMeta(await asyncFormatter.getJson());
     }
-
-    new DeployProgress(deploy, this.jsonEnabled()).start();
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
     process.exitCode = determineExitCode(result);
@@ -279,6 +294,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   protected catch(error: Error | SfError): Promise<never> {
     if (error instanceof SourceConflictError && error.data) {
       if (!this.jsonEnabled()) {
+        this.stages?.update({ status: 'Failed' });
+        this.stages?.error();
         writeConflictTable(error.data);
         // set the message and add plugin-specific actions
         return super.catch({
