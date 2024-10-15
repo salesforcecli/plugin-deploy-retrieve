@@ -1,14 +1,118 @@
+# [3.14.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.13.2-beta.1...3.14.0) (2024-10-15)
+
+## [3.13.2-beta.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.13.2-dev.0...3.13.2-beta.1) (2024-10-15)
+
+### Bug Fixes
+
+- change prerelease tag ([36b380c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/36b380c67f4f0c520c97a4daf479a34f7df87619))
+
+## [3.13.2-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.13.1...3.13.2-dev.0) (2024-10-15)
+
+### Features
+
+- incorporate deploy url ([0c13053](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0c130539592e65349b68d31ea45b75c50a2bafc0))
+
+## [3.12.20-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.20-dev.0...3.12.20-dev.1) (2024-10-14)
+
+### Bug Fixes
+
+- bump @oclif/multi-stage-output ([1a7c3aa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1a7c3aa5953692b3a776746cd1067bfdd57904ab))
+
+## [3.12.20-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.19...3.12.20-dev.0) (2024-10-14)
+
+## [3.12.18-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.17...3.12.18-dev.0) (2024-10-07)
+
+### Bug Fixes
+
+- upgrade mso ([7e60874](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7e60874add821f9fef5f635df106cbb6e82b5a9e))
+
+## [3.12.15-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.14...3.12.15-dev.0) (2024-09-30)
+
+## [3.12.12-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.11...3.12.12-dev.0) (2024-09-25)
+
+## [3.12.11-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.10...3.12.11-dev.0) (2024-09-18)
+
+## [3.12.8-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.7...3.12.8-dev.0) (2024-09-11)
+
+### Bug Fixes
+
+- bump mso ([81c944f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81c944f334bda7ac52158d6b5ca06be53982f2ad))
+
+## [3.12.3-dev.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.1...3.12.3-dev.2) (2024-09-06)
+
+### Bug Fixes
+
+- bump mso ([4f9fe02](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f9fe0212bde7eb31ee5919da430518397ac8aef))
+
+## [3.12.3-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.3-dev.1) (2024-09-04)
+
+### Bug Fixes
+
+- human readable output ([#1140](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1140)) ([3be3278](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3be3278942c9fb452fb718e5a87f2bd38c255853))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
+
 ## [3.13.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.13.0...3.13.1) (2024-10-15)
 
 ### Bug Fixes
 
 - deploy url in resume ([5c7b487](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5c7b48754b61d605d06f15833bbae47783cb23e2))
 
-# [3.13.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.19...3.13.0) (2024-10-14)
+# [3.13.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.20-dev.1...3.13.0) (2024-10-14)
 
 ### Features
 
 - build deploy URL using ID ([23bd739](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/23bd7399b787084c926ea34f2bd431eff73ef484))
+
+## [3.12.20-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.20-dev.0...3.12.20-dev.1) (2024-10-14)
+
+### Bug Fixes
+
+- bump @oclif/multi-stage-output ([1a7c3aa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1a7c3aa5953692b3a776746cd1067bfdd57904ab))
+
+## [3.12.20-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.19...3.12.20-dev.0) (2024-10-14)
+
+## [3.12.18-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.17...3.12.18-dev.0) (2024-10-07)
+
+### Bug Fixes
+
+- upgrade mso ([7e60874](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7e60874add821f9fef5f635df106cbb6e82b5a9e))
+
+## [3.12.15-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.14...3.12.15-dev.0) (2024-09-30)
+
+## [3.12.12-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.11...3.12.12-dev.0) (2024-09-25)
+
+## [3.12.11-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.10...3.12.11-dev.0) (2024-09-18)
+
+## [3.12.8-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.7...3.12.8-dev.0) (2024-09-11)
+
+### Bug Fixes
+
+- bump mso ([81c944f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81c944f334bda7ac52158d6b5ca06be53982f2ad))
+
+## [3.12.3-dev.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.1...3.12.3-dev.2) (2024-09-06)
+
+### Bug Fixes
+
+- bump mso ([4f9fe02](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f9fe0212bde7eb31ee5919da430518397ac8aef))
+
+## [3.12.3-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.3-dev.1) (2024-09-04)
+
+### Bug Fixes
+
+- human readable output ([#1140](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1140)) ([3be3278](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3be3278942c9fb452fb718e5a87f2bd38c255853))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
 
 ## [3.12.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.18...3.12.19) (2024-10-12)
 
@@ -16,11 +120,48 @@
 
 - **deps:** bump @salesforce/sf-plugins-core from 11.3.10 to 11.3.12 ([b6efa0f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b6efa0f3aa9fd03aa33e120da1a79003a0e26f42))
 
-## [3.12.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.17...3.12.18) (2024-10-12)
+## [3.12.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.18-dev.0...3.12.18) (2024-10-12)
 
 ### Bug Fixes
 
 - **deps:** bump @oclif/core from 4.0.23 to 4.0.28 ([e075d2a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e075d2a35e1dd38691b91c2a602f977cff068c4d))
+
+## [3.12.18-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.17...3.12.18-dev.0) (2024-10-07)
+
+### Bug Fixes
+
+- upgrade mso ([7e60874](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7e60874add821f9fef5f635df106cbb6e82b5a9e))
+
+## [3.12.15-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.14...3.12.15-dev.0) (2024-09-30)
+
+## [3.12.12-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.11...3.12.12-dev.0) (2024-09-25)
+
+## [3.12.11-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.10...3.12.11-dev.0) (2024-09-18)
+
+## [3.12.8-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.7...3.12.8-dev.0) (2024-09-11)
+
+### Bug Fixes
+
+- bump mso ([81c944f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81c944f334bda7ac52158d6b5ca06be53982f2ad))
+
+## [3.12.3-dev.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.1...3.12.3-dev.2) (2024-09-06)
+
+### Bug Fixes
+
+- bump mso ([4f9fe02](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f9fe0212bde7eb31ee5919da430518397ac8aef))
+
+## [3.12.3-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.3-dev.1) (2024-09-04)
+
+### Bug Fixes
+
+- human readable output ([#1140](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1140)) ([3be3278](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3be3278942c9fb452fb718e5a87f2bd38c255853))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
 
 ## [3.12.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.16...3.12.17) (2024-10-05)
 
@@ -34,11 +175,42 @@
 
 - fix generated code coverage result percent ([#1175](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1175)) ([d4cdac1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d4cdac1bbc321ed334955f335a7f85f6e81aacb8))
 
-## [3.12.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.14...3.12.15) (2024-10-01)
+## [3.12.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.15-dev.0...3.12.15) (2024-10-01)
 
 ### Bug Fixes
 
 - bump SDR [skip-validate-pr] ([582b2d1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/582b2d1d3ed2ccf1849ee28037a57c6c823de0b3))
+
+## [3.12.15-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.14...3.12.15-dev.0) (2024-09-30)
+
+## [3.12.12-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.11...3.12.12-dev.0) (2024-09-25)
+
+## [3.12.11-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.10...3.12.11-dev.0) (2024-09-18)
+
+## [3.12.8-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.7...3.12.8-dev.0) (2024-09-11)
+
+### Bug Fixes
+
+- bump mso ([81c944f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81c944f334bda7ac52158d6b5ca06be53982f2ad))
+
+## [3.12.3-dev.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.1...3.12.3-dev.2) (2024-09-06)
+
+### Bug Fixes
+
+- bump mso ([4f9fe02](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f9fe0212bde7eb31ee5919da430518397ac8aef))
+
+## [3.12.3-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.3-dev.1) (2024-09-04)
+
+### Bug Fixes
+
+- human readable output ([#1140](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1140)) ([3be3278](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3be3278942c9fb452fb718e5a87f2bd38c255853))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
 
 ## [3.12.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.13...3.12.14) (2024-09-28)
 
@@ -52,17 +224,73 @@
 
 - **deps:** bump @salesforce/apex-node from 8.1.7 to 8.1.9 ([47cf95d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/47cf95d14bdc124da729b6d972741d9c3d7caab2))
 
-## [3.12.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.11...3.12.12) (2024-09-28)
+## [3.12.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.12-dev.0...3.12.12) (2024-09-28)
 
 ### Bug Fixes
 
 - **deps:** bump @salesforce/core from 8.5.7 to 8.6.1 ([f2bf581](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f2bf581cf75b61ce2dde9b8131d3bc51491f4fcf))
 
-## [3.12.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.10...3.12.11) (2024-09-21)
+## [3.12.12-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.11...3.12.12-dev.0) (2024-09-25)
+
+## [3.12.11-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.10...3.12.11-dev.0) (2024-09-18)
+
+## [3.12.8-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.7...3.12.8-dev.0) (2024-09-11)
+
+### Bug Fixes
+
+- bump mso ([81c944f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81c944f334bda7ac52158d6b5ca06be53982f2ad))
+
+## [3.12.3-dev.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.1...3.12.3-dev.2) (2024-09-06)
+
+### Bug Fixes
+
+- bump mso ([4f9fe02](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f9fe0212bde7eb31ee5919da430518397ac8aef))
+
+## [3.12.3-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.3-dev.1) (2024-09-04)
+
+### Bug Fixes
+
+- human readable output ([#1140](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1140)) ([3be3278](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3be3278942c9fb452fb718e5a87f2bd38c255853))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
+
+## [3.12.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.11-dev.0...3.12.11) (2024-09-21)
 
 ### Bug Fixes
 
 - **deps:** bump @salesforce/plugin-info from 3.4.3 to 3.4.9 ([789934d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/789934dec603ac0579312e41dcf6f76626e917e2))
+
+## [3.12.11-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.10...3.12.11-dev.0) (2024-09-18)
+
+## [3.12.8-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.7...3.12.8-dev.0) (2024-09-11)
+
+### Bug Fixes
+
+- bump mso ([81c944f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81c944f334bda7ac52158d6b5ca06be53982f2ad))
+
+## [3.12.3-dev.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.1...3.12.3-dev.2) (2024-09-06)
+
+### Bug Fixes
+
+- bump mso ([4f9fe02](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f9fe0212bde7eb31ee5919da430518397ac8aef))
+
+## [3.12.3-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.3-dev.1) (2024-09-04)
+
+### Bug Fixes
+
+- human readable output ([#1140](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1140)) ([3be3278](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3be3278942c9fb452fb718e5a87f2bd38c255853))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
 
 ## [3.12.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.9...3.12.10) (2024-09-14)
 
@@ -76,11 +304,36 @@
 
 - **deps:** bump @salesforce/apex-node from 8.1.3 to 8.1.7 ([7241a89](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7241a897c65a96b19cbafc52a50319d3033aaf9a))
 
-## [3.12.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.7...3.12.8) (2024-09-14)
+## [3.12.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.8-dev.0...3.12.8) (2024-09-14)
 
 ### Bug Fixes
 
 - **deps:** bump @salesforce/source-deploy-retrieve from 12.6.2 to 12.6.3 ([26a0271](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/26a02719fa76aa6e4d035f34796a476443cc917e))
+
+## [3.12.8-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.7...3.12.8-dev.0) (2024-09-11)
+
+### Bug Fixes
+
+- bump mso ([81c944f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81c944f334bda7ac52158d6b5ca06be53982f2ad))
+
+## [3.12.3-dev.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.1...3.12.3-dev.2) (2024-09-06)
+
+### Bug Fixes
+
+- bump mso ([4f9fe02](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f9fe0212bde7eb31ee5919da430518397ac8aef))
+
+## [3.12.3-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.3-dev.1) (2024-09-04)
+
+### Bug Fixes
+
+- human readable output ([#1140](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1140)) ([3be3278](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3be3278942c9fb452fb718e5a87f2bd38c255853))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
 
 ## [3.12.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.6...3.12.7) (2024-09-07)
 
@@ -100,17 +353,43 @@
 
 - **deps:** bump @salesforce/source-tracking from 7.1.11 to 7.1.12 ([9d74fe0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9d74fe03cb42bc304d0627d960b2af8bfab65fcb))
 
-## [3.12.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.4) (2024-09-06)
+## [3.12.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.2...3.12.4) (2024-09-06)
 
 ### Bug Fixes
 
 - default hep value ([da267c2](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/da267c2d0fad2435f745d307da3315e9c169a086))
 
-## [3.12.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3) (2024-09-04)
+## [3.12.3-dev.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.1...3.12.3-dev.2) (2024-09-06)
+
+### Bug Fixes
+
+- bump mso ([4f9fe02](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f9fe0212bde7eb31ee5919da430518397ac8aef))
+
+## [3.12.3-dev.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3...3.12.3-dev.1) (2024-09-04)
+
+### Bug Fixes
+
+- human readable output ([#1140](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1140)) ([3be3278](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3be3278942c9fb452fb718e5a87f2bd38c255853))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
+
+## [3.12.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.3-dev.0...3.12.3) (2024-09-04)
 
 ### Bug Fixes
 
 - bump deps ([c010502](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c01050219946943598bf1803a260229ebb0be295))
+
+## [3.12.3-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.2...3.12.3-dev.0) (2024-09-04)
+
+### Bug Fixes
+
+- compilation errors ([922c085](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/922c085bfd65cb342d5cbe598369009dc0c02576))
+- prevent NaN in stage output ([#1139](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1139)) ([c4195cd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c4195cd18498cb2d6accd3e5a8af271f710b661b))
 
 ## [3.12.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.12.1...3.12.2) (2024-08-31)
 
