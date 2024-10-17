@@ -50,40 +50,42 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
         this.ux.log('Nothing retrieved');
       }
     } else {
-      const columns = {
-        state: { header: 'State' },
-        fullName: { header: 'Name' },
-        type: { header: 'Type' },
-        filePath: { header: 'Path' },
-      };
-      const options = { title: tableHeader('Retrieved Source'), 'no-truncate': true };
       this.ux.log();
 
-      this.ux.table(successes, columns, options);
+      this.ux.table({
+        data: successes,
+        columns: ['state', { key: 'fullName', name: 'Name' }, 'type', { key: 'filePath', name: 'Path' }],
+        title: tableHeader('Retrieved Source'),
+        overflow: 'wrap',
+      });
     }
 
     const warnings = getWarnings(this.result);
     if (warnings.length) {
       this.ux.log();
-      this.ux.table(
-        warnings,
-        { fileName: { header: 'File' }, problem: { header: 'Problem' } },
-        { 'no-truncate': true, title: tableHeader('Warnings') }
-      );
+      this.ux.table({
+        data: warnings,
+        columns: [{ key: 'fileName', name: 'File' }, 'problem'],
+        title: tableHeader('Warnings'),
+        overflow: 'wrap',
+      });
     }
   }
 
   private async displayPackages(): Promise<void> {
     const packages = await this.getPackages();
     if (packages?.length) {
-      const columns = {
-        name: { header: 'Package Name' },
-        fullPath: { header: 'Converted Location' },
-      };
-      const options = { title: tableHeader('Retrieved Packages'), 'no-truncate': true };
       this.ux.log();
       this.ux.warn('Metadata from retrieved packages is meant for your reference only, not development.');
-      this.ux.table(packages, columns, options);
+      this.ux.table({
+        data: packages,
+        columns: [
+          { key: 'name', name: 'Package Name' },
+          { key: 'fullPath', name: 'Converted Location' },
+        ],
+        title: tableHeader('Retrieved Packages'),
+        overflow: 'wrap',
+      });
     }
   }
 

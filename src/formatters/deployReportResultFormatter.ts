@@ -32,7 +32,11 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
     );
 
     ux.log();
-    ux.table(response, { key: {}, value: {} }, { title: tableHeader('Deploy Info'), 'no-truncate': true });
+    ux.table({
+      data: response,
+      title: tableHeader('Deploy Info'),
+      overflow: 'wrap',
+    });
 
     const opts = Object.entries(this.flags).reduce<Array<{ key: string; value: unknown }>>((result, [key, value]) => {
       if (key === 'timestamp') {
@@ -48,7 +52,11 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
       return result.concat({ key, value });
     }, []);
     ux.log();
-    ux.table(opts, { key: {}, value: {} }, { title: tableHeader('Deploy Options'), 'no-truncate': true });
+    ux.table({
+      data: opts,
+      title: tableHeader('Deploy Options'),
+      overflow: 'wrap',
+    });
     super.display();
   }
 }

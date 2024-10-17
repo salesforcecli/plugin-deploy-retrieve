@@ -35,14 +35,24 @@ describe('deployResultFormatter', () => {
       const formatter = new DeployResultFormatter(deployResultFailure, { verbose: true });
       formatter.display();
       expect(tableStub.callCount).to.equal(1);
-      expect(tableStub.firstCall.args[0]).to.deep.equal([
-        {
-          error: 'This component has some problems',
-          fullName: 'ProductController',
-          loc: '27:18',
-          problemType: 'Error',
-        },
-      ]);
+      expect(tableStub.firstCall.args[0]).to.deep.equal({
+        data: [
+          {
+            problemType: 'Error',
+            fullName: 'ProductController',
+            error: 'This component has some problems',
+            loc: '27:18',
+          },
+        ],
+        columns: [
+          { key: 'problemType', name: 'Type' },
+          { key: 'fullName', name: 'Name' },
+          { key: 'error', name: 'Problem' },
+          { key: 'loc', name: 'Line:Column' },
+        ],
+        title: '\x1B[1m\x1B[31mComponent Failures [1]\x1B[39m\x1B[22m',
+        overflow: 'wrap',
+      });
     });
 
     it('displays errors from the server not in file responses', () => {
@@ -93,20 +103,31 @@ describe('deployResultFormatter', () => {
       const formatter = new DeployResultFormatter(deployFailure, { verbose: true });
       formatter.display();
       expect(tableStub.callCount).to.equal(1);
-      expect(tableStub.firstCall.args[0]).to.deep.equal([
-        {
-          error: error2.problem,
-          fullName: error2.fullName,
-          loc: '',
-          problemType: error2.problemType,
-        },
-        {
-          error: 'This component has some problems',
-          fullName: 'ProductController',
-          loc: '27:18',
-          problemType: 'Error',
-        },
-      ]);
+      expect(tableStub.firstCall.args[0]).to.deep.equal({
+        data: [
+          {
+            problemType: 'Error',
+            fullName: 'Create_property',
+            error:
+              "An object 'Create_property' of type Flow was named in package.xml, but was not found in zipped directory",
+            loc: '',
+          },
+          {
+            problemType: 'Error',
+            fullName: 'ProductController',
+            error: 'This component has some problems',
+            loc: '27:18',
+          },
+        ],
+        columns: [
+          { key: 'problemType', name: 'Type' },
+          { key: 'fullName', name: 'Name' },
+          { key: 'error', name: 'Problem' },
+          { key: 'loc', name: 'Line:Column' },
+        ],
+        title: '\x1B[1m\x1B[31mComponent Failures [2]\x1B[39m\x1B[22m',
+        overflow: 'wrap',
+      });
     });
   });
 
