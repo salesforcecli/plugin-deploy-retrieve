@@ -93,15 +93,23 @@ export default class ConvertSourceBehavior extends SfCommand<SourceBehaviorResul
       await rm(TMP_DIR, { recursive: true });
     }
 
-    this.table(
-      filesToDelete.map((f) => ({ value: f })),
-      { value: { header: flags['dry-run'] ? 'Files that would have been deleted if not --dry-run' : 'Deleted Files' } }
-    );
+    this.table({
+      data: filesToDelete.map((f) => ({ value: f })),
+      columns: [
+        {
+          key: 'value',
+          name: flags['dry-run'] ? 'Files that would have been deleted if not --dry-run' : 'Deleted Files',
+        },
+      ],
+    });
+
     this.log();
-    this.table(
-      createdFiles.map((f) => ({ value: f })),
-      { value: { header: 'Created Files' } }
-    );
+
+    this.table({
+      data: createdFiles.map((f) => ({ value: f })),
+      columns: [{ key: 'value', name: 'Created Files' }],
+    });
+
     if (flags['dry-run']) {
       // put it back how it was
       await writeFile(projectJson.getPath(), backupPjsonContents);
