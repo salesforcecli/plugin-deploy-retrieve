@@ -208,11 +208,13 @@ describe('forceignore changes', () => {
 
       const output = execCmd<DeployResultJson>(`project:deploy:preview -d ${classdir} --concise`, {
         ensureExitCode: 0,
+        env: { ...process.env, SF_NO_TABLE_STYLE: 'true' },
       }).shellOutput.stdout;
+
       expect(output).to.include('Will Deploy [1] files.');
-      expect(output).to.include('ApexClass UnIgnoreTest');
+      expect(output).to.include('ApexClass   UnIgnoreTest');
       expect(output).to.not.include("These files won't deploy because they're ignored by your .forceignore file.");
-      expect(output).to.not.include('ApexClass IgnoreTest');
+      expect(output).to.not.include('ApexClass   IgnoreTest');
     });
   });
 });

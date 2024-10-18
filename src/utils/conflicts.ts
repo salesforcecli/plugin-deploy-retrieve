@@ -14,16 +14,14 @@ export const writeConflictTable = (conflicts?: ConflictResponse[]): void => {
   if (!conflicts || conflicts.length === 0) {
     return;
   }
-  ux.table(
-    // Interfaces cannot be used as Record<string, unknown> so we have to make it a concrete type
-    // See https://github.com/microsoft/TypeScript/issues/15300
-    conflicts.map((c) => ({ state: c.state, fullName: c.fullName, type: c.type, filePath: c.filePath })),
-    {
-      state: { header: 'STATE' },
-      fullName: { header: 'FULL NAME' },
-      type: { header: 'TYPE' },
-      filePath: { header: 'FILE PATH' },
-    },
-    { 'no-truncate': true }
-  );
+  ux.table({
+    data: conflicts,
+    columns: [
+      { key: 'state', name: 'STATE' },
+      { key: 'fullName', name: 'FULL NAME' },
+      { key: 'type', name: 'TYPE' },
+      { key: 'filePath', name: 'FILE PATH' },
+    ],
+    overflow: 'wrap',
+  });
 };

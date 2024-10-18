@@ -82,17 +82,17 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
         });
       }
 
-      ux.log('');
+      ux.log();
       ux.styledHeader(tableHeader('Deleted Source'));
-      ux.table(
-        successes.map(getFileResponseSuccessProps),
-        {
-          fullName: { header: 'FULL NAME' },
-          type: { header: 'TYPE' },
-          filePath: { header: 'PROJECT PATH' },
-        },
-        { 'no-truncate': true }
-      );
+      ux.table({
+        data: successes.map(getFileResponseSuccessProps),
+        columns: [
+          { key: 'fullName', name: 'FULL NAME' },
+          { key: 'type', name: 'TYPE' },
+          { key: 'filePath', name: 'PROJECT PATH' },
+        ],
+        overflow: 'wrap',
+      });
     } else {
       this.displayFailures();
     }
@@ -105,17 +105,15 @@ export class DeleteResultFormatter extends TestResultsFormatter implements Forma
     if (!failures.length) return;
 
     ux.log();
-    ux.table(
-      failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.problem })),
-      {
-        problemType: { header: 'Type' },
-        fullName: { header: 'Name' },
-        error: { header: 'Problem' },
-      },
-      {
-        title: StandardColors.error(`Component Failures [${failures.length}]`),
-        'no-truncate': true,
-      }
-    );
+    ux.table({
+      data: failures.map((f) => ({ problemType: f.problemType, fullName: f.fullName, error: f.problem })),
+      columns: [
+        { key: 'problemType', name: 'Type' },
+        { key: 'fullName', name: 'Name' },
+        { key: 'error', name: 'Problem' },
+      ],
+      title: StandardColors.error(`Component Failures [${failures.length}]`),
+      overflow: 'wrap',
+    });
   }
 }

@@ -110,12 +110,14 @@ const displayVerboseTestCoverage = (coverage?: CodeCoverage | CodeCoverage[]): v
   const codeCoverage = ensureArray(coverage);
   if (codeCoverage.length) {
     ux.log();
-    ux.log(tableHeader('Apex Code Coverage'));
-
-    ux.table(codeCoverage.sort(coverageSort).map(coverageOutput), {
-      name: { header: 'Name' },
-      coveragePercent: { header: '% Covered' },
-      linesNotCovered: { header: 'Uncovered Lines' },
+    ux.table({
+      data: codeCoverage.sort(coverageSort).map(coverageOutput),
+      columns: [
+        'name',
+        { key: 'coveragePercent', name: '% Covered' },
+        { key: 'linesNotCovered', name: 'Uncovered Lines' },
+      ],
+      title: tableHeader('Apex Code Coverage'),
     });
   }
 };
