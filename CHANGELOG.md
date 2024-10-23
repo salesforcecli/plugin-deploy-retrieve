@@ -1,3 +1,9 @@
+# [3.15.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.14.0...3.15.0) (2024-10-23)
+
+### Features
+
+- use new table ([1e091a6](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1e091a6680d50aa884a9f01dde5f534c9b0afd98))
+
 # [3.14.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.13.2-beta.1...3.14.0) (2024-10-15)
 
 ## [3.13.2-beta.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.13.2-dev.0...3.13.2-beta.1) (2024-10-15)
