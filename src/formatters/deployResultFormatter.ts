@@ -274,17 +274,15 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
           replaced,
         }))
       );
-      ux.table(
-        replacements,
-        {
-          filePath: { header: 'PROJECT PATH' },
-          replaced: { header: 'TEXT REPLACED' },
-        },
-        {
-          title: tableHeader('Metadata Replacements'),
-          'no-truncate': true,
-        }
-      );
+      ux.table({
+        data: replacements,
+        columns: [
+          { key: 'filePath', name: 'PROJECT PATH' },
+          { key: 'replaced', name: 'TEXT REPLACED' },
+        ],
+        title: tableHeader('Metadata Replacements'),
+        overflow: 'wrap',
+      });
     }
   }
 
@@ -293,17 +291,14 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
 
     if (!successes.length || this.result.response.status === RequestStatus.Failed) return;
 
-    const columns = {
-      state: { header: 'State' },
-      fullName: { header: 'Name' },
-      type: { header: 'Type' },
-      filePath: { header: 'Path' },
-    };
     const title = this.result.response.checkOnly ? 'Validated Source' : 'Deployed Source';
-    const options = { title: tableHeader(title), 'no-truncate': true };
     ux.log();
-
-    ux.table(successes.map(getFileResponseSuccessProps), columns, options);
+    ux.table({
+      data: successes.map(getFileResponseSuccessProps),
+      columns: ['state', { key: 'fullName', name: 'Name' }, 'type', { key: 'filePath', name: 'Path' }],
+      title: tableHeader(title),
+      overflow: 'wrap',
+    });
   }
 
   private displayFailures(): void {
@@ -312,24 +307,23 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     const failures = this.getFileResponseFailures();
     if (!failures?.length) return;
 
-    const columns = {
-      problemType: { header: 'Type' },
-      fullName: { header: 'Name' },
-      error: { header: 'Problem' },
-      loc: { header: 'Line:Column' },
-    };
-    const options = { title: error(`Component Failures [${failures.length}]`), 'no-truncate': true };
     ux.log();
-    ux.table(
-      sortBy(failures, ['problemType', 'fullName', 'lineNumber', 'columnNumber', 'error']).map((f) => ({
+    ux.table({
+      data: sortBy(failures, ['problemType', 'fullName', 'lineNumber', 'columnNumber', 'error']).map((f) => ({
         problemType: f.problemType,
         fullName: f.fullName,
         error: f.error,
         loc: f.lineNumber ? `${f.lineNumber}:${f.columnNumber ?? ''}` : '',
       })),
-      columns,
-      options
-    );
+      columns: [
+        { key: 'problemType', name: 'Type' },
+        { key: 'fullName', name: 'Name' },
+        { key: 'error', name: 'Problem' },
+        { key: 'loc', name: 'Line:Column' },
+      ],
+      title: error(`Component Failures [${failures.length}]`),
+      overflow: 'wrap',
+    });
   }
 }
 
@@ -344,14 +338,12 @@ const displayDeletes = (relativeFiles: FileResponse[], extraDeletes: FileRespons
 
   if (!deletions.length) return;
 
-  const columns = {
-    fullName: { header: 'Name' },
-    type: { header: 'Type' },
-    filePath: { header: 'Path' },
-  };
-
-  const options = { title: tableHeader('Deleted Source'), 'no-truncate': true };
   ux.log();
 
-  ux.table(deletions, columns, options);
+  ux.table({
+    data: deletions,
+    columns: [{ key: 'fullName', name: 'Name' }, 'type', { key: 'filePath', name: 'Path' }],
+    title: tableHeader('Deleted Source'),
+    overflow: 'wrap',
+  });
 };

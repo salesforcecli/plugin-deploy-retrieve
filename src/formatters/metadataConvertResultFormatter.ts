@@ -43,21 +43,21 @@ export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJso
   public async display(): Promise<void> {
     const convertData = await this.getJson();
     if (convertData?.length) {
-      ux.table(
-        convertData.map((entry) => ({
+      ux.table({
+        data: convertData.map((entry) => ({
           state: entry.state,
           fullName: entry.fullName,
           type: entry.type,
           filePath: entry.filePath,
         })),
-        {
-          state: { header: 'STATE' },
-          fullName: { header: 'FULL NAME' },
-          type: { header: 'TYPE' },
-          filePath: { header: 'PROJECT PATH' },
-        },
-        { 'no-truncate': true }
-      );
+        columns: [
+          { key: 'state', name: 'STATE' },
+          { key: 'fullName', name: 'FULL NAME' },
+          { key: 'type', name: 'TYPE' },
+          { key: 'filePath', name: 'PROJECT PATH' },
+        ],
+        overflow: 'wrap',
+      });
     } else {
       ux.log('No metadata found to convert');
     }
