@@ -8,7 +8,7 @@ To use Salesforce CLI to work with components that you retrieved via Metadata AP
 
 To convert files from the source format back to the metadata format, run "sf project convert source".
 
-To convert multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
+To convert multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --source-dir.
 
 # examples
 
@@ -42,7 +42,7 @@ Metadata component names to convert.
 
 # flags.manifest.description
 
-If you specify this parameter, don’t specify --metadata or --source-dir.
+If you specify this flag, don’t specify --metadata or --source-dir.
 
 # flags.metadata-dir.description
 
@@ -60,7 +60,7 @@ Expected a file but found a directory.
 
 # InvalidFlagPath
 
-The %s command parameter specifies an invalid path: %s
+The %s command flag specifies an invalid path: %s
 %s
 
 # notFound
