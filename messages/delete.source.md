@@ -8,7 +8,7 @@ Use this command to delete components from orgs that don’t have source trackin
 
 When you run this command, both the local source file and the metadata component in the org are deleted.
 
-To delete multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
+To delete multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --source-dir.
 
 # examples
 
@@ -70,7 +70,7 @@ IMPORTANT: Where possible, we changed noninclusive terms to align with our compa
 
 Validates the deleted metadata and runs all Apex tests, but prevents the deletion from being saved to the org.
 
-If you change a field type from Master-Detail to Lookup or vice versa, that change isn’t supported when using the --check-only parameter to test a deletion (validation). This kind of change isn’t supported for test deletions to avoid the risk of data loss or corruption. If a change that isn’t supported for test deletions is included in a deletion package, the test deletion fails and issues an error.
+If you change a field type from Master-Detail to Lookup or vice versa, that change isn’t supported when using the --check-only flag to test a deletion (validation). This kind of change isn’t supported for test deletions to avoid the risk of data loss or corruption. If a change that isn’t supported for test deletions is included in a deletion package, the test deletion fails and issues an error.
 
 If your deletion package changes a field type from Master-Detail to Lookup or vice versa, you can still validate the changes prior to deploying to Production by performing a full deletion to another test Sandbox. A full deletion includes a validation of the changes as part of the deletion process.
 
@@ -82,13 +82,13 @@ Note: A Metadata API deletion that includes Master-Detail relationships deletes 
 
 # flags.metadata.description
 
-If you specify this parameter, don’t specify --source-dir.
+If you specify this flag, don’t specify --source-dir.
 
 # flags.source-dir.description
 
 The supplied paths can be a single file (in which case the operation is applied to only one file) or a folder (in which case the operation is applied to all metadata types in the directory and its sub-directories).
 
-If you specify this parameter, don’t specify --metadata.
+If you specify this flag, don’t specify --metadata.
 
 # flags.wait.description
 

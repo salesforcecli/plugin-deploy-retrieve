@@ -10,7 +10,7 @@ Metadata components are retrieved in source format by default. Retrieve them in 
 
 If your org allows source tracking, then this command tracks the changes in your source. Some orgs, such as production orgs, never allow source tracking. Source tracking is enabled by default on scratch and sandbox orgs; you can disable source tracking when you create the orgs by specifying the --no-track-source flag on the "<%= config.bin %> org create scratch|sandbox" commands.
 
-To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --manifest and --source-dir.
+To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --source-dir.
 
 # examples
 
@@ -95,7 +95,7 @@ File path for the manifest (package.xml) that specifies the components to retrie
 
 # flags.manifest.description
 
-If you specify this parameter, don’t specify --metadata or --source-dir.
+If you specify this flag, don’t specify --metadata or --source-dir.
 
 # flags.metadata.summary
 
