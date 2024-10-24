@@ -148,10 +148,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   );
 
   protected retrieveResult!: RetrieveResult;
-  protected ms!: MultiStageOutput<{
-    status: string;
-    apiData: RetrieveVersionData;
-  }>;
+  protected ms:
+    | MultiStageOutput<{
+        status: string;
+        apiData: RetrieveVersionData;
+      }>
+    | undefined;
 
   // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
@@ -222,27 +224,27 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
       Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) =>
-        Promise.resolve(this.ms.updateData({ apiData }))
+        Promise.resolve(this.ms?.updateData({ apiData }))
       );
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
       this.ms.goto('Waiting for the org to respond', { status: 'Pending' });
 
       retrieve.onUpdate((data) => {
-        this.ms.goto('Waiting for the org to respond', { status: mdTransferMessages.getMessage(data.status) });
+        this.ms?.goto('Waiting for the org to respond', { status: mdTransferMessages.getMessage(data.status) });
       });
       retrieve.onFinish((data) => {
-        this.ms.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
+        this.ms?.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
       });
       retrieve.onCancel((data) => {
-        this.ms.updateData({ status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
-        this.ms.error();
+        this.ms?.updateData({ status: mdTransferMessages.getMessage(data?.status ?? 'Canceled') });
+        this.ms?.error();
       });
       retrieve.onError((error: Error) => {
         if (error.message.includes('client has timed out')) {
-          this.ms.updateData({ status: 'Client Timeout' });
+          this.ms?.updateData({ status: 'Client Timeout' });
         }
 
-        this.ms.error();
+        this.ms?.error();
         throw error;
       });
 
@@ -300,8 +302,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
   protected catch(error: Error | SfError): Promise<never> {
     if (!this.jsonEnabled() && error instanceof SourceConflictError && error.data) {
-      this.ms.updateData({ status: 'Failed' });
-      this.ms.error();
+      this.ms?.updateData({ status: 'Failed' });
+      this.ms?.error();
       writeConflictTable(error.data);
       // set the message and add plugin-specific actions
       return super.catch({
@@ -310,7 +312,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         actions: messages.getMessages('error.Conflicts.Actions'),
       });
     } else {
-      this.ms.error();
+      this.ms?.error();
     }
 
     return super.catch(error);
