@@ -1,3 +1,9 @@
+## [3.15.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.2...3.15.3) (2024-10-24)
+
+### Bug Fixes
+
+- ms might be undefined ([1f9df69](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1f9df6969e349da02919309fca8f69273ab3a9cc))
+
 ## [3.15.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.1...3.15.2) (2024-10-24)
 
 ### Bug Fixes
