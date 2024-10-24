@@ -13,7 +13,7 @@
     "@salesforce/plugin-info": "^3.4.13",
     "@salesforce/sf-plugins-core": "^12.0.4",
     "@salesforce/source-deploy-retrieve": "^12.7.4",
-    "@salesforce/source-tracking": "^7.1.16",
+    "@salesforce/source-tracking": "^7.1.17",
     "@salesforce/ts-types": "^2.0.12",
     "ansis": "^3.3.2",
     "terminal-link": "^3.0.0"
