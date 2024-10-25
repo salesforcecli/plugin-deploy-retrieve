@@ -253,7 +253,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
     it('should throw an err when attempting to pull from a non scratch-org', () => {
       const hubUsername = session.hubOrg.username;
       assert(hubUsername, 'hubUsername should be defined');
-      const failure = execCmd(`project retrieve preview -u ${hubUsername} --json`, {
+      const failure = execCmd(`project retrieve preview -o ${hubUsername} --json`, {
         ensureExitCode: 1,
         cli: 'sf',
       }).jsonOutput as unknown as { name: string };
