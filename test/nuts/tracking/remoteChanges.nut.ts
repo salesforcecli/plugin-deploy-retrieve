@@ -66,7 +66,7 @@ describe('remote changes', () => {
     });
 
     it('sees no local changes (all were committed from deploy)', () => {
-      const localResult = execCmd<StatusResult[]>('force:source:status --json --local', {
+      const localResult = execCmd<StatusResult[]>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -107,7 +107,7 @@ describe('remote changes', () => {
       ).to.equal(true);
     });
     it('sfdx can see the delete in status', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const result = execCmd<StatusResult[]>('project retrieve preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -125,7 +125,7 @@ describe('remote changes', () => {
       expect(result?.toDelete, JSON.stringify(result)).to.have.length(1);
     });
     it('sfdx does not see any change in local status', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json --local', {
+      const result = execCmd<StatusResult[]>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -162,13 +162,13 @@ describe('remote changes', () => {
       ).to.equal(false);
     });
     it('sees correct local and remote status', () => {
-      const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const remoteResult = execCmd<StatusResult[]>('project retrieve preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
       expect(remoteResult?.filter((r) => r.state.includes('Remote Deleted'))).to.deep.equal([]);
 
-      const localStatus = execCmd<StatusResult[]>('force:source:status --json --local', {
+      const localStatus = execCmd<StatusResult[]>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -202,7 +202,7 @@ describe('remote changes', () => {
       }
     });
     it('can see the add in status', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const result = execCmd<StatusResult[]>('project retrieve preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -230,7 +230,7 @@ describe('remote changes', () => {
     });
     describe('check status', () => {
       it('sfdx sees correct remote status', () => {
-        const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
+        const remoteResult = execCmd<StatusResult[]>('project retrieve preview --json', {
           ensureExitCode: 0,
           cli: 'sf',
         }).jsonOutput?.result;
@@ -240,7 +240,7 @@ describe('remote changes', () => {
         ).deep.equal([]);
       });
       it('sfdx sees correct local status', () => {
-        const localStatus = execCmd<StatusResult[]>('force:source:status --json --local', {
+        const localStatus = execCmd<StatusResult[]>('project deploy preview --json', {
           ensureExitCode: 0,
           cli: 'sf',
         }).jsonOutput?.result;

@@ -70,7 +70,7 @@ describe('conflict detection and resolution', () => {
         description: 'modified',
       },
     });
-    const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
+    const result = execCmd<StatusResult[]>('project retrieve preview --json', {
       ensureExitCode: 0,
       cli: 'sf',
     }).jsonOutput?.result;
@@ -94,7 +94,7 @@ describe('conflict detection and resolution', () => {
     );
   });
   it('can see the conflict in status', () => {
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<StatusResult[]>('project deploy preview --json', {
       ensureExitCode: 0,
       cli: 'sf',
     }).jsonOutput?.result.filter((app) => app.type === 'CustomApplication');

@@ -64,7 +64,7 @@ describe('reset and clear tracking', () => {
 
   describe('clearing tracking', () => {
     it('runs status to start tracking', () => {
-      const result = execCmd('force:source:status --json', {
+      const result = execCmd('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -110,7 +110,7 @@ describe('reset and clear tracking', () => {
         }
       });
       // gets tracking files from server
-      execCmd('force:source:status --json --remote', { ensureExitCode: 0, cli: 'sf' });
+      execCmd('project retrieve preview --json', { ensureExitCode: 0, cli: 'sf' });
       const revisions = await getRevisionsAsArray();
       const revisionFile = JSON.parse(
         await fs.promises.readFile(path.join(trackingFileFolder, 'maxRevision.json'), 'utf8')

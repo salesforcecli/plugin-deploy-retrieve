@@ -70,7 +70,7 @@ describe('forceignore changes', () => {
     });
 
     it('shows the file in status as ignored', () => {
-      const output = execCmd<StatusResult>('force:source:status --json', {
+      const output = execCmd<StatusResult>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -156,7 +156,7 @@ describe('forceignore changes', () => {
 
     it('source:status recognizes change', () => {
       // gets file into source tracking
-      const statusOutput = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const statusOutput = execCmd<StatusResult[]>('project retrieve preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;

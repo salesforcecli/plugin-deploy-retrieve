@@ -48,7 +48,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
 
   describe('basic status and pull', () => {
     it('detects the initial metadata status', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json', {
+      const result = execCmd<StatusResult[]>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -85,13 +85,13 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(files.every(isSdrSuccess), JSON.stringify(files.filter(isSdrFailure))).to.equal(true);
     });
     it('sees no local changes (all were committed from push), but profile updated in remote', () => {
-      const localResult = execCmd<StatusResult[]>('force:source:status --json --local', {
+      const localResult = execCmd<StatusResult[]>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
       expect(localResult?.filter(filterIgnored)).to.deep.equal([]);
 
-      const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const remoteResult = execCmd<StatusResult[]>('project retrieve preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -105,7 +105,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(response?.toDeploy).to.be.an.instanceof(Array).with.lengthOf(0);
     });
     it('sf sees no remote changes (all were committed from push) except Profile', () => {
-      const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const remoteResult = execCmd<StatusResult[]>('project retrieve preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -123,13 +123,23 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
     });
 
     it('sees no local or remote changes', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json', {
+      const deployResult = execCmd<StatusResult[]>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
-      expect(result?.filter((r) => r.type === 'Profile').filter(filterIgnored), JSON.stringify(result)).to.have.length(
-        0
-      );
+      expect(
+        deployResult?.filter((r) => r.type === 'Profile').filter(filterIgnored),
+        JSON.stringify(result)
+      ).to.have.length(0);
+
+      const retrieveResult = execCmd<StatusResult[]>('project retrieve preview --json', {
+        ensureExitCode: 0,
+        cli: 'sf',
+      }).jsonOutput?.result;
+      expect(
+        retrieveResult?.filter((r) => r.type === 'Profile').filter(filterIgnored),
+        JSON.stringify(result)
+      ).to.have.length(0);
     });
 
     it('sf no local changes', () => {
@@ -152,7 +162,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
         fs.promises.unlink(path.join(classDir, 'TestOrderController.cls')),
         fs.promises.unlink(path.join(classDir, 'TestOrderController.cls-meta.xml')),
       ]);
-      const result = execCmd<StatusResult[]>('force:source:status --json --local', {
+      const result = execCmd<StatusResult[]>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -197,7 +207,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       ]);
     });
     it('does not see any change in remote status', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const result = execCmd<StatusResult[]>('project retrieve preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -223,7 +233,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(result, JSON.stringify(result)).to.be.an.instanceof(Array).with.length(2);
     });
     it('sees no local changes', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json --local', {
+      const result = execCmd<StatusResult[]>('project deploy preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
@@ -243,7 +253,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
     it('should throw an err when attempting to pull from a non scratch-org', () => {
       const hubUsername = session.hubOrg.username;
       assert(hubUsername, 'hubUsername should be defined');
-      const failure = execCmd(`force:source:status -u ${hubUsername} --remote --json`, {
+      const failure = execCmd(`project retrieve preview -u ${hubUsername} --json`, {
         ensureExitCode: 1,
         cli: 'sf',
       }).jsonOutput as unknown as { name: string };
@@ -282,7 +292,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       });
       describe('classes that failed to deploy are still in local status', () => {
         it('sees no local changes', () => {
-          const result = execCmd<StatusResult[]>('force:source:status --json --local', {
+          const result = execCmd<StatusResult[]>('project deploy preview --json', {
             ensureExitCode: 0,
             cli: 'sf',
           }).jsonOutput?.result;

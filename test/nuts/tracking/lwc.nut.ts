@@ -56,7 +56,7 @@ describe('lwc', () => {
       cssPathAbsolute,
       (await fs.promises.readFile(cssPathAbsolute, 'utf-8')).replace('absolute', 'relative')
     );
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<StatusResult[]>('project deploy preview --json', {
       ensureExitCode: 0,
       cli: 'sf',
     }).jsonOutput?.result;
@@ -86,7 +86,7 @@ describe('lwc', () => {
   });
 
   it('sfdx sees no local changes', () => {
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<StatusResult[]>('project deploy preview --json', {
       ensureExitCode: 0,
       cli: 'sf',
     })
@@ -106,7 +106,7 @@ describe('lwc', () => {
 
   it("deleting an lwc sub-component should show the sub-component as 'Deleted'", async () => {
     await fs.promises.rm(cssPathAbsolute);
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<StatusResult[]>('project deploy preview --json', {
       ensureExitCode: 0,
       cli: 'sf',
     })
@@ -138,7 +138,7 @@ describe('lwc', () => {
   });
 
   it('sees no local changes', () => {
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<StatusResult[]>('project deploy preview --json', {
       ensureExitCode: 0,
       cli: 'sf',
     })
@@ -169,7 +169,7 @@ describe('lwc', () => {
       dependentLWCPath,
       (await fs.promises.readFile(dependentLWCPath, 'utf-8')).replace(/<c-hero.*hero-details>/s, '')
     );
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<StatusResult[]>('project deploy preview --json', {
       ensureExitCode: 0,
       cli: 'sf',
     }).jsonOutput?.result.filter((r) => r.origin === 'Local');
@@ -193,7 +193,7 @@ describe('lwc', () => {
   });
 
   it('sees no local changes', () => {
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<StatusResult[]>('project deploy preview --json', {
       ensureExitCode: 0,
       cli: 'sf',
     })
