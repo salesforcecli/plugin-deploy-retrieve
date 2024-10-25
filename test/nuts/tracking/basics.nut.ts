@@ -129,7 +129,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       }).jsonOutput?.result;
       expect(
         deployResult?.filter((r) => r.type === 'Profile').filter(filterIgnored),
-        JSON.stringify(result)
+        JSON.stringify(deployResult)
       ).to.have.length(0);
 
       const retrieveResult = execCmd<StatusResult[]>('project retrieve preview --json', {
@@ -138,7 +138,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       }).jsonOutput?.result;
       expect(
         retrieveResult?.filter((r) => r.type === 'Profile').filter(filterIgnored),
-        JSON.stringify(result)
+        JSON.stringify(retrieveResult)
       ).to.have.length(0);
     });
 
