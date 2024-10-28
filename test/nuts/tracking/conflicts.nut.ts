@@ -13,7 +13,6 @@ import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { DeployResultJson, isSdrFailure, isSdrSuccess, RetrieveResultJson } from '../../../src/utils/types.js';
 import { PreviewResult } from '../../../src/utils/previewOutput.js';
-import type { StatusResult } from './types.js';
 import { eBikesDeployResultCount } from './constants.js';
 
 let session: TestSession;
@@ -70,12 +69,11 @@ describe('conflict detection and resolution', () => {
         description: 'modified',
       },
     });
-    const result = execCmd<StatusResult[]>('project retrieve preview --json', {
+    const result = execCmd<PreviewResult>('project retrieve preview --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     }).jsonOutput?.result;
     expect(
-      result?.filter((r) => r.type === 'CustomApplication'),
+      result?.toRetrieve.filter((r) => r.type === 'CustomApplication'),
       JSON.stringify(result)
     ).to.have.lengthOf(1);
   });
@@ -94,36 +92,24 @@ describe('conflict detection and resolution', () => {
     );
   });
   it('can see the conflict in status', () => {
-    const result = execCmd<StatusResult[]>('project deploy preview --json', {
+    const result = execCmd<PreviewResult>('project deploy preview --json', {
       ensureExitCode: 0,
-      cli: 'sf',
-    }).jsonOutput?.result.filter((app) => app.type === 'CustomApplication');
+    }).jsonOutput?.result.conflicts.filter((app) => app.type === 'CustomApplication');
     // json is not sorted.  This relies on the implementation of getConflicts()
     expect(result).to.deep.equal([
       {
         type: 'CustomApplication',
-        state: 'Local Changed (Conflict)',
         fullName: 'EBikes',
-        filePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
-        ignored: false,
         conflict: true,
-        origin: 'Local',
-        actualState: 'Changed',
-      },
-      {
-        type: 'CustomApplication',
-        state: 'Remote Changed (Conflict)',
-        fullName: 'EBikes',
-        filePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
         ignored: false,
-        conflict: true,
-        origin: 'Remote',
-        actualState: 'Changed',
+        operation: 'deploy',
+        path: path.normalize(path.join(session.project.dir, 'force-app/main/default/applications/EBikes.app-meta.xml')),
+        projectRelativePath: path.normalize('force-app/main/default/applications/EBikes.app-meta.xml'),
       },
     ]);
   });
 
-  it('sf can see the conflict in status (deploy)', () => {
+  it('can see the conflict in status (deploy)', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result.conflicts.filter((app) => app.type === 'CustomApplication');
@@ -141,7 +127,7 @@ describe('conflict detection and resolution', () => {
     ]);
   });
 
-  it('sf can see the conflict in status (retrieve)', () => {
+  it('can see the conflict in status (retrieve)', () => {
     const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result.conflicts.filter((app) => app.type === 'CustomApplication');
@@ -159,7 +145,7 @@ describe('conflict detection and resolution', () => {
     ]);
   });
 
-  it('sf can see the conflict in status (deploy) ignoring conflicts', () => {
+  it('can see the conflict in status (deploy) ignoring conflicts', () => {
     const result = execCmd<PreviewResult>('deploy metadata preview --json -c', {
       ensureExitCode: 0,
     }).jsonOutput?.result.toDeploy.filter((app) => app.type === 'CustomApplication');
@@ -177,7 +163,7 @@ describe('conflict detection and resolution', () => {
     ]);
   });
 
-  it('sf can see the conflict in status (retrieve) ignoring conflicts', () => {
+  it('can see the conflict in status (retrieve) ignoring conflicts', () => {
     const result = execCmd<PreviewResult>('retrieve metadata preview --json -c', {
       ensureExitCode: 0,
     }).jsonOutput?.result.toRetrieve.filter((app) => app.type === 'CustomApplication');

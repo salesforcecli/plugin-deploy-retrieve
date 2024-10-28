@@ -11,6 +11,7 @@ import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { expect } from 'chai';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { DeleteTrackingResult } from '../../../src/commands/project/delete/tracking.js';
+import { PreviewResult } from '../../../src/utils/previewOutput.js';
 
 let session: TestSession;
 let orgId: string;
@@ -64,11 +65,11 @@ describe('reset and clear tracking', () => {
 
   describe('clearing tracking', () => {
     it('runs status to start tracking', () => {
-      const result = execCmd('project deploy preview --json', {
+      const result = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput?.result;
-      expect(result).to.have.length.greaterThan(100); // ebikes is big
+      // dreamhouse-lwc is big
+      expect(result?.toDeploy).to.have.length.greaterThan(75);
     });
 
     it('local tracking file exists', () => {
