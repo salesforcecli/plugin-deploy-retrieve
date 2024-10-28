@@ -74,15 +74,13 @@ describe('forceignore changes', () => {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
-      expect(output, JSON.stringify(output)).to.deep.include({
-        state: 'Local Add',
+      expect(output?.ignored, JSON.stringify(output)).to.deep.include({
         fullName: 'IgnoreTest',
         type: 'ApexClass',
-        origin: 'Local',
-        filePath: path.join(classdir, 'IgnoreTest.cls'),
-        ignored: true,
+        projectRelativePath: path.join(classdir, 'IgnoreTest.cls-meta.xml'),
+        path: path.resolve(path.join(classdir, 'IgnoreTest.cls-meta.xml')),
         conflict: false,
-        actualState: 'Add',
+        ignored: true,
       });
     });
 
@@ -154,13 +152,13 @@ describe('forceignore changes', () => {
       );
     });
 
-    it('source:status recognizes change', () => {
+    it('source:status recognizes ignored class', () => {
       // gets file into source tracking
-      const statusOutput = execCmd<StatusResult[]>('project retrieve preview --json', {
+      const statusOutput = execCmd<PreviewResult>('project retrieve preview --json', {
         ensureExitCode: 0,
         cli: 'sf',
       }).jsonOutput?.result;
-      expect(statusOutput?.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
+      expect(statusOutput?.ignored.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
     });
 
     it('metadata preview recognizes change and marks it ignored', () => {
