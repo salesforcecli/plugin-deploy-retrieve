@@ -147,7 +147,6 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       }).jsonOutput?.result;
       assert(response);
       expect(response.toDeploy).to.be.an.instanceof(Array).with.lengthOf(0);
-      expect(response.toDelete).to.be.an.instanceof(Array).with.lengthOf(1);
       expect(response.toDelete).deep.equals([
         {
           type: 'ApexClass',
@@ -171,7 +170,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
     });
 
     it('pushes the local delete to the org', () => {
-      const result = execCmd<DeployResultJson>('deploy metadata --json', {
+      const result = execCmd<DeployResultJson>('project:deploy:start --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result.files;
       expect(result, JSON.stringify(result)).to.be.an.instanceof(Array).with.length(2);

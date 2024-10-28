@@ -134,7 +134,7 @@ describe('project delete source NUTs', () => {
     const query = () =>
       execCmd<{ records: Array<{ IsNameObsolete: boolean }> }>(
         `data:query -q "SELECT IsNameObsolete FROM SourceMember WHERE MemberType='ApexClass' AND MemberName='${apexName}' LIMIT 1" -t --json`,
-        { silent: true, ensureExitCode: 0 }
+        { silent: true, ensureExitCode: 0, cli: 'sf' }
       );
 
     let soql = query().jsonOutput?.result;
@@ -232,7 +232,7 @@ describe('project delete source NUTs', () => {
   it('should delete an entire LWC', async () => {
     const lwcPath = path.join(testkit.projectDir, 'force-app', 'main', 'default', 'lwc');
     const mylwcPath = path.join(lwcPath, 'mylwc');
-    execCmd(`force:lightning:component:create -n mylwc --type lwc -d ${lwcPath}`, { ensureExitCode: 0 });
+    execCmd(`force:lightning:component:create -n mylwc --type lwc -d ${lwcPath}`, { ensureExitCode: 0, cli: 'sf' });
     execCmd(`project:deploy:start --source-dir ${mylwcPath}`);
     expect(await isNameObsolete(testkit.username, 'LightningComponentBundle', 'mylwc')).to.be.false;
     const deleteResult = execCmd<DeleteSourceJson>(`project:delete:source -p ${mylwcPath} --no-prompt --json`)
