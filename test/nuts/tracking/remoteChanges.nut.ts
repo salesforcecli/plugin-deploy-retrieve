@@ -281,11 +281,4 @@ describe('remote changes', () => {
       expect(result).to.include(`v${newApiVersion} metadata`);
     });
   });
-
-  describe('remote changes: mixed', () => {
-    it('all three types of changes on the server');
-    it('can see the changes in status');
-    it('can pull the changes');
-    it('sees correct local and remote status');
-  });
 });

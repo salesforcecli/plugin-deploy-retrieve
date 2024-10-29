@@ -141,7 +141,12 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(response?.files).to.be.an.instanceof(Array).with.lengthOf(0);
     });
 
-    it('sees a local delete in local status', () => {
+    it('sees a local delete in local status', async () => {
+      const classDir = path.join(session.project.dir, 'force-app', 'main', 'default', 'classes');
+      await Promise.all([
+        fs.promises.unlink(path.join(classDir, 'TestOrderController.cls')),
+        fs.promises.unlink(path.join(classDir, 'TestOrderController.cls-meta.xml')),
+      ]);
       const response = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
