@@ -46,7 +46,7 @@ describe('multiple pkgDirectories pushed as one deploy', () => {
 
   describe('mpd non-sequential', () => {
     it('pushes using MPD', () => {
-      const result = execCmd<DeployResultJson>('deploy:metadata --json', {
+      const result = execCmd<DeployResultJson>('project:deploy:start --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result.files;
       assert(Array.isArray(result));

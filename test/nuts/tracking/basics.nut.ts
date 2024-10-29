@@ -10,11 +10,10 @@ import * as fs from 'node:fs';
 import { expect, assert } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { DeployResultJson, RetrieveResultJson, isSdrFailure, isSdrSuccess } from '../../../src/utils/types.js';
-import { PreviewResult } from '../../../src/utils/previewOutput.js';
-import type { StatusResult } from './types.js';
+import { PreviewFile, PreviewResult } from '../../../src/utils/previewOutput.js';
 import { eBikesDeployResultCount } from './constants.js';
 
-const filterIgnored = (r: StatusResult): boolean => r.ignored !== true;
+const filterIgnored = (r: PreviewFile): boolean => r.ignored !== true;
 
 describe('end-to-end-test for tracking with an org (single packageDir)', () => {
   let session: TestSession;
@@ -48,16 +47,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
 
   describe('basic status and pull', () => {
     it('detects the initial metadata status', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json', {
-        ensureExitCode: 0,
-        cli: 'sf',
-      }).jsonOutput?.result;
-      assert(Array.isArray(result));
-      // the fields should be populated
-      expect(result.every((row) => row.type && row.fullName)).to.equal(true);
-    });
-    it('detects the initial metadata status using sf', () => {
-      const response = execCmd<PreviewResult>('deploy metadata preview --json', {
+      const response = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       assert(response);
@@ -67,7 +57,7 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(response.conflicts).to.be.an.instanceof(Array).with.length(0);
     });
     it('includes no wildcard entries', () => {
-      const response = execCmd<PreviewResult>('deploy metadata preview --metadata ApexClass --json', {
+      const response = execCmd<PreviewResult>('project deploy preview --metadata ApexClass --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       assert(response);
@@ -85,31 +75,28 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       expect(files.every(isSdrSuccess), JSON.stringify(files.filter(isSdrFailure))).to.equal(true);
     });
     it('sees no local changes (all were committed from push), but profile updated in remote', () => {
-      const localResult = execCmd<StatusResult[]>('force:source:status --json --local', {
+      const localResult = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput?.result;
-      expect(localResult?.filter(filterIgnored)).to.deep.equal([]);
+      expect(localResult?.toDeploy.filter(filterIgnored)).to.deep.equal([]);
 
-      const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const remoteResult = execCmd<PreviewResult>('project retrieve preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput?.result;
-      expect(remoteResult?.some((item) => item.type === 'Profile')).to.equal(true);
+      expect(remoteResult?.toRetrieve.some((item) => item.type === 'Profile')).to.equal(true);
     });
 
-    it('sf sees no local changes (all were committed from push)', () => {
-      const response = execCmd<PreviewResult>('deploy metadata preview --json', {
+    it('sees no local changes (all were committed from push)', () => {
+      const response = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       expect(response?.toDeploy).to.be.an.instanceof(Array).with.lengthOf(0);
     });
-    it('sf sees no remote changes (all were committed from push) except Profile', () => {
-      const remoteResult = execCmd<StatusResult[]>('force:source:status --json --remote', {
+    it('sees no remote changes (all were committed from push) except Profile', () => {
+      const remoteResult = execCmd<PreviewResult>('project retrieve preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput?.result;
-      expect(remoteResult?.some((item) => item.type === 'Profile')).to.equal(true);
+      expect(remoteResult?.toRetrieve.some((item) => item.type === 'Profile')).to.equal(true);
     });
 
     it('can pull the remote profile', () => {
@@ -123,23 +110,31 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
     });
 
     it('sees no local or remote changes', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json', {
+      const deployResult = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput?.result;
-      expect(result?.filter((r) => r.type === 'Profile').filter(filterIgnored), JSON.stringify(result)).to.have.length(
-        0
-      );
+      expect(
+        deployResult?.toDeploy.filter((r) => r.type === 'Profile').filter(filterIgnored),
+        JSON.stringify(deployResult)
+      ).to.have.length(0);
+
+      const retrieveResult = execCmd<PreviewResult>('project retrieve preview --json', {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(
+        retrieveResult?.toRetrieve.filter((r) => r.type === 'Profile').filter(filterIgnored),
+        JSON.stringify(retrieveResult)
+      ).to.have.length(0);
     });
 
-    it('sf no local changes', () => {
-      const response = execCmd<PreviewResult>('deploy metadata preview --json', {
+    it('no local changes', () => {
+      const response = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       expect(response?.toDeploy).to.be.an.instanceof(Array).with.lengthOf(0);
     });
 
-    it('sf deploy no local changes is not an error', () => {
+    it('deploy no local changes is not an error', () => {
       const response = execCmd<DeployResultJson>('project deploy start --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
@@ -152,38 +147,11 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
         fs.promises.unlink(path.join(classDir, 'TestOrderController.cls')),
         fs.promises.unlink(path.join(classDir, 'TestOrderController.cls-meta.xml')),
       ]);
-      const result = execCmd<StatusResult[]>('force:source:status --json --local', {
-        ensureExitCode: 0,
-        cli: 'sf',
-      }).jsonOutput?.result;
-      expect(result?.filter(filterIgnored)).to.deep.equal([
-        {
-          type: 'ApexClass',
-          state: 'Local Deleted',
-          fullName: 'TestOrderController',
-          filePath: path.normalize('force-app/main/default/classes/TestOrderController.cls'),
-          ignored: false,
-          actualState: 'Deleted',
-          origin: 'Local',
-        },
-        {
-          type: 'ApexClass',
-          state: 'Local Deleted',
-          fullName: 'TestOrderController',
-          filePath: path.normalize('force-app/main/default/classes/TestOrderController.cls-meta.xml'),
-          ignored: false,
-          actualState: 'Deleted',
-          origin: 'Local',
-        },
-      ]);
-    });
-    it('sf sees a local delete in local status', () => {
-      const response = execCmd<PreviewResult>('deploy metadata preview --json', {
+      const response = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
       assert(response);
       expect(response.toDeploy).to.be.an.instanceof(Array).with.lengthOf(0);
-      expect(response.toDelete).to.be.an.instanceof(Array).with.lengthOf(1);
       expect(response.toDelete).deep.equals([
         {
           type: 'ApexClass',
@@ -197,16 +165,6 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       ]);
     });
     it('does not see any change in remote status', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json --remote', {
-        ensureExitCode: 0,
-        cli: 'sf',
-      }).jsonOutput?.result;
-      expect(
-        result?.filter((r) => r.fullName === 'TestOrderController'),
-        JSON.stringify(result)
-      ).to.have.length(0);
-    });
-    it('sf does not see any change in remote status', () => {
       const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
@@ -217,21 +175,14 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
     });
 
     it('pushes the local delete to the org', () => {
-      const result = execCmd<DeployResultJson>('deploy metadata --json', {
+      const result = execCmd<DeployResultJson>('project:deploy:start --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result.files;
       expect(result, JSON.stringify(result)).to.be.an.instanceof(Array).with.length(2);
     });
-    it('sees no local changes', () => {
-      const result = execCmd<StatusResult[]>('force:source:status --json --local', {
-        ensureExitCode: 0,
-        cli: 'sf',
-      }).jsonOutput?.result;
-      expect(result?.filter(filterIgnored), JSON.stringify(result)).to.be.an.instanceof(Array).with.length(0);
-    });
 
-    it('sf no local changes', () => {
-      const response = execCmd<PreviewResult>('deploy metadata preview --json', {
+    it('no local changes', () => {
+      const response = execCmd<PreviewResult>('project deploy preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
 
@@ -243,9 +194,8 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
     it('should throw an err when attempting to pull from a non scratch-org', () => {
       const hubUsername = session.hubOrg.username;
       assert(hubUsername, 'hubUsername should be defined');
-      const failure = execCmd(`force:source:status -u ${hubUsername} --remote --json`, {
+      const failure = execCmd(`project retrieve preview -o ${hubUsername} --json`, {
         ensureExitCode: 1,
-        cli: 'sf',
       }).jsonOutput as unknown as { name: string };
       // command5 is removing `Error` from the end of the error names.
       expect(failure.name).to.include('NonSourceTrackedOrg');
@@ -282,14 +232,15 @@ describe('end-to-end-test for tracking with an org (single packageDir)', () => {
       });
       describe('classes that failed to deploy are still in local status', () => {
         it('sees no local changes', () => {
-          const result = execCmd<StatusResult[]>('force:source:status --json --local', {
+          const result = execCmd<PreviewResult>('project deploy preview --json', {
             ensureExitCode: 0,
-            cli: 'sf',
           }).jsonOutput?.result;
-          expect(result?.filter(filterIgnored), JSON.stringify(result)).to.be.an.instanceof(Array).with.length(2);
+          expect(result?.toDeploy.filter(filterIgnored), JSON.stringify(result))
+            .to.be.an.instanceof(Array)
+            .with.length(1);
         });
-        it('sf sees no local changes', () => {
-          const response = execCmd<PreviewResult>('deploy metadata preview --json', {
+        it('sees no local changes', () => {
+          const response = execCmd<PreviewResult>('project deploy preview --json', {
             ensureExitCode: 0,
           }).jsonOutput?.result;
           assert(response);
