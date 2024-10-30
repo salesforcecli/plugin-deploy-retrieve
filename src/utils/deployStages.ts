@@ -81,6 +81,7 @@ export class DeployStages {
           },
           bold: true,
           type: 'dynamic-key-value',
+          onlyShowAtEndInCI: true,
         },
         {
           label: 'Deploy ID',
