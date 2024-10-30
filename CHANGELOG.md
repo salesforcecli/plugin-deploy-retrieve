@@ -1,3 +1,9 @@
+## [3.15.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.3...3.15.4) (2024-10-30)
+
+### Bug Fixes
+
+- only show status at end in CI ([#1196](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1196)) ([1d22fc3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1d22fc380908dec72d1d8f5d836b2c6d5907ccb7))
+
 ## [3.15.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.2...3.15.3) (2024-10-24)
 
 ### Bug Fixes
