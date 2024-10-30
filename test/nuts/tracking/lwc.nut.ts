@@ -10,15 +10,14 @@ import * as fs from 'node:fs';
 import { assert, expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
-import { PreviewResult } from '../../../src/utils/previewOutput.js';
+import { PreviewFile, PreviewResult } from '../../../src/utils/previewOutput.js';
 import { DeployResultJson } from '../../../src/utils/types.js';
-import type { StatusResult } from './types.js';
 
 let session: TestSession;
 let cssPathAbsolute: string;
 let cssPathRelative: string;
 
-const filterIgnored = (r: StatusResult): boolean => r.ignored !== true;
+const filterIgnored = (r: PreviewFile): boolean => r.ignored !== true;
 
 describe('lwc', () => {
   before(async () => {
@@ -47,24 +46,16 @@ describe('lwc', () => {
   });
 
   it('pushes the repo to get source tracking started', () => {
-    const resp = execCmd<DeployResultJson>('deploy metadata --json');
-    expect(resp.jsonOutput?.status, JSON.stringify(resp)).equals(0);
+    execCmd<DeployResultJson>('project deploy start --json', { ensureExitCode: 0 });
   });
 
-  it('sfdx sees lwc css changes in local status', async () => {
+  it('sees lwc css changes in local status', async () => {
     await fs.promises.writeFile(
       cssPathAbsolute,
       (await fs.promises.readFile(cssPathAbsolute, 'utf-8')).replace('absolute', 'relative')
     );
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
-      ensureExitCode: 0,
-      cli: 'sf',
-    }).jsonOutput?.result;
-    expect(result?.find((r) => r.filePath === cssPathRelative)).to.have.property('actualState', 'Changed');
-  });
 
-  it('sf sees lwc css changes in local status', () => {
-    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+    const result = execCmd<PreviewResult>('project deploy preview --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     assert(result);
@@ -78,25 +69,15 @@ describe('lwc', () => {
   });
 
   it('pushes lwc css change', () => {
-    const result = execCmd<DeployResultJson>('deploy metadata --json', {
+    const result = execCmd<DeployResultJson>('project deploy start --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result.files;
     // we get a result for each bundle member, even though only one changed
     expect(result?.filter((r) => r.fullName === 'heroDetails')).to.have.length(4);
   });
 
-  it('sfdx sees no local changes', () => {
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
-      ensureExitCode: 0,
-      cli: 'sf',
-    })
-      .jsonOutput?.result.filter((r) => r.origin === 'Local')
-      .filter(filterIgnored);
-    expect(result).to.have.length(0);
-  });
-
-  it('sf sees no local changes', () => {
-    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+  it('sees no local changes', () => {
+    const result = execCmd<PreviewResult>('project deploy preview --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     assert(result);
@@ -106,26 +87,34 @@ describe('lwc', () => {
 
   it("deleting an lwc sub-component should show the sub-component as 'Deleted'", async () => {
     await fs.promises.rm(cssPathAbsolute);
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<PreviewResult>('project deploy preview --json', {
       ensureExitCode: 0,
-      cli: 'sf',
     })
-      .jsonOutput?.result.filter(filterIgnored)
-      .find((r) => r.filePath === cssPathRelative);
+      .jsonOutput?.result.toDeploy.filter(filterIgnored)
+      .find((r) => r.path?.endsWith('.js-meta.xml'));
+    assert(result);
+    // remove
+    delete result.projectRelativePath;
     expect(result).to.deep.equal({
       fullName: 'heroDetails',
       type: 'LightningComponentBundle',
-      state: 'Local Deleted',
-      ignored: false,
-      filePath: cssPathRelative,
-      origin: 'Local',
-      actualState: 'Deleted',
+      operation: 'deploy',
       conflict: false,
+      ignored: false,
+      path: path.join(
+        session.project.dir,
+        'force-app',
+        'main',
+        'default',
+        'lwc',
+        'heroDetails',
+        'heroDetails.js-meta.xml'
+      ),
     });
   });
 
   it('pushes lwc subcomponent delete', () => {
-    const result = execCmd<DeployResultJson>('deploy metadata --json', {
+    const result = execCmd<DeployResultJson>('project deploy start --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result.files;
     const bundleMembers = result?.filter((r) => r.fullName === 'heroDetails');
@@ -138,17 +127,7 @@ describe('lwc', () => {
   });
 
   it('sees no local changes', () => {
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
-      ensureExitCode: 0,
-      cli: 'sf',
-    })
-      .jsonOutput?.result.filter((r) => r.origin === 'Local')
-      .filter(filterIgnored);
-    expect(result).to.have.length(0);
-  });
-
-  it('sf sees no local changes', () => {
-    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+    const result = execCmd<PreviewResult>('project deploy preview --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     assert(result);
@@ -169,18 +148,45 @@ describe('lwc', () => {
       dependentLWCPath,
       (await fs.promises.readFile(dependentLWCPath, 'utf-8')).replace(/<c-hero.*hero-details>/s, '')
     );
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
+    const result = execCmd<PreviewResult>('project deploy preview --json', {
       ensureExitCode: 0,
-      cli: 'sf',
-    }).jsonOutput?.result.filter((r) => r.origin === 'Local');
+    }).jsonOutput?.result;
+
     assert(result);
-    expect(result.filter(filterIgnored)).to.have.length(4);
-    expect(result.filter(filterIgnored).filter((r) => r.actualState === 'Deleted')).to.have.length(3);
-    expect(result.filter(filterIgnored).filter((r) => r.actualState === 'Changed')).to.have.length(1);
+    expect(result.toDeploy).to.deep.equal([
+      {
+        type: 'LightningComponentBundle',
+        fullName: 'hero',
+        conflict: false,
+        ignored: false,
+        path: path.join(session.project.dir, 'force-app', 'main', 'default', 'lwc', 'hero', 'hero.js-meta.xml'),
+        projectRelativePath: path.join('force-app', 'main', 'default', 'lwc', 'hero', 'hero.js-meta.xml'),
+        operation: 'deploy',
+      },
+    ]);
+    expect(result.toDelete).to.deep.equal([
+      {
+        type: 'LightningComponentBundle',
+        fullName: 'heroDetails',
+        conflict: false,
+        ignored: false,
+        path: path.join(
+          session.project.dir,
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'heroDetails',
+          'heroDetails.js-meta.xml'
+        ),
+        projectRelativePath: path.join('force-app', 'main', 'default', 'lwc', 'heroDetails', 'heroDetails.js-meta.xml'),
+        operation: 'deletePost',
+      },
+    ]);
   });
 
   it('push deletes the LWC remotely', () => {
-    const result = execCmd<DeployResultJson>('deploy metadata --json', {
+    const result = execCmd<DeployResultJson>('project deploy start --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result.files;
     // there'll also be changes for the changed Hero component html, but we've already tested changing a bundle member
@@ -193,22 +199,11 @@ describe('lwc', () => {
   });
 
   it('sees no local changes', () => {
-    const result = execCmd<StatusResult[]>('force:source:status --json', {
-      ensureExitCode: 0,
-      cli: 'sf',
-    })
-      .jsonOutput?.result.filter((r) => r.origin === 'Local')
-      .filter(filterIgnored);
-    expect(result).to.have.length(0);
-  });
-  it('sf sees no local changes', () => {
-    const result = execCmd<PreviewResult>('deploy metadata preview --json', {
+    const result = execCmd<PreviewResult>('project deploy preview --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     assert(result);
     expect(result.toDeploy).to.have.length(0);
     expect(result.toRetrieve).to.have.length(0);
   });
-
-  it('detects remote subcomponent conflicts');
 });

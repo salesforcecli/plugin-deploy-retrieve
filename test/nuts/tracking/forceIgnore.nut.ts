@@ -14,7 +14,6 @@ import { AuthInfo, Connection } from '@salesforce/core';
 import { ComponentStatus } from '@salesforce/source-deploy-retrieve';
 import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
 import { PreviewResult } from '../../../src/utils/previewOutput.js';
-import type { StatusResult } from './types.js';
 
 let session: TestSession;
 // leave this in posix path mode since it's used in forceignore
@@ -70,23 +69,6 @@ describe('forceignore changes', () => {
     });
 
     it('shows the file in status as ignored', () => {
-      const output = execCmd<StatusResult>('force:source:status --json', {
-        ensureExitCode: 0,
-        cli: 'sf',
-      }).jsonOutput?.result;
-      expect(output, JSON.stringify(output)).to.deep.include({
-        state: 'Local Add',
-        fullName: 'IgnoreTest',
-        type: 'ApexClass',
-        origin: 'Local',
-        filePath: path.join(classdir, 'IgnoreTest.cls'),
-        ignored: true,
-        conflict: false,
-        actualState: 'Add',
-      });
-    });
-
-    it('sf shows the file in status as ignored', () => {
       const output = execCmd<PreviewResult>('deploy metadata preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
@@ -154,13 +136,12 @@ describe('forceignore changes', () => {
       );
     });
 
-    it('source:status recognizes change', () => {
+    it('source:status recognizes ignored class', () => {
       // gets file into source tracking
-      const statusOutput = execCmd<StatusResult[]>('force:source:status --json --remote', {
+      const statusOutput = execCmd<PreviewResult>('project retrieve preview --json', {
         ensureExitCode: 0,
-        cli: 'sf',
       }).jsonOutput?.result;
-      expect(statusOutput?.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
+      expect(statusOutput?.ignored.some((result) => result.fullName === 'CreatedClass')).to.equal(true);
     });
 
     it('metadata preview recognizes change and marks it ignored', () => {
@@ -174,7 +155,7 @@ describe('forceignore changes', () => {
       ).to.equal(true);
     });
 
-    it('sf will not retrieve a remote file added to the ignore AFTER it is being tracked', () => {
+    it('will not retrieve a remote file added to the ignore AFTER it is being tracked', () => {
       // pull doesn't retrieve that change
       const pullOutput = execCmd<RetrieveResultJson>('project:retrieve:start --json', {
         ensureExitCode: 0,

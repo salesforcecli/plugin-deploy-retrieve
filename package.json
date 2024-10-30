@@ -128,6 +128,7 @@
     "test:nuts:specialTypes:translations": "mocha \"test/nuts/specialTypes/translation.nut.ts\" --slow 4500 --timeout 1200000 --retries 0 --jobs 20",
     "test:nuts:static": "nyc mocha \"test/commands/**/*.nut.ts\" \"test/nuts/*.nut.ts\"  --slow 4500 --timeout 1200000 --parallel --retries 0 --jobs 20",
     "test:nuts:tracking": "nyc mocha \"test/nuts/tracking/*.nut.ts\"  --slow 4500 --timeout 1200000 --parallel --retries 0 --jobs 20",
+    "test:nuts:tracking:forceignore": "nyc mocha \"test/nuts/tracking/forceignore.nut.ts\"  --slow 4500 --timeout 1200000 --parallel --retries 0 --jobs 20",
     "test:only": "wireit",
     "version": "oclif readme"
   },
