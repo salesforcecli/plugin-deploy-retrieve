@@ -193,9 +193,9 @@ describe('forceignore changes', () => {
       }).shellOutput.stdout;
 
       expect(output).to.include('Will Deploy [1] files.');
-      expect(output).to.include('ApexClass   UnIgnoreTest');
+      expect(output).to.match(/ApexClass\s+UnIgnoreTest/);
       expect(output).to.not.include("These files won't deploy because they're ignored by your .forceignore file.");
-      expect(output).to.not.include('ApexClass   IgnoreTest');
+      expect(output).to.not.match(/ApexClass\s+IgnoreTest/);
     });
   });
 });
