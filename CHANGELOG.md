@@ -1,3 +1,9 @@
+## [3.15.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.7...3.15.8) (2024-11-05)
+
+### Bug Fixes
+
+- bulk SDR ([#1210](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1210)) ([d793ce1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d793ce198950f54e416d013551006123940d6ece))
+
 ## [3.15.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.6...3.15.7) (2024-10-31)
 
 ### Bug Fixes
