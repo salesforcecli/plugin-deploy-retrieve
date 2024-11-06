@@ -1,3 +1,9 @@
+## [3.15.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.8...3.15.9) (2024-11-06)
+
+### Bug Fixes
+
+- you can't specify --manifest more than once ([#1194](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1194)) ([1471549](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/14715492ead3e342965ea743443bbb98f10cae59))
+
 ## [3.15.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.7...3.15.8) (2024-11-05)
 
 ### Bug Fixes
