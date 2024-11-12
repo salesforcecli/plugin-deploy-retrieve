@@ -129,10 +129,19 @@ export class DeployStages {
           type: 'dynamic-key-value',
         },
         {
-          label: 'Tests',
+          label: 'Completed',
           get: (data): string | undefined =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
               ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
+              : undefined,
+          stage: 'Running Tests',
+          type: 'dynamic-key-value',
+        },
+        {
+          label: 'Failures',
+          get: (data): string | undefined =>
+            data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
+              ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal)
               : undefined,
           stage: 'Running Tests',
           type: 'dynamic-key-value',
