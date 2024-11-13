@@ -310,13 +310,13 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     ux.log();
     ux.table({
       data: sortBy(failures, ['problemType', 'fullName', 'lineNumber', 'columnNumber', 'error']).map((f) => ({
-        problemType: f.problemType,
+        type: f.type,
         fullName: f.fullName,
         error: f.error,
         loc: f.lineNumber ? `${f.lineNumber}:${f.columnNumber ?? ''}` : '',
       })),
       columns: [
-        { key: 'problemType', name: 'Type' },
+        { key: 'type', name: 'Type' },
         { key: 'fullName', name: 'Name' },
         { key: 'error', name: 'Problem' },
         { key: 'loc', name: 'Line:Column' },
