@@ -1,3 +1,9 @@
+## [3.15.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.11...3.15.12) (2024-11-14)
+
+### Bug Fixes
+
+- repurposes 'error' column, to show the metadata type ([#1217](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1217)) ([325f1ea](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/325f1ea2b6bdb6fafe89d99d930a76399ba4e55f))
+
 ## [3.15.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.10...3.15.11) (2024-11-09)
 
 ### Bug Fixes
