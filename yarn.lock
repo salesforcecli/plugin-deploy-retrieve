@@ -1330,7 +1330,7 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsforce/jsforce-node@^3.4.1", "@jsforce/jsforce-node@^3.6.1", "@jsforce/jsforce-node@^3.6.2":
+"@jsforce/jsforce-node@^3.6.1", "@jsforce/jsforce-node@^3.6.2":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.6.2.tgz#5d8509aaeb161f1d6658e4ce737948a04d3ce3a6"
   integrity sha512-bBWRCZl4kVRnYLHRSzl4piqowM3GeTW2yBoKo+WnMGAw36uGjyMq/9z9yAaA+0AmpHFaI4po7/0PrAMdEU/AGA==
@@ -1490,13 +1490,13 @@
     "@pnpm/network.ca-file" "^1.0.1"
     config-chain "^1.1.11"
 
-"@salesforce/apex-node@^8.1.9":
-  version "8.1.9"
-  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-8.1.9.tgz#7c26ec2262825db864e355376e878494fd2caa0e"
-  integrity sha512-9Qv48QygPI6w1n5cD9n0jGYNc4J2cSD0eVW0pSONyxc/2VfU7nRamjg1EQ8oSuA5rfkXcqZcmkp/B3slU90YfQ==
+"@salesforce/apex-node@^8.1.17":
+  version "8.1.17"
+  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-8.1.17.tgz#d66e71cd9a1b8a22e9da8d012f79146e36862ddf"
+  integrity sha512-HtPVFrTG5XTtAt46k1yMkcsJLXuFrAex5Iz2nH1s0DLjXbNMahdxbvY139P3WXUeLlWRpeDlbjqYKyUXQiNE9w==
   dependencies:
-    "@jsforce/jsforce-node" "^3.4.1"
-    "@salesforce/core" "^8.5.7"
+    "@jsforce/jsforce-node" "^3.6.2"
+    "@salesforce/core" "^8.6.4"
     "@salesforce/kit" "^3.2.3"
     "@types/istanbul-reports" "^3.0.4"
     bfj "8.0.0"

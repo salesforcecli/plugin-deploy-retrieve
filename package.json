@@ -7,7 +7,7 @@
   "dependencies": {
     "@oclif/core": "^4.0.28",
     "@oclif/multi-stage-output": "^0.7.12",
-    "@salesforce/apex-node": "^8.1.9",
+    "@salesforce/apex-node": "^8.1.17",
     "@salesforce/core": "^8.6.4",
     "@salesforce/kit": "^3.2.3",
     "@salesforce/plugin-info": "^3.4.18",
