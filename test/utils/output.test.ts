@@ -38,14 +38,14 @@ describe('deployResultFormatter', () => {
       expect(tableStub.firstCall.args[0]).to.deep.equal({
         data: [
           {
-            problemType: 'Error',
+            type: 'ApexClass',
             fullName: 'ProductController',
             error: 'This component has some problems',
             loc: '27:18',
           },
         ],
         columns: [
-          { key: 'problemType', name: 'Type' },
+          { key: 'type', name: 'Type' },
           { key: 'fullName', name: 'Name' },
           { key: 'error', name: 'Problem' },
           { key: 'loc', name: 'Line:Column' },
@@ -106,21 +106,21 @@ describe('deployResultFormatter', () => {
       expect(tableStub.firstCall.args[0]).to.deep.equal({
         data: [
           {
-            problemType: 'Error',
+            type: '',
             fullName: 'Create_property',
             error:
               "An object 'Create_property' of type Flow was named in package.xml, but was not found in zipped directory",
             loc: '',
           },
           {
-            problemType: 'Error',
+            type: 'ApexClass',
             fullName: 'ProductController',
             error: 'This component has some problems',
             loc: '27:18',
           },
         ],
         columns: [
-          { key: 'problemType', name: 'Type' },
+          { key: 'type', name: 'Type' },
           { key: 'fullName', name: 'Name' },
           { key: 'error', name: 'Problem' },
           { key: 'loc', name: 'Line:Column' },
