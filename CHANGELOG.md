@@ -1,3 +1,15 @@
+## [3.15.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.14...3.15.15) (2024-11-23)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.4.18 to 3.4.21 ([6a78324](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6a78324b08a8d62b926d5d70a4ff4ce810e85a35))
+
+## [3.15.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.13...3.15.14) (2024-11-23)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 8.1.9 to 8.1.18 ([2117465](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2117465f1846ef09e1bcc599fe9edc5e3a516f3c))
+
 ## [3.15.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.12...3.15.13) (2024-11-18)
 
 ### Bug Fixes
