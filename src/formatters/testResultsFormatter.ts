@@ -18,7 +18,7 @@ import {
   Successes,
 } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
-import { TestLevel, Verbosity } from '../utils/types.js';
+import { isTruthy, TestLevel, Verbosity } from '../utils/types.js';
 import { tableHeader, error, success, check } from '../utils/output.js';
 import { coverageOutput } from '../utils/coverage.js';
 
@@ -45,7 +45,9 @@ export class TestResultsFormatter {
       return;
     }
 
-    displayVerboseTestFailures(this.result.response);
+    if (!isTruthy(process.env.CI)) {
+      displayVerboseTestFailures(this.result.response);
+    }
 
     if (this.verbosity === 'verbose') {
       displayVerboseTestSuccesses(this.result.response.details.runTestResult?.successes);

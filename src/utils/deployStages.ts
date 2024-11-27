@@ -4,12 +4,22 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import os from 'node:os';
 import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { Lifecycle, Messages } from '@salesforce/core';
-import { MetadataApiDeploy, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import {
+  Failures,
+  MetadataApiDeploy,
+  MetadataApiDeployStatus,
+  RequestStatus,
+  Successes,
+} from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
 import terminalLink from 'terminal-link';
+import { ensureArray } from '@salesforce/kit';
+import ansis from 'ansis';
 import { getZipFileSize } from './output.js';
+import { isTruthy } from './types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
@@ -129,7 +139,7 @@ export class DeployStages {
           type: 'dynamic-key-value',
         },
         {
-          label: 'Completed',
+          label: 'Successful',
           get: (data): string | undefined =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
               ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
@@ -138,10 +148,11 @@ export class DeployStages {
           type: 'dynamic-key-value',
         },
         {
-          label: 'Failures',
+          label: 'Failed',
           get: (data): string | undefined =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
-              ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal)
+              ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal) +
+                (isTruthy(process.env.CI) ? os.EOL + formatTestFailures(data) : '')
               : undefined,
           stage: 'Running Tests',
           type: 'dynamic-key-value',
@@ -241,3 +252,26 @@ export class DeployStages {
     this.mso.skipTo('Done', data);
   }
 }
+
+function formatTestFailures(data: Data): string {
+  if (data.mdapiDeploy.details.runTestResult?.failures === undefined) return '';
+  const failures = ensureArray(data.mdapiDeploy.details.runTestResult?.failures).sort(testResultSort);
+
+  let output = '';
+
+  for (const test of failures) {
+    const testName = ansis.underline(`${test.name}.${test.methodName}`);
+    output += `   • ${testName}${os.EOL}`;
+    output += `     message: ${test.message}${os.EOL}`;
+    if (test.stackTrace) {
+      const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
+      output += `     stacktrace:${os.EOL}       ${stackTrace}${os.EOL}${os.EOL}`;
+    }
+  }
+
+  // remove last EOL char
+  return output.slice(0, -1);
+}
+
+const testResultSort = <T extends Successes | Failures>(a: T, b: T): number =>
+  a.methodName === b.methodName ? a.name.localeCompare(b.name) : a.methodName.localeCompare(b.methodName);
