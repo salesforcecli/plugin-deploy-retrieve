@@ -211,6 +211,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     new DeployStages({
       title: 'Validating Deployment',
       jsonEnabled: this.jsonEnabled(),
+      verbose: flags.verbose,
     }).start(
       {
         deploy,

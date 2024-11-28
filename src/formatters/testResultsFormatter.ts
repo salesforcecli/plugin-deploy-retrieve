@@ -18,9 +18,10 @@ import {
   Successes,
 } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
-import { isTruthy, TestLevel, Verbosity } from '../utils/types.js';
+import { TestLevel, Verbosity } from '../utils/types.js';
 import { tableHeader, error, success, check } from '../utils/output.js';
 import { coverageOutput } from '../utils/coverage.js';
+import { isCI } from '../utils/deployStages.js';
 
 const ux = new Ux();
 
@@ -45,12 +46,14 @@ export class TestResultsFormatter {
       return;
     }
 
-    if (!isTruthy(process.env.CI)) {
+    if (!isCI()) {
       displayVerboseTestFailures(this.result.response);
     }
 
     if (this.verbosity === 'verbose') {
-      displayVerboseTestSuccesses(this.result.response.details.runTestResult?.successes);
+      if (!isCI()) {
+        displayVerboseTestSuccesses(this.result.response.details.runTestResult?.successes);
+      }
       displayVerboseTestCoverage(this.result.response.details.runTestResult?.codeCoverage);
     }
 
@@ -124,7 +127,7 @@ const displayVerboseTestCoverage = (coverage?: CodeCoverage | CodeCoverage[]): v
   }
 };
 
-const testResultSort = <T extends Successes | Failures>(a: T, b: T): number =>
+export const testResultSort = <T extends Successes | Failures>(a: T, b: T): number =>
   a.methodName === b.methodName ? a.name.localeCompare(b.name) : a.methodName.localeCompare(b.methodName);
 
 const coverageSort = (a: CodeCoverage, b: CodeCoverage): number =>

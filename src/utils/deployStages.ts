@@ -7,18 +7,13 @@
 import os from 'node:os';
 import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { Lifecycle, Messages } from '@salesforce/core';
-import {
-  Failures,
-  MetadataApiDeploy,
-  MetadataApiDeployStatus,
-  RequestStatus,
-  Successes,
-} from '@salesforce/source-deploy-retrieve';
+import { MetadataApiDeploy, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
 import terminalLink from 'terminal-link';
 import { ensureArray } from '@salesforce/kit';
 import ansis from 'ansis';
-import { getZipFileSize } from './output.js';
+import { testResultSort } from '../formatters/testResultsFormatter.js';
+import { check, getZipFileSize } from './output.js';
 import { isTruthy } from './types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -27,6 +22,7 @@ const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retr
 type Options = {
   title: string;
   jsonEnabled: boolean;
+  verbose?: boolean;
 };
 
 type Data = {
@@ -58,7 +54,7 @@ function formatProgress(current: number, total: number): string {
 export class DeployStages {
   private mso: MultiStageOutput<Data>;
 
-  public constructor({ title, jsonEnabled }: Options) {
+  public constructor({ title, jsonEnabled, verbose }: Options) {
     this.mso = new MultiStageOutput<Data>({
       title,
       stages: [
@@ -142,7 +138,8 @@ export class DeployStages {
           label: 'Successful',
           get: (data): string | undefined =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
-              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
+              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal) +
+                (verbose && isCI() ? os.EOL + formatTestSuccesses(data) : '')
               : undefined,
           stage: 'Running Tests',
           type: 'dynamic-key-value',
@@ -152,7 +149,7 @@ export class DeployStages {
           get: (data): string | undefined =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
               ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal) +
-                (isTruthy(process.env.CI) ? os.EOL + formatTestFailures(data) : '')
+                (isCI() ? os.EOL + formatTestFailures(data) : '')
               : undefined,
           stage: 'Running Tests',
           type: 'dynamic-key-value',
@@ -253,8 +250,22 @@ export class DeployStages {
   }
 }
 
+function formatTestSuccesses(data: Data): string {
+  const successes = ensureArray(data.mdapiDeploy.details.runTestResult?.successes).sort(testResultSort);
+
+  let output = '';
+
+  if (successes.length > 0) {
+    for (const test of successes) {
+      const testName = ansis.underline(`${test.name}.${test.methodName}`);
+      output += `   ${check} ${testName}${os.EOL}`;
+    }
+  }
+
+  return output;
+}
+
 function formatTestFailures(data: Data): string {
-  if (data.mdapiDeploy.details.runTestResult?.failures === undefined) return '';
   const failures = ensureArray(data.mdapiDeploy.details.runTestResult?.failures).sort(testResultSort);
 
   let output = '';
@@ -273,5 +284,14 @@ function formatTestFailures(data: Data): string {
   return output.slice(0, -1);
 }
 
-const testResultSort = <T extends Successes | Failures>(a: T, b: T): number =>
-  a.methodName === b.methodName ? a.name.localeCompare(b.name) : a.methodName.localeCompare(b.methodName);
+export function isCI(): boolean {
+  if (
+    isTruthy(process.env.CI) &&
+    ('CI' in process.env ||
+      'CONTINUOUS_INTEGRATION' in process.env ||
+      Object.keys(process.env).some((key) => key.startsWith('CI_')))
+  )
+    return true;
+
+  return false;
+}
