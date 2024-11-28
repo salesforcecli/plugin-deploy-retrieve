@@ -4,12 +4,17 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import os from 'node:os';
 import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { Lifecycle, Messages } from '@salesforce/core';
 import { MetadataApiDeploy, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
 import terminalLink from 'terminal-link';
-import { getZipFileSize } from './output.js';
+import { ensureArray } from '@salesforce/kit';
+import ansis from 'ansis';
+import { testResultSort } from '../formatters/testResultsFormatter.js';
+import { check, getZipFileSize } from './output.js';
+import { isTruthy } from './types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
@@ -17,6 +22,7 @@ const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retr
 type Options = {
   title: string;
   jsonEnabled: boolean;
+  verbose?: boolean;
 };
 
 type Data = {
@@ -48,7 +54,7 @@ function formatProgress(current: number, total: number): string {
 export class DeployStages {
   private mso: MultiStageOutput<Data>;
 
-  public constructor({ title, jsonEnabled }: Options) {
+  public constructor({ title, jsonEnabled, verbose }: Options) {
     this.mso = new MultiStageOutput<Data>({
       title,
       stages: [
@@ -129,10 +135,21 @@ export class DeployStages {
           type: 'dynamic-key-value',
         },
         {
-          label: 'Tests',
+          label: 'Successful',
           get: (data): string | undefined =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
-              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
+              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal) +
+                (verbose && isCI() ? os.EOL + formatTestSuccesses(data) : '')
+              : undefined,
+          stage: 'Running Tests',
+          type: 'dynamic-key-value',
+        },
+        {
+          label: 'Failed',
+          get: (data): string | undefined =>
+            data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
+              ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal) +
+                (isCI() ? os.EOL + formatTestFailures(data) : '')
               : undefined,
           stage: 'Running Tests',
           type: 'dynamic-key-value',
@@ -231,4 +248,50 @@ export class DeployStages {
   public done(data?: Partial<Data>): void {
     this.mso.skipTo('Done', data);
   }
+}
+
+function formatTestSuccesses(data: Data): string {
+  const successes = ensureArray(data.mdapiDeploy.details.runTestResult?.successes).sort(testResultSort);
+
+  let output = '';
+
+  if (successes.length > 0) {
+    for (const test of successes) {
+      const testName = ansis.underline(`${test.name}.${test.methodName}`);
+      output += `   ${check} ${testName}${os.EOL}`;
+    }
+  }
+
+  return output;
+}
+
+function formatTestFailures(data: Data): string {
+  const failures = ensureArray(data.mdapiDeploy.details.runTestResult?.failures).sort(testResultSort);
+
+  let output = '';
+
+  for (const test of failures) {
+    const testName = ansis.underline(`${test.name}.${test.methodName}`);
+    output += `   • ${testName}${os.EOL}`;
+    output += `     message: ${test.message}${os.EOL}`;
+    if (test.stackTrace) {
+      const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
+      output += `     stacktrace:${os.EOL}       ${stackTrace}${os.EOL}${os.EOL}`;
+    }
+  }
+
+  // remove last EOL char
+  return output.slice(0, -1);
+}
+
+export function isCI(): boolean {
+  if (
+    isTruthy(process.env.CI) &&
+    ('CI' in process.env ||
+      'CONTINUOUS_INTEGRATION' in process.env ||
+      Object.keys(process.env).some((key) => key.startsWith('CI_')))
+  )
+    return true;
+
+  return false;
 }
