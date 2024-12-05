@@ -83,6 +83,20 @@ describe('retrieve metadata NUTs', () => {
       await testkit.expect.filesToBeRetrieved(['myOutput/classes/*', 'myOutput/aura/**/*']);
     });
 
+    it('should warn when nothing retrieved into output-dir and not throw ENOENT', async () => {
+      const result = await testkit.retrieve({ args: '--metadata ApexClass:NonExistant --output-dir myOutput' });
+      expect(result?.status).to.equal(0);
+      const retrieveResult = result?.result as unknown as RetrieveResultJson;
+      expect(retrieveResult.success).to.equal(true);
+      expect(retrieveResult.fileProperties).to.be.an('array').with.lengthOf(1);
+      expect(retrieveResult.messages).to.deep.equal([
+        {
+          fileName: 'unpackaged/package.xml',
+          problem: "Entity of type 'ApexClass' named 'NonExistant' cannot be found",
+        },
+      ]);
+    });
+
     it('should retrieve ApexClasses from wildcard match', async () => {
       const response = await testkit.retrieve({ args: '--metadata "ApexClass:Test*"' });
       expect(response?.status).to.equal(0);
