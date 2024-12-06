@@ -1,3 +1,9 @@
+## [3.15.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.17...3.15.18) (2024-12-06)
+
+### Bug Fixes
+
+- no ENOENT when nothing retrieved to specific directory ([62e9cfa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/62e9cfa21e5dada4dc2541fd0245761fa312d701))
+
 ## [3.15.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.16...3.15.17) (2024-11-30)
 
 ### Bug Fixes
