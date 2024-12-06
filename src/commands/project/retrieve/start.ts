@@ -354,6 +354,11 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       );
       return directories;
     }
+    // If we retrieved only a package.xml, just return.
+    if (this.retrieveResult.getFileResponses().length < 2) {
+      return;
+    }
+
     // getFileResponses fails once the files have been moved, calculate where they're moved to, and then move them
     this.retrieveResult.getFileResponses().forEach((fileResponse) => {
       fileResponse.filePath = fileResponse.filePath?.replace(join('main', 'default'), '');
