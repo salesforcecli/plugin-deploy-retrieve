@@ -1396,10 +1396,10 @@
     wordwrap "^1.0.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/multi-stage-output@^0.7.12":
-  version "0.7.12"
-  resolved "https://registry.yarnpkg.com/@oclif/multi-stage-output/-/multi-stage-output-0.7.12.tgz#04df5efb6dce527920cf475c9ad9f20236803ccd"
-  integrity sha512-MmCgqPb7jC7QUOiX9jMik2njplCO+tRybGxiB55OXDmZ7osifM3KuQb/ykgP4XYn559k3DXeNLFS0NpokuH+mw==
+"@oclif/multi-stage-output@^0.7.15":
+  version "0.7.15"
+  resolved "https://registry.yarnpkg.com/@oclif/multi-stage-output/-/multi-stage-output-0.7.15.tgz#fe568e4db01d8d406bb735a120f1a6b4bb31213e"
+  integrity sha512-6qDhWbbUbdSFTEtwzWvVcEKvWY5E+ioECqS0UPOmwt2Nx1TdW1HZkHAmJ6P+4FheJhAJseFaD/hV6gdaYVwsaA==
   dependencies:
     "@oclif/core" "^4"
     "@types/react" "^18.3.12"
