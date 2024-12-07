@@ -1,3 +1,9 @@
+## [3.15.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.19...3.15.20) (2024-12-07)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 4.0.33 to 4.0.34 ([008a906](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/008a9069488c33b606fde1b778be63339bf271dc))
+
 ## [3.15.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.18...3.15.19) (2024-12-07)
 
 ### Bug Fixes
