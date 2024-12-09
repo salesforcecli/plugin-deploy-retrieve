@@ -7,7 +7,12 @@
 import os from 'node:os';
 import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { Lifecycle, Messages } from '@salesforce/core';
-import { MetadataApiDeploy, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import {
+  Failures,
+  MetadataApiDeploy,
+  MetadataApiDeployStatus,
+  RequestStatus,
+} from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
 import terminalLink from 'terminal-link';
 import { ensureArray } from '@salesforce/kit';
@@ -53,8 +58,10 @@ function formatProgress(current: number, total: number): string {
 
 export class DeployStages {
   private mso: MultiStageOutput<Data>;
+  private previousFailures: Set<string>;
 
   public constructor({ title, jsonEnabled, verbose }: Options) {
+    this.previousFailures = new Set();
     this.mso = new MultiStageOutput<Data>({
       title,
       stages: [
@@ -146,11 +153,30 @@ export class DeployStages {
         },
         {
           label: 'Failed',
-          get: (data): string | undefined =>
-            data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
-              ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal) +
-                (isCI() ? os.EOL + formatTestFailures(data) : '')
-              : undefined,
+          get: (data): string | undefined => {
+            let output =
+              data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
+                ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal) +
+                  (isCI()
+                    ? os.EOL + formatTestFailures(ensureArray(data.mdapiDeploy.details.runTestResult?.failures))
+                    : '')
+                : undefined;
+
+            console.log(
+              // @ts-ignore
+              `TO RENDER 2: ${data?.mdapiDeploy.details.runTestResult.failures.map((f) => `${f.name}.${f.methodName}`)}`
+            );
+            console.log(data?.mdapiDeploy.numberTestsTotal);
+            console.log(data?.mdapiDeploy.numberTestErrors);
+
+            if (Array.isArray(data?.mdapiDeploy.details.runTestResult?.failures)) {
+              data?.mdapiDeploy.details.runTestResult?.failures.forEach((f) =>
+                this.previousFailures.add(`${f.name}.${f.methodName}`)
+              );
+            }
+
+            return output;
+          },
           stage: 'Running Tests',
           type: 'dynamic-key-value',
         },
@@ -193,7 +219,22 @@ export class DeployStages {
         data.numberTestsTotal > 0 &&
         data.numberComponentsDeployed > 0
       ) {
-        this.mso.skipTo('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
+        const mdapiDeploy: MetadataApiDeployStatus = {
+          ...data,
+        };
+        if (
+          Array.isArray(mdapiDeploy.details.runTestResult?.failures) &&
+          mdapiDeploy.details.runTestResult?.failures.length > 0
+        ) {
+          mdapiDeploy.details.runTestResult.failures = mdapiDeploy.details.runTestResult?.failures.filter(
+            (f) => !this.previousFailures.has(`${f.name}.${f.methodName}`)
+          );
+
+          console.log(
+            `TO RENDER 1: ${mdapiDeploy.details.runTestResult.failures.map((f) => `${f.name}.${f.methodName}`)}`
+          );
+        }
+        this.mso.skipTo('Running Tests', { mdapiDeploy, status: mdTransferMessages.getMessage(data?.status) });
       } else if (data.status === RequestStatus.Pending) {
         this.mso.skipTo('Waiting for the org to respond', {
           mdapiDeploy: data,
@@ -265,8 +306,8 @@ function formatTestSuccesses(data: Data): string {
   return output;
 }
 
-function formatTestFailures(data: Data): string {
-  const failures = ensureArray(data.mdapiDeploy.details.runTestResult?.failures).sort(testResultSort);
+function formatTestFailures(failuresData: Failures[]): string {
+  const failures = failuresData.sort(testResultSort);
 
   let output = '';
 
