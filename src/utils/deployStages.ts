@@ -58,10 +58,14 @@ function formatProgress(current: number, total: number): string {
 
 export class DeployStages {
   private mso: MultiStageOutput<Data>;
-  private previousFailures: Set<string>;
+  /**
+   * Set of Apex test failures that were already rendered in the `Running Tests` block.
+   * This is used in the `Failed` stage block for CI output to ensure test failures aren't duplicated when rendering new failures on polling.
+   */
+  private printedApexTestFailures: Set<string>;
 
   public constructor({ title, jsonEnabled, verbose }: Options) {
-    this.previousFailures = new Set();
+    this.printedApexTestFailures = new Set();
     this.mso = new MultiStageOutput<Data>({
       title,
       stages: [
@@ -154,28 +158,35 @@ export class DeployStages {
         {
           label: 'Failed',
           get: (data): string | undefined => {
-            let output =
-              data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
-                ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal) +
-                  (isCI()
-                    ? os.EOL + formatTestFailures(ensureArray(data.mdapiDeploy.details.runTestResult?.failures))
-                    : '')
-                : undefined;
+            let testFailures: Failures[] = [];
 
-            console.log(
-              // @ts-ignore
-              `TO RENDER 2: ${data?.mdapiDeploy.details.runTestResult.failures.map((f) => `${f.name}.${f.methodName}`)}`
-            );
-            console.log(data?.mdapiDeploy.numberTestsTotal);
-            console.log(data?.mdapiDeploy.numberTestErrors);
+            // only render new test failures
+            if (isCI() && Array.isArray(data?.mdapiDeploy.details.runTestResult?.failures)) {
+              // skip failure counter/progress info if there's no new failures to render.
+              if (
+                this.printedApexTestFailures.size > 0 &&
+                data.mdapiDeploy.numberTestErrors === this.printedApexTestFailures.size
+              ) {
+                return undefined;
+              }
 
-            if (Array.isArray(data?.mdapiDeploy.details.runTestResult?.failures)) {
-              data?.mdapiDeploy.details.runTestResult?.failures.forEach((f) =>
-                this.previousFailures.add(`${f.name}.${f.methodName}`)
+              testFailures = data.mdapiDeploy.details.runTestResult?.failures.filter(
+                (f) => !this.printedApexTestFailures.has(`${f.name}.${f.methodName}`)
               );
+
+              data?.mdapiDeploy.details.runTestResult?.failures.forEach((f) =>
+                this.printedApexTestFailures.add(`${f.name}.${f.methodName}`)
+              );
+
+              return data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
+                ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal) +
+                    (isCI() ? os.EOL + formatTestFailures(testFailures) : '')
+                : undefined;
             }
 
-            return output;
+            return data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
+              ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal)
+              : undefined;
           },
           stage: 'Running Tests',
           type: 'dynamic-key-value',
@@ -219,22 +230,7 @@ export class DeployStages {
         data.numberTestsTotal > 0 &&
         data.numberComponentsDeployed > 0
       ) {
-        const mdapiDeploy: MetadataApiDeployStatus = {
-          ...data,
-        };
-        if (
-          Array.isArray(mdapiDeploy.details.runTestResult?.failures) &&
-          mdapiDeploy.details.runTestResult?.failures.length > 0
-        ) {
-          mdapiDeploy.details.runTestResult.failures = mdapiDeploy.details.runTestResult?.failures.filter(
-            (f) => !this.previousFailures.has(`${f.name}.${f.methodName}`)
-          );
-
-          console.log(
-            `TO RENDER 1: ${mdapiDeploy.details.runTestResult.failures.map((f) => `${f.name}.${f.methodName}`)}`
-          );
-        }
-        this.mso.skipTo('Running Tests', { mdapiDeploy, status: mdTransferMessages.getMessage(data?.status) });
+        this.mso.skipTo('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
       } else if (data.status === RequestStatus.Pending) {
         this.mso.skipTo('Waiting for the org to respond', {
           mdapiDeploy: data,
