@@ -248,7 +248,6 @@ export class Source extends SfCommand<DeleteSourceJson> {
     const stages = new DeployStages({
       title: 'Deleting Metadata',
       jsonEnabled: this.jsonEnabled(),
-      verbose: this.flags['verbose'],
     });
 
     const isRest = (await resolveApi()) === API['REST'];

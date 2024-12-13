@@ -15,10 +15,9 @@ import {
 } from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
 import terminalLink from 'terminal-link';
-import { ensureArray } from '@salesforce/kit';
 import ansis from 'ansis';
 import { testResultSort } from '../formatters/testResultsFormatter.js';
-import { check, getZipFileSize } from './output.js';
+import { getZipFileSize } from './output.js';
 import { isTruthy } from './types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -27,7 +26,6 @@ const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retr
 type Options = {
   title: string;
   jsonEnabled: boolean;
-  verbose?: boolean;
 };
 
 type Data = {
@@ -64,7 +62,7 @@ export class DeployStages {
    */
   private printedApexTestFailures: Set<string>;
 
-  public constructor({ title, jsonEnabled, verbose }: Options) {
+  public constructor({ title, jsonEnabled }: Options) {
     this.printedApexTestFailures = new Set();
     this.mso = new MultiStageOutput<Data>({
       title,
@@ -149,8 +147,7 @@ export class DeployStages {
           label: 'Successful',
           get: (data): string | undefined =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
-              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal) +
-                (verbose && isCI() ? os.EOL + formatTestSuccesses(data) : '')
+              ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
               : undefined,
           stage: 'Running Tests',
           type: 'dynamic-key-value',
@@ -285,21 +282,6 @@ export class DeployStages {
   public done(data?: Partial<Data>): void {
     this.mso.skipTo('Done', data);
   }
-}
-
-function formatTestSuccesses(data: Data): string {
-  const successes = ensureArray(data.mdapiDeploy.details.runTestResult?.successes).sort(testResultSort);
-
-  let output = '';
-
-  if (successes.length > 0) {
-    for (const test of successes) {
-      const testName = ansis.underline(`${test.name}.${test.methodName}`);
-      output += `   ${check} ${testName}${os.EOL}`;
-    }
-  }
-
-  return output;
 }
 
 function formatTestFailures(failuresData: Failures[]): string {

@@ -250,7 +250,6 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     this.stages = new DeployStages({
       title,
       jsonEnabled: this.jsonEnabled(),
-      verbose: flags['verbose'],
     });
 
     this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);

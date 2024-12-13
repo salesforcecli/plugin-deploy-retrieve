@@ -134,7 +134,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       new DeployStages({
         title: 'Resuming Deploy',
         jsonEnabled: this.jsonEnabled(),
-        verbose: flags.verbose,
       }).start(
         {
           deploy,
