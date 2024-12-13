@@ -154,6 +154,7 @@ export class DeployStages {
         },
         {
           label: 'Failed',
+          alwaysPrintInCI: true,
           get: (data): string | undefined => {
             let testFailures: Failures[] = [];
 
