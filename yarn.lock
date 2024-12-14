@@ -1655,14 +1655,14 @@
     string-width "^7.2.0"
     terminal-link "^3.0.0"
 
-"@salesforce/sf-plugins-core@^12", "@salesforce/sf-plugins-core@^12.0.11":
-  version "12.0.11"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-12.0.11.tgz#5837bc385cb8f057c4bc86b71ead71464ba5063b"
-  integrity sha512-DYb54IeszQxcyl0N3e5qxSx3Vc571f36alZNE54qPqBTi9RAGEHQN4XR03dKLic0aNS/j4Z09RGH6YoH2zSL6A==
+"@salesforce/sf-plugins-core@^12", "@salesforce/sf-plugins-core@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-12.1.1.tgz#20ae5246b1f458643c2fd04bb639b76085db1cff"
+  integrity sha512-88Vna77gYLj1b9X/aduCsl/5KFthhoM43+o30+0UEAWf93xED1nahmbw7jcJJoiTkaSzLZq08vZfh6X24AyWqg==
   dependencies:
     "@inquirer/confirm" "^3.1.22"
     "@inquirer/password" "^2.2.0"
-    "@oclif/core" "^4.0.27"
+    "@oclif/core" "^4.0.34"
     "@oclif/table" "^0.3.2"
     "@salesforce/core" "^8.5.1"
     "@salesforce/kit" "^3.2.3"
