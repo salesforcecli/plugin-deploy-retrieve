@@ -1,3 +1,45 @@
+## [3.15.22](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.21...3.15.22) (2024-12-14)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 4.0.34 to 4.0.37 ([75c0f0b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/75c0f0b980dfb0b06aed2285855a5f0d007c8031))
+
+## [3.15.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.20...3.15.21) (2024-12-14)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 12.0.11 to 12.1.1 ([7dea591](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7dea59160acc64f2111e6eadc16285e53248fa61))
+
+## [3.15.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.19...3.15.20) (2024-12-07)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 4.0.33 to 4.0.34 ([008a906](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/008a9069488c33b606fde1b778be63339bf271dc))
+
+## [3.15.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.18...3.15.19) (2024-12-07)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/multi-stage-output from 0.7.12 to 0.7.15 ([254a567](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/254a56769ba2fc73c5716de17449e9361fbabbfe))
+
+## [3.15.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.17...3.15.18) (2024-12-06)
+
+### Bug Fixes
+
+- no ENOENT when nothing retrieved to specific directory ([62e9cfa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/62e9cfa21e5dada4dc2541fd0245761fa312d701))
+
+## [3.15.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.16...3.15.17) (2024-11-30)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve ([71f7918](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/71f7918d098e910d4ded55cbacecc6cc2d42ccfb))
+
+## [3.15.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.15...3.15.16) (2024-11-30)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.4.21 to 3.4.23 ([84e9931](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/84e9931e5319cd7e8b4b9d6f71eb2233a6a10712))
+
 ## [3.15.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.14...3.15.15) (2024-11-23)
 
 ### Bug Fixes
