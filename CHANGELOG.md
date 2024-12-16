@@ -1,3 +1,9 @@
+# [3.16.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.22...3.16.0) (2024-12-16)
+
+### Features
+
+- render test failure counter ([#1215](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1215)) ([e05b983](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e05b983bf478f29fa8dcb83f44c66079138e2c2c))
+
 ## [3.15.22](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.21...3.15.22) (2024-12-14)
 
 ### Bug Fixes
