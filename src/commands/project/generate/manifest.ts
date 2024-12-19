@@ -85,10 +85,10 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
       char: 'c',
       dependsOn: ['from-org'],
     }),
-    'exclude-metadata': Flags.string({
+    'excluded-metadata': Flags.string({
       multiple: true,
       delimiter: ',',
-      summary: messages.getMessage('flags.exclude-metadata.summary'),
+      summary: messages.getMessage('flags.excluded-metadata.summary'),
       dependsOn: ['from-org'],
       exclusive: ['metadata'],
     }),
@@ -128,11 +128,11 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
       apiversion: flags['api-version'] ?? (await getSourceApiVersion()),
       sourcepath: flags['source-dir'],
       metadata:
-        flags.metadata ?? flags['exclude-metadata']
+        flags.metadata ?? flags['excluded-metadata']
           ? {
               metadataEntries: flags.metadata ?? [],
               directoryPaths: await getPackageDirs(),
-              excludedEntries: flags['exclude-metadata'],
+              excludedEntries: flags['excluded-metadata'],
             }
           : undefined,
       org: flags['from-org']
