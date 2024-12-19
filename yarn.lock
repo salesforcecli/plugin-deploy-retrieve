@@ -1671,6 +1671,25 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
+"@salesforce/source-deploy-retrieve@12.10.4-dev-17431548.0":
+  version "12.10.4-dev-17431548.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.10.4-dev-17431548.0.tgz#3d1214fa7b69c9e4eaf68912cad198d55208b15c"
+  integrity sha512-tAvqDNp3Oa0QDGhs1rJCOJQYvRO7pfKxzWutjVN2g7fbxn/ej5U5ZX6hKfCp411+NmI7MsN5wUpjQOs185h0mA==
+  dependencies:
+    "@salesforce/core" "^8.8.0"
+    "@salesforce/kit" "^3.2.2"
+    "@salesforce/ts-types" "^2.0.12"
+    fast-levenshtein "^3.0.0"
+    fast-xml-parser "^4.5.0"
+    got "^11.8.6"
+    graceful-fs "^4.2.11"
+    ignore "^5.3.2"
+    isbinaryfile "^5.0.2"
+    jszip "^3.10.1"
+    mime "2.6.0"
+    minimatch "^9.0.5"
+    proxy-agent "^6.4.0"
+
 "@salesforce/source-deploy-retrieve@^12.10.2", "@salesforce/source-deploy-retrieve@^12.7.4":
   version "12.10.2"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.10.2.tgz#c3737f3751f84cb4754b666edd83c014c91b87bb"
