@@ -404,9 +404,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
         .filter(sourceComponentIsNotInMixedDeployDelete(this.mixedDeployDelete))
         .flatMap((c) =>
           // for custom labels, print each custom label to be deleted, not the whole file
-          isNonDecomposedCustomLabelsOrCustomLabel(c)
-            ? [`${c.type.name}:${c.fullName}`]
-            : [c.xml, ...c.walkContent()] ?? []
+          isNonDecomposedCustomLabelsOrCustomLabel(c) ? [`${c.type.name}:${c.fullName}`] : [c.xml, ...c.walkContent()]
         )
         .concat(this.mixedDeployDelete.delete.map((fr) => `${fr.fullName} (${fr.filePath})`));
 

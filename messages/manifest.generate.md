@@ -19,6 +19,8 @@ Use --name to specify a custom name for the generated manifest if the pre-define
 
 To include multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --include-packages and --source-dir.
 
+To build a manifest from the metadata in an org, use the --from-org flag. You can combine --from-org with the --metadata flag to include only certain metadata types, or with the --excluded-metadata flag to exclude certain metadata types. When building a manifest from an org, the command makes many concurrent API calls to discover the metadata that exists in the org. To limit the number of concurrent requests, use the SF_LIST_METADATA_BATCH_SIZE environment variable and set it to a size that works best for your org and environment. If you experience timeouts or inconsistent manifest contents, then setting this environment variable can improve accuracy. However, the command takes longer to run because it sends fewer requests at a time.
+
 # examples
 
 - Create a manifest for deploying or retrieving all Apex classes and custom objects:
@@ -37,9 +39,21 @@ To include multiple metadata components, either set multiple --metadata <name> f
 
   $ <%= config.bin %> <%= command.id %> --from-org test@myorg.com --include-packages unlocked
 
+- Create a manifest from specific metadata types in an org:
+
+  $ <%= config.bin %> <%= command.id %> --from-org test@myorg.com --metadata ApexClass,CustomObject,CustomLabels
+
+- Create a manifest from all metadata components in an org excluding specific metadata types:
+
+  $ <%= config.bin %> <%= command.id %> --from-org test@myorg.com --excluded-metadata StandardValueSet
+
 # flags.include-packages.summary
 
 Package types (managed, unlocked) whose metadata is included in the manifest; by default, metadata in managed and unlocked packages is excluded. Metadata in unmanaged packages is always included.
+
+# flags.excluded-metadata.summary
+
+Metadata types to exclude when building a manifest from an org. Specify the name of the type, not the name of a specific component.
 
 # flags.from-org.summary
 
