@@ -1,3 +1,9 @@
+## [3.16.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.0...3.16.1) (2024-12-19)
+
+### Bug Fixes
+
+- bump SDR ([#1246](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1246)) ([cb51d1e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/cb51d1e18850a51f227c483d76d17a66ded323e1))
+
 # [3.16.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.22...3.16.0) (2024-12-16)
 
 ### Features
