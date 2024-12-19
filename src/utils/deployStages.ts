@@ -4,12 +4,21 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import os from 'node:os';
 import { MultiStageOutput } from '@oclif/multi-stage-output';
 import { Lifecycle, Messages } from '@salesforce/core';
-import { MetadataApiDeploy, MetadataApiDeployStatus, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import {
+  Failures,
+  MetadataApiDeploy,
+  MetadataApiDeployStatus,
+  RequestStatus,
+} from '@salesforce/source-deploy-retrieve';
 import { SourceMemberPollingEvent } from '@salesforce/source-tracking';
 import terminalLink from 'terminal-link';
+import ansis from 'ansis';
+import { testResultSort } from '../formatters/testResultsFormatter.js';
 import { getZipFileSize } from './output.js';
+import { isTruthy } from './types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'metadata.transfer');
@@ -47,8 +56,14 @@ function formatProgress(current: number, total: number): string {
 
 export class DeployStages {
   private mso: MultiStageOutput<Data>;
+  /**
+   * Set of Apex test failures that were already rendered in the `Running Tests` block.
+   * This is used in the `Failed` stage block for CI output to ensure test failures aren't duplicated when rendering new failures on polling.
+   */
+  private printedApexTestFailures: Set<string>;
 
   public constructor({ title, jsonEnabled }: Options) {
+    this.printedApexTestFailures = new Set();
     this.mso = new MultiStageOutput<Data>({
       title,
       stages: [
@@ -129,11 +144,48 @@ export class DeployStages {
           type: 'dynamic-key-value',
         },
         {
-          label: 'Tests',
+          label: 'Successful',
           get: (data): string | undefined =>
             data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestsCompleted
               ? formatProgress(data?.mdapiDeploy?.numberTestsCompleted, data?.mdapiDeploy?.numberTestsTotal)
               : undefined,
+          stage: 'Running Tests',
+          type: 'dynamic-key-value',
+        },
+        {
+          label: 'Failed',
+          alwaysPrintInCI: true,
+          get: (data): string | undefined => {
+            let testFailures: Failures[] = [];
+
+            // only render new test failures
+            if (isCI() && Array.isArray(data?.mdapiDeploy.details.runTestResult?.failures)) {
+              // skip failure counter/progress info if there's no new failures to render.
+              if (
+                this.printedApexTestFailures.size > 0 &&
+                data.mdapiDeploy.numberTestErrors === this.printedApexTestFailures.size
+              ) {
+                return undefined;
+              }
+
+              testFailures = data.mdapiDeploy.details.runTestResult?.failures.filter(
+                (f) => !this.printedApexTestFailures.has(`${f.name}.${f.methodName}`)
+              );
+
+              data?.mdapiDeploy.details.runTestResult?.failures.forEach((f) =>
+                this.printedApexTestFailures.add(`${f.name}.${f.methodName}`)
+              );
+
+              return data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
+                ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal) +
+                    (isCI() ? os.EOL + formatTestFailures(testFailures) : '')
+                : undefined;
+            }
+
+            return data?.mdapiDeploy?.numberTestsTotal && data?.mdapiDeploy?.numberTestErrors
+              ? formatProgress(data?.mdapiDeploy?.numberTestErrors, data?.mdapiDeploy?.numberTestsTotal)
+              : undefined;
+          },
           stage: 'Running Tests',
           type: 'dynamic-key-value',
         },
@@ -231,4 +283,35 @@ export class DeployStages {
   public done(data?: Partial<Data>): void {
     this.mso.skipTo('Done', data);
   }
+}
+
+function formatTestFailures(failuresData: Failures[]): string {
+  const failures = failuresData.sort(testResultSort);
+
+  let output = '';
+
+  for (const test of failures) {
+    const testName = ansis.underline(`${test.name}.${test.methodName}`);
+    output += `   • ${testName}${os.EOL}`;
+    output += `     message: ${test.message}${os.EOL}`;
+    if (test.stackTrace) {
+      const stackTrace = test.stackTrace.replace(/\n/g, `${os.EOL}    `);
+      output += `     stacktrace:${os.EOL}       ${stackTrace}${os.EOL}${os.EOL}`;
+    }
+  }
+
+  // remove last EOL char
+  return output.slice(0, -1);
+}
+
+export function isCI(): boolean {
+  if (
+    isTruthy(process.env.CI) &&
+    ('CI' in process.env ||
+      'CONTINUOUS_INTEGRATION' in process.env ||
+      Object.keys(process.env).some((key) => key.startsWith('CI_')))
+  )
+    return true;
+
+  return false;
 }

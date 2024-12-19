@@ -1,3 +1,27 @@
+## [3.16.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.0...3.16.1) (2024-12-19)
+
+### Bug Fixes
+
+- bump SDR ([#1246](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1246)) ([cb51d1e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/cb51d1e18850a51f227c483d76d17a66ded323e1))
+
+# [3.16.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.22...3.16.0) (2024-12-16)
+
+### Features
+
+- render test failure counter ([#1215](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1215)) ([e05b983](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e05b983bf478f29fa8dcb83f44c66079138e2c2c))
+
+## [3.15.22](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.21...3.15.22) (2024-12-14)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 4.0.34 to 4.0.37 ([75c0f0b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/75c0f0b980dfb0b06aed2285855a5f0d007c8031))
+
+## [3.15.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.20...3.15.21) (2024-12-14)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/sf-plugins-core from 12.0.11 to 12.1.1 ([7dea591](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7dea59160acc64f2111e6eadc16285e53248fa61))
+
 ## [3.15.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.15.19...3.15.20) (2024-12-07)
 
 ### Bug Fixes

@@ -124,3 +124,7 @@ export const isFileResponseDeleted = (fileResponse: FileResponseSuccess): boolea
   fileResponse.state === ComponentStatus.Deleted;
 
 export const isDefined = <T>(value?: T): value is T => value !== undefined;
+
+export function isTruthy(value: string | undefined): boolean {
+  return value !== '0' && value !== 'false';
+}
