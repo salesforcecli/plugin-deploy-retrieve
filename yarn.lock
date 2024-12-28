@@ -1693,12 +1693,12 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^7.3.3":
-  version "7.3.3"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.3.tgz#f560d05922c941448ac3bd0b120d8b43485ab581"
-  integrity sha512-PYwReB+rzbOEit+jLk9t2XskYji+vCoFcVJPVt4XFSMgDJNhNvdNio5K9p1HZoYf+5pJnsdAeDvUIb6DhyG3PA==
+"@salesforce/source-tracking@^7.3.4":
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.4.tgz#6e51ffb0c6305086c142f86ed17432cfb37298ba"
+  integrity sha512-Qs2GWPaF8GrIvEZyVqX9zmk80BZAzKxirbnfGk+eB0Nig3/Yh01PLdjH5ctRxZpAvraXYZqConIyUxztwT16pA==
   dependencies:
-    "@oclif/core" "^4.0.34"
+    "@oclif/core" "^4.2.0"
     "@salesforce/core" "^8.8.0"
     "@salesforce/kit" "^3.2.3"
     "@salesforce/source-deploy-retrieve" "^12.10.3"
