@@ -1,3 +1,9 @@
+## [3.16.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.5...3.16.6) (2024-12-28)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 8.1.18 to 8.1.19 ([71c8277](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/71c82777cafb17909cde4274535469e82aef7933))
+
 ## [3.16.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.4...3.16.5) (2024-12-28)
 
 ### Bug Fixes
