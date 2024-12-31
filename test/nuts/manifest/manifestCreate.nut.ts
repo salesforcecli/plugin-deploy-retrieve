@@ -40,7 +40,7 @@ describe('project generate manifest', () => {
   });
 
   it('should produce a manifest (package.xml) for ApexClass', () => {
-    const result = execCmd<Dictionary>('force:source:manifest:create --metadata ApexClass --json', {
+    const result = execCmd<Dictionary>('project generate manifest --metadata ApexClass --json', {
       ensureExitCode: 0,
     }).jsonOutput?.result;
     expect(result).to.be.ok;
@@ -70,7 +70,7 @@ describe('project generate manifest', () => {
     const output = join('abc', 'def');
     const outputFile = join(output, 'destructiveChanges.xml');
     const result = execCmd<Dictionary>(
-      `force:source:manifest:create --metadata ApexClass --manifesttype destroy --outputdir ${output} --apiversion=51.0 --json`,
+      `project generate manifest --metadata ApexClass --manifesttype destroy --outputdir ${output} --apiversion=51.0 --json`,
       {
         ensureExitCode: 0,
       }
@@ -85,7 +85,7 @@ describe('project generate manifest', () => {
     const output = join('abc', 'def');
     const outputFile = join(output, 'myNewManifest.xml');
     const result = execCmd<Dictionary>(
-      `force:source:manifest:create --metadata ApexClass --manifestname myNewManifest --outputdir ${output} --json`,
+      `project generate manifest --metadata ApexClass --manifestname myNewManifest --outputdir ${output} --json`,
       {
         ensureExitCode: 0,
       }
@@ -96,50 +96,112 @@ describe('project generate manifest', () => {
 
   it('should produce a manifest in a directory with stdout output', () => {
     const output = join('abc', 'def');
-    const result = execCmd<Dictionary>(`force:source:manifest:create --metadata ApexClass --outputdir ${output}`, {
+    const result = execCmd<Dictionary>(`project generate manifest --metadata ApexClass --outputdir ${output}`, {
       ensureExitCode: 0,
     }).shellOutput;
     expect(result).to.include(`successfully wrote package.xml to ${output}`);
   });
 
   it('should produce a manifest with stdout output', () => {
-    const result = execCmd<Dictionary>('force:source:manifest:create --metadata ApexClass', {
+    const result = execCmd<Dictionary>('project generate manifest --metadata ApexClass', {
       ensureExitCode: 0,
     }).shellOutput;
     expect(result).to.include('successfully wrote package.xml');
   });
 
-  it('should produce a manifest from metadata in an org', async () => {
-    const manifestName = 'org-metadata.xml';
-    const result = execCmd<Dictionary>(`force:source:manifest:create --fromorg ${orgAlias} -n ${manifestName} --json`, {
-      ensureExitCode: 0,
-    }).jsonOutput?.result;
-    expect(result).to.be.ok;
-    expect(result).to.include({ path: manifestName, name: manifestName });
-    const stats = fs.statSync(join(session.project.dir, manifestName));
-    expect(stats.isFile()).to.be.true;
-    expect(stats.size).to.be.greaterThan(100);
-  });
-
-  it('should produce the same manifest from an org every time', async () => {
-    config.truncateThreshold = 0;
-
-    execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-1.xml`, {
-      ensureExitCode: 0,
+  describe('from org', () => {
+    before(async () => {
+      // Deploy all source in the project to the org so there's some metadata in it.
+      execCmd<Dictionary>('project deploy start', { ensureExitCode: 0 });
     });
-    const manifest1 = fs.readFileSync(join(session.project.dir, 'org-metadata-1.xml'), 'utf-8');
 
-    execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-2.xml`, {
-      ensureExitCode: 0,
+    it('should produce a manifest from metadata in an org', async () => {
+      const manifestName = 'org-metadata.xml';
+      const result = execCmd<Dictionary>(`project generate manifest --fromorg ${orgAlias} -n ${manifestName} --json`, {
+        ensureExitCode: 0,
+      }).jsonOutput?.result;
+      expect(result).to.be.ok;
+      expect(result).to.include({ path: manifestName, name: manifestName });
+      const stats = fs.statSync(join(session.project.dir, manifestName));
+      expect(stats.isFile()).to.be.true;
+      expect(stats.size).to.be.greaterThan(100);
     });
-    const manifest2 = fs.readFileSync(join(session.project.dir, 'org-metadata-2.xml'), 'utf-8');
 
-    execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-3.xml`, {
-      ensureExitCode: 0,
+    it('should produce a manifest from an include list of metadata in an org', async () => {
+      const manifestName = 'org-metadata.xml';
+      const includeList = 'ApexClass:FileUtil*,PermissionSet,Flow';
+      execCmd<Dictionary>(
+        `project generate manifest --fromorg ${orgAlias} -n ${manifestName} --metadata ${includeList} --json`,
+        {
+          ensureExitCode: 0,
+        }
+      );
+      const manifestContents = fs.readFileSync(join(session.project.dir, manifestName), 'utf-8');
+
+      const expectedManifestContents =
+        '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        '<Package xmlns="http://soap.sforce.com/2006/04/metadata">\n' +
+        '    <types>\n' +
+        '        <members>FileUtilities</members>\n' +
+        '        <members>FileUtilitiesTest</members>\n' +
+        '        <name>ApexClass</name>\n' +
+        '    </types>\n' +
+        '    <types>\n' +
+        '        <members>Create_property</members>\n' +
+        '        <name>Flow</name>\n' +
+        '    </types>\n' +
+        '    <types>\n' +
+        '        <members>dreamhouse</members>\n' +
+        '        <members>sfdcInternalInt__sfdc_scrt2</members>\n' +
+        '        <name>PermissionSet</name>\n' +
+        '    </types>\n' +
+        '    <version>61.0</version>\n' +
+        '</Package>\n';
+      expect(manifestContents).to.equal(expectedManifestContents);
     });
-    const manifest3 = fs.readFileSync(join(session.project.dir, 'org-metadata-3.xml'), 'utf-8');
 
-    expect(manifest1).to.equal(manifest2);
-    expect(manifest2).to.equal(manifest3);
+    it('should produce a manifest from an excluded list of metadata in an org', async () => {
+      const manifestName = 'org-metadata.xml';
+      const excludedList = 'ApexClass,CustomObject,StandardValueSet';
+      execCmd<Dictionary>(
+        `project generate manifest --fromorg ${orgAlias} -n ${manifestName} --excluded-metadata ${excludedList} --json`,
+        {
+          ensureExitCode: 0,
+        }
+      );
+      const manifestContents = fs.readFileSync(join(session.project.dir, manifestName), 'utf-8');
+
+      // should NOT have these entries
+      expect(manifestContents).to.not.contain('<name>ApexClass</name>');
+      expect(manifestContents).to.not.contain('<name>CustomObject</name>');
+      expect(manifestContents).to.not.contain('<name>StandardValueSet</name>');
+
+      // should have these entries
+      expect(manifestContents).to.contain('<name>Layout</name>');
+      expect(manifestContents).to.contain('<name>CustomLabels</name>');
+      expect(manifestContents).to.contain('<name>Profile</name>');
+    });
+
+    it('should produce the same manifest from an org every time', async () => {
+      config.truncateThreshold = 0;
+
+      execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-1.xml`, {
+        ensureExitCode: 0,
+      });
+      const manifest1 = fs.readFileSync(join(session.project.dir, 'org-metadata-1.xml'), 'utf-8');
+
+      execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-2.xml`, {
+        ensureExitCode: 0,
+      });
+      const manifest2 = fs.readFileSync(join(session.project.dir, 'org-metadata-2.xml'), 'utf-8');
+
+      execCmd<Dictionary>(`project generate manifest --from-org ${orgAlias} -n org-metadata-3.xml`, {
+        ensureExitCode: 0,
+      });
+      const manifest3 = fs.readFileSync(join(session.project.dir, 'org-metadata-3.xml'), 'utf-8');
+
+      expect(manifest1).to.equal(manifest2);
+      expect(manifest2).to.equal(manifest3);
+    });
   });
 });
