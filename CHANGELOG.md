@@ -1,3 +1,33 @@
+## [3.16.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.5...3.16.6) (2024-12-28)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 8.1.18 to 8.1.19 ([71c8277](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/71c82777cafb17909cde4274535469e82aef7933))
+
+## [3.16.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.4...3.16.5) (2024-12-28)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.3.3 to 7.3.4 ([a8e2df9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a8e2df9748ebf220803d730f12b2d98d49474fb8))
+
+## [3.16.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.3...3.16.4) (2024-12-21)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.1.17 to 7.3.3 ([a4056a4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a4056a48a42f40968a0ee73bbc832691c1930f1c))
+
+## [3.16.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.2...3.16.3) (2024-12-21)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 4.0.37 to 4.2.0 ([fbb9e3a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fbb9e3a510f87f612e69770e750d2c673d02b6c4))
+
+## [3.16.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.1...3.16.2) (2024-12-21)
+
+### Bug Fixes
+
+- **deps:** bump ansis from 3.3.2 to 3.4.0 ([4f2fdb9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f2fdb92a95065a4e722adab78e3cb4ebc9aa38b))
+
 ## [3.16.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.0...3.16.1) (2024-12-19)
 
 ### Bug Fixes
