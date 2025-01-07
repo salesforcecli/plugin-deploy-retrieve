@@ -239,6 +239,7 @@
     "flagChars": ["c", "d", "m", "n", "p", "t"],
     "flags": [
       "api-version",
+      "excluded-metadata",
       "flags-dir",
       "from-org",
       "include-packages",

@@ -1690,6 +1690,25 @@
     minimatch "^9.0.5"
     proxy-agent "^6.4.0"
 
+"@salesforce/source-deploy-retrieve@^12.11.2":
+  version "12.11.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.11.2.tgz#8e789d88ce92ae024ea9cb57da88345b2d06b564"
+  integrity sha512-bfx0FnAJ9hfMB2ex9Jv1kfaKYuCe7Xe921ctVEOzIgwM9bisKYfL1NUKCiGwWYgS+dePcwmDcpJFJMr0CUu0ZA==
+  dependencies:
+    "@salesforce/core" "^8.8.0"
+    "@salesforce/kit" "^3.2.2"
+    "@salesforce/ts-types" "^2.0.12"
+    fast-levenshtein "^3.0.0"
+    fast-xml-parser "^4.5.1"
+    got "^11.8.6"
+    graceful-fs "^4.2.11"
+    ignore "^5.3.2"
+    isbinaryfile "^5.0.2"
+    jszip "^3.10.1"
+    mime "2.6.0"
+    minimatch "^9.0.5"
+    proxy-agent "^6.4.0"
+
 "@salesforce/source-testkit@^2.2.93":
   version "2.2.93"
   resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.93.tgz#a4c537b328ab97a33f9411d5330f7d182f43ab50"
@@ -1706,15 +1725,15 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^7.3.4":
-  version "7.3.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.4.tgz#6e51ffb0c6305086c142f86ed17432cfb37298ba"
-  integrity sha512-Qs2GWPaF8GrIvEZyVqX9zmk80BZAzKxirbnfGk+eB0Nig3/Yh01PLdjH5ctRxZpAvraXYZqConIyUxztwT16pA==
+"@salesforce/source-tracking@^7.3.6":
+  version "7.3.6"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.6.tgz#70d1ffbe511394f64b5a28e0e5af88b8aed45c96"
+  integrity sha512-U++xMp9gdU+Iq8C9vYOVpzMSkB2lcYMCs7VpC7h518pt1KC/GRV0ufWI6qwcSxZzsZMrPCpCdhGITpAgmM5YnA==
   dependencies:
     "@oclif/core" "^4.2.0"
     "@salesforce/core" "^8.8.0"
     "@salesforce/kit" "^3.2.3"
-    "@salesforce/source-deploy-retrieve" "^12.10.3"
+    "@salesforce/source-deploy-retrieve" "^12.11.2"
     "@salesforce/ts-types" "^2.0.12"
     fast-xml-parser "^4.5.1"
     graceful-fs "^4.2.11"

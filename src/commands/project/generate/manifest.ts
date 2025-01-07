@@ -38,7 +38,7 @@ export type ManifestGenerateCommandResult = {
   path: string;
 };
 
-const xorFlags = ['metadata', 'source-dir', 'from-org'];
+const atLeastOneOfFlags = ['metadata', 'source-dir', 'from-org'];
 
 export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
   public static readonly summary = messages.getMessage('summary');
@@ -53,14 +53,14 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
     metadata: arrayWithDeprecation({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
-      exactlyOne: xorFlags,
+      exclusive: ['source-dir'],
     }),
     'source-dir': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
       summary: messages.getMessage('flags.source-dir.summary'),
-      exactlyOne: xorFlags,
+      exclusive: ['metadata'],
     }),
     name: Flags.string({
       char: 'n',
@@ -85,11 +85,18 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
       char: 'c',
       dependsOn: ['from-org'],
     }),
+    'excluded-metadata': Flags.string({
+      multiple: true,
+      delimiter: ',',
+      summary: messages.getMessage('flags.excluded-metadata.summary'),
+      dependsOn: ['from-org'],
+      exclusive: ['metadata'],
+    }),
     'from-org': Flags.custom({
       summary: messages.getMessage('flags.from-org.summary'),
-      exactlyOne: xorFlags,
       aliases: ['fromorg'],
       deprecateAliases: true,
+      exclusive: ['source-dir'],
       parse: async (input: string | undefined) => (input ? Org.create({ aliasOrUsername: input }) : undefined),
     })(),
     'output-dir': Flags.string({
@@ -102,6 +109,12 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
 
   public async run(): Promise<ManifestGenerateCommandResult> {
     const { flags } = await this.parse(ManifestGenerate);
+
+    // We need at least one of these flags (but could be more than 1): 'metadata', 'source-dir', 'from-org'
+    if (!Object.keys(flags).some((f) => atLeastOneOfFlags.includes(f))) {
+      throw Error(`provided flags must include at least one of: ${atLeastOneOfFlags.toString()}`);
+    }
+
     // convert the manifesttype into one of the "official" manifest names
     // if no manifesttype flag passed, use the manifestname?flag
     // if no manifestname flag, default to 'package.xml'
@@ -114,12 +127,14 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
     const componentSet = await ComponentSetBuilder.build({
       apiversion: flags['api-version'] ?? (await getSourceApiVersion()),
       sourcepath: flags['source-dir'],
-      metadata: flags.metadata
-        ? {
-            metadataEntries: flags.metadata,
-            directoryPaths: await getPackageDirs(),
-          }
-        : undefined,
+      metadata:
+        flags.metadata ?? flags['excluded-metadata']
+          ? {
+              metadataEntries: flags.metadata ?? [],
+              directoryPaths: await getPackageDirs(),
+              excludedEntries: flags['excluded-metadata'],
+            }
+          : undefined,
       org: flags['from-org']
         ? {
             username: flags['from-org'].getUsername() as string,
