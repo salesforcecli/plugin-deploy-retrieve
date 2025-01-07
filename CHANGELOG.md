@@ -1,3 +1,24 @@
+# [3.17.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.6...3.17.0) (2025-01-07)
+
+### Bug Fixes
+
+- bump versions of SDR and STL ([e1d059c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e1d059cb18b0802296706e96d81acdff154e6835))
+
+### Features
+
+- add nut ([8e41a72](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8e41a724616060ab9e2892fda677f5df1e3c5c63))
+
+## [3.16.2-dev-17431548.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.1...3.16.2-dev-17431548.0) (2024-12-19)
+
+### Bug Fixes
+
+- flag name and help text edits ([c51330c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c51330c2f21df5ecfbceb88b5a8e2a30facca353))
+- tsc issue ([9218257](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/92182574f1e5075160a0d21717d697a84fef897a))
+
+### Features
+
+- support generating a manifest from an org with include and exclude metadata lists ([108c060](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/108c06040366276cf1e68483c7dab3252a7ff4a3))
+
 ## [3.16.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.5...3.16.6) (2024-12-28)
 
 ### Bug Fixes
@@ -22,11 +43,22 @@
 
 - **deps:** bump @oclif/core from 4.0.37 to 4.2.0 ([fbb9e3a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fbb9e3a510f87f612e69770e750d2c673d02b6c4))
 
-## [3.16.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.1...3.16.2) (2024-12-21)
+## [3.16.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.2-dev-17431548.0...3.16.2) (2024-12-21)
 
 ### Bug Fixes
 
 - **deps:** bump ansis from 3.3.2 to 3.4.0 ([4f2fdb9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f2fdb92a95065a4e722adab78e3cb4ebc9aa38b))
+
+## [3.16.2-dev-17431548.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.1...3.16.2-dev-17431548.0) (2024-12-19)
+
+### Bug Fixes
+
+- flag name and help text edits ([c51330c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c51330c2f21df5ecfbceb88b5a8e2a30facca353))
+- tsc issue ([9218257](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/92182574f1e5075160a0d21717d697a84fef897a))
+
+### Features
+
+- support generating a manifest from an org with include and exclude metadata lists ([108c060](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/108c06040366276cf1e68483c7dab3252a7ff4a3))
 
 ## [3.16.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.16.0...3.16.1) (2024-12-19)
 
