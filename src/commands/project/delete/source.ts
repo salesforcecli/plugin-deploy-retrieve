@@ -8,7 +8,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-
 import { Interfaces } from '@oclif/core';
 import { Lifecycle, Messages, Org, SfError } from '@salesforce/core';
 import {
@@ -188,7 +187,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
       // if we didn't find any components to delete, let the user know and exit
       this.styledHeader(tableHeader('Deleted Source'));
       this.log('No results found');
-      return;
+      if (this.componentSet.forceIgnoredPaths?.size) {
+        // we have nothing in the CS, and something forceignored, let the user know they're trying to delete a forceignored file
+        this.warn('Attempting to delete metadata that conflicts with a .forceignore entry');
+      }
     }
 
     // create a new ComponentSet and mark everything for deletion
@@ -285,7 +287,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
    */
   protected async resolveSuccess(): Promise<void> {
     // if deploy failed restore the stashed files if they exist
-    if (this.deployResult?.response?.status !== RequestStatus.Succeeded) {
+    if (this.deployResult && this.deployResult.response?.status !== RequestStatus.Succeeded) {
       process.exitCode = 1;
       await Promise.all(
         this.mixedDeployDelete.delete.map(async (file) => {

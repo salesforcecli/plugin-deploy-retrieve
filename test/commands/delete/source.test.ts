@@ -15,7 +15,7 @@ import {
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
 import { Lifecycle, SfProject } from '@salesforce/core';
-import { fromStub, stubInterface, stubMethod } from '@salesforce/ts-sinon';
+import { fromStub, spyMethod, stubInterface, stubMethod } from '@salesforce/ts-sinon';
 import { Config } from '@oclif/core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
 import { SfCommand } from '@salesforce/sf-plugins-core';
@@ -203,6 +203,17 @@ describe('project delete source', () => {
     ensureHookArgs();
     // deleting the component and its xml
     expect(rmStub.callCount).to.equal(2);
+  });
+
+  it('should warn if everything is forceignored', async () => {
+    buildComponentSetStub.restore();
+    const warnSpy = spyMethod($$.SANDBOX, SfCommand.prototype, 'warn');
+    buildComponentSetStub = stubMethod($$.SANDBOX, ComponentSetBuilder, 'build').resolves({
+      forceIgnoredPaths: new Set<string>('myPath'),
+      toArray: () => [],
+    });
+    await runDeleteCmd(['--metadata', 'ApexClass:MyClass', '--json', '-r']);
+    expect(warnSpy.calledOnce).to.be.true;
   });
 
   it('should pass along metadata', async () => {
