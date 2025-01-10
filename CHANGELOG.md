@@ -1,3 +1,10 @@
+## [3.17.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.1...3.17.2) (2025-01-10)
+
+### Bug Fixes
+
+- add warning when nothing to delete ([daecf6c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/daecf6c4a501008c0aa9d6bf1ca14b5bf3a38f8b))
+- update warning to include files ([f0ae41f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f0ae41fdc483380fbcfbf4871e213990562fe577))
+
 ## [3.17.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.0...3.17.1) (2025-01-08)
 
 ### Bug Fixes
