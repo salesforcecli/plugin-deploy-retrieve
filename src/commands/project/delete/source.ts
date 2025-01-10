@@ -189,7 +189,9 @@ export class Source extends SfCommand<DeleteSourceJson> {
       this.log('No results found');
       if (this.componentSet.forceIgnoredPaths?.size) {
         // we have nothing in the CS, and something forceignored, let the user know they're trying to delete a forceignored file
-        this.warn('Attempting to delete metadata that conflicts with a .forceignore entry');
+        const ignoredComponentPaths = Array.from(this.componentSet.forceIgnoredPaths).toString();
+        this.warn(`Attempting to delete metadata that conflicts with a .forceignore entry: ${ignoredComponentPaths}
+Update the .forceignore file and try again.`);
       }
     }
 
