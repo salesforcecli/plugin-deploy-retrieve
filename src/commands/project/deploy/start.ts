@@ -279,6 +279,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
     process.exitCode = determineExitCode(result);
+    this.stages.stop();
     const formatter = new DeployResultFormatter(result, flags);
 
     if (!this.jsonEnabled()) {
