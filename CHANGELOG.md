@@ -1,3 +1,9 @@
+## [3.17.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.3...3.17.4) (2025-01-15)
+
+### Bug Fixes
+
+- prevent duplicate MSO after table ([#1267](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1267)) ([d835b06](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d835b06e832f1fdaedc91d2eca1fd074ef480cdf))
+
 ## [3.17.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.2...3.17.3) (2025-01-11)
 
 ### Bug Fixes
