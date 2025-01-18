@@ -1,3 +1,9 @@
+## [3.17.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.4...3.17.5) (2025-01-18)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/multi-stage-output from 0.8.0 to 0.8.5 ([d03cbfa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d03cbfaa1d7d493c47e60198fa04854ab65ebacd))
+
 ## [3.17.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.3...3.17.4) (2025-01-15)
 
 ### Bug Fixes
