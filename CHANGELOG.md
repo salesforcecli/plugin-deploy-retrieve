@@ -1,3 +1,10 @@
+## [3.17.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.6...3.17.7) (2025-01-22)
+
+### Bug Fixes
+
+- bump STL version to 7.3.9 ([4e47b91](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4e47b911e3cd61dabf6ed93bc8932458ee8e5c2f))
+- disable ctc temporarily and bump SDR version ([88e70b7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/88e70b7988e38f62c80dde057175706f7fe754b0))
+
 ## [3.17.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.5...3.17.6) (2025-01-18)
 
 ### Bug Fixes
