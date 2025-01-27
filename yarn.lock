@@ -1658,13 +1658,13 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.10.3", "@salesforce/source-deploy-retrieve@^12.12.4":
-  version "12.12.4"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.12.4.tgz#0165dfdc417f4d3b75372a0da6436e5710ff864e"
-  integrity sha512-+OEefLoidtVeAQ5PIz6GopaXjZUgry6xD5XQl0EPB8y30mMTGpAJumfzs5bRzBMDkC0xLPFQZeHBPN0ESvTQFg==
+"@salesforce/source-deploy-retrieve@^12.10.3", "@salesforce/source-deploy-retrieve@^12.14.0":
+  version "12.14.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.14.0.tgz#04036f76301071b2188c92f70d77a138bc0d72cf"
+  integrity sha512-3WOQCUY0a8cNYx5/NVtaubLEgxo/vHS/7k4Kw/FEZY3ysALpPCqWk2psJQP56xsp/SDAI3lV0VpMZadrL+ryMw==
   dependencies:
-    "@salesforce/core" "^8.8.0"
-    "@salesforce/kit" "^3.2.2"
+    "@salesforce/core" "^8.8.2"
+    "@salesforce/kit" "^3.2.3"
     "@salesforce/ts-types" "^2.0.12"
     fast-levenshtein "^3.0.0"
     fast-xml-parser "^4.5.1"
@@ -1676,6 +1676,7 @@
     mime "2.6.0"
     minimatch "^9.0.5"
     proxy-agent "^6.4.0"
+    yaml "^2.6.1"
 
 "@salesforce/source-testkit@^2.2.93":
   version "2.2.93"
@@ -1693,15 +1694,15 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^7.3.9":
-  version "7.3.9"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.9.tgz#baf13f0847a5fcd4298ed086db509e596e4c9a66"
-  integrity sha512-nGVDtwzU3sj4IgA/crULC5NS6NeqBsmuTMlXDh+u2VgRpu+OB8QvSRGnhY4G2ctPE/hlYf9iOHfT0gDzqX/SZw==
+"@salesforce/source-tracking@^7.3.10":
+  version "7.3.10"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.10.tgz#7530ef2acf4e89c012b800deebc840e9a18d18ef"
+  integrity sha512-2TynT9Xtl9Clutz9gFaiUlrZ3+13FM9mBifK2zfZQZSHHZCb2EwTTQKQ2i23njYHEZwcVcjBRU0qmrti+nkRGQ==
   dependencies:
     "@oclif/core" "^4.2.3"
     "@salesforce/core" "^8.8.2"
     "@salesforce/kit" "^3.2.3"
-    "@salesforce/source-deploy-retrieve" "^12.12.4"
+    "@salesforce/source-deploy-retrieve" "^12.14.0"
     "@salesforce/ts-types" "^2.0.12"
     fast-xml-parser "^4.5.1"
     graceful-fs "^4.2.11"
@@ -8559,10 +8560,10 @@ yallist@^4.0.0:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
-yaml@^2.4.5:
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.4.5.tgz#60630b206dd6d84df97003d33fc1ddf6296cca5e"
-  integrity sha512-aBx2bnqDzVOyNKfsysjA2ms5ZlnjSAW2eG3/L5G/CSujfjLJTJsEw1bGw8kCf04KodQWk1pxlGnZ56CRxiawmg==
+yaml@^2.4.5, yaml@^2.6.1:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.7.0.tgz#aef9bb617a64c937a9a748803786ad8d3ffe1e98"
+  integrity sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==
 
 yargs-parser@^18.1.2:
   version "18.1.3"
