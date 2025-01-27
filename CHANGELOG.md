@@ -1,3 +1,9 @@
+# [3.18.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.7...3.18.0) (2025-01-27)
+
+### Features
+
+- bump sdr and stl to pickup esr decomposition ([#1275](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1275)) ([898141c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/898141c85356628494af203b12a681fc74df4f93))
+
 ## [3.17.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.6...3.17.7) (2025-01-22)
 
 ### Bug Fixes
