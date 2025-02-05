@@ -127,7 +127,7 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
         flags.metadata ?? flags['excluded-metadata']
           ? {
               metadataEntries: flags.metadata ?? [],
-              directoryPaths: await getPackageDirs(),
+              directoryPaths: flags['source-dir'] ?? (await getPackageDirs()),
               excludedEntries: flags['excluded-metadata'],
             }
           : undefined,
