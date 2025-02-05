@@ -120,19 +120,14 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
       '.xml'
     );
 
-    // Set the sourcepath if the source-dir flag is set without the metadata flag. If both flags are set
-    // they will combine to restrict the metadata in the sourcepaths (i.e., not be additive) and that will
-    // be handled by the MetadataOption of ComponentSetBuilder.
-    const sourcepath = flags['source-dir'] && !flags.metadata ? flags['source-dir'] : undefined;
-
     const componentSet = await ComponentSetBuilder.build({
       apiversion: flags['api-version'] ?? (await getSourceApiVersion()),
-      sourcepath,
+      sourcepath: flags['source-dir'],
       metadata:
         flags.metadata ?? flags['excluded-metadata']
           ? {
               metadataEntries: flags.metadata ?? [],
-              directoryPaths: flags['source-dir'] ?? (await getPackageDirs()),
+              directoryPaths: await getPackageDirs(),
               excludedEntries: flags['excluded-metadata'],
             }
           : undefined,
