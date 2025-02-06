@@ -93,6 +93,7 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
       summary: messages.getMessage('flags.from-org.summary'),
       aliases: ['fromorg'],
       deprecateAliases: true,
+      exclusive: ['source-dir'],
       parse: async (input: string | undefined) => (input ? Org.create({ aliasOrUsername: input }) : undefined),
     })(),
     'output-dir': Flags.string({
