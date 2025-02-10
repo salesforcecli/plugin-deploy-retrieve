@@ -193,6 +193,40 @@ describe('project retrieve start', () => {
     ensureRetrieveArgs({ format: 'source' });
   });
 
+  it('should pass along metadata and org for pseudo-type matching', async () => {
+    const metadata = ['Agent:My_Agent'];
+    const result = await RetrieveMetadata.run(['--metadata', metadata[0], '--json']);
+    expect(result).to.deep.equal(expectedResults);
+    ensureCreateComponentSetArgs({
+      metadata: {
+        metadataEntries: metadata,
+        directoryPaths: [expectedDirectoryPath],
+      },
+      org: {
+        username: testOrg.username,
+        exclude: [],
+      },
+    });
+    ensureRetrieveArgs({ format: 'source' });
+  });
+
+  it('should pass along metadata and org for pseudo-type wildcard matching', async () => {
+    const metadata = ['ApexClass', 'Agent'];
+    const result = await RetrieveMetadata.run(['--metadata', metadata[0], '--metadata', metadata[1], '--json']);
+    expect(result).to.deep.equal(expectedResults);
+    ensureCreateComponentSetArgs({
+      metadata: {
+        metadataEntries: metadata,
+        directoryPaths: [expectedDirectoryPath],
+      },
+      org: {
+        username: testOrg.username,
+        exclude: [],
+      },
+    });
+    ensureRetrieveArgs({ format: 'source' });
+  });
+
   it('should pass along manifest', async () => {
     const manifest = 'package.xml';
     const result = await RetrieveMetadata.run(['--manifest', manifest, '--json']);
