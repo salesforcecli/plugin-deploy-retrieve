@@ -5,13 +5,15 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import path from 'node:path';
+import { stripVTControlCharacters } from 'node:util';
 import { assert, expect, config } from 'chai';
 import sinon from 'sinon';
-import { DeployMessage, DeployResult, FileResponse } from '@salesforce/source-deploy-retrieve';
+import { DeployMessage, DeployResult, Failures, FileResponse } from '@salesforce/source-deploy-retrieve';
 import { Ux } from '@salesforce/sf-plugins-core';
 import { getCoverageFormattersOptions } from '../../src/utils/coverage.js';
 import { getZipFileSize } from '../../src/utils/output.js';
 import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter.js';
+import { TestLevel } from '../../src/utils/types.js';
 import { getDeployResult } from './deployResponses.js';
 
 config.truncateThreshold = 0;
@@ -26,9 +28,11 @@ describe('deployResultFormatter', () => {
   describe('displayFailures', () => {
     const deployResultFailure = getDeployResult('failed');
     let tableStub: sinon.SinonStub;
+    let uxLogStub: sinon.SinonStub;
 
     beforeEach(() => {
       tableStub = sandbox.stub(Ux.prototype, 'table');
+      uxLogStub = sandbox.stub(Ux.prototype, 'log');
     });
 
     it('prints file responses, and messages from server', () => {
@@ -87,7 +91,27 @@ describe('deployResultFormatter', () => {
         success: false,
       } as DeployMessage;
 
+      const testFailure1 = {
+        id: '01pDS00001AQcuGYAT',
+        message: 'System.AssertException: Assertion Failed: Expected: 0, Actual: 1',
+        methodName: 'successResponse',
+        name: 'GeocodingServiceTest',
+        namespace: null,
+        packageName: 'GeocodingServiceTest',
+        stackTrace: 'Class.GeocodingServiceTest.successResponse: line 32, column 1',
+        time: '70',
+        type: 'Class',
+      } as Failures;
+
       deployFailure.response.details.componentFailures = [error1, error2];
+      deployFailure.response.numberTestErrors = 1;
+      deployFailure.response.runTestsEnabled = true;
+      deployFailure.response.details.runTestResult = {
+        numTestsRun: '1',
+        numFailures: '1',
+        totalTime: '3511',
+        failures: [testFailure1],
+      };
       sandbox.stub(deployFailure, 'getFileResponses').returns([
         {
           fullName: error1.fullName,
@@ -100,7 +124,10 @@ describe('deployResultFormatter', () => {
           problemType: error1.problemType,
         },
       ] as FileResponse[]);
-      const formatter = new DeployResultFormatter(deployFailure, { verbose: true });
+      const formatter = new DeployResultFormatter(deployFailure, {
+        verbose: true,
+        'test-level': TestLevel.RunAllTestsInOrg,
+      });
       formatter.display();
       expect(tableStub.callCount).to.equal(1);
       expect(tableStub.firstCall.args[0]).to.deep.equal({
@@ -128,6 +155,11 @@ describe('deployResultFormatter', () => {
         title: '\x1B[1m\x1B[31mComponent Failures [2]\x1B[39m\x1B[22m',
         overflow: 'wrap',
       });
+      // @ts-expect-error we expect args to be strings
+      const uxLogArgs: Array<[string]> = uxLogStub.args;
+      expect(stripVTControlCharacters(uxLogArgs[2][0])).to.equal('Test Failures [1]');
+      expect(stripVTControlCharacters(uxLogArgs[3][0])).to.equal(`• ${testFailure1.name}.${testFailure1.methodName}`);
+      expect(stripVTControlCharacters(uxLogArgs[4][0])).to.equal(`  message: ${testFailure1.message}`);
     });
   });
 

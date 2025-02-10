@@ -26,6 +26,7 @@ import { isCI } from '../utils/deployStages.js';
 const ux = new Ux();
 
 export class TestResultsFormatter {
+  public skipVerboseTestReportOnCI: boolean;
   public testLevel: TestLevel | undefined;
   public verbosity: Verbosity;
 
@@ -34,8 +35,10 @@ export class TestResultsFormatter {
     protected flags: Partial<{
       'test-level': TestLevel;
       verbose: boolean;
-    }>
+    }>,
+    skipVerboseTestReportOnCI = true
   ) {
+    this.skipVerboseTestReportOnCI = skipVerboseTestReportOnCI;
     this.testLevel = flags['test-level'];
     this.verbosity = this.determineVerbosity();
   }
@@ -46,12 +49,18 @@ export class TestResultsFormatter {
       return;
     }
 
-    if (!isCI()) {
+    // some commands like `project deploy start` will report these failures as they happen via MSO:
+    // https://github.com/salesforcecli/plugin-deploy-retrieve/pull/1215
+    //
+    // commands can set `skipVerboseTestReportOnCI` if so when instantiating the formatter to skip these (false by default).
+    const skipVerboseTestReport = isCI() && this.skipVerboseTestReportOnCI;
+
+    if (!skipVerboseTestReport) {
       displayVerboseTestFailures(this.result.response);
     }
 
     if (this.verbosity === 'verbose') {
-      if (!isCI()) {
+      if (!skipVerboseTestReport) {
         displayVerboseTestSuccesses(this.result.response.details.runTestResult?.successes);
       }
       displayVerboseTestCoverage(this.result.response.details.runTestResult?.codeCoverage);
