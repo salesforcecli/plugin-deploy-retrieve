@@ -73,7 +73,8 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       wait: Duration | number;
     }>,
     /** add extra synthetic fileResponses not in the mdapiResponse  */
-    protected extraDeletes: FileResponseSuccess[] = []
+    protected extraDeletes: FileResponseSuccess[] = [],
+    skipVerboseTestReportOnCI = false
   ) {
     super(result, flags);
     this.absoluteFiles = (this.result.getFileResponses() ?? []).sort(fileResponseSortFn);
@@ -83,6 +84,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     this.resultsDir = this.flags['results-dir'] ?? 'coverage';
     this.coverageOptions = getCoverageFormattersOptions(this.flags['coverage-formatters']);
     this.junit = this.flags.junit;
+    this.skipVerboseTestReportOnCI = skipVerboseTestReportOnCI;
   }
 
   public async getJson(): Promise<DeployResultJson> {
