@@ -1,3 +1,9 @@
+## [3.18.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.1...3.18.2) (2025-02-11)
+
+### Bug Fixes
+
+- support retrieving agent pseudo type ([ac8dfa3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ac8dfa3606c1ccd66a2bc625cc82555e133a0770))
+
 ## [3.18.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.0...3.18.1) (2025-02-10)
 
 ### Bug Fixes
