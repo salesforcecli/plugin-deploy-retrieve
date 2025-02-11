@@ -1,3 +1,15 @@
+## [3.18.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.1...3.18.2) (2025-02-11)
+
+### Bug Fixes
+
+- support retrieving agent pseudo type ([ac8dfa3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ac8dfa3606c1ccd66a2bc625cc82555e133a0770))
+
+## [3.18.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.0...3.18.1) (2025-02-10)
+
+### Bug Fixes
+
+- always render apex test reports ([#1284](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1284)) ([46cfcd3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/46cfcd36c66eeb15ef82d6ba309530380ae85ab5))
+
 # [3.18.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.7...3.18.0) (2025-01-27)
 
 ### Features

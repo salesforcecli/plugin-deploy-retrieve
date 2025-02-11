@@ -423,7 +423,11 @@ const buildRetrieveAndDeleteTargets = async (
     }
     return result;
   } else {
-    const retrieveFromOrg = flags.metadata?.some(isRegexMatch) ? flags['target-org'].getUsername() : undefined;
+    const hasPseudoType = flags.metadata?.some(isPseudoType);
+    const hasRegexMatch = flags.metadata?.some(isRegexMatch);
+    // Deliberately using logical or
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const retrieveFromOrg = hasRegexMatch || hasPseudoType ? flags['target-org'].getUsername() : undefined;
     if (format === 'source' && (await flags['target-org'].supportsSourceTracking())) {
       await SourceTracking.create({
         org: flags['target-org'],
@@ -503,3 +507,5 @@ const isRegexMatch = (mdEntry: string): boolean => {
   const mdName = mdEntry.split(':')[1];
   return mdName?.includes('*') && mdName?.length > 1 && !mdName?.includes('.*');
 };
+
+const isPseudoType = (mdEntry: string): boolean => mdEntry.split(':')[0] === 'Agent';
