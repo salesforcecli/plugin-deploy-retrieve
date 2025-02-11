@@ -121,3 +121,9 @@ const commaWarningForMultipleFlags = async (input: string, warningText: string):
   }
   return input;
 };
+
+/**
+ * Returns `true` if the metadata entry (e.g., --metadata) contains a pseudo type
+ * such as "Agent" or "Agent:My_Agent".
+ */
+export const isPseudoType = (mdEntry: string): boolean => mdEntry.split(':')[0] === 'Agent';

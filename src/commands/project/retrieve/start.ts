@@ -28,7 +28,7 @@ import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking
 import { Duration } from '@salesforce/kit';
 import { Interfaces } from '@oclif/core';
 
-import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, zipFileFlag } from '../../../utils/flags.js';
+import { DEFAULT_ZIP_FILE_NAME, ensuredDirFlag, isPseudoType, zipFileFlag } from '../../../utils/flags.js';
 import { RetrieveResultFormatter } from '../../../formatters/retrieveResultFormatter.js';
 import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter.js';
 import { getOptionalProject, getPackageDirs } from '../../../utils/project.js';
@@ -507,5 +507,3 @@ const isRegexMatch = (mdEntry: string): boolean => {
   const mdName = mdEntry.split(':')[1];
   return mdName?.includes('*') && mdName?.length > 1 && !mdName?.includes('.*');
 };
-
-const isPseudoType = (mdEntry: string): boolean => mdEntry.split(':')[0] === 'Agent';
