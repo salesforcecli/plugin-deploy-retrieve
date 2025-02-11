@@ -83,7 +83,7 @@ const displayVerboseTestSuccesses = (resultSuccesses: RunTestResult['successes']
     ux.log();
     ux.log(success(`Test Success [${successes.length}]`));
     for (const test of successes) {
-      const testName = ansis.underline(`${test.name}.${test.methodName}`);
+      const testName = ansis.underline(`${test.name}.${test.methodName} (${test.time}ms)`);
       ux.log(`${check} ${testName}`);
     }
   }
