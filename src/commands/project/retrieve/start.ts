@@ -21,6 +21,7 @@ import {
   MetadataApiRetrieveStatus,
   RegistryAccess,
   RequestStatus,
+  ComponentStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
@@ -354,8 +355,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       );
       return directories;
     }
-    // If we retrieved only a package.xml, just return.
-    if (this.retrieveResult.getFileResponses().length < 1) {
+
+    // skip file move if all retrieves failed to avoid ENOENT err (no such file or directory).
+    if (
+      this.retrieveResult.getFileResponses().length ===
+      this.retrieveResult.getFileResponses().filter((c) => c.state === ComponentStatus.Failed).length
+    ) {
       return;
     }
 
