@@ -163,11 +163,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
     }
   }
 
+  // eslint-disable-next-line complexity
   protected async delete(): Promise<void> {
     const sourcepaths = this.flags['source-dir'];
-    const retrieveFromOrg = this.flags.metadata?.some(isPseudoType)
-      ? this.flags['target-org'].getUsername()
-      : undefined;
+    const resolveFromOrg = this.flags.metadata?.some(isPseudoType) ? this.flags['target-org'].getUsername() : undefined;
 
     this.componentSet = await ComponentSetBuilder.build({
       apiversion: this.flags['api-version'],
@@ -180,8 +179,18 @@ export class Source extends SfCommand<DeleteSourceJson> {
           }
         : undefined,
       projectDir: this.project?.getPath(),
-      ...(retrieveFromOrg ? { org: { username: retrieveFromOrg, exclude: [] } } : {}),
+      ...(resolveFromOrg ? { org: { username: resolveFromOrg, exclude: [] } } : {}),
     });
+
+    // If we built a component set from an org connection, we have to resolve
+    // components from the project.
+    if (resolveFromOrg) {
+      this.componentSet = ComponentSet.fromSource({
+        fsPaths: await getPackageDirs(),
+        include: this.componentSet,
+      });
+    }
+
     if (this.flags['track-source'] && !this.flags['force-overwrite']) {
       await this.filterConflictsByComponentSet();
     }
