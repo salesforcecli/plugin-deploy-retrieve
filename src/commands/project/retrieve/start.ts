@@ -355,7 +355,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       return directories;
     }
     // If we retrieved only a package.xml, just return.
-    if (this.retrieveResult.getFileResponses().length < 2) {
+    if (this.retrieveResult.getFileResponses().length < 1) {
       return;
     }
 
