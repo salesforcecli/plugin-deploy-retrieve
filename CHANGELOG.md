@@ -1,3 +1,9 @@
+# [3.19.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.3...3.19.0) (2025-02-12)
+
+### Features
+
+- add runtime to apex test method ([#1286](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1286)) ([77a4b87](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/77a4b87ed3457a905ffd735c5b027a85d0b405ee))
+
 ## [3.18.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.2...3.18.3) (2025-02-12)
 
 ## [3.18.1-manifest.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.0...3.18.1-manifest.0) (2025-02-06)
