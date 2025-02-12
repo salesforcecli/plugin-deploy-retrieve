@@ -1359,13 +1359,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oclif/core@^4", "@oclif/core@^4.0.27", "@oclif/core@^4.0.34", "@oclif/core@^4.2.0", "@oclif/core@^4.2.3":
-  version "4.2.4"
-  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-4.2.4.tgz#0737063beb35e3d421135cd07983bc5306fb17bf"
-  integrity sha512-JDqdhX6fBbijY3ouubfmX7yFBXy95YSpiAVk0TAaXXCoSqoo/2WMcV2Ufv2V+8zriafPU/rvKgI+ZE07/7HwfQ==
+"@oclif/core@^4", "@oclif/core@^4.0.27", "@oclif/core@^4.2.0", "@oclif/core@^4.2.4", "@oclif/core@^4.2.6":
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-4.2.6.tgz#f2f1696be03a815a4c391504312f90fce29fbb4e"
+  integrity sha512-agk1Tlm7qMemWx+qq5aNgkYwX2JCkoVP4M0ruFveJrarmdUPbKZTMW1j/eg8lNKZh1sp68ytZyKhYXYEfRPcww==
   dependencies:
     ansi-escapes "^4.3.2"
-    ansis "^3.9.0"
+    ansis "^3.10.0"
     clean-stack "^3.0.1"
     cli-spinners "^2.9.2"
     debug "^4.4.0"
@@ -1383,10 +1383,10 @@
     wordwrap "^1.0.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/multi-stage-output@^0.8.5":
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/@oclif/multi-stage-output/-/multi-stage-output-0.8.5.tgz#5a46f2a0d0718fcc68249f461255d47b756612b9"
-  integrity sha512-+iv4cK8WRJbLNL5f7gLU+tvqbReDofpG0qNss6tbJDbQUK3YmyEWrE2DnMPi7afJW6iwoG/uOwFRTs+9TpGg1A==
+"@oclif/multi-stage-output@^0.8.7":
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/@oclif/multi-stage-output/-/multi-stage-output-0.8.7.tgz#2f168202d35efc6d3f4fd04613cd78694939b6d1"
+  integrity sha512-bXblOjcPsJR7oboNSc4SkYSq85rePqs3uPBTb2JtC7s0RNRfh9HGrbMktr2cV3byoNDv6fz49M/ABQ/G+/LyGg==
   dependencies:
     "@oclif/core" "^4"
     "@types/react" "^18.3.12"
@@ -1440,12 +1440,11 @@
     lodash "^4.17.21"
     registry-auth-token "^5.0.3"
 
-"@oclif/table@^0.4.0":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@oclif/table/-/table-0.4.3.tgz#5766e0f745f6533575843eabc59259c269d4e87f"
-  integrity sha512-fioTULPaOilLeLVKfgcd7cJXzFBHeRKumjYcj3NeuYiyl6J4EcaCDYsy6tSyrBASqoWD0xzc5Hv21zCLG0CS+g==
+"@oclif/table@^0.4.6":
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/@oclif/table/-/table-0.4.6.tgz#4e07fc11de9b8a3187a5ea43edce71c42811ab7e"
+  integrity sha512-NXh72vHHYnDrWPmVfh4i7kDydz3CXm/tSAr17fWhmWfMM+8jGn5uo6FXtvB0cd9s4skvDqzoRcsRwOeR73zIKA==
   dependencies:
-    "@oclif/core" "^4"
     "@types/react" "^18.3.12"
     change-case "^5.4.4"
     cli-truncate "^4.0.0"
@@ -1596,10 +1595,10 @@
     debug "^4.4.0"
     handlebars "^4.7.8"
 
-"@salesforce/plugin-info@^3.4.30":
-  version "3.4.30"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.30.tgz#6a62622c14bba4cd3920bf5951e2caf794957ae7"
-  integrity sha512-PQ4/6u85epah4w5Y7nC665PCgPTVta17eyB/5noRm0Inu/jzTLMqJnWRa9ZVHbQmWSraZSHt6fO25FWRLL5zHA==
+"@salesforce/plugin-info@^3.4.37":
+  version "3.4.37"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.37.tgz#6ce5a2b09d892484983d37feb964ccd35227a9e4"
+  integrity sha512-ak9owqn5Q1PP+HL9JXZLYJo7ufTOQa1PoYag5HEq5l9oDgWvPbUKlMoEm02dVIzKqoULWvYhoy1CpHq4CQflDg==
   dependencies:
     "@inquirer/input" "^2.3.0"
     "@jsforce/jsforce-node" "^3.6.3"
@@ -1612,7 +1611,7 @@
     marked-terminal "^4.2.0"
     open "^10.1.0"
     proxy-agent "^6.5.0"
-    semver "^7.6.3"
+    semver "^7.7.0"
 
 "@salesforce/prettier-config@^0.0.3":
   version "0.0.3"
@@ -1642,15 +1641,15 @@
     string-width "^7.2.0"
     terminal-link "^3.0.0"
 
-"@salesforce/sf-plugins-core@^12", "@salesforce/sf-plugins-core@^12.1.2":
-  version "12.1.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-12.1.2.tgz#0c4fba3787ee670014c8bca447c2fc59fb9c3ec3"
-  integrity sha512-qrmGZr2mG7uOpqhOpeOJjBEVztM7Mt8B10lD3rG+aOBZQelTm3YQ738yZYcwHjksQW3AOyf0QtqZICCfe0nD8A==
+"@salesforce/sf-plugins-core@^12", "@salesforce/sf-plugins-core@^12.1.4":
+  version "12.1.4"
+  resolved "https://registry.yarnpkg.com/@salesforce/sf-plugins-core/-/sf-plugins-core-12.1.4.tgz#c73829c7f12bdc96a2e2746ce7f574a604e8efb4"
+  integrity sha512-inSWsy9omNc4dIULVpoOJPX6DdEaqkA4CxmzTVrylc7P08jCbsv6LpS79wUaYC7Ah3krBQvbopP4wR9f3XvLeQ==
   dependencies:
     "@inquirer/confirm" "^3.1.22"
     "@inquirer/password" "^2.2.0"
-    "@oclif/core" "^4.0.34"
-    "@oclif/table" "^0.4.0"
+    "@oclif/core" "^4.2.4"
+    "@oclif/table" "^0.4.6"
     "@salesforce/core" "^8.5.1"
     "@salesforce/kit" "^3.2.3"
     "@salesforce/ts-types" "^2.0.12"
@@ -1658,10 +1657,10 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.10.3", "@salesforce/source-deploy-retrieve@^12.14.0", "@salesforce/source-deploy-retrieve@^12.14.5":
-  version "12.14.5"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.14.5.tgz#d78e1f79467ff75bbfbb6e636e5517349ef18343"
-  integrity sha512-FYB1VCVt/CbdJn+wc5k/iNDnKG+al40Kk0XwWqUL9jEyvkozpS/428UBlCOmVyCivVFUN0Nqjc7NVHlI2V8jbw==
+"@salesforce/source-deploy-retrieve@12.14.8", "@salesforce/source-deploy-retrieve@^12.10.3", "@salesforce/source-deploy-retrieve@^12.14.1":
+  version "12.14.8"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.14.8.tgz#df47446a46cd405e2c2fdbd741ef985eeea000be"
+  integrity sha512-XmTAen0b49YhhFhVuRag/n38uRgqRXpdS/0iqUhEmLEaNXVaH9/jpSNaNRM3VHOfIWxDd2QtEj3JUgAEfy1i3A==
   dependencies:
     "@salesforce/core" "^8.8.2"
     "@salesforce/kit" "^3.2.3"
@@ -1694,15 +1693,15 @@
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^7.3.10":
-  version "7.3.10"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.10.tgz#7530ef2acf4e89c012b800deebc840e9a18d18ef"
-  integrity sha512-2TynT9Xtl9Clutz9gFaiUlrZ3+13FM9mBifK2zfZQZSHHZCb2EwTTQKQ2i23njYHEZwcVcjBRU0qmrti+nkRGQ==
+"@salesforce/source-tracking@^7.3.12":
+  version "7.3.12"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.12.tgz#b9fde67d88469017328bc978f04ba083dfd204a9"
+  integrity sha512-0Ab0EfGOnpOmWYmXKzRqviCDA1SKYrcnaye8587iI465AB+pZTGDFpu7LVFNnevQWKsiy8fmz2q0Jyt4oxG73w==
   dependencies:
-    "@oclif/core" "^4.2.3"
+    "@oclif/core" "^4.2.4"
     "@salesforce/core" "^8.8.2"
     "@salesforce/kit" "^3.2.3"
-    "@salesforce/source-deploy-retrieve" "^12.14.0"
+    "@salesforce/source-deploy-retrieve" "^12.14.1"
     "@salesforce/ts-types" "^2.0.12"
     fast-xml-parser "^4.5.1"
     graceful-fs "^4.2.11"
@@ -2810,10 +2809,10 @@ ansicolors@~0.3.2:
   resolved "https://registry.yarnpkg.com/ansicolors/-/ansicolors-0.3.2.tgz#665597de86a9ffe3aa9bfbe6cae5c6ea426b4979"
   integrity sha512-QXu7BPrP29VllRxH8GwB7x5iX5qWKAAMLqKQGWTeLWVlNHNOpVMJ91dsxQAIWXpjuW5wqvxu3Jd/nRjrJ+0pqg==
 
-ansis@^3.3.2, ansis@^3.4.0, ansis@^3.5.2, ansis@^3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/ansis/-/ansis-3.9.0.tgz#d195c93c31a333916142ff8f0be4d7e3872f262e"
-  integrity sha512-PcDrVe15ldexeZMsVLBAzBwF2KhZgaU0R+CHxH+x5kqn/pO+UWVBZJ+NEXMPpEOLUFeNsnNdoWYc2gwO+MVkDg==
+ansis@^3.10.0, ansis@^3.3.2, ansis@^3.4.0, ansis@^3.5.2:
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/ansis/-/ansis-3.10.0.tgz#6886afb0f729b1fa865df6b710b97a9915b7d0d4"
+  integrity sha512-hxDKLYT7hy3Y4sF3HxI926A3urzPxi73mZBB629m9bCVF+NyKNxbwCqqm+C/YrGPtxLwnl6d8/ZASCsz6SyvJA==
 
 anymatch@~3.1.2:
   version "3.1.3"
@@ -7401,10 +7400,10 @@ semver@^6.0.0, semver@^6.3.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
-semver@^7.3.4, semver@^7.3.5, semver@^7.5.3, semver@^7.5.4, semver@^7.6.0, semver@^7.6.3:
-  version "7.6.3"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.3.tgz#980f7b5550bc175fb4dc09403085627f9eb33143"
-  integrity sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==
+semver@^7.3.4, semver@^7.3.5, semver@^7.5.3, semver@^7.5.4, semver@^7.6.0, semver@^7.6.3, semver@^7.7.0:
+  version "7.7.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.1.tgz#abd5098d82b18c6c81f6074ff2647fd3e7220c9f"
+  integrity sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==
 
 sentence-case@^3.0.4:
   version "3.0.4"

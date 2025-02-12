@@ -1283,8 +1283,8 @@ Create a project manifest that lists the metadata components you want to deploy 
 
 ```
 USAGE
-  $ sf project generate manifest [--json] [--flags-dir <value>] [--api-version <value>] [-m <value>... | -p <value>...] [-n
-    <value> | -t pre|post|destroy|package] [-c managed|unlocked... --from-org <value>] [--excluded-metadata <value>... ]
+  $ sf project generate manifest [--json] [--flags-dir <value>] [--api-version <value>] [-m <value>...] [-p <value>...] [-n
+    <value> | -t pre|post|destroy|package] [-c managed|unlocked... --from-org <value>] [--excluded-metadata <value>...]
     [-d <value>]
 
 FLAGS
