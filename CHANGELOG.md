@@ -1,3 +1,11 @@
+## [3.19.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.19.1...3.19.2) (2025-02-13)
+
+### Bug Fixes
+
+- early return if all retrieves failed ([403d215](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/403d21590e73345b32f03641e15f7ca05e6bcd09))
+- move single file components to outdir too ([92981d8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/92981d89c1e657d25ed235bd5b0515d48526d8e5))
+- strip path sep too ([2bbe6e6](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2bbe6e662bd1dab4fb47f3a3ae270c904ccdedc6))
+
 ## [3.19.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.19.0...3.19.1) (2025-02-13)
 
 ### Bug Fixes
