@@ -6,7 +6,7 @@
  */
 
 import { rm } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 import * as fs from 'node:fs';
 
 import { MultiStageOutput } from '@oclif/multi-stage-output';
@@ -366,7 +366,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     // getFileResponses fails once the files have been moved, calculate where they're moved to, and then move them
     this.retrieveResult.getFileResponses().forEach((fileResponse) => {
-      fileResponse.filePath = fileResponse.filePath?.replace(join('main', 'default'), '');
+      fileResponse.filePath = fileResponse.filePath?.replace(join('main', 'default', sep), '');
     });
     // move contents of 'main/default' to 'retrievetargetdir'
     await promisesQueue([join(resolvedTargetDir, 'main', 'default')], mv, 5, true);
