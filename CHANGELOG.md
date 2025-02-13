@@ -1,3 +1,9 @@
+## [3.19.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.19.0...3.19.1) (2025-02-13)
+
+### Bug Fixes
+
+- convert URL to path before doing path ops ([#1290](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1290)) ([723d1ae](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/723d1ae37a50ab55732c9874254e89240746083f))
+
 # [3.19.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.3...3.19.0) (2025-02-12)
 
 ### Features
