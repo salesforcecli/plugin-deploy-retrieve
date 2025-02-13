@@ -117,6 +117,7 @@ describe('project delete source', () => {
   let lifecycleEmitStub: sinon.SinonStub;
   let resolveProjectConfigStub: sinon.SinonStub;
   let rmStub: sinon.SinonStub;
+  let compSetFromSourceStub: sinon.SinonStub;
 
   class TestDelete extends Source {
     public async runIt() {
@@ -167,6 +168,10 @@ describe('project delete source', () => {
     });
     const lifecycle = Lifecycle.getInstance();
     lifecycleEmitStub = $$.SANDBOX.stub(lifecycle, 'emit');
+
+    compSetFromSourceStub = stubMethod($$.SANDBOX, ComponentSet, 'fromSource').returns({
+      toArray: () => [new SourceComponent(exampleSourceComponent)],
+    });
   });
 
   afterEach(() => {
@@ -226,6 +231,23 @@ describe('project delete source', () => {
       },
     });
     ensureHookArgs();
+  });
+
+  it('should pass along metadata and org for pseudo-type matching', async () => {
+    const metadata = ['Agent:My_Agent'];
+    await runDeleteCmd(['--metadata', metadata[0], '--json']);
+    ensureCreateComponentSetArgs({
+      metadata: {
+        metadataEntries: metadata,
+        directoryPaths: [defaultPackagePath],
+      },
+      org: {
+        username: testOrg.username,
+        exclude: [],
+      },
+    });
+    ensureHookArgs();
+    expect(compSetFromSourceStub.calledOnce).to.be.true;
   });
 
   it('should pass along apiversion', async () => {
