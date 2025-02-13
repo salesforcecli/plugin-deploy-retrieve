@@ -204,4 +204,89 @@ describe('project generate manifest', () => {
       expect(manifest2).to.equal(manifest3);
     });
   });
+
+  describe('filtering combinations', () => {
+    let projectSubDir: string;
+    before(async () => {
+      // Add some other directories with apex classes
+      projectSubDir = join(session.project.dir, 'force-app', 'core');
+      const projectSubDirClasses = join(projectSubDir, 'classes');
+      fs.mkdirSync(projectSubDirClasses, { recursive: true });
+      fs.writeFileSync(join(projectSubDirClasses, 'ManifestCreateNut.cls'), 'empty cls');
+      fs.writeFileSync(join(projectSubDirClasses, 'ManifestCreateNut.cls-meta.xml'), '<empty cls meta/>');
+    });
+
+    it('should produce a manifest from --source-dir and specific --metadata', () => {
+      const combo1 = 'srcDirAndMetadata-package.xml';
+      const forceAppMainDir = join(session.project.dir, 'force-app', 'main');
+      const result = execCmd<Dictionary>(
+        `project generate manifest --source-dir ${forceAppMainDir} --metadata ApexClass:FileUtilities --name ${combo1} --json`,
+        {
+          ensureExitCode: 0,
+        }
+      ).jsonOutput?.result;
+      expect(result).to.be.ok;
+      expect(result).to.include({ path: combo1, name: combo1 });
+      const manifestContents = fs.readFileSync(join(session.project.dir, combo1), 'utf-8');
+      const expectedApexClasses = `<types>
+        <members>FileUtilities</members>
+        <name>ApexClass</name>
+    </types>`;
+      expect(manifestContents).to.include(expectedApexClasses);
+      expect(manifestContents).to.not.include('<members>ManifestCreateNut</members>');
+      expect(manifestContents).to.not.include('<members>PagedResult</members>');
+    });
+
+    it('should produce a manifest from --source-dir and wildcard --metadata', () => {
+      const combo1 = 'srcDirAndMetadata-package.xml';
+      const forceAppMainDir = join(session.project.dir, 'force-app', 'main');
+      const result = execCmd<Dictionary>(
+        `project generate manifest --source-dir ${forceAppMainDir} --metadata ApexClass --name ${combo1} --json`,
+        {
+          ensureExitCode: 0,
+        }
+      ).jsonOutput?.result;
+      expect(result).to.be.ok;
+      expect(result).to.include({ path: combo1, name: combo1 });
+      const manifestContents = fs.readFileSync(join(session.project.dir, combo1), 'utf-8');
+      expect(manifestContents).to.not.include('<name>AuraDefinitionBundle</name>');
+      expect(manifestContents).to.not.include('<members>ManifestCreateNut</members>');
+      expect(manifestContents).to.include('<members>PagedResult</members>');
+    });
+
+    it('should produce a manifest from --source-dir and specific --excluded-metadata', () => {
+      const combo3 = 'srcDirAndExcMetadata3-package.xml';
+      const forceAppMainDir = join(session.project.dir, 'force-app', 'main');
+      const result = execCmd<Dictionary>(
+        `project generate manifest --source-dir ${forceAppMainDir} --excluded-metadata ApexClass:FileUtilities --name ${combo3} --json`,
+        {
+          ensureExitCode: 0,
+        }
+      ).jsonOutput?.result;
+      expect(result).to.be.ok;
+      expect(result).to.include({ path: combo3, name: combo3 });
+      const manifestContents = fs.readFileSync(join(session.project.dir, combo3), 'utf-8');
+      expect(manifestContents).to.not.include('<members>ManifestCreateNut</members>');
+      expect(manifestContents).to.not.include('<members>FileUtilities</members>');
+      expect(manifestContents).to.include('<members>PagedResult</members>');
+    });
+
+    it('should produce a manifest from --source-dir and wildcard --excluded-metadata', () => {
+      const combo4 = 'srcDirAndExcMetadata4-package.xml';
+      const forceAppMainDir = join(session.project.dir, 'force-app', 'main');
+      const result = execCmd<Dictionary>(
+        `project generate manifest --source-dir ${forceAppMainDir} --excluded-metadata ApexClass --name ${combo4} --json`,
+        {
+          ensureExitCode: 0,
+        }
+      ).jsonOutput?.result;
+      expect(result).to.be.ok;
+      expect(result).to.include({ path: combo4, name: combo4 });
+      const manifestContents = fs.readFileSync(join(session.project.dir, combo4), 'utf-8');
+      expect(manifestContents).to.not.include('<members>ManifestCreateNut</members>');
+      expect(manifestContents).to.not.include('<members>FileUtilities</members>');
+      expect(manifestContents).to.not.include('<name>ApexClass</name>');
+      expect(manifestContents).to.include('<name>AuraDefinitionBundle</name>');
+    });
+  });
 });

@@ -1,14 +1,48 @@
+## [3.19.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.19.0...3.19.1) (2025-02-13)
+
+### Bug Fixes
+
+- convert URL to path before doing path ops ([#1290](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1290)) ([723d1ae](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/723d1ae37a50ab55732c9874254e89240746083f))
+
+# [3.19.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.3...3.19.0) (2025-02-12)
+
+### Features
+
+- add runtime to apex test method ([#1286](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1286)) ([77a4b87](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/77a4b87ed3457a905ffd735c5b027a85d0b405ee))
+
+## [3.18.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.2...3.18.3) (2025-02-12)
+
+## [3.18.1-manifest.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.0...3.18.1-manifest.0) (2025-02-06)
+
+### Bug Fixes
+
+- add back the exclusive with source-dir ([3d1b89d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3d1b89d0dd096301e0670a541765d8a9fcfe85e1))
+- adds tests for generate manifest ([d3983cf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d3983cfffc6ef88934a6d11272e83cbac66838bc))
+- allow source-dir flag with metadata and excluded metadata ([a64eff0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a64eff044e52121d6f162fab62867c287b375a75))
+- fix flag config ([d79dbd5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d79dbd559cb352082463beb5a272543bda3ead05))
+- remove manifest:generate flag validation ([4b706f8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4b706f8868d8107b315875ff4e908ed231db096f))
+
 ## [3.18.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.1...3.18.2) (2025-02-11)
 
 ### Bug Fixes
 
 - support retrieving agent pseudo type ([ac8dfa3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ac8dfa3606c1ccd66a2bc625cc82555e133a0770))
 
-## [3.18.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.0...3.18.1) (2025-02-10)
+## [3.18.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.1-manifest.0...3.18.1) (2025-02-10)
 
 ### Bug Fixes
 
 - always render apex test reports ([#1284](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1284)) ([46cfcd3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/46cfcd36c66eeb15ef82d6ba309530380ae85ab5))
+
+## [3.18.1-manifest.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.18.0...3.18.1-manifest.0) (2025-02-06)
+
+### Bug Fixes
+
+- add back the exclusive with source-dir ([3d1b89d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3d1b89d0dd096301e0670a541765d8a9fcfe85e1))
+- adds tests for generate manifest ([d3983cf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d3983cfffc6ef88934a6d11272e83cbac66838bc))
+- allow source-dir flag with metadata and excluded metadata ([a64eff0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a64eff044e52121d6f162fab62867c287b375a75))
+- fix flag config ([d79dbd5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d79dbd559cb352082463beb5a272543bda3ead05))
+- remove manifest:generate flag validation ([4b706f8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4b706f8868d8107b315875ff4e908ed231db096f))
 
 # [3.18.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.17.7...3.18.0) (2025-01-27)
 

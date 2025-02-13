@@ -53,14 +53,12 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
     metadata: arrayWithDeprecation({
       char: 'm',
       summary: messages.getMessage('flags.metadata.summary'),
-      exclusive: ['source-dir'],
     }),
     'source-dir': arrayWithDeprecation({
       char: 'p',
       aliases: ['sourcepath'],
       deprecateAliases: true,
       summary: messages.getMessage('flags.source-dir.summary'),
-      exclusive: ['metadata'],
     }),
     name: Flags.string({
       char: 'n',
@@ -89,8 +87,7 @@ export class ManifestGenerate extends SfCommand<ManifestGenerateCommandResult> {
       multiple: true,
       delimiter: ',',
       summary: messages.getMessage('flags.excluded-metadata.summary'),
-      dependsOn: ['from-org'],
-      exclusive: ['metadata'],
+      relationships: [{ type: 'some', flags: ['from-org', 'source-dir'] }],
     }),
     'from-org': Flags.custom({
       summary: messages.getMessage('flags.from-org.summary'),

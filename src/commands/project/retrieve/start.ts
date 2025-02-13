@@ -6,7 +6,7 @@
  */
 
 import { rm } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 import * as fs from 'node:fs';
 
 import { MultiStageOutput } from '@oclif/multi-stage-output';
@@ -21,6 +21,7 @@ import {
   MetadataApiRetrieveStatus,
   RegistryAccess,
   RequestStatus,
+  ComponentStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { getString } from '@salesforce/ts-types';
@@ -354,14 +355,18 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       );
       return directories;
     }
-    // If we retrieved only a package.xml, just return.
-    if (this.retrieveResult.getFileResponses().length < 2) {
+
+    // skip file move if all retrieves failed to avoid ENOENT err (no such file or directory).
+    if (
+      this.retrieveResult.getFileResponses().length ===
+      this.retrieveResult.getFileResponses().filter((c) => c.state === ComponentStatus.Failed).length
+    ) {
       return;
     }
 
     // getFileResponses fails once the files have been moved, calculate where they're moved to, and then move them
     this.retrieveResult.getFileResponses().forEach((fileResponse) => {
-      fileResponse.filePath = fileResponse.filePath?.replace(join('main', 'default'), '');
+      fileResponse.filePath = fileResponse.filePath?.replace(join('main', 'default', sep), '');
     });
     // move contents of 'main/default' to 'retrievetargetdir'
     await promisesQueue([join(resolvedTargetDir, 'main', 'default')], mv, 5, true);

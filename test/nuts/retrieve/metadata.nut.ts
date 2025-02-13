@@ -10,8 +10,10 @@ import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { execCmd } from '@salesforce/cli-plugins-testkit';
 import { SourceTestkit } from '@salesforce/source-testkit';
-import { expect } from 'chai';
+import { expect, config } from 'chai';
 import { RetrieveResultJson } from '../../../src/utils/types.js';
+
+config.truncateThreshold = 0;
 
 const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
 
@@ -81,6 +83,17 @@ describe('retrieve metadata NUTs', () => {
     it('should retrieve into the output-dir', async () => {
       await testkit.retrieve({ args: '--metadata ApexClass AuraDefinitionBundle --output-dir myOutput' });
       await testkit.expect.filesToBeRetrieved(['myOutput/classes/*', 'myOutput/aura/**/*']);
+    });
+
+    it('should retrieve a single metadata file with correct path', async () => {
+      const result = await testkit.retrieve({ args: '--metadata CustomTab:Broker__c --output-dir myOutput --json' });
+      expect(result?.status).to.equal(0);
+      const retrieveResult = result?.result as unknown as RetrieveResultJson;
+      expect(retrieveResult.success).to.equal(true);
+      expect(retrieveResult.files).to.be.an('array').with.lengthOf(1);
+      expect(retrieveResult.files[0].filePath).to.equal(
+        path.join(testkit.projectDir, 'myOutput', 'tabs', 'Broker__c.tab-meta.xml')
+      );
     });
 
     it('should warn when nothing retrieved into output-dir and not throw ENOENT', async () => {

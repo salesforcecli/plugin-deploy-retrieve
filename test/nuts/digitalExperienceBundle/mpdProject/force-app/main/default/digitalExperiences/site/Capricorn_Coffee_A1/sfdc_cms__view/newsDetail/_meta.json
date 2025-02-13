@@ -1,5 +1,5 @@
 {
-  "apiName" : "newsDetail",
-  "type" : "sfdc_cms__view",
-  "path" : "views"
+  "apiName": "newsDetail",
+  "type": "sfdc_cms__view",
+  "path": "views"
 }
