@@ -24,8 +24,11 @@ import { isString } from '@salesforce/ts-types';
 export type ComponentSetAndPackageDirPath = { packageDirPath: string; cs: ComponentSet };
 
 // TODO: there could be a cleaner way to read this
-const PRESET_DIR = fileURLToPath(
-  join(import.meta.resolve('@salesforce/source-deploy-retrieve'), '..', 'registry', 'presets')
+const PRESET_DIR = join(
+  fileURLToPath(import.meta.resolve('@salesforce/source-deploy-retrieve')),
+  '..',
+  'registry',
+  'presets'
 );
 export const PRESETS_PROP = 'sourceBehaviorOptions';
 export const PRESET_CHOICES = [...presetMap.keys()];
