@@ -1,3 +1,14 @@
+# [3.20.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.19.2...3.20.0) (2025-02-14)
+
+### Bug Fixes
+
+- add unit test ([19ee2f0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/19ee2f00caa9304779ac3345517a097e1c981075))
+- resolve local metadata files with pseudo types ([f5af252](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f5af252a7731bdb0e22ca640f673a95d94a689f0))
+
+### Features
+
+- support deleting with agent pseudo type ([79f1612](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/79f1612de1466f5c1bfd3549be0636d457639c36))
+
 ## [3.19.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.19.1...3.19.2) (2025-02-13)
 
 ### Bug Fixes
