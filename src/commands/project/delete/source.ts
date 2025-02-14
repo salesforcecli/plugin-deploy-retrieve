@@ -42,7 +42,7 @@ import { resolveApi, validateTests } from '../../../utils/deploy.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeleteResultFormatter } from '../../../formatters/deleteResultFormatter.js';
 import { DeployCache } from '../../../utils/deployCache.js';
-import { testLevelFlag, testsFlag } from '../../../utils/flags.js';
+import { isPseudoType, testLevelFlag, testsFlag } from '../../../utils/flags.js';
 const testFlags = 'Test';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -163,8 +163,10 @@ export class Source extends SfCommand<DeleteSourceJson> {
     }
   }
 
+  // eslint-disable-next-line complexity
   protected async delete(): Promise<void> {
     const sourcepaths = this.flags['source-dir'];
+    const resolveFromOrg = this.flags.metadata?.some(isPseudoType) ? this.flags['target-org'].getUsername() : undefined;
 
     this.componentSet = await ComponentSetBuilder.build({
       apiversion: this.flags['api-version'],
@@ -177,7 +179,18 @@ export class Source extends SfCommand<DeleteSourceJson> {
           }
         : undefined,
       projectDir: this.project?.getPath(),
+      ...(resolveFromOrg ? { org: { username: resolveFromOrg, exclude: [] } } : {}),
     });
+
+    // If we built a component set from an org connection, we have to resolve
+    // components from the project.
+    if (resolveFromOrg) {
+      this.componentSet = ComponentSet.fromSource({
+        fsPaths: await getPackageDirs(),
+        include: this.componentSet,
+      });
+    }
+
     if (this.flags['track-source'] && !this.flags['force-overwrite']) {
       await this.filterConflictsByComponentSet();
     }
