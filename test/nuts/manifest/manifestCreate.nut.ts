@@ -155,7 +155,7 @@ describe('project generate manifest', () => {
         '        <members>sfdcInternalInt__sfdc_scrt2</members>\n' +
         '        <name>PermissionSet</name>\n' +
         '    </types>\n' +
-        '    <version>61.0</version>\n' +
+        '    <version>63.0</version>\n' +
         '</Package>\n';
       expect(manifestContents).to.equal(expectedManifestContents);
     });
