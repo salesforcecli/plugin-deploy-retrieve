@@ -15,7 +15,7 @@
     "@salesforce/source-deploy-retrieve": "^12.15.0",
     "@salesforce/source-tracking": "^7.3.15",
     "@salesforce/ts-types": "^2.0.12",
-    "ansis": "^3.4.0",
+    "ansis": "^3.16.0",
     "terminal-link": "^3.0.0"
   },
   "devDependencies": {
