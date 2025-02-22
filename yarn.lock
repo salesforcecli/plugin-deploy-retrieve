@@ -2829,10 +2829,10 @@ ansicolors@~0.3.2:
   resolved "https://registry.yarnpkg.com/ansicolors/-/ansicolors-0.3.2.tgz#665597de86a9ffe3aa9bfbe6cae5c6ea426b4979"
   integrity sha512-QXu7BPrP29VllRxH8GwB7x5iX5qWKAAMLqKQGWTeLWVlNHNOpVMJ91dsxQAIWXpjuW5wqvxu3Jd/nRjrJ+0pqg==
 
-ansis@^3.10.0, ansis@^3.14.0, ansis@^3.3.2, ansis@^3.4.0, ansis@^3.5.2:
-  version "3.15.0"
-  resolved "https://registry.yarnpkg.com/ansis/-/ansis-3.15.0.tgz#8c2c5546685ceba0944dad9485903851b6e704f6"
-  integrity sha512-zIcWDJ+Kwqxfdnogx66Gxzr0kVmCcRAdat9nlY2IHsshqTN4fBH6tMeRMPA/2w0rpBayIJvjQAaa2/4RDrNqwg==
+ansis@^3.10.0, ansis@^3.14.0, ansis@^3.16.0, ansis@^3.3.2, ansis@^3.5.2:
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/ansis/-/ansis-3.16.0.tgz#5e365fd173133756a01199c77fc9146bb22fb5eb"
+  integrity sha512-sU7d/tfZiYrsIAXbdL/CNZld5bCkruzwT5KmqmadCJYxuLxHAOBjidxD5+iLmN/6xEfjcQq1l7OpsiCBlc4LzA==
 
 anymatch@~3.1.2:
   version "3.1.3"
