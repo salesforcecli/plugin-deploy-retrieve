@@ -1,3 +1,9 @@
+## [3.20.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.4...3.20.5) (2025-02-22)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 8.8.2 to 8.8.3 ([fd81028](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fd8102802a323a0fe2b3e3ffd47c8e7334c18dbb))
+
 ## [3.20.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.3...3.20.4) (2025-02-22)
 
 ### Bug Fixes
