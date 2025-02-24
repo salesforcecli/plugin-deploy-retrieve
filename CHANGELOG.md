@@ -1,3 +1,9 @@
+## [3.20.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.5...3.20.6) (2025-02-24)
+
+### Bug Fixes
+
+- bump sdr for analytics-dashboard ([#1299](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1299)) ([d57f7a7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d57f7a76f3479162ae3bd9aa454cef7a4fd4aa53))
+
 ## [3.20.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.4...3.20.5) (2025-02-22)
 
 ### Bug Fixes
