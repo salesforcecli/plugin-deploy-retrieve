@@ -189,6 +189,26 @@ export class Source extends SfCommand<DeleteSourceJson> {
         fsPaths: await getPackageDirs(),
         include: this.componentSet,
       });
+      // Confirm if the user wants to delete GenAiPlugins as part of an agent
+      if (!this.flags['no-prompt']) {
+        const genAiPlugins = this.componentSet.toArray().filter((comp) => comp.type.name === 'GenAiPlugin');
+        if (genAiPlugins?.length) {
+          const genAiPluginFiles = genAiPlugins
+            .map((plugin) => ('xml' in plugin ? plugin.xml : undefined))
+            .filter((p) => !!p);
+          const message = `Do you want to delete ALL related topics?:\n${genAiPluginFiles.join('\n')}`;
+          if (!(await this.confirm({ message, ms: 30_000 }))) {
+            // Create a new ComponentSet without GenAiPlugins
+            const compSetNoPlugins = new ComponentSet();
+            for (const comp of this.componentSet) {
+              if (comp.type.name !== 'GenAiPlugin') {
+                compSetNoPlugins.add(comp);
+              }
+            }
+            this.componentSet = compSetNoPlugins;
+          }
+        }
+      }
     }
 
     if (this.flags['track-source'] && !this.flags['force-overwrite']) {
@@ -441,7 +461,7 @@ Update the .forceignore file and try again.`);
           : messages.getMessage('areYouSure'),
       ];
 
-      return this.confirm({ message: message.join('\n') });
+      return this.confirm({ message: message.join('\n'), ms: 30_000 });
     }
     return true;
   }
