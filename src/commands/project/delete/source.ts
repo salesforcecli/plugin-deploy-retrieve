@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { Interfaces } from '@oclif/core';
+import { checkbox } from '@inquirer/prompts';
 import { Lifecycle, Messages, Org, SfError } from '@salesforce/core';
 import {
   ComponentSet,
@@ -193,15 +194,18 @@ export class Source extends SfCommand<DeleteSourceJson> {
       if (!this.flags['no-prompt']) {
         const genAiPlugins = this.componentSet.toArray().filter((comp) => comp.type.name === 'GenAiPlugin');
         if (genAiPlugins?.length) {
-          const genAiPluginFiles = genAiPlugins
-            .map((plugin) => ('xml' in plugin ? plugin.xml : undefined))
-            .filter((p) => !!p);
-          const message = `Do you want to delete ALL related topics?:\n${genAiPluginFiles.join('\n')}`;
-          if (!(await this.confirm({ message, ms: 30_000 }))) {
-            // Create a new ComponentSet without GenAiPlugins
+          const funcsToDelete = await checkbox<string | null>({
+            message: 'Select related topics to delete',
+            choices: genAiPlugins.map((plugin) => ({ name: plugin.fullName, value: plugin.fullName })),
+          });
+          if (funcsToDelete?.length !== genAiPlugins?.length) {
+            // Create a new ComponentSet with selected GenAiPlugins and all non-GenAiPlugins
             const compSetNoPlugins = new ComponentSet();
             for (const comp of this.componentSet) {
-              if (comp.type.name !== 'GenAiPlugin') {
+              if (
+                comp.type.name !== 'GenAiPlugin' ||
+                (comp.type.name === 'GenAiPlugin' && funcsToDelete.includes(comp.fullName))
+              ) {
                 compSetNoPlugins.add(comp);
               }
             }
