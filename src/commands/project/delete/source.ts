@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { Interfaces } from '@oclif/core';
+import * as inquirerPrompts from '@inquirer/prompts';
 import { Lifecycle, Messages, Org, SfError } from '@salesforce/core';
 import {
   ComponentSet,
@@ -136,6 +137,7 @@ export class Source extends SfCommand<DeleteSourceJson> {
   private org!: Org;
   private componentSet!: ComponentSet;
   private deployResult!: DeployResult;
+  private inquirer = inquirerPrompts;
 
   public async run(): Promise<DeleteSourceJson> {
     this.flags = (await this.parse(Source)).flags;
@@ -189,6 +191,29 @@ export class Source extends SfCommand<DeleteSourceJson> {
         fsPaths: await getPackageDirs(),
         include: this.componentSet,
       });
+      // Confirm if the user wants to delete GenAiPlugins as part of an agent
+      if (!this.flags['no-prompt']) {
+        const genAiPlugins = this.componentSet.toArray().filter((comp) => comp.type.name === 'GenAiPlugin');
+        if (genAiPlugins?.length) {
+          const funcsToDelete = await this.inquirer.checkbox<string | null>({
+            message: 'Select related topics to delete',
+            choices: genAiPlugins.map((plugin) => ({ name: plugin.fullName, value: plugin.fullName })),
+          });
+          if (funcsToDelete?.length !== genAiPlugins?.length) {
+            // Create a new ComponentSet with selected GenAiPlugins and all non-GenAiPlugins
+            const compSetNoPlugins = new ComponentSet();
+            for (const comp of this.componentSet) {
+              if (
+                comp.type.name !== 'GenAiPlugin' ||
+                (comp.type.name === 'GenAiPlugin' && funcsToDelete.includes(comp.fullName))
+              ) {
+                compSetNoPlugins.add(comp);
+              }
+            }
+            this.componentSet = compSetNoPlugins;
+          }
+        }
+      }
     }
 
     if (this.flags['track-source'] && !this.flags['force-overwrite']) {
@@ -441,7 +466,7 @@ Update the .forceignore file and try again.`);
           : messages.getMessage('areYouSure'),
       ];
 
-      return this.confirm({ message: message.join('\n') });
+      return this.confirm({ message: message.join('\n'), ms: 30_000 });
     }
     return true;
   }
