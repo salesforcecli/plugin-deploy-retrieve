@@ -143,7 +143,6 @@ describe('project delete source', () => {
   let resolveProjectConfigStub: sinon.SinonStub;
   let rmStub: sinon.SinonStub;
   let compSetFromSourceStub: sinon.SinonStub;
-  let confirmStub: sinon.SinonStub;
   let handlePromptStub: sinon.SinonStub;
 
   class TestDelete extends Source {
@@ -159,7 +158,7 @@ describe('project delete source', () => {
     params: string[],
     options?: {
       sourceApiVersion?: string;
-      confirm?: boolean;
+      inquirerMock?: { checkbox: sinon.SinonStub };
     }
   ) => {
     const cmd = new TestDelete(params, oclifConfigStub);
@@ -184,8 +183,14 @@ describe('project delete source', () => {
       onCancel: () => {},
       onError: () => {},
     });
-    confirmStub = stubMethod($$.SANDBOX, cmd, 'confirm').returns(options?.confirm ?? true);
     handlePromptStub = stubMethod($$.SANDBOX, cmd, 'handlePrompt').returns(confirm);
+    if (options?.inquirerMock) {
+      // @ts-expect-error stubbing private member of the command
+      cmd.inquirer = options.inquirerMock;
+    } else {
+      // @ts-expect-error stubbing private member of the command
+      cmd.inquirer = { checkbox: $$.SANDBOX.stub().resolves([]) };
+    }
     rmStub = stubMethod($$.SANDBOX, fs.promises, 'rm').resolves();
     stubMethod($$.SANDBOX, DeployCache, 'update').resolves();
 
@@ -269,10 +274,13 @@ describe('project delete source', () => {
 
   it('should pass along metadata and org for pseudo-type matching with plugins', async () => {
     const agentCompSet = new ComponentSet();
+    const pluginNames = [agentComponents[2].name, agentComponents[3].name];
     agentComponents.map((comp) => agentCompSet.add(comp));
     compSetFromSourceStub = compSetFromSourceStub.returns(agentCompSet);
+    const inquirerCheckboxStub = $$.SANDBOX.stub().resolves(pluginNames);
+    const inquirerMock = { checkbox: inquirerCheckboxStub };
     const metadata = ['Agent:My_Agent'];
-    await runDeleteCmd(['--metadata', metadata[0], '--json']);
+    await runDeleteCmd(['--metadata', metadata[0], '--json'], { inquirerMock });
     ensureCreateComponentSetArgs({
       metadata: {
         metadataEntries: metadata,
@@ -285,12 +293,12 @@ describe('project delete source', () => {
     });
     ensureHookArgs();
     expect(compSetFromSourceStub.calledOnce).to.be.true;
-    expect(confirmStub.calledOnce).to.be.true;
-    expect(confirmStub.firstCall.firstArg)
-      .has.deep.property('message')
-      .that.includes('Do you want to delete ALL related topics?')
-      .and.includes(agentComponents[2].xml)
-      .and.includes(agentComponents[3].xml);
+    expect(inquirerCheckboxStub.calledOnce).to.be.true;
+    expect(inquirerCheckboxStub.firstCall.firstArg).has.property('message', 'Select related topics to delete');
+    expect(inquirerCheckboxStub.firstCall.firstArg).has.deep.property('choices', [
+      { name: 'Test_Plugin1', value: 'Test_Plugin1' },
+      { name: 'Test_Plugin2', value: 'Test_Plugin2' },
+    ]);
     expect(handlePromptStub.calledOnce).to.be.true;
     expect(lifecycleEmitStub.firstCall.args[1]).to.deep.equal(agentComponents);
   });
@@ -299,8 +307,10 @@ describe('project delete source', () => {
     const agentCompSet = new ComponentSet();
     agentComponents.map((comp) => agentCompSet.add(comp));
     compSetFromSourceStub = compSetFromSourceStub.returns(agentCompSet);
+    const inquirerCheckboxStub = $$.SANDBOX.stub().resolves([]);
+    const inquirerMock = { checkbox: inquirerCheckboxStub };
     const metadata = ['Agent:My_Agent'];
-    await runDeleteCmd(['--metadata', metadata[0], '--json'], { confirm: false });
+    await runDeleteCmd(['--metadata', metadata[0], '--json'], { inquirerMock });
     ensureCreateComponentSetArgs({
       metadata: {
         metadataEntries: metadata,
@@ -313,12 +323,11 @@ describe('project delete source', () => {
     });
     ensureHookArgs();
     expect(compSetFromSourceStub.calledOnce).to.be.true;
-    expect(confirmStub.calledOnce).to.be.true;
-    expect(confirmStub.firstCall.firstArg)
-      .has.deep.property('message')
-      .that.includes('Do you want to delete ALL related topics?')
-      .and.includes(agentComponents[2].xml)
-      .and.includes(agentComponents[3].xml);
+    expect(inquirerCheckboxStub.calledOnce).to.be.true;
+    expect(inquirerCheckboxStub.firstCall.firstArg).has.deep.property('choices', [
+      { name: 'Test_Plugin1', value: 'Test_Plugin1' },
+      { name: 'Test_Plugin2', value: 'Test_Plugin2' },
+    ]);
     expect(handlePromptStub.calledOnce).to.be.true;
     expect(lifecycleEmitStub.firstCall.args[1]).to.deep.equal([agentComponents[0], agentComponents[1]]);
   });
