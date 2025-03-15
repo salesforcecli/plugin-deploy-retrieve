@@ -1608,7 +1608,7 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.10.3", "@salesforce/source-deploy-retrieve@^12.16.6":
+"@salesforce/source-deploy-retrieve@^12.16.4", "@salesforce/source-deploy-retrieve@^12.16.6":
   version "12.16.6"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.16.6.tgz#59237914564bf1c0a418089c4cc0a0498f01f9cc"
   integrity sha512-k0DHARp4dKUjn5JVSBF6YYfpBNU3jooRblXIoRN074gIeJs8mUcK4y5lL7Eck9FW0CPjbgWq7+5StvYQxFIODw==
@@ -1629,19 +1629,19 @@
     proxy-agent "^6.4.0"
     yaml "^2.6.1"
 
-"@salesforce/source-testkit@^2.2.93":
-  version "2.2.93"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.93.tgz#a4c537b328ab97a33f9411d5330f7d182f43ab50"
-  integrity sha512-LUA1iKCpZKM+Yv5s61R4249w0/78MtuDc+tWj3rp4ctcLCqVhSo73sx/+p9UL3xG1YlbR07WbamsVNyDhpdcyA==
+"@salesforce/source-testkit@^2.2.106":
+  version "2.2.106"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.106.tgz#57bfd895999e28f366a4d93c5563446d7991d5ce"
+  integrity sha512-MQrDl4Wltgz7CcxZyRziV11kCYOwwH1zUKIQG+CLo+S/itTGH1CJgTc2HBLxEQAk8AlvOU/o2W2vHIZU2kCXMw==
   dependencies:
     "@salesforce/cli-plugins-testkit" "^5.3.39"
-    "@salesforce/core" "^8.8.0"
+    "@salesforce/core" "^8.8.5"
     "@salesforce/kit" "^3.2.3"
-    "@salesforce/source-deploy-retrieve" "^12.10.3"
+    "@salesforce/source-deploy-retrieve" "^12.16.4"
     "@salesforce/ts-types" "^2.0.12"
     chai "^4.5.0"
     debug "^4.4.0"
-    fast-glob "^3.3.2"
+    fast-glob "^3.3.3"
     shelljs "^0.8.4"
     sinon "^10.0.0"
 
