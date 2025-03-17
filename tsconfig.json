@@ -3,11 +3,7 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@salesforce/source-deploy-retrieve": ["node_modules/@salesforce/source-deploy-retrieve"]
-    }
+    "skipLibCheck": true
   },
   "include": ["./src/**/*.ts"]
 }
