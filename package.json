@@ -6,14 +6,14 @@
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
     "@oclif/core": "^4.2.10",
-    "@oclif/multi-stage-output": "^0.8.11",
+    "@oclif/multi-stage-output": "^0.8.12",
     "@salesforce/apex-node": "^8.1.19",
     "@salesforce/core": "^8.8.5",
     "@salesforce/kit": "^3.2.3",
     "@salesforce/plugin-info": "^3.4.47",
-    "@salesforce/sf-plugins-core": "^12.2.0",
-    "@salesforce/source-deploy-retrieve": "^12.16.6",
-    "@salesforce/source-tracking": "^7.3.17",
+    "@salesforce/sf-plugins-core": "^12.2.1",
+    "@salesforce/source-deploy-retrieve": "12.16.9",
+    "@salesforce/source-tracking": "^7.3.19",
     "@salesforce/ts-types": "^2.0.12",
     "ansis": "^3.17.0",
     "terminal-link": "^3.0.0"
