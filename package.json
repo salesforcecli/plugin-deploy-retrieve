@@ -11,7 +11,7 @@
     "@salesforce/core": "^8.8.5",
     "@salesforce/kit": "^3.2.3",
     "@salesforce/plugin-info": "^3.4.47",
-    "@salesforce/sf-plugins-core": "^12.2.0",
+    "@salesforce/sf-plugins-core": "^12.2.1",
     "@salesforce/source-deploy-retrieve": "12.16.9",
     "@salesforce/source-tracking": "^7.3.19",
     "@salesforce/ts-types": "^2.0.12",
