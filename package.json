@@ -1,12 +1,12 @@
 {
   "name": "@salesforce/plugin-deploy-retrieve",
   "description": "deploy and retrieve commands for sf",
-  "version": "3.20.9",
+  "version": "3.20.10",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
     "@inquirer/prompts": "^7.3.3",
-    "@oclif/core": "^4.2.9",
+    "@oclif/core": "^4.2.10",
     "@oclif/multi-stage-output": "^0.8.11",
     "@salesforce/apex-node": "^8.1.19",
     "@salesforce/core": "^8.8.5",
@@ -20,12 +20,12 @@
     "terminal-link": "^3.0.0"
   },
   "devDependencies": {
-    "@oclif/plugin-command-snapshot": "^5.2.36",
+    "@oclif/plugin-command-snapshot": "^5.2.37",
     "@salesforce/cli-plugins-testkit": "^5.3.38",
     "@salesforce/dev-scripts": "^10.2.12",
-    "@salesforce/plugin-command-reference": "^3.1.39",
+    "@salesforce/plugin-command-reference": "^3.1.47",
     "@salesforce/schemas": "^1.9.0",
-    "@salesforce/source-testkit": "^2.2.93",
+    "@salesforce/source-testkit": "^2.2.106",
     "@salesforce/ts-sinon": "^1.4.30",
     "cross-env": "^7.0.3",
     "eslint-plugin-sf-plugin": "^1.20.15",
