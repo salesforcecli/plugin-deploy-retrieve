@@ -1,8 +1,26 @@
-## [3.20.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.9...3.20.10) (2025-03-15)
+## [3.20.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.10...3.20.11) (2025-03-17)
+
+### Bug Fixes
+
+- more explicit typing for conver flags ([b8bc5ef](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b8bc5efa82b315a425e2518d5dd27ba26a13e6a9))
+
+## [3.20.10-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.9...3.20.10-dev.0) (2025-03-14)
+
+### Bug Fixes
+
+- use updated connectionResolver from SDR ([166ee34](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/166ee34627b74568f00ca71abf45bcaadf937ff8))
+
+## [3.20.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.10-dev.0...3.20.10) (2025-03-15)
 
 ### Bug Fixes
 
 - **deps:** bump @oclif/core from 4.2.9 to 4.2.10 ([1ac6e3b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1ac6e3bd31aad3de43913d7e2dc69ca5aa36fabe))
+
+## [3.20.10-dev.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.9...3.20.10-dev.0) (2025-03-14)
+
+### Bug Fixes
+
+- use updated connectionResolver from SDR ([166ee34](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/166ee34627b74568f00ca71abf45bcaadf937ff8))
 
 ## [3.20.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.8...3.20.9) (2025-03-11)
 
