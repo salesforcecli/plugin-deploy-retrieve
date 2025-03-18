@@ -39,7 +39,10 @@ export class Source extends SfCommand<ConvertResultJson> {
   public static readonly aliases = ['force:source:convert'];
   public static readonly deprecateAliases = true;
   public static readonly flags = {
-    'api-version': { ...orgApiVersionFlagWithDeprecations, summary: messages.getMessage('flags.api-version.summary') },
+    'api-version': {
+      ...orgApiVersionFlagWithDeprecations,
+      summary: messages.getMessage('flags.api-version.summary'),
+    } as Interfaces.OptionFlag<string | undefined, Interfaces.CustomOptions>,
     loglevel,
     'root-dir': Flags.directory({
       aliases: ['rootdir'],
