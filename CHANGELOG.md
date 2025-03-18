@@ -1,3 +1,14 @@
+# [3.21.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.11...3.21.0) (2025-03-18)
+
+### Bug Fixes
+
+- mock inquirer in tests ([dc47007](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/dc47007a6163053212ff16cfbd8eeb11a73f59e4))
+- use checkbox inquirer for topic deletion ([43b99c7](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/43b99c7a48a000b5747ef36dfcf2ff7c54546baf))
+
+### Features
+
+- confirm agent topic deletion for agent pseudo-types ([bec6b7c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/bec6b7ce30cbde6dd248334ab27cc9ca3bb68167))
+
 ## [3.20.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.20.10...3.20.11) (2025-03-17)
 
 ### Bug Fixes
