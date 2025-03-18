@@ -12,6 +12,7 @@ import {
   ComponentSet,
   ComponentSetBuilder,
   ComponentSetOptions,
+  RegistryAccess,
   SourceComponent,
 } from '@salesforce/source-deploy-retrieve';
 import { Lifecycle, SfProject } from '@salesforce/core';
@@ -39,6 +40,30 @@ export const exampleSourceComponent: ComponentProperties = {
   xml: '/dreamhouse-lwc/force-app/main/default/classes/GeocodingService.cls-meta.xml',
   content: '/dreamhouse-lwc/force-app/main/default/classes/GeocodingService.cls',
 };
+
+const registry = new RegistryAccess();
+const agentComponents: SourceComponent[] = [
+  new SourceComponent({
+    name: 'My_Agent',
+    type: registry.getTypeByName('Bot'),
+    xml: '/dreamhouse-lwc/force-app/main/default/bots/My_Agent.bot-meta.xml',
+  }),
+  new SourceComponent({
+    name: 'Test_Planner',
+    type: registry.getTypeByName('GenAiPlanner'),
+    xml: '/dreamhouse-lwc/force-app/main/default/genAiPlanners/Test_Planner.genAiPlanner-meta.xml',
+  }),
+  new SourceComponent({
+    name: 'Test_Plugin1',
+    type: registry.getTypeByName('GenAiPlugin'),
+    xml: '/dreamhouse-lwc/force-app/main/default/genAiPlugins/Test_Plugin1.genAiPlugin-meta.xml',
+  }),
+  new SourceComponent({
+    name: 'Test_Plugin2',
+    type: registry.getTypeByName('GenAiPlugin'),
+    xml: '/dreamhouse-lwc/force-app/main/default/genAiPlugins/Test_Plugin2.genAiPlugin-meta.xml',
+  }),
+];
 
 export const exampleDeleteResponse = {
   // required but ignored by the delete UT
@@ -118,6 +143,7 @@ describe('project delete source', () => {
   let resolveProjectConfigStub: sinon.SinonStub;
   let rmStub: sinon.SinonStub;
   let compSetFromSourceStub: sinon.SinonStub;
+  let handlePromptStub: sinon.SinonStub;
 
   class TestDelete extends Source {
     public async runIt() {
@@ -128,7 +154,13 @@ describe('project delete source', () => {
     }
   }
 
-  const runDeleteCmd = async (params: string[], options?: { sourceApiVersion?: string }) => {
+  const runDeleteCmd = async (
+    params: string[],
+    options?: {
+      sourceApiVersion?: string;
+      inquirerMock?: { checkbox: sinon.SinonStub };
+    }
+  ) => {
     const cmd = new TestDelete(params, oclifConfigStub);
     cmd.project = SfProject.getInstance();
     $$.SANDBOX.stub(cmd.project, 'getDefaultPackage').returns({ name: '', path: '', fullPath: defaultPackagePath });
@@ -151,7 +183,14 @@ describe('project delete source', () => {
       onCancel: () => {},
       onError: () => {},
     });
-    stubMethod($$.SANDBOX, cmd, 'handlePrompt').returns(confirm);
+    handlePromptStub = stubMethod($$.SANDBOX, cmd, 'handlePrompt').returns(confirm);
+    if (options?.inquirerMock) {
+      // @ts-expect-error stubbing private member of the command
+      cmd.inquirer = options.inquirerMock;
+    } else {
+      // @ts-expect-error stubbing private member of the command
+      cmd.inquirer = { checkbox: $$.SANDBOX.stub().resolves([]) };
+    }
     rmStub = stubMethod($$.SANDBOX, fs.promises, 'rm').resolves();
     stubMethod($$.SANDBOX, DeployCache, 'update').resolves();
 
@@ -233,9 +272,15 @@ describe('project delete source', () => {
     ensureHookArgs();
   });
 
-  it('should pass along metadata and org for pseudo-type matching', async () => {
+  it('should pass along metadata and org for pseudo-type matching with plugins', async () => {
+    const agentCompSet = new ComponentSet();
+    const pluginNames = [agentComponents[2].name, agentComponents[3].name];
+    agentComponents.map((comp) => agentCompSet.add(comp));
+    compSetFromSourceStub = compSetFromSourceStub.returns(agentCompSet);
+    const inquirerCheckboxStub = $$.SANDBOX.stub().resolves(pluginNames);
+    const inquirerMock = { checkbox: inquirerCheckboxStub };
     const metadata = ['Agent:My_Agent'];
-    await runDeleteCmd(['--metadata', metadata[0], '--json']);
+    await runDeleteCmd(['--metadata', metadata[0], '--json'], { inquirerMock });
     ensureCreateComponentSetArgs({
       metadata: {
         metadataEntries: metadata,
@@ -248,6 +293,43 @@ describe('project delete source', () => {
     });
     ensureHookArgs();
     expect(compSetFromSourceStub.calledOnce).to.be.true;
+    expect(inquirerCheckboxStub.calledOnce).to.be.true;
+    expect(inquirerCheckboxStub.firstCall.firstArg).has.property('message', 'Select related topics to delete');
+    expect(inquirerCheckboxStub.firstCall.firstArg).has.deep.property('choices', [
+      { name: 'Test_Plugin1', value: 'Test_Plugin1' },
+      { name: 'Test_Plugin2', value: 'Test_Plugin2' },
+    ]);
+    expect(handlePromptStub.calledOnce).to.be.true;
+    expect(lifecycleEmitStub.firstCall.args[1]).to.deep.equal(agentComponents);
+  });
+
+  it('should pass along metadata and org for pseudo-type matching without plugins', async () => {
+    const agentCompSet = new ComponentSet();
+    agentComponents.map((comp) => agentCompSet.add(comp));
+    compSetFromSourceStub = compSetFromSourceStub.returns(agentCompSet);
+    const inquirerCheckboxStub = $$.SANDBOX.stub().resolves([]);
+    const inquirerMock = { checkbox: inquirerCheckboxStub };
+    const metadata = ['Agent:My_Agent'];
+    await runDeleteCmd(['--metadata', metadata[0], '--json'], { inquirerMock });
+    ensureCreateComponentSetArgs({
+      metadata: {
+        metadataEntries: metadata,
+        directoryPaths: [defaultPackagePath],
+      },
+      org: {
+        username: testOrg.username,
+        exclude: [],
+      },
+    });
+    ensureHookArgs();
+    expect(compSetFromSourceStub.calledOnce).to.be.true;
+    expect(inquirerCheckboxStub.calledOnce).to.be.true;
+    expect(inquirerCheckboxStub.firstCall.firstArg).has.deep.property('choices', [
+      { name: 'Test_Plugin1', value: 'Test_Plugin1' },
+      { name: 'Test_Plugin2', value: 'Test_Plugin2' },
+    ]);
+    expect(handlePromptStub.calledOnce).to.be.true;
+    expect(lifecycleEmitStub.firstCall.args[1]).to.deep.equal([agentComponents[0], agentComponents[1]]);
   });
 
   it('should pass along apiversion', async () => {
