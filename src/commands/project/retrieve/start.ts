@@ -10,7 +10,16 @@ import { dirname, join, resolve, sep } from 'node:path';
 import * as fs from 'node:fs';
 
 import { MultiStageOutput } from '@oclif/multi-stage-output';
-import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError, SfProject } from '@salesforce/core';
+import {
+  ConfigAggregator,
+  EnvironmentVariable,
+  Lifecycle,
+  Logger,
+  Messages,
+  OrgConfigProperties,
+  SfError,
+  SfProject,
+} from '@salesforce/core';
 import {
   RetrieveResult,
   ComponentSetBuilder,
@@ -24,7 +33,7 @@ import {
   ComponentStatus,
 } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
-import { getString } from '@salesforce/ts-types';
+import { getString, isString } from '@salesforce/ts-types';
 import { SourceTracking, SourceConflictError } from '@salesforce/source-tracking';
 import { Duration } from '@salesforce/kit';
 import { Interfaces } from '@oclif/core';
@@ -43,6 +52,14 @@ const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retr
 
 type Format = 'source' | 'metadata';
 const mdapiFlagGroup = 'Metadata API Format';
+
+let logger: Logger;
+const getLogger = (): Logger => {
+  if (!logger) {
+    logger = Logger.childFromRoot('RetrieveMetadataCommand');
+  }
+  return logger;
+};
 
 export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static readonly summary = messages.getMessage('summary');
@@ -382,6 +399,8 @@ type RetrieveAndDeleteTargets = {
   fileResponsesFromDelete?: FileResponse[];
 };
 
+type RetrieveMetadataFlags = Interfaces.InferredFlags<typeof RetrieveMetadata.flags>;
+
 const wantsToRetrieveCustomFields = (cs: ComponentSet, registry: RegistryAccess): boolean => {
   const hasCustomField = cs.has({
     type: registry.getTypeByName('CustomField'),
@@ -395,8 +414,9 @@ const wantsToRetrieveCustomFields = (cs: ComponentSet, registry: RegistryAccess)
   return hasCustomField && !hasCustomObject;
 };
 
+// eslint-disable-next-line complexity
 const buildRetrieveAndDeleteTargets = async (
-  flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
+  flags: RetrieveMetadataFlags,
   format: Format
 ): Promise<RetrieveAndDeleteTargets> => {
   const isChanges =
@@ -428,11 +448,18 @@ const buildRetrieveAndDeleteTargets = async (
     }
     return result;
   } else {
+    const apiVersion = await resolveApiVersion(flags);
     const hasPseudoType = flags.metadata?.some(isPseudoType);
+    const shouldResolvePseudoFromOrg = hasPseudoType && Number(apiVersion) < 64.0;
+    let replacedMetadataEntries: string[] | undefined;
+    if (hasPseudoType && Number(apiVersion) > 63.0) {
+      // replace Agent metadata types with Bot and use rootTypesWithDependencies RetrieveOption
+      replacedMetadataEntries = flags.metadata?.map((md) => md.replace('Agent', 'Bot'));
+    }
     const hasRegexMatch = flags.metadata?.some(isRegexMatch);
     // Deliberately using logical or
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    const retrieveFromOrg = hasRegexMatch || hasPseudoType ? flags['target-org'].getUsername() : undefined;
+    const retrieveFromOrg = hasRegexMatch || shouldResolvePseudoFromOrg ? flags['target-org'].getUsername() : undefined;
     if (format === 'source' && (await flags['target-org'].supportsSourceTracking())) {
       await SourceTracking.create({
         org: flags['target-org'],
@@ -462,7 +489,7 @@ const buildRetrieveAndDeleteTargets = async (
         ...(flags.metadata
           ? {
               metadata: {
-                metadataEntries: flags.metadata,
+                metadataEntries: replacedMetadataEntries ?? flags.metadata,
                 // if mdapi format, there might not be a project
                 directoryPaths: format === 'metadata' || flags['output-dir'] ? [] : await getPackageDirs(),
               },
@@ -485,30 +512,70 @@ const buildRetrieveAndDeleteTargets = async (
  * @returns RetrieveSetOptions (an object that can be passed as the options for a ComponentSet retrieve)
  */
 const buildRetrieveOptions = async (
-  flags: Interfaces.InferredFlags<typeof RetrieveMetadata.flags>,
+  flags: RetrieveMetadataFlags,
   format: Format,
   zipFileName: string,
   output: string | undefined
-): Promise<RetrieveSetOptions> => ({
-  usernameOrConnection: flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
-  merge: true,
-  packageOptions: flags['package-name'],
-  format,
-  ...(format === 'metadata'
-    ? {
-        singlePackage: flags['single-package'],
-        unzip: flags.unzip,
-        zipFileName,
-        // known to exist because that's how `format` becomes 'metadata'
-        output: flags['target-metadata-dir'] as string,
-      }
-    : {
-        output: output ?? (await SfProject.resolve()).getDefaultPackage().fullPath,
-      }),
-});
+): Promise<RetrieveSetOptions> => {
+  const apiVersion = await resolveApiVersion(flags);
+  return {
+    usernameOrConnection: flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
+    merge: true,
+    packageOptions: flags['package-name'],
+    format,
+    ...(hasRootTypesWithDependencies(flags, apiVersion) ? { rootTypesWithDependencies: ['Bot'] } : {}),
+    ...(format === 'metadata'
+      ? {
+          singlePackage: flags['single-package'],
+          unzip: flags.unzip,
+          zipFileName,
+          // known to exist because that's how `format` becomes 'metadata'
+          output: flags['target-metadata-dir'] as string,
+        }
+      : {
+          output: output ?? (await SfProject.resolve()).getDefaultPackage().fullPath,
+        }),
+  };
+};
 
 // check if we're retrieving metadata based on a pattern ...
 const isRegexMatch = (mdEntry: string): boolean => {
   const mdName = mdEntry.split(':')[1];
   return mdName?.includes('*') && mdName?.length > 1 && !mdName?.includes('.*');
+};
+
+const hasRootTypesWithDependencies = (flags: RetrieveMetadataFlags, apiVersion?: number): boolean => {
+  const hasDeps = !!flags.metadata?.some(isPseudoType) && Number(apiVersion) > 63.0;
+  if (hasDeps) {
+    getLogger().debug(
+      'Requesting metadata with rootTypesWithDependencies param because a pseudotype was detected and API Version is 64.0 or higher.'
+    );
+  }
+  return hasDeps;
+};
+
+// Resolve the API Version used for the retrieve. NOTE: it does not resolve sourceApiVersion.
+const resolveApiVersion = async (flags: RetrieveMetadataFlags): Promise<number | undefined> => {
+  try {
+    // Use api-version flag if defined
+    if (isString(flags['api-version'])) {
+      return Number(flags['api-version']);
+    }
+
+    // Use config value if defined
+    const apiVersionConfig = ConfigAggregator.getValue(OrgConfigProperties.ORG_API_VERSION).value;
+    if (isString(apiVersionConfig)) {
+      return Number(apiVersionConfig);
+    }
+
+    // Use max api version of target org
+    if (flags['target-org']) {
+      return Number(await flags['target-org'].getConnection().retrieveMaxApiVersion());
+    }
+  } catch (e) {
+    // Log resolution error
+    const err = SfError.wrap(e);
+    getLogger().debug(`Error when resolving API version during metadata retrieve: ${err.message}
+      Due to: ${err.stack ?? 'unknown (no error stack)'}`);
+  }
 };
