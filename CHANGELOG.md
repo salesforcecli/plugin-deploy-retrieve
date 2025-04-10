@@ -1,3 +1,9 @@
+# [3.22.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.21.3...3.22.0) (2025-04-10)
+
+### Features
+
+- use the rootTypesWithDependencies RetrieveRequest param ([4a3e8b3](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4a3e8b3068e51b9abc76fbd4a1dfaa90cd98cb85))
+
 ## [3.21.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.21.2...3.21.3) (2025-04-08)
 
 ### Bug Fixes
