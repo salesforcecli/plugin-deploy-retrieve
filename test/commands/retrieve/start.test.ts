@@ -210,6 +210,40 @@ describe('project retrieve start', () => {
     ensureRetrieveArgs({ format: 'source' });
   });
 
+  it('should pass along metadata and org for pseudo-type matching with API version 63.0', async () => {
+    const metadata = ['Agent:My_Agent'];
+    const apiversion = '63.0';
+    const result = await RetrieveMetadata.run(['--metadata', metadata[0], '--api-version', apiversion, '--json']);
+    expect(result).to.deep.equal(expectedResults);
+    ensureCreateComponentSetArgs({
+      apiversion,
+      metadata: {
+        metadataEntries: metadata,
+        directoryPaths: [expectedDirectoryPath],
+      },
+      org: {
+        username: testOrg.username,
+        exclude: [],
+      },
+    });
+    ensureRetrieveArgs({ format: 'source' });
+  });
+
+  it('should pass along Bot metadata and rootTypesWithDependencies for pseudo-type matching with API version 64.0', async () => {
+    const metadata = ['Agent:My_Agent'];
+    const apiversion = '64.0';
+    const result = await RetrieveMetadata.run(['--metadata', metadata[0], '--api-version', apiversion, '--json']);
+    expect(result).to.deep.equal(expectedResults);
+    ensureCreateComponentSetArgs({
+      apiversion,
+      metadata: {
+        metadataEntries: ['Bot:My_Agent'],
+        directoryPaths: [expectedDirectoryPath],
+      },
+    });
+    ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['Bot'] });
+  });
+
   it('should pass along metadata and org for pseudo-type wildcard matching', async () => {
     const metadata = ['ApexClass', 'Agent'];
     const result = await RetrieveMetadata.run(['--metadata', metadata[0], '--metadata', metadata[1], '--json']);
