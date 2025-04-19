@@ -1917,10 +1917,10 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.16.10", "@salesforce/source-deploy-retrieve@^12.18.4", "@salesforce/source-deploy-retrieve@^12.19.2":
-  version "12.19.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.19.2.tgz#0a58e5825491fddf2b23619ef7bc6fd6ea42d035"
-  integrity sha512-pnWFhQrPPbv+gsTm0u3hst0vzttQL6Tm+ogGKUbtM+yrLNurSfvlRyNoJowu4tHAyWL1aSpBKxPa7DwB/vy0RQ==
+"@salesforce/source-deploy-retrieve@^12.18.4", "@salesforce/source-deploy-retrieve@^12.19.0", "@salesforce/source-deploy-retrieve@^12.19.2":
+  version "12.19.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.19.3.tgz#42b34913b624115aee36cd289cb5ea1d5de9b7b1"
+  integrity sha512-rvdEfi2beJmVbN4NQ3Ve4dULq+wMFuLKBKpmNBIb9udXNVZd8Q0P7TO9pM/tzfeAfwfdTE7swXaYe2Qv5UAd+g==
   dependencies:
     "@salesforce/core" "^8.8.7"
     "@salesforce/kit" "^3.2.3"
@@ -1938,15 +1938,15 @@
     proxy-agent "^6.4.0"
     yaml "^2.7.1"
 
-"@salesforce/source-testkit@^2.2.112":
-  version "2.2.112"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.112.tgz#907f04a41c573b12cb3d0aa13f54695b1261de5d"
-  integrity sha512-eR8x2sJd3zvOeusFHtUn3Cpfe3W2wmvcTiFfVzbykyOP6mhe5u4UETpHuHaR+RR82EqJ8SfRV0eRSyELRTnIPg==
+"@salesforce/source-testkit@^2.2.116":
+  version "2.2.116"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.116.tgz#c235b6cf0df62d33b270dd2602e3cc69da259b39"
+  integrity sha512-tJzyOlcKNE64mZsUj7bFHZia8vMRoAs+FClOBfZq733qjkvYKz8ho4CXNL8cCrUqIu5UdTj+3as6lVw4I3rYQg==
   dependencies:
     "@salesforce/cli-plugins-testkit" "^5.3.39"
-    "@salesforce/core" "^8.8.7"
+    "@salesforce/core" "^8.9.0"
     "@salesforce/kit" "^3.2.3"
-    "@salesforce/source-deploy-retrieve" "^12.16.10"
+    "@salesforce/source-deploy-retrieve" "^12.19.0"
     "@salesforce/ts-types" "^2.0.12"
     chai "^4.5.0"
     debug "^4.4.0"
