@@ -12,6 +12,8 @@ If your org allows source tracking, then this command tracks the changes in your
 
 To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --source-dir.
 
+When retrieving metadata matching a pattern, a `.*` pattern is treated literally since certain metadata can be referenced that way within a manifest.
+
 # examples
 
 - Retrieve all remote changes from your default org:
@@ -46,6 +48,10 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 - Retrieve all custom objects in the SBQQ namespace by using a wildcard and quotes:
 
       sf <%= command.id %> --metadata 'CustomObject:SBQQ__*'
+
+- Retrieve all list views for the Case standard object:
+
+      sf <%= command.id %> --metadata 'ListView:Case*'
 
 - Retrieve all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
