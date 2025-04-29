@@ -12,8 +12,6 @@ If your org allows source tracking, then this command tracks the changes in your
 
 To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --source-dir.
 
-When retrieving metadata matching a pattern, a `.*` pattern is treated literally since certain metadata can be referenced that way within a manifest.
-
 # examples
 
 - Retrieve all remote changes from your default org:
