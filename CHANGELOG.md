@@ -1,3 +1,9 @@
+## [3.22.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.4...3.22.5) (2025-04-29)
+
+### Bug Fixes
+
+- update retrieve doc for .\* wildcard retrieval - W-18369903 ([#1341](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1341)) ([6f63bdd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6f63bdd52c9d56e7a770f60248b15c7b05b35e47))
+
 ## [3.22.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.3...3.22.4) (2025-04-15)
 
 ### Bug Fixes
