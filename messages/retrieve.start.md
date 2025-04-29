@@ -47,6 +47,10 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
       sf <%= command.id %> --metadata 'CustomObject:SBQQ__*'
 
+- Retrieve all list views for the Case standard object:
+
+      sf <%= command.id %> --metadata 'ListView:Case*'
+
 - Retrieve all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
   <%= config.bin %> <%= command.id %> --metadata CustomObject ApexClass
