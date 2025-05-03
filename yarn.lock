@@ -1577,7 +1577,7 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsforce/jsforce-node@^3.6.3", "@jsforce/jsforce-node@^3.7.0", "@jsforce/jsforce-node@^3.8.1":
+"@jsforce/jsforce-node@^3.7.0", "@jsforce/jsforce-node@^3.8.1":
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.8.1.tgz#482fcf2820b48a6b10930d33550eb4e4cbd1e480"
   integrity sha512-+IZZC7VfNjhkTyeAspBc4Z35Y5eAP0RIWQnyfKahsbY/aLjiFRIM9ejl1YbWbrbabf5ODFSUgBGmOiEYLW3f7Q==
@@ -1741,13 +1741,13 @@
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@salesforce/apex-node@^8.1.19":
-  version "8.1.19"
-  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-8.1.19.tgz#1de67d0e66f2a6d568621eb9b40f4f9ef656cf2e"
-  integrity sha512-zW+C7/NIoNAxLw/CH0pKIu/qD7W0kaxHxFirxmiaXNZ2EoIAG1jPpRTCvDPODs+yeoxd5ls+j4EeJrEbuc2ceQ==
+"@salesforce/apex-node@^8.1.24":
+  version "8.1.24"
+  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-8.1.24.tgz#0fde9f933f468eacc5bf11264a71840f9c926823"
+  integrity sha512-ZKu17xmjBHJpBwYN3OliThqLhu6ZbQ2WLeMJmLHkYRiOjGm0zVA6DfFfMghVGLlZn5q8zcpiRMSgtr9BHePXQQ==
   dependencies:
-    "@jsforce/jsforce-node" "^3.6.3"
-    "@salesforce/core" "^8.8.0"
+    "@jsforce/jsforce-node" "^3.8.1"
+    "@salesforce/core" "^8.10.0"
     "@salesforce/kit" "^3.2.3"
     "@types/istanbul-reports" "^3.0.4"
     bfj "8.0.0"
