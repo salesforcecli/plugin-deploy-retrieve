@@ -1614,7 +1614,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oclif/core@^4", "@oclif/core@^4.0.27", "@oclif/core@^4.2.10", "@oclif/core@^4.2.9":
+"@oclif/core@^4", "@oclif/core@^4.0.27", "@oclif/core@^4.2.10":
   version "4.2.10"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-4.2.10.tgz#31dfb7481c79887c3e672e10c981fcc01fcbaeb3"
   integrity sha512-fAqcXgqkUm4v5FYy7qWP4w1HaOlVSVJveah+yVTo5Nm5kTiXhmD5mQQ7+knGeBaStyrtQy6WardoC2xSic9rlQ==
@@ -1917,7 +1917,7 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.18.4", "@salesforce/source-deploy-retrieve@^12.19.3", "@salesforce/source-deploy-retrieve@^12.19.4":
+"@salesforce/source-deploy-retrieve@^12.19.3", "@salesforce/source-deploy-retrieve@^12.19.4":
   version "12.19.4"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.19.4.tgz#50e445099fa44c7bdcfe7dc579a84b228dde42dc"
   integrity sha512-zsJ6eaGVGGXxawS2Hhi1jg2DRveYPk78jdaKFTW4vmCOuztKWPLcqjmht6+qa3PEgIB2QZhnCXL3b3okvu8KRg==
@@ -1954,15 +1954,15 @@
     shelljs "^0.9.2"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^7.3.20":
-  version "7.3.20"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.20.tgz#dc4f589aba75c84b4b3f93145bcf277e06690030"
-  integrity sha512-5B1E4Gf8aPCUmokeBMftM9MTZMpOMGwk/8UYsLOnHVfZiSc0dldPb42dlibvhIA/99QiovkH5E7pcAG2X49ZFQ==
+"@salesforce/source-tracking@^7.3.23":
+  version "7.3.23"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.3.23.tgz#1a33e2d1aefadeaf8da3cd1b3919c65719d5beca"
+  integrity sha512-6p8Iujpr3ctEcBX/DgHUMslCA3PcJKc0t7RKRubFsG03Zk1HlK4n0LptwAIHQM3LdQr/875oN2ZafWPtWVjd6A==
   dependencies:
-    "@oclif/core" "^4.2.9"
-    "@salesforce/core" "^8.8.7"
+    "@oclif/core" "^4.2.10"
+    "@salesforce/core" "^8.9.1"
     "@salesforce/kit" "^3.2.3"
-    "@salesforce/source-deploy-retrieve" "^12.18.4"
+    "@salesforce/source-deploy-retrieve" "^12.19.3"
     "@salesforce/ts-types" "^2.0.12"
     fast-xml-parser "^4.5.3"
     graceful-fs "^4.2.11"
