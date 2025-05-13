@@ -1,3 +1,9 @@
+## [3.22.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.9...3.22.10) (2025-05-13)
+
+### Bug Fixes
+
+- bump SDR ([ad53f8c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ad53f8cbfec1b724e233dbbadbd14838d8a00216))
+
 ## [3.22.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.8...3.22.9) (2025-05-05)
 
 ### Bug Fixes
