@@ -52,7 +52,7 @@ export class TestResultsFormatter {
     // some commands like `project deploy start` will report these failures as they happen via MSO:
     // https://github.com/salesforcecli/plugin-deploy-retrieve/pull/1215
     //
-    // commands can enable/disable `skipVerboseTestReportOnCI` when instantiating the formatter to skip these.
+    // commands can enable/disable `skipVerboseTestReportOnCI` when instantiating the formatter to skip these
     const skipVerboseTestReport = isCI() && this.skipVerboseTestReportOnCI;
 
     if (!skipVerboseTestReport) {
