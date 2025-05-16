@@ -72,4 +72,36 @@ describe('Deploy --verbose', () => {
     expect(shellOutput.stdout).to.contain('Size: ').and.contain('KB of ~39 MB limit');
     expect(shellOutput.stdout).to.contain('Files: 5 of 10,000 limit');
   });
+
+  it('should have test successes in the output', () => {
+    const shellOutput = execCmd<DeployResultJson>(
+      'project deploy start --source-dir force-app --verbose --test-level RunLocalTests --dry-run',
+      {
+        ensureExitCode: 0,
+      }
+    ).shellOutput;
+
+    expect(shellOutput.stdout).to.contain('Test Success [1]');
+  });
+
+  it('should have test successes in the output when CI=true', () => {
+    const ciEnvVar = process.env.CI;
+    try {
+      process.env.CI = 'true';
+      const shellOutput = execCmd<DeployResultJson>(
+        'project deploy start --source-dir force-app --verbose --test-level RunLocalTests --dry-run',
+        {
+          ensureExitCode: 0,
+        }
+      ).shellOutput;
+
+      expect(shellOutput.stdout).to.contain('Test Success [1]');
+    } finally {
+      if (ciEnvVar === undefined) {
+        delete process.env.CI;
+      } else {
+        process.env.CI = ciEnvVar;
+      }
+    }
+  });
 });
