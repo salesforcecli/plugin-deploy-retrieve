@@ -1,3 +1,9 @@
+## [3.22.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.14...3.22.15) (2025-05-20)
+
+### Bug Fixes
+
+- use latest core lib and a few more lib bumps ([684d897](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/684d897e238a802af791656d93276011fb7409b4))
+
 ## [3.22.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.13...3.22.14) (2025-05-20)
 
 ### Bug Fixes
