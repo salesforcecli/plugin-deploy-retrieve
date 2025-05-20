@@ -1,3 +1,9 @@
+## [3.22.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.13...3.22.14) (2025-05-20)
+
+### Bug Fixes
+
+- add test successes to verbose CI output - W-18531727 ([#1358](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1358)) ([ff654b2](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ff654b285fe96d1f16073085d28012793f18e9d4))
+
 ## [3.22.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.12...3.22.13) (2025-05-17)
 
 ### Bug Fixes
