@@ -1,3 +1,9 @@
+## [3.22.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.15...3.22.16) (2025-05-24)
+
+### Bug Fixes
+
+- **deps:** bump @inquirer/prompts from 7.5.1 to 7.5.2 ([ae882d9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ae882d99f5aa7d034dde5f8737ae3e3e5eaa57a0))
+
 ## [3.22.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.14...3.22.15) (2025-05-20)
 
 ### Bug Fixes
