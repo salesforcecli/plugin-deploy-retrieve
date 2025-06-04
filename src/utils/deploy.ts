@@ -142,7 +142,8 @@ export async function executeDeploy(
     }
   } else {
     let stl: SourceTracking | undefined;
-    if (!opts['dry-run']) {
+    if (!(opts['dry-run'] ?? opts.manifest ?? opts.metadata ?? opts['source-dir'])) {
+      // if not dry-run, or with source-tracking enabling flags
       // instantiate source tracking
       // stl will decide, based on the org's properties, what needs to be done
       stl = await SourceTracking.create({
