@@ -50,10 +50,8 @@ export type DeployOptions = {
   concise?: boolean;
   'single-package'?: boolean;
   status?: RequestStatus;
-
   'pre-destructive-changes'?: string;
   'post-destructive-changes'?: string;
-
   'purge-on-delete'?: boolean;
 };
 
@@ -76,7 +74,7 @@ export async function resolveApi(existingConfigAggregator?: ConfigAggregator): P
 
 export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: SourceTracking): Promise<ComponentSet> {
   // if you specify nothing, you'll get the changes, like sfdx push, as long as there's an stl
-  if (!opts['source-dir'] && !opts.manifest && !opts.metadata && stl) {
+  if (!opts['source-dir'] && !opts.manifest && !opts.metadata && !opts['dry-run'] && stl) {
     /** localChangesAsComponentSet returned an array to support multiple sequential deploys.
      * `sf` chooses not to support this so we force one ComponentSet
      */
