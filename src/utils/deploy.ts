@@ -74,7 +74,7 @@ export async function resolveApi(existingConfigAggregator?: ConfigAggregator): P
 
 export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: SourceTracking): Promise<ComponentSet> {
   // if you specify nothing, you'll get the changes, like sfdx push, as long as there's an stl
-  if (!opts['source-dir'] && !opts.manifest && !opts.metadata && stl) {
+  if (!opts['source-dir'] && !opts.manifest && !opts.metadata && !opts['dry-run'] && stl) {
     /** localChangesAsComponentSet returned an array to support multiple sequential deploys.
      * `sf` chooses not to support this so we force one ComponentSet
      */
@@ -141,21 +141,16 @@ export async function executeDeploy(
       await deploy.start();
     }
   } else {
-    let stl: SourceTracking | undefined;
-    if (!opts['dry-run']) {
-      // if not dry-run, or with source-tracking enabling flags
-      // instantiate source tracking
-      // stl will decide, based on the org's properties, what needs to be done
-      stl = await SourceTracking.create({
-        org,
-        // mdapi format deploys don't require a project, but at this point we need one
-        project: project ?? (await SfProject.resolve()),
-        subscribeSDREvents: true,
-        ignoreConflicts: opts['ignore-conflicts'],
-      });
-      registry = stl.registry;
-    }
-
+    // instantiate source tracking
+    // stl will decide, based on the org's properties, what needs to be done
+    const stl = await SourceTracking.create({
+      org,
+      // mdapi format deploys don't require a project, but at this point we need one
+      project: project ?? (await SfProject.resolve()),
+      subscribeSDREvents: true,
+      ignoreConflicts: opts['ignore-conflicts'],
+    });
+    registry = stl.registry;
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
       if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
