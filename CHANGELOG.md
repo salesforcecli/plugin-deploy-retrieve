@@ -1,3 +1,39 @@
+## [3.22.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.24...3.22.25) (2025-06-14)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/multi-stage-output from 0.8.13 to 0.8.14 ([b8e1203](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b8e12038c34ebefcb3d9289c03849d7f91a0e8a5))
+
+## [3.22.24](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.23...3.22.24) (2025-06-14)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 8.1.30 to 8.1.31 ([392abdb](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/392abdb51aa8915c8565a86238551be045b39412))
+
+## [3.22.23](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.22...3.22.23) (2025-06-12)
+
+### Bug Fixes
+
+- bump libs ([0a3d6be](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/0a3d6be2c9eeae0110f05a64db9ac5374a0de9f7))
+
+## [3.22.22](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.21...3.22.22) (2025-06-07)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.4.63 to 3.4.65 ([941ee6f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/941ee6f500649fd463f409c93ab1cbefffcc2947))
+
+## [3.22.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.20...3.22.21) (2025-06-07)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.3.25 to 7.4.0 ([20e60bf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/20e60bf2ae71a141397c6d6be0517328dd1cef7a))
+
+## [3.22.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.19...3.22.20) (2025-06-07)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 8.1.29 to 8.1.30 ([4abdbd0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4abdbd0f355b36a4b4ed8181d9dd9c3bf8c7606e))
+
 ## [3.22.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.18...3.22.19) (2025-05-31)
 
 ### Bug Fixes

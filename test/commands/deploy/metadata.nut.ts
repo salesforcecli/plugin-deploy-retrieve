@@ -7,6 +7,9 @@
 
 import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { execCmd } from '@salesforce/cli-plugins-testkit';
+import { expect } from 'chai';
+import { type DeployResultJson } from '../../../src/utils/types.js';
 
 describe('deploy metadata NUTs', () => {
   let testkit: SourceTestkit;
@@ -26,6 +29,12 @@ describe('deploy metadata NUTs', () => {
     it('should deploy force-app', async () => {
       await testkit.deploy({ args: '--source-dir force-app' });
       await testkit.expect.filesToBeDeployed(['force-app/**/*'], ['force-app/test/**/*']);
+    });
+
+    it('--source-dir --dry-run should NOT affect source-tracking', async () => {
+      execCmd('project:deploy:start --dry-run --source-dir force-app', { ensureExitCode: 0 });
+      const actual = execCmd<DeployResultJson>('project:deploy:start --json', { ensureExitCode: 0 }).jsonOutput; // should deploy everything since previous attempt was --dry-run
+      expect(actual?.result?.numberComponentsDeployed).to.be.greaterThan(1);
     });
   });
 
