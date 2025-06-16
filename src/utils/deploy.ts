@@ -147,7 +147,7 @@ export async function executeDeploy(
       org,
       // mdapi format deploys don't require a project, but at this point we need one
       project: project ?? (await SfProject.resolve()),
-      subscribeSDREvents: !opts['dry-run'],
+      subscribeSDREvents: opts['dry-run'] ? false : true,
       ignoreConflicts: opts['ignore-conflicts'],
     });
     registry = stl.registry;

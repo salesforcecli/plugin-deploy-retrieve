@@ -126,7 +126,7 @@ describe('deploy metadata quick NUTs', () => {
 
       it('should fail to deploy previously deployed deployment', async () => {
         const first = await testkit.execute<DeployResultJson>('project:deploy:start', {
-          args: '--source-dir force-app',
+          args: '--source-dir force-app --ignore-conflicts',
           json: true,
           exitCode: 0,
         });
