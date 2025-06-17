@@ -144,7 +144,7 @@ export async function executeDeploy(
     // instantiate source tracking
     // stl will decide, based on the org's properties, what needs to be done
     let stl: SourceTracking | undefined;
-    if (!opts['dry-run'] || !(await org.supportsSourceTracking())) {
+    if (!opts['dry-run'] || !(await org.tracksSource())) {
       stl = await SourceTracking.create({
         org,
         // mdapi format deploys don't require a project, but at this point we need one
