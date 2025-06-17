@@ -143,14 +143,18 @@ export async function executeDeploy(
   } else {
     // instantiate source tracking
     // stl will decide, based on the org's properties, what needs to be done
-    const stl = await SourceTracking.create({
-      org,
-      // mdapi format deploys don't require a project, but at this point we need one
-      project: project ?? (await SfProject.resolve()),
-      subscribeSDREvents: opts['dry-run'] ? false : true,
-      ignoreConflicts: opts['ignore-conflicts'],
-    });
-    registry = stl.registry;
+    let stl: SourceTracking | undefined;
+    if (!opts['dry-run'] || !(await org.supportsSourceTracking())) {
+      stl = await SourceTracking.create({
+        org,
+        // mdapi format deploys don't require a project, but at this point we need one
+        project: project ?? (await SfProject.resolve()),
+        subscribeSDREvents: true,
+        ignoreConflicts: opts['ignore-conflicts'],
+      });
+      registry = stl.registry;
+    }
+
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
       if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
