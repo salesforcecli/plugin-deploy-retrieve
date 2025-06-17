@@ -1,3 +1,10 @@
+## [3.22.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.25...3.22.26) (2025-06-17)
+
+### Bug Fixes
+
+- bug (fingers crossed) ([a41c487](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a41c487d385bf62336c5fa89175ea668652f4fbd))
+- no source tracking after a dry-run ([80de220](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/80de220f2e94399c3a5d86fea8826ef40de8b9eb))
+
 ## [3.22.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.24...3.22.25) (2025-06-14)
 
 ### Bug Fixes
