@@ -9,7 +9,7 @@
     "@oclif/core": "^4.3.0",
     "@oclif/multi-stage-output": "^0.8.14",
     "@salesforce/apex-node": "^8.1.31",
-    "@salesforce/core": "^8.11.1",
+    "@salesforce/core": "^8.17.0",
     "@salesforce/kit": "^3.2.3",
     "@salesforce/plugin-info": "^3.4.67",
     "@salesforce/sf-plugins-core": "^12.2.2",
