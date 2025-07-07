@@ -87,7 +87,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
     return cs;
   }
 
-  return ComponentSetBuilder.build({
+  const x = await ComponentSetBuilder.build({
     apiversion: opts['api-version'],
     sourceapiversion: await getSourceApiVersion(),
     sourcepath: opts['source-dir'],
@@ -104,6 +104,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
     ...(opts.metadata ? { metadata: { metadataEntries: opts.metadata, directoryPaths: await getPackageDirs() } } : {}),
     projectDir: stl?.projectPath,
   });
+  return x;
 }
 
 export async function executeDeploy(
@@ -143,17 +144,14 @@ export async function executeDeploy(
   } else {
     // instantiate source tracking
     // stl will decide, based on the org's properties, what needs to be done
-    let stl: SourceTracking | undefined;
-    if (!opts['dry-run'] || !(await org.tracksSource())) {
-      stl = await SourceTracking.create({
-        org,
-        // mdapi format deploys don't require a project, but at this point we need one
-        project: project ?? (await SfProject.resolve()),
-        subscribeSDREvents: true,
-        ignoreConflicts: opts['ignore-conflicts'],
-      });
-      registry = stl.registry;
-    }
+    const stl = await SourceTracking.create({
+      org,
+      // mdapi format deploys don't require a project, but at this point we need one
+      project: project ?? (await SfProject.resolve()),
+      subscribeSDREvents: !opts['dry-run'] || !(await org.tracksSource()),
+      ignoreConflicts: opts['ignore-conflicts'],
+    });
+    registry = stl.registry;
 
     componentSet = await buildComponentSet(opts, stl);
     if (componentSet.size === 0) {
