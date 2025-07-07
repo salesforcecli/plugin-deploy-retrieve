@@ -87,7 +87,7 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
     return cs;
   }
 
-  const x = await ComponentSetBuilder.build({
+  return ComponentSetBuilder.build({
     apiversion: opts['api-version'],
     sourceapiversion: await getSourceApiVersion(),
     sourcepath: opts['source-dir'],
@@ -104,7 +104,6 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
     ...(opts.metadata ? { metadata: { metadataEntries: opts.metadata, directoryPaths: await getPackageDirs() } } : {}),
     projectDir: stl?.projectPath,
   });
-  return x;
 }
 
 export async function executeDeploy(
