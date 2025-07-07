@@ -73,7 +73,13 @@ describe('Partial Bundle Delete Retrieves', () => {
     // Create an actual connection to the org we created for the TestSession, then stub
     // retrieve() and checkRetrieveStatus() and others to simulate retrieving a partial bundle delete.
     const connection = await Connection.create({
-      authInfo: await AuthInfo.create(session.orgs.get(scratchOrgUsername)),
+      authInfo: await AuthInfo.create({
+        ...session.orgs.get(scratchOrgUsername),
+        clientApps: Object.entries(session.orgs.get(scratchOrgUsername)?.clientApps ?? {}).map(([name, app]) => ({
+          name,
+          ...app,
+        })),
+      }),
     });
     // suppress ui results from test output
     stubSfCommandUx(sandbox);
