@@ -1,3 +1,9 @@
+## [3.22.28](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.27...3.22.28) (2025-07-07)
+
+### Bug Fixes
+
+- optionally subscribe to SDR events, rather than optionally creat @W-18979695@ ([#1395](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1395)) ([28cff7b](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/28cff7bd63884248392c948a60acaea6f1b0f59e))
+
 ## [3.22.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.26...3.22.27) (2025-06-21)
 
 ### Bug Fixes
