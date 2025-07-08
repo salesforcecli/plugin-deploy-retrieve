@@ -118,7 +118,7 @@ const getSourceComponentFiles = (c: SourceComponent): string[] =>
   [c.xml, ...(c.content ? fullPathsFromDir(c.content) : [])].filter(isString);
 
 const fullPathsFromDir = (dir: string): string[] =>
-  readdirSync(dir, { withFileTypes: true }).map((d) => join(d.path, d.name));
+  readdirSync(dir, { withFileTypes: true }).map((d) => join(d.parentPath, d.name));
 
 /** build a component set from the original project for each pkgDir */
 const componentSetFromPackageDirectory =
