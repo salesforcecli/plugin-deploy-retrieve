@@ -1,3 +1,9 @@
+## [3.22.29](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.28...3.22.29) (2025-07-08)
+
+### Bug Fixes
+
+- bump sfdx-core ([#1396](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1396)) ([52c71b9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/52c71b9b7458596ef587ca9eff446085104b2ca7))
+
 ## [3.22.28](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.27...3.22.28) (2025-07-07)
 
 ### Bug Fixes
