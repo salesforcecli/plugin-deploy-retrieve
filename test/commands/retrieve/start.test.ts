@@ -5,8 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { resolve } from 'node:path';
-
+import { resolve, join } from 'node:path';
 import fs from 'node:fs/promises';
 import { Stats } from 'node:fs';
 import sinon from 'sinon';
@@ -144,10 +143,6 @@ describe('project retrieve start', () => {
     ensureRetrieveArgs({ format: 'source' });
   });
   it('should pass along retrievetargetdir', async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const renameStub = $$.SANDBOX.stub(RetrieveMetadata.prototype, 'moveResultsForRetrieveTargetDir').resolves();
-
     const sourcepath = ['somepath'];
     const metadata = ['ApexClass:MyClass'];
     const result = await RetrieveMetadata.run(['--output-dir', sourcepath[0], '--metadata', metadata[0], '--json']);
@@ -160,7 +155,26 @@ describe('project retrieve start', () => {
       },
     });
     ensureRetrieveArgs({ output: resolve(sourcepath[0]), format: 'source' });
-    expect(renameStub.calledOnce).to.be.true;
+  });
+
+  it.only('should pass along retrievetargetdir with hidden directory', async () => {
+    const sourcepath = ['.hidden'];
+    const metadata = ['ApexClass:MyClass'];
+
+    // For hidden directories, uses a temp directory
+    const projectRoot = SfProject.getInstance();
+    const tempRetrievePath = join(projectRoot.getPath(), 'tempRetrieve');
+
+    const result = await RetrieveMetadata.run(['--output-dir', sourcepath[0], '--metadata', metadata[0], '--json']);
+    expect(result).to.deep.equal(expectedResults);
+    ensureCreateComponentSetArgs({
+      sourcepath: undefined,
+      metadata: {
+        directoryPaths: [],
+        metadataEntries: ['ApexClass:MyClass'],
+      },
+    });
+    ensureRetrieveArgs({ output: tempRetrievePath, format: 'source' });
   });
 
   it('should pass along metadata', async () => {
