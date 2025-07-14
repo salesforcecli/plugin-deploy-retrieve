@@ -25,3 +25,7 @@ Failed
 # Canceling
 
 Canceling
+
+# Finalizing
+
+Finalizing
