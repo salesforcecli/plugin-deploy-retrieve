@@ -1,3 +1,9 @@
+## [3.22.33](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.32...3.22.33) (2025-07-14)
+
+### Bug Fixes
+
+- for W-19029417 - fix finalzing MDAPI state ([276b50c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/276b50c477ab602f3a32c5fccb9e13c7752b8a28))
+
 ## [3.22.32](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.31...3.22.32) (2025-07-12)
 
 ### Bug Fixes
