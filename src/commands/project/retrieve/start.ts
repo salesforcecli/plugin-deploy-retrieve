@@ -176,10 +176,16 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
+
     let resolvedTargetDir: string | undefined;
     if (flags['output-dir']) {
       resolvedTargetDir = resolve(flags['output-dir']);
-      if (SfProject.getInstance()?.getPackageNameFromPath(resolvedTargetDir)) {
+
+      await fs.promises.mkdir(resolvedTargetDir, { recursive: true });
+
+      const packageName = SfProject.getInstance()?.getPackageNameFromPath(resolvedTargetDir);
+
+      if (packageName && !flags['output-dir'].startsWith('.')) {
         throw messages.createError('retrieveTargetDirOverlapsPackage', [flags['output-dir']]);
       }
     }
@@ -271,9 +277,42 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
 
     this.ms.stop();
 
-    // flags['output-dir'] will set resolvedTargetDir var, so this check is redundant, but allows for nice typings in the moveResultsForRetrieveTargetDir method
     if (flags['output-dir'] && resolvedTargetDir) {
-      await this.moveResultsForRetrieveTargetDir(flags['output-dir'], resolvedTargetDir);
+      // Determine the actual source directory where files were retrieved
+      const actualSourceDir = flags['output-dir'].startsWith('.')
+        ? join((await SfProject.resolve()).getPath(), 'tempRetrieve')
+        : resolvedTargetDir;
+
+      const mainDefaultPath = join(actualSourceDir, 'main', 'default');
+      const hasMainDefaultStructure = await fs.promises
+        .access(mainDefaultPath)
+        .then(() => true)
+        .catch(() => false);
+
+      if (hasMainDefaultStructure) {
+        await this.moveResultsForRetrieveTargetDir(flags['output-dir'], actualSourceDir);
+
+        // Update file response paths to reflect the actual destination for hidden directories
+        if (flags['output-dir'].startsWith('.')) {
+          const outputDir = flags['output-dir'];
+          this.retrieveResult.getFileResponses().forEach((fileResponse) => {
+            if (fileResponse.filePath?.includes('tempRetrieve/')) {
+              fileResponse.filePath = fileResponse.filePath.replace('tempRetrieve/', `${outputDir}/`);
+            }
+          });
+        }
+
+        if (flags['output-dir'].startsWith('.')) {
+          await fs.promises.rm(actualSourceDir, { recursive: true });
+        } else {
+          this.retrieveResult.getFileResponses().forEach((fileResponse) => {
+            // Update the path to reflect the actual location
+            if (fileResponse.filePath?.includes('main/default/')) {
+              fileResponse.filePath = fileResponse.filePath.replace(/.*main\/default\//, '');
+            }
+          });
+        }
+      }
     }
 
     // reference the flag instead of `format` so we get correct type
@@ -362,7 +401,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       await promisesQueue(
         files,
         async (file: string): Promise<string> => {
-          const dest = join(src.replace(join('main', 'default'), ''), file);
+          const relativePath = src.replace(join(resolvedTargetDir, 'main', 'default'), '');
+          const dest = join(targetDir, relativePath, file);
           const destDir = dirname(dest);
           await fs.promises.mkdir(destDir, { recursive: true });
           await fs.promises.rename(join(src, file), dest);
@@ -387,8 +427,16 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     });
     // move contents of 'main/default' to 'retrievetargetdir'
     await promisesQueue([join(resolvedTargetDir, 'main', 'default')], mv, 5, true);
-    // remove 'main/default'
-    await fs.promises.rm(join(targetDir, 'main'), { recursive: true });
+
+    try {
+      await fs.promises.access(join(targetDir, 'main'));
+      // remove 'main/default'
+      await fs.promises.rm(join(targetDir, 'main'), { recursive: true });
+    } catch (e) {
+      const err = SfError.wrap(e);
+      getLogger().debug(`Error directory does not exist: ${err.message}
+      Due to: ${err.stack ?? 'unknown (no error stack)'}`);
+    }
   }
 }
 
@@ -518,6 +566,18 @@ const buildRetrieveOptions = async (
   output: string | undefined
 ): Promise<RetrieveSetOptions> => {
   const apiVersion = await resolveApiVersion(flags);
+
+  let retrieveOutput: string;
+
+  if (flags['output-dir'] && format === 'source' && flags['output-dir'].startsWith('.')) {
+    // Use a temporary regular directory for hidden directories
+    const projectRoot = await SfProject.resolve();
+    retrieveOutput = join(projectRoot.getPath(), 'tempRetrieve');
+    await fs.promises.mkdir(retrieveOutput, { recursive: true });
+  } else {
+    retrieveOutput = output ?? (await SfProject.resolve()).getDefaultPackage().fullPath;
+  }
+
   return {
     usernameOrConnection: flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
     merge: true,
@@ -533,7 +593,7 @@ const buildRetrieveOptions = async (
           output: flags['target-metadata-dir'] as string,
         }
       : {
-          output: output ?? (await SfProject.resolve()).getDefaultPackage().fullPath,
+          output: retrieveOutput,
         }),
   };
 };
