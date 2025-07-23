@@ -1,3 +1,9 @@
+## [3.22.34](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.33...3.22.34) (2025-07-23)
+
+### Bug Fixes
+
+- **deps:** bump form-data from 4.0.3 to 4.0.4 ([42a88bd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/42a88bd633ebeae10fa4364e07b4a273eb125d6c))
+
 ## [3.22.33](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.32...3.22.33) (2025-07-14)
 
 ### Bug Fixes
