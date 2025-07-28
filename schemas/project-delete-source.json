@@ -156,7 +156,16 @@
     },
     "RequestStatus": {
       "type": "string",
-      "enum": ["Pending", "InProgress", "Succeeded", "SucceededPartial", "Failed", "Canceling", "Canceled"]
+      "enum": [
+        "Pending",
+        "InProgress",
+        "Succeeded",
+        "SucceededPartial",
+        "Failed",
+        "Canceling",
+        "Canceled",
+        "Finalizing"
+      ]
     },
     "DeployDetails": {
       "type": "object",

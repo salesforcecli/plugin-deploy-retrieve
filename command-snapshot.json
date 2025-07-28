@@ -291,6 +291,7 @@
       "metadata",
       "output-dir",
       "package-name",
+      "poll-interval",
       "single-package",
       "source-dir",
       "target-metadata-dir",

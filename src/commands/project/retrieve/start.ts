@@ -152,6 +152,13 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       exclusive: ['ignore-conflicts'],
       helpGroup: mdapiFlagGroup,
     }),
+    'poll-interval': Flags.duration({
+      min: Duration.milliseconds(500).seconds,
+      required: false,
+      helpValue: '<seconds>',
+      unit: 'seconds',
+      summary: messages.getMessage('flags.poll-interval.summary'),
+    }),
   };
 
   public static configurationVariablesSection = toHelpSection(
@@ -266,7 +273,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         throw error;
       });
 
-      this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
+      this.retrieveResult = await retrieve.pollStatus(flags['poll-interval']?.milliseconds ?? 500, flags.wait.seconds);
     }
 
     this.ms.stop();
