@@ -29,6 +29,9 @@
             "zipFileCount": {
               "type": "number"
             },
+            "deployUrl": {
+              "type": "string"
+            },
             "id": {
               "type": "string"
             },
@@ -105,9 +108,6 @@
               "type": "string"
             },
             "stateDetail": {
-              "type": "string"
-            },
-            "deployUrl": {
               "type": "string"
             }
           },
@@ -204,7 +204,16 @@
     },
     "RequestStatus": {
       "type": "string",
-      "enum": ["Pending", "InProgress", "Succeeded", "SucceededPartial", "Failed", "Canceling", "Canceled"]
+      "enum": [
+        "Pending",
+        "InProgress",
+        "Succeeded",
+        "SucceededPartial",
+        "Failed",
+        "Canceling",
+        "Canceled",
+        "Finalizing"
+      ]
     },
     "DeployDetails": {
       "type": "object",
@@ -511,6 +520,9 @@
         "zipFileCount": {
           "type": "number"
         },
+        "deployUrl": {
+          "type": "string"
+        },
         "canceledBy": {
           "type": "string"
         },
@@ -585,9 +597,6 @@
         },
         "done": {
           "type": "boolean"
-        },
-        "deployUrl": {
-          "type": "string"
         }
       },
       "required": ["files", "status"]
