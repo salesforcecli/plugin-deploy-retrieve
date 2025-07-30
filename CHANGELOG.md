@@ -1,3 +1,9 @@
+## [3.22.37](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.36...3.22.37) (2025-07-30)
+
+### Bug Fixes
+
+- add new deploy status ([9c364cf](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9c364cf675dfcbb11243b968567f3a52a98e57a3))
+
 ## [3.22.36](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.35...3.22.36) (2025-07-29)
 
 ### Bug Fixes
