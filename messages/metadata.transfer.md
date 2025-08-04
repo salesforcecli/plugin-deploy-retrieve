@@ -29,3 +29,7 @@ Canceling
 # Finalizing
 
 Finalizing
+
+# FinalizingFailed
+
+Finalizing Failed
