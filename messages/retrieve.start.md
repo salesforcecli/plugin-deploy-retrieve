@@ -149,6 +149,10 @@ Extract all files from the retrieved zip file.
 
 File name to use for the retrieved zip file.
 
+# flags.poll-interval.summary
+
+Number of seconds to wait between status checks.
+
 # error.Conflicts
 
 There are changes in your local files that conflict with the org changes you're trying to retrieve.
