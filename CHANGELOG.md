@@ -1,3 +1,9 @@
+## [3.22.39](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.38...3.22.39) (2025-08-13)
+
+### Bug Fixes
+
+- bump core dependency ([bf81397](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/bf81397c2b0e8ac57eed63d2a3b5a2a0db1e3408))
+
 ## [3.22.38](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.37...3.22.38) (2025-08-09)
 
 ### Bug Fixes
