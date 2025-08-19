@@ -199,3 +199,8 @@ This command expects the org to support source tracking. If it doesn't, you must
 - Use the `--source-dir`, `--manifest` or `--package-name` flags to retrieve metadata in source format.
 
 - Use the `--target-metadata-dir` flag to retrieve metadata in metadata format to a directory.
+
+# noSourceTrackingWarning
+
+Starting in December 2025, this command will require source tracking support.
+Production orgs and other non-tracking orgs will no longer be supported without explicit metadata specification.

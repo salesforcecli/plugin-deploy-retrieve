@@ -53,10 +53,11 @@ export type DeployOptions = {
   'pre-destructive-changes'?: string;
   'post-destructive-changes'?: string;
   'purge-on-delete'?: boolean;
+  warnCallback?: (message: string) => void;
 };
 
 /** Manifest is expected.  You cannot pass metadata and source-dir array--use those to get a manifest */
-export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-dir'> & {
+export type CachedOptions = Omit<DeployOptions, 'wait' | 'metadata' | 'source-dir' | 'warnCallback'> & {
   wait: number;
   /** whether the user passed in anything for metadata-dir (could be a folder, could be a zip) */
   isMdapi: boolean;
@@ -150,6 +151,10 @@ export async function executeDeploy(
       subscribeSDREvents: !opts['dry-run'] || !(await org.tracksSource()),
       ignoreConflicts: opts['ignore-conflicts'],
     });
+
+    if (!(await org.tracksSource()) && opts.warnCallback) {
+      opts.warnCallback(deployMessages.getMessage('noSourceTrackingWarning'));
+    }
     registry = stl.registry;
 
     componentSet = await buildComponentSet(opts, stl);

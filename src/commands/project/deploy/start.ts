@@ -234,6 +234,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         ...flags,
         'target-org': username,
         api,
+        warnCallback: this.warn.bind(this),
       },
       project
     );

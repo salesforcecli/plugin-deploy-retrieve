@@ -257,3 +257,8 @@ The `pushPackageDirectoriesSequentially` property is not respected by this comma
 # apiVersionMsgDetailed
 
 %s %s metadata to %s using the v%s %s API.
+
+# noSourceTrackingWarning
+
+Starting in December 2025, this command will require source tracking support.
+Production orgs and other non-tracking orgs will no longer be supported without explicit metadata specification.
