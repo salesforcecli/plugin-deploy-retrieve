@@ -55,7 +55,7 @@ describe('retrieve mdapi format without project', () => {
     });
 
     expect(result.jsonOutput?.name).to.equal('noSourceTracking');
-    expect(result.jsonOutput?.message).to.include('does not support source tracking');
+    expect(result.jsonOutput?.message).to.include('Unable to track changes in your source files');
   });
 
   after(async () => {
