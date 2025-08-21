@@ -202,5 +202,5 @@ This command expects the org to support source tracking. If it doesn't, you must
 
 # noSourceTrackingWarning
 
-Starting in December 2025, this command will require source tracking support.
+Starting in December 2025, this command will require that the target org use source tracking.
 Production orgs and other non-tracking orgs will no longer be supported without explicit metadata specification.
