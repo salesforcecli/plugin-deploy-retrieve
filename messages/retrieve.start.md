@@ -203,4 +203,4 @@ This command expects the org to support source tracking. If it doesn't, you must
 # noSourceTrackingWarning
 
 Starting in December 2025, this command will require that the target org use source tracking.
-Production orgs and other non-tracking orgs will no longer be supported without explicit metadata specification.
+Specifically, to use this command with a production org, scratch org created with the `--no-track-source` flag, or other non-source-tracking org, you must specify the metadata you want to retrieve with either the `--metadata`, `--source-dir`, or `--manifest` flag.
