@@ -261,4 +261,4 @@ The `pushPackageDirectoriesSequentially` property is not respected by this comma
 # noSourceTrackingWarning
 
 Starting in December 2025, this command will require source tracking support.
-Production orgs and other non-tracking orgs will no longer be supported without explicit metadata specification.
+Specifically, to use this command with a production org, scratch org created with the `--no-track-source` flag, or other non-source-tracking org, you must specify the metadata you want to deploy with either the `--metadata`, `--source-dir`, or `--manifest` flag. 
