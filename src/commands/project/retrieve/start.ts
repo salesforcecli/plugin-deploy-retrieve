@@ -176,6 +176,19 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   // eslint-disable-next-line complexity
   public async run(): Promise<RetrieveResultJson> {
     const { flags } = await this.parse(RetrieveMetadata);
+
+    // Add warning for non-source-tracking orgs when using default behavior
+    const isChanges =
+      !flags['source-dir'] &&
+      !flags['manifest'] &&
+      !flags['metadata'] &&
+      !flags['target-metadata-dir'] &&
+      !flags['package-name']?.length;
+
+    if (isChanges && !(await flags['target-org'].tracksSource())) {
+      this.warn(messages.getMessage('noSourceTrackingWarning'));
+    }
+
     let resolvedTargetDir: string | undefined;
     if (flags['output-dir']) {
       resolvedTargetDir = resolve(flags['output-dir']);
@@ -518,6 +531,7 @@ const buildRetrieveOptions = async (
   output: string | undefined
 ): Promise<RetrieveSetOptions> => {
   const apiVersion = await resolveApiVersion(flags);
+
   return {
     usernameOrConnection: flags['target-org'].getUsername() ?? flags['target-org'].getConnection(flags['api-version']),
     merge: true,

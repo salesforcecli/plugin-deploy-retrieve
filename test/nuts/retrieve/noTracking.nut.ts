@@ -49,6 +49,15 @@ describe('retrieve mdapi format without project', () => {
     expect(result?.files).to.not.be.empty;
   });
 
+  it('should fail when retrieving changes from a non-tracking org', () => {
+    const result = execCmd<RetrieveResultJson>(`project:retrieve:start -o ${session.hubOrg.username} --json`, {
+      ensureExitCode: 1,
+    });
+
+    expect(result.jsonOutput?.name).to.equal('noSourceTracking');
+    expect(result.jsonOutput?.message).to.include('Unable to track changes in your source files');
+  });
+
   after(async () => {
     await session?.clean();
   });
