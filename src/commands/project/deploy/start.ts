@@ -199,6 +199,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       throw messages.createError('error.NoTestsSpecified');
     }
 
+    const noDeployFlags = !flags['source-dir'] && !flags.manifest && !flags.metadata && !flags['metadata-dir'];
+
+    if (noDeployFlags && !(await flags['target-org'].tracksSource())) {
+      this.warn(messages.getMessage('noSourceTrackingWarning'));
+    }
+
     const api = await resolveApi(this.configAggregator);
     const username = flags['target-org'].getUsername();
     const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
