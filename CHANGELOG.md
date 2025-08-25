@@ -1,3 +1,15 @@
+# [3.23.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.43...3.23.0) (2025-08-25)
+
+### Bug Fixes
+
+- add validate flags ([04dac76](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/04dac7650f128cc8b81c09059521372041a5141a))
+- remove callback ([c703dd9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c703dd95e0d75b2e81dbf82d7d39a4e7d0842066))
+- update NUT ([ddfe068](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ddfe068bca2e9afc2de8ba0ad07d3665b92fb62f))
+
+### Features
+
+- add deprecation cycle deploy/retrieve start ([49b74af](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/49b74af42bb39674b958746047684547b27e7f67))
+
 ## [3.22.43](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.42...3.22.43) (2025-08-23)
 
 ### Bug Fixes
