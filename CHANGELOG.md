@@ -1,3 +1,9 @@
+## [3.23.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.1...3.23.2) (2025-09-10)
+
+### Bug Fixes
+
+- dreamforce api version ([#1443](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1443)) ([fc34dd4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fc34dd4ea11c53e53b6b9e04420917d85c92f414))
+
 ## [3.23.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.0...3.23.1) (2025-09-06)
 
 ### Bug Fixes
