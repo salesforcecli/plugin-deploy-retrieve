@@ -29,7 +29,7 @@
     "@salesforce/ts-sinon": "^1.4.31",
     "cross-env": "^7.0.3",
     "eslint-plugin-sf-plugin": "^1.20.32",
-    "oclif": "^4.22.21",
+    "oclif": "^4.22.27",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
