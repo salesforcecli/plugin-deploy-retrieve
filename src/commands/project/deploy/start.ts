@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { type DeployVersionData, DeployZipData } from '@salesforce/source-deploy-retrieve';
+import { type DeployVersionData, DeployZipData, RegistryAccess } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
@@ -97,6 +97,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       multiple: true,
       exclusive: exclusiveFlags.filter((f) => f !== 'metadata'),
       helpGroup: sourceFormatFlags,
+      completion: {
+        options: () => Promise.resolve(Object.keys(new RegistryAccess().getRegistry().types)),
+      },
     }),
     'metadata-dir': fileOrDirFlag({
       summary: messages.getMessage('flags.metadata-dir.summary'),
