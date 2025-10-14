@@ -9,6 +9,12 @@ module.exports = {
   rules: {
     // allow deleting object properties via rest operator
     '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+    // Disable unsafe any rules due to @oclif/core autocomplete tag typing
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-argument': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
   },
   ignorePatterns: ['test/nuts/specialTypes/*Project/**', 'test/nuts/retrieve/partialBundleDeleteProject/**'],
 };

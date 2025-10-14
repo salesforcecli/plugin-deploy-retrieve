@@ -137,6 +137,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "resolutions": {
+    "@oclif/core": "npm:@oclif/core@autocomplete",
+    "**/@oclif/core": "npm:@oclif/core@autocomplete"
+  },
   "wireit": {
     "build": {
       "dependencies": [
