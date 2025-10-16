@@ -1,7 +1,7 @@
 {
   "name": "@salesforce/plugin-deploy-retrieve",
   "description": "deploy and retrieve commands for sf",
-  "version": "3.23.4",
+  "version": "3.23.5-autocomplete.0",
   "author": "Salesforce",
   "bugs": "https://github.com/forcedotcom/cli/issues",
   "dependencies": {
@@ -136,6 +136,10 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "resolutions": {
+    "@oclif/core": "npm:@oclif/core@autocomplete",
+    "**/@oclif/core": "npm:@oclif/core@autocomplete"
   },
   "wireit": {
     "build": {

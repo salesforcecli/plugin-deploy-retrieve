@@ -40,7 +40,7 @@ export const fileResponseSortFn = (i: FileResponse, j: FileResponse): number => 
 
 export const exitCodeAsNumber = (): number | undefined => {
   try {
-    return typeof process.exitCode === 'string' ? parseInt(process.exitCode, 10) : process.exitCode;
+    return typeof process.exitCode === 'string' ? parseInt(process.exitCode, 10) : process.exitCode ?? undefined;
   } catch {
     // it *could* be a string that fails to parse to int?
     return undefined;
