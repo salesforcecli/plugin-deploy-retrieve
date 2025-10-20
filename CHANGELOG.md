@@ -1,3 +1,10 @@
+## [3.23.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.5...3.23.6) (2025-10-20)
+
+### Bug Fixes
+
+- bump testkit lib for fixes ([f15a2de](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f15a2de35b1dca734eaa004ee14685e9b7b2ac51))
+- update libs and command schemas ([105fcfd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/105fcfd63e4fc83593c0bcdede83ae2ae8cb6cbc))
+
 ## [3.23.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.4...3.23.5) (2025-10-18)
 
 ### Bug Fixes
