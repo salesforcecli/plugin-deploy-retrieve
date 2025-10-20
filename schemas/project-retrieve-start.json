@@ -200,7 +200,8 @@
         "Failed",
         "Canceling",
         "Canceled",
-        "Finalizing"
+        "Finalizing",
+        "FinalizingFailed"
       ]
     },
     "RetrieveMessage": {
