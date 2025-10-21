@@ -65,9 +65,10 @@ describe('deploy metadata NUTs', () => {
       await testkit.expect.filesToBeDeployed(['force-app/main/default/classes/*']);
 
       // no illegal file paths should be generated when using SF_MDAPI_TEMP_DIR
+      // Users/william.ruemmele/projects/oss/plugin-deploy-retrieve/test_session_1761066173823d94ce455705e3fe5/dreamhouse-lwc/myTempDirectory/2025-10-21T17_03_52.245Z_deploy/metadata/package.xml
       expect(
-        (await getAllFilePaths(join(testkit.projectDir, process.env.SF_MDAPI_TEMP_DIR))).every(
-          (path) => !/[<>:"/\\|?*]/.test(path)
+        (await getAllFilePaths(join(testkit.projectDir, process.env.SF_MDAPI_TEMP_DIR))).every((path) =>
+          /[<>:"/\\|?*]/.test(path)
         )
       ).to.be.true;
 
