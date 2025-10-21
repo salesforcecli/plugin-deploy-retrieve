@@ -1,3 +1,9 @@
+## [3.23.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.6...3.23.7) (2025-10-21)
+
+### Bug Fixes
+
+- regenerate lock file and fix TS compile error ([#1465](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1465)) ([fa9681a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fa9681a64a413a18e39dba63dfd7233e86b1f971))
+
 ## [3.23.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.5...3.23.6) (2025-10-20)
 
 ### Bug Fixes
