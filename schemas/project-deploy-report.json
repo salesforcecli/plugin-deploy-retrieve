@@ -212,7 +212,8 @@
         "Failed",
         "Canceling",
         "Canceled",
-        "Finalizing"
+        "Finalizing",
+        "FinalizingFailed"
       ]
     },
     "DeployDetails": {

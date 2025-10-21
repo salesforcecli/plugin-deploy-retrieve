@@ -1,3 +1,70 @@
+## [3.23.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.6...3.23.7) (2025-10-21)
+
+### Bug Fixes
+
+- regenerate lock file and fix TS compile error ([#1465](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1465)) ([fa9681a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fa9681a64a413a18e39dba63dfd7233e86b1f971))
+
+## [3.23.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.5...3.23.6) (2025-10-20)
+
+### Bug Fixes
+
+- bump testkit lib for fixes ([f15a2de](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f15a2de35b1dca734eaa004ee14685e9b7b2ac51))
+- update libs and command schemas ([105fcfd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/105fcfd63e4fc83593c0bcdede83ae2ae8cb6cbc))
+
+## [3.23.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.4...3.23.5) (2025-10-18)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 4.5.4 to 4.5.6 ([3469bfd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3469bfd0defce79b53a4a02d1479e78ea2c61c87))
+
+## [3.23.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.3...3.23.4) (2025-10-11)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 8.23.1 to 8.23.2 ([3ebe880](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3ebe880371983ead394adb6c8eb5ad401b695418))
+
+## [3.23.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.2...3.23.3) (2025-09-13)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.4.72 to 3.4.85 ([4107328](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/41073288757ae23ae567ad2e649d05f84930a09f))
+
+## [3.23.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.1...3.23.2) (2025-09-10)
+
+### Bug Fixes
+
+- dreamforce api version ([#1443](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1443)) ([fc34dd4](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fc34dd4ea11c53e53b6b9e04420917d85c92f414))
+
+## [3.23.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.0...3.23.1) (2025-09-06)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 8.19.1 to 8.23.0 ([ccf9bfa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ccf9bfa411e4415ab843ca793a030bea6eabc0f3))
+
+# [3.23.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.43...3.23.0) (2025-08-25)
+
+### Bug Fixes
+
+- add validate flags ([04dac76](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/04dac7650f128cc8b81c09059521372041a5141a))
+- remove callback ([c703dd9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c703dd95e0d75b2e81dbf82d7d39a4e7d0842066))
+- update NUT ([ddfe068](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ddfe068bca2e9afc2de8ba0ad07d3665b92fb62f))
+
+### Features
+
+- add deprecation cycle deploy/retrieve start ([49b74af](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/49b74af42bb39674b958746047684547b27e7f67))
+
+## [3.22.43](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.42...3.22.43) (2025-08-23)
+
+### Bug Fixes
+
+- **deps:** bump @inquirer/prompts from 7.8.2 to 7.8.3 ([cd4c45c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/cd4c45c223aac92b33aef038add122da3d7abe21))
+
+## [3.22.42](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.41...3.22.42) (2025-08-23)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/multi-stage-output from 0.8.19 to 0.8.20 ([80efd4f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/80efd4f1524fbd40cafee3c904e9e2fa873541aa))
+
 ## [3.22.41](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.22.40...3.22.41) (2025-08-16)
 
 ### Bug Fixes
