@@ -15,7 +15,26 @@
  */
 
 import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { readdir } from 'node:fs/promises';
 import { SourceTestkit } from '@salesforce/source-testkit';
+import { expect } from 'chai';
+
+async function getAllFilePaths(dir: string): Promise<string[]> {
+  let filePaths: string[] = [];
+  const entries = await readdir(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+    if (entry.isFile()) {
+      filePaths.push(fullPath);
+    } else if (entry.isDirectory()) {
+      // eslint-disable-next-line no-await-in-loop
+      filePaths = filePaths.concat(await getAllFilePaths(fullPath));
+    }
+  }
+  return filePaths;
+}
 
 describe('deploy metadata NUTs', () => {
   let testkit: SourceTestkit;
@@ -40,9 +59,20 @@ describe('deploy metadata NUTs', () => {
 
   describe('--metadata flag', () => {
     it('should deploy ApexClass', async () => {
+      process.env.SF_MDAPI_TEMP_DIR = 'myTempDirectory';
       await testkit.modifyLocalGlobs(['force-app/main/default/classes/*.cls'], '// comment');
       await testkit.deploy({ args: '--metadata ApexClass' });
       await testkit.expect.filesToBeDeployed(['force-app/main/default/classes/*']);
+
+      // no illegal file paths should be generated when using SF_MDAPI_TEMP_DIR
+      // Users/william.ruemmele/projects/oss/plugin-deploy-retrieve/test_session_1761066173823d94ce455705e3fe5/dreamhouse-lwc/myTempDirectory/2025-10-21T17_03_52.245Z_deploy/metadata/package.xml
+      expect(
+        (await getAllFilePaths(join(testkit.projectDir, process.env.SF_MDAPI_TEMP_DIR))).every((path) =>
+          /[<>:"/\\|?*]/.test(path)
+        )
+      ).to.be.true;
+
+      delete process.env.SF_MDAPI_TEMP_DIR;
     });
 
     it('should deploy named ApexClass', async () => {
