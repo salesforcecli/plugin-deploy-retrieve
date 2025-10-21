@@ -1,3 +1,5 @@
+## [3.23.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.7...3.23.8) (2025-10-21)
+
 ## [3.23.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.6...3.23.7) (2025-10-21)
 
 ### Bug Fixes
