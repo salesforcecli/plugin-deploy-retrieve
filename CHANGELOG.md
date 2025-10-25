@@ -1,3 +1,9 @@
+## [3.23.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.8...3.23.9) (2025-10-25)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.4.10 to 7.5.0 ([e3b2a89](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e3b2a8981118ee6d9e984f213391ef1c9fedbf7a))
+
 ## [3.23.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.7...3.23.8) (2025-10-21)
 
 ## [3.23.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.6...3.23.7) (2025-10-21)
