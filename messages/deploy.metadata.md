@@ -104,6 +104,8 @@ Valid values are:
 
 - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
 
+- RunRelevantTests — Runs only tests that are relevant to the files being deployed.
+
   If you don’t specify a test level, the default behavior depends on the contents of your deployment package and target org. For more information, see [Running Tests in a Deployment](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy_running_tests.htm) in the "Metadata API Developer Guide".
 
 # flags.source-dir.summary
@@ -261,4 +263,4 @@ The `pushPackageDirectoriesSequentially` property is not respected by this comma
 # noSourceTrackingWarning
 
 Starting in December 2025, this command will require that the target org use source tracking.
-Specifically, to use this command with a production org, scratch org created with the `--no-track-source` flag, or other non-source-tracking org, you must specify the metadata you want to deploy with either the `--metadata`, `--source-dir`, or `--manifest` flag. 
+Specifically, to use this command with a production org, scratch org created with the `--no-track-source` flag, or other non-source-tracking org, you must specify the metadata you want to deploy with either the `--metadata`, `--source-dir`, or `--manifest` flag.

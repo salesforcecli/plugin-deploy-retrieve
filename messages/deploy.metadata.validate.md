@@ -52,6 +52,8 @@ Valid values are:
 
 - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
 
+- RunRelevantTests — Runs only tests that are relevant to the files being deployed.
+
 # flags.source-dir.summary
 
 Path to the local source files to validate for deployment.
