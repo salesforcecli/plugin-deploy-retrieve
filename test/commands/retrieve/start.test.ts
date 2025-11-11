@@ -152,7 +152,7 @@ describe('project retrieve start', () => {
     ensureCreateComponentSetArgs({ sourcepath });
     ensureRetrieveArgs({ format: 'source' });
   });
-  it.only('should pass along retrievetargetdir', async () => {
+  it('should pass along retrievetargetdir', async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const renameStub = $$.SANDBOX.stub(RetrieveMetadata.prototype, 'moveResultsForRetrieveTargetDir').resolves();
