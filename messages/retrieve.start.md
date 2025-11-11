@@ -204,7 +204,3 @@ This command expects the org to support source tracking. If it doesn't, you must
 
 Starting in December 2025, this command will require that the target org use source tracking.
 Specifically, to use this command with a production org, scratch org created with the `--no-track-source` flag, or other non-source-tracking org, you must specify the metadata you want to retrieve with either the `--metadata`, `--source-dir`, or `--manifest` flag.
-
-# outputDirOutsideProject
-
-The output directory must be inside the current project. The path relative you provided %s is outside the project root.
