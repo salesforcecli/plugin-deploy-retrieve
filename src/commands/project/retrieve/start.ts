@@ -15,7 +15,7 @@
  */
 
 import { rm } from 'node:fs/promises';
-import { dirname, join, resolve, sep } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import * as fs from 'node:fs';
 
 import { MultiStageOutput } from '@oclif/multi-stage-output';
@@ -203,6 +203,16 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       resolvedTargetDir = resolve(flags['output-dir']);
       if (SfProject.getInstance()?.getPackageNameFromPath(resolvedTargetDir)) {
         throw messages.createError('retrieveTargetDirOverlapsPackage', [flags['output-dir']]);
+      }
+
+      // Ensure --output-dir is inside the current project directory
+      const project = await getOptionalProject();
+      if (project) {
+        const rel = relative(project.getPath(), resolvedTargetDir);
+        if (rel.startsWith('..')) {
+          // resolvedTargetDir is outside the project path
+          throw messages.createError('outputDirOutsideProject', [flags['output-dir']]);
+        }
       }
     }
     const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
