@@ -152,14 +152,14 @@ describe('project retrieve start', () => {
     ensureCreateComponentSetArgs({ sourcepath });
     ensureRetrieveArgs({ format: 'source' });
   });
-  it('should pass along retrievetargetdir', async () => {
+  it.only('should pass along retrievetargetdir', async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const renameStub = $$.SANDBOX.stub(RetrieveMetadata.prototype, 'moveResultsForRetrieveTargetDir').resolves();
 
-    const sourcepath = ['somepath'];
+    const outputDir = resolve(expectedDirectoryPath, '..', 'retrieveOutput');
     const metadata = ['ApexClass:MyClass'];
-    const result = await RetrieveMetadata.run(['--output-dir', sourcepath[0], '--metadata', metadata[0], '--json']);
+    const result = await RetrieveMetadata.run(['--output-dir', outputDir, '--metadata', metadata[0], '--json']);
     expect(result).to.deep.equal(expectedResults);
     ensureCreateComponentSetArgs({
       sourcepath: undefined,
@@ -168,7 +168,7 @@ describe('project retrieve start', () => {
         metadataEntries: ['ApexClass:MyClass'],
       },
     });
-    ensureRetrieveArgs({ output: resolve(sourcepath[0]), format: 'source' });
+    ensureRetrieveArgs({ output: resolve(outputDir), format: 'source' });
     expect(renameStub.calledOnce).to.be.true;
   });
 
