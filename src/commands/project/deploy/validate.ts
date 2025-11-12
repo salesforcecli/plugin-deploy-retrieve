@@ -96,7 +96,12 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     'target-org': Flags.requiredOrg(),
     tests: testsFlag({ helpGroup: testFlags }),
     'test-level': testLevelFlag({
-      options: [TestLevel.RunAllTestsInOrg, TestLevel.RunLocalTests, TestLevel.RunSpecifiedTests],
+      options: [
+        TestLevel.RunAllTestsInOrg,
+        TestLevel.RunLocalTests,
+        TestLevel.RunSpecifiedTests,
+        TestLevel.RunRelevantTests,
+      ],
       default: TestLevel.RunLocalTests,
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),

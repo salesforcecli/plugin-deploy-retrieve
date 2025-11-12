@@ -35,6 +35,7 @@ export enum TestLevel {
   RunSpecifiedTests = 'RunSpecifiedTests',
   RunLocalTests = 'RunLocalTests',
   RunAllTestsInOrg = 'RunAllTestsInOrg',
+  RunRelevantTests = 'RunRelevantTests',
 }
 
 export enum API {
