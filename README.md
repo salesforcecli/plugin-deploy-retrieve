@@ -141,7 +141,7 @@ FLAG DESCRIPTIONS
     If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/convert/mdapi.ts)_
+_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/convert/mdapi.ts)_
 
 ## `sf project convert source`
 
@@ -214,7 +214,7 @@ FLAG DESCRIPTIONS
     Override the api version used for api requests made by this command
 ```
 
-_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/convert/source.ts)_
+_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/convert/source.ts)_
 
 ## `sf project convert source-behavior`
 
@@ -273,7 +273,7 @@ EXAMPLES
     $ sf project convert source-behavior --behavior decomposePermissionSetBeta --dry-run --preserve-temp-dir
 ```
 
-_See code: [src/commands/project/convert/source-behavior.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/convert/source-behavior.ts)_
+_See code: [src/commands/project/convert/source-behavior.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/convert/source-behavior.ts)_
 
 ## `sf project delete source`
 
@@ -282,8 +282,8 @@ Delete source from your project and from a non-source-tracked org.
 ```
 USAGE
   $ sf project delete source -o <value> [--json] [--flags-dir <value>] [--api-version <value>] [-w <value>] [--tests
-    <value>...] [-l NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg] [-r] [-m <value>...] [-p <value>...] [-f
-    [-t | -c]] [--verbose]
+    <value>...] [-l NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg|RunRelevantTests] [-r] [-m <value>...]
+    [-p <value>...] [-f [-t | -c]] [--verbose]
 
 FLAGS
   -c, --check-only             Validate delete command but don't delete anything from the org or the local project.
@@ -300,7 +300,7 @@ FLAGS
 
 TEST FLAGS
   -l, --test-level=<option>  Deployment Apex testing level.
-                             <options: NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg>
+                             <options: NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg|RunRelevantTests>
       --tests=<value>...     Apex tests to run when --test-level is RunSpecifiedTests.
 
 GLOBAL FLAGS
@@ -369,7 +369,9 @@ FLAG DESCRIPTIONS
     reference a master record or be soft-deleted (sent to the Recycle Bin) for the deletion to succeed. However, a
     successful deletion permanently deletes any detail records in the Recycle Bin.
 
-  -l, --test-level=NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg  Deployment Apex testing level.
+  -l, --test-level=NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg|RunRelevantTests
+
+    Deployment Apex testing level.
 
     Valid values are:
 
@@ -413,7 +415,7 @@ FLAG DESCRIPTIONS
     - Separate the test names with spaces: --tests Test1 Test2 "Test With Space"
 ```
 
-_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/delete/source.ts)_
+_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/delete/source.ts)_
 
 ## `sf project delete tracking`
 
@@ -450,7 +452,7 @@ EXAMPLES
     $ sf project delete tracking --target-org my-scratch
 ```
 
-_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/delete/tracking.ts)_
+_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/delete/tracking.ts)_
 
 ## `sf project deploy cancel`
 
@@ -522,7 +524,7 @@ FLAG DESCRIPTIONS
     project deploy report".
 ```
 
-_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/deploy/cancel.ts)_
+_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/deploy/cancel.ts)_
 
 ## `sf project deploy preview`
 
@@ -605,7 +607,7 @@ FLAG DESCRIPTIONS
     All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/deploy/preview.ts)_
+_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/deploy/preview.ts)_
 
 ## `sf project deploy quick`
 
@@ -689,7 +691,7 @@ FLAG DESCRIPTIONS
     deploy report".
 ```
 
-_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/deploy/quick.ts)_
+_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/deploy/quick.ts)_
 
 ## `sf project deploy report`
 
@@ -781,7 +783,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/deploy/report.ts)_
+_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/deploy/report.ts)_
 
 ## `sf project deploy resume`
 
@@ -866,7 +868,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/deploy/resume.ts)_
+_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/deploy/resume.ts)_
 
 ## `sf project deploy start`
 
@@ -876,10 +878,11 @@ Deploy metadata to an org from your local project.
 USAGE
   $ sf project deploy start -o <value> [--json] [--flags-dir <value>] [-a <value>] [--async | -w <minutes>] [--concise |
     --verbose] [--dry-run] [-c] [-r] [-g] [--single-package ] [-t <value>...] [-l
-    NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg] [--purge-on-delete] [--pre-destructive-changes <value>
-    [-x <value> | -d <value>... | -m <value>... | --metadata-dir <value>]] [--post-destructive-changes <value> ]
-    [--coverage-formatters clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary...]
-    [--junit] [--results-dir <value>]
+    NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg|RunRelevantTests] [--purge-on-delete]
+    [--pre-destructive-changes <value> [-x <value> | -d <value>... | -m <value>... | --metadata-dir <value>]]
+    [--post-destructive-changes <value> ] [--coverage-formatters
+    clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary...] [--junit]
+    [--results-dir <value>]
 
 FLAGS
   -a, --api-version=<value>  Target API version for the deploy.
@@ -902,7 +905,8 @@ SOURCE FORMAT FLAGS
 
 TEST FLAGS
   -l, --test-level=<option>              Deployment Apex testing level.
-                                         <options: NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg>
+                                         <options:
+                                         NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg|RunRelevantTests>
   -t, --tests=<value>...                 Apex tests to run when --test-level is RunSpecifiedTests.
       --coverage-formatters=<option>...  Format of the code coverage results.
                                          <options: clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamci
@@ -1043,7 +1047,9 @@ FLAG DESCRIPTIONS
     component that doesn't exist in the org, you get a warning. In this case, to ensure that the command returns a
     success value of true, specify this flag.
 
-  -l, --test-level=NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg  Deployment Apex testing level.
+  -l, --test-level=NoTestRun|RunSpecifiedTests|RunLocalTests|RunAllTestsInOrg|RunRelevantTests
+
+    Deployment Apex testing level.
 
     Valid values are:
 
@@ -1059,6 +1065,8 @@ FLAG DESCRIPTIONS
     packages. This test level is the default for production deployments that include Apex classes or triggers.
 
     - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
+
+    - RunRelevantTests — Runs only tests that are relevant to the files being deployed.
 
     If you don’t specify a test level, the default behavior depends on the contents of your deployment package and
     target org. For more information, see [Running Tests in a
@@ -1102,7 +1110,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/deploy/start.ts)_
+_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/deploy/start.ts)_
 
 ## `sf project deploy validate`
 
@@ -1112,7 +1120,7 @@ Validate a metadata deployment without actually executing it.
 USAGE
   $ sf project deploy validate -o <value> [--json] [--flags-dir <value>] [-a <value>] [--async] [--concise | --verbose] [-m
     <value>...] [-d <value>...] [--single-package --metadata-dir <value>] [-t <value>...] [-l
-    RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests] [-w <minutes>] [-g] [--coverage-formatters
+    RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests|RunRelevantTests] [-w <minutes>] [-g] [--coverage-formatters
     clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamcity|text|text-summary...] [--junit]
     [--results-dir <value>] [--purge-on-delete -x <value>] [--pre-destructive-changes <value> ]
     [--post-destructive-changes <value> ]
@@ -1134,7 +1142,7 @@ SOURCE FORMAT FLAGS
 
 TEST FLAGS
   -l, --test-level=<option>              [default: RunLocalTests] Deployment Apex testing level.
-                                         <options: RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests>
+                                         <options: RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests|RunRelevantTests>
   -t, --tests=<value>...                 Apex tests to run when --test-level is RunSpecifiedTests.
       --coverage-formatters=<option>...  Format of the code coverage results.
                                          <options: clover|cobertura|html-spa|html|json|json-summary|lcovonly|none|teamci
@@ -1229,7 +1237,7 @@ FLAG DESCRIPTIONS
     component that doesn't exist in the org, you get a warning. In this case, to ensure that the command returns a
     success value of true, specify this flag.
 
-  -l, --test-level=RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests  Deployment Apex testing level.
+  -l, --test-level=RunAllTestsInOrg|RunLocalTests|RunSpecifiedTests|RunRelevantTests  Deployment Apex testing level.
 
     Valid values are:
 
@@ -1242,6 +1250,8 @@ FLAG DESCRIPTIONS
     packages. This test level is the default.
 
     - RunAllTestsInOrg — All tests in your org are run, including tests of managed packages.
+
+    - RunRelevantTests — Runs only tests that are relevant to the files being deployed.
 
   -t, --tests=<value>...  Apex tests to run when --test-level is RunSpecifiedTests.
 
@@ -1275,7 +1285,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/deploy/validate.ts)_
+_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/deploy/validate.ts)_
 
 ## `sf project generate manifest`
 
@@ -1371,7 +1381,7 @@ EXAMPLES
     $ sf project generate manifest --from-org test@myorg.com --excluded-metadata StandardValueSet
 ```
 
-_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/generate/manifest.ts)_
+_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/generate/manifest.ts)_
 
 ## `sf project list ignored`
 
@@ -1413,7 +1423,7 @@ EXAMPLES
     $ sf project list ignored --source-dir package.xml
 ```
 
-_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/list/ignored.ts)_
+_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/list/ignored.ts)_
 
 ## `sf project reset tracking`
 
@@ -1462,7 +1472,7 @@ EXAMPLES
     $ sf project reset tracking --revision 30
 ```
 
-_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/reset/tracking.ts)_
+_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/reset/tracking.ts)_
 
 ## `sf project retrieve preview`
 
@@ -1516,7 +1526,7 @@ FLAG DESCRIPTIONS
     production orgs.
 ```
 
-_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/retrieve/preview.ts)_
+_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/retrieve/preview.ts)_
 
 ## `sf project retrieve start`
 
@@ -1689,6 +1699,6 @@ FLAG DESCRIPTIONS
     If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.23.16/src/commands/project/retrieve/start.ts)_
+_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/3.24.0/src/commands/project/retrieve/start.ts)_
 
 <!-- commandsstop -->

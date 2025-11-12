@@ -1,3 +1,9 @@
+# [3.24.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.16...3.24.0) (2025-11-12)
+
+### Features
+
+- added new RunRelevantTests test-level @W-20152151@ ([#1479](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1479)) ([20e3d55](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/20e3d55b49234ad6ae69ad0270ebf01d02249080))
+
 ## [3.23.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.15...3.23.16) (2025-11-08)
 
 ### Bug Fixes
