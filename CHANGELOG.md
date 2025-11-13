@@ -1,3 +1,10 @@
+## [3.24.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.0...3.24.1) (2025-11-13)
+
+### Bug Fixes
+
+- update the test ([a451aa5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a451aa5651b7148fa29a7caff090a38b87bfd10f))
+- validate file path is inside the project dir ([6fbf6ba](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6fbf6ba72326f303ff95c12c5c6aff4a160fd7b3))
+
 # [3.24.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.23.16...3.24.0) (2025-11-12)
 
 ### Features
