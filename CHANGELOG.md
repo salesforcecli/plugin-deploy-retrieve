@@ -1,3 +1,9 @@
+## [3.24.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.1...3.24.2) (2025-11-14)
+
+### Bug Fixes
+
+- bump SDR, dedupe yarn.lock ([5461eba](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5461eba43dbbd197d648a3756ced9f872132e12c))
+
 ## [3.24.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.0...3.24.1) (2025-11-13)
 
 ### Bug Fixes
