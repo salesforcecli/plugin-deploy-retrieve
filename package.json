@@ -8,7 +8,7 @@
     "@inquirer/prompts": "^7.8.3",
     "@oclif/core": "^4.8.0",
     "@oclif/multi-stage-output": "^0.8.28",
-    "@salesforce/apex-node": "^8.3.5",
+    "@salesforce/apex-node": "^8.3.7",
     "@salesforce/core": "^8.23.4",
     "@salesforce/kit": "^3.2.4",
     "@salesforce/plugin-info": "^3.4.93",
