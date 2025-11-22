@@ -1507,10 +1507,10 @@
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@salesforce/apex-node@^8.3.5":
-  version "8.3.6"
-  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-8.3.6.tgz#58c2481d0b88ebf9b119d57b064eb6d4f9b9b0bc"
-  integrity sha512-w8//4hopMTp5saT+8EC8EDyOp1h+7dMls83FuAqLjStgLUkm2AgMVT4CnLK7wO3UP+KufJvFxGhh8X9pjT/Jgw==
+"@salesforce/apex-node@^8.3.8":
+  version "8.3.8"
+  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-8.3.8.tgz#fceda4ebb7cb70813bc377ac2ce1682b288e6567"
+  integrity sha512-dscXGEMc2+/oh1I8nQRn89wUnzGuyph2cyY1Lu3pNu/wh4ivrwzEm0fNJ3YHylVcOqDtujc8fKIKU0wZlJBddg==
   dependencies:
     "@salesforce/core" "^8.23.4"
     "@salesforce/kit" "^3.2.4"
