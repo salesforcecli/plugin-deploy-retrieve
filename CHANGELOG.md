@@ -1,3 +1,9 @@
+## [3.24.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.2...3.24.3) (2026-01-07)
+
+### Bug Fixes
+
+- bump deps + add NUTs for consecutive errors W-18203875 ([#1495](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1495)) ([6042618](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/6042618cfbc4088f5db186d619af032be8471a3c))
+
 ## [3.24.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.1...3.24.2) (2025-11-14)
 
 ### Bug Fixes
