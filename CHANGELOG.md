@@ -1,3 +1,9 @@
+## [3.24.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.4...3.24.5) (2026-01-08)
+
+### Bug Fixes
+
+- bump SDR to 12.31.2 for AAB deploy fix ([93865a0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/93865a0aa1edb3b42d436d466bb327d11ebae9f3))
+
 ## [3.24.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.3...3.24.4) (2026-01-08)
 
 ### Bug Fixes
