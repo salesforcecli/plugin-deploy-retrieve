@@ -28,7 +28,7 @@ import DeployMetadata from '../../../src/commands/project/deploy/start.js';
  *
  * see https://github.com/forcedotcom/source-deploy-retrieve/pull/1663
  */
-describe.skip('Deploy Consecutive Errors NUT', () => {
+describe('Deploy Consecutive Errors NUT', () => {
   let testkit: SourceTestkit;
   let orgUsername: string;
 
