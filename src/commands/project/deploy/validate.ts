@@ -236,7 +236,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
       }
     );
 
-    const result = await deploy.pollStatus(500, flags.wait?.seconds);
+    const result = await deploy.pollStatus(Duration.seconds(1).milliseconds, flags.wait?.seconds);
     process.exitCode = determineExitCode(result);
     const formatter = new DeployResultFormatter(result, {
       ...flags,

@@ -298,7 +298,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         throw error;
       });
 
-      this.retrieveResult = await retrieve.pollStatus(500, flags.wait.seconds);
+      this.retrieveResult = await retrieve.pollStatus(Duration.seconds(1).milliseconds, flags.wait.seconds);
     }
 
     this.ms.stop();
