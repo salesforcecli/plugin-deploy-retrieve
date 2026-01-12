@@ -19,6 +19,10 @@
     "ansis": "^3.17.0",
     "terminal-link": "^3.0.0"
   },
+  "resolutions": {
+    "@salesforce/core": "^8.24.1-dev.0",
+    "@salesforce/source-deploy-retrieve": "^12.31.3-dev.0"
+  },
   "devDependencies": {
     "@oclif/plugin-command-snapshot": "^5.3.8",
     "@salesforce/cli-plugins-testkit": "^5.3.41",
