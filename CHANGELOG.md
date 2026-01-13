@@ -1,3 +1,9 @@
+## [3.24.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.6...3.24.7) (2026-01-13)
+
+### Bug Fixes
+
+- increase poll frequency to 1s W-20866289 ([#1499](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1499)) ([c683569](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c683569f3e858235e2799f84024c5a7cf2f75126))
+
 ## [3.24.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.5...3.24.6) (2026-01-09)
 
 ### Bug Fixes
