@@ -154,7 +154,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
         }
       );
 
-      result = await deploy.pollStatus(500, wait.seconds);
+      result = await deploy.pollStatus(Duration.seconds(1).milliseconds, wait.seconds);
 
       if (!deploy.id) {
         throw new SfError('The deploy id is not available.');

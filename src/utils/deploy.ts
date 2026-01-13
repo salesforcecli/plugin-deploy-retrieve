@@ -209,7 +209,7 @@ export async function cancelDeploy(opts: Partial<DeployOptions>, id: string): Pr
 
   await deploy.cancel();
   return deploy.pollStatus({
-    frequency: Duration.milliseconds(500),
+    frequency: Duration.seconds(1),
     timeout: opts.wait ?? Duration.minutes(33),
   });
 }

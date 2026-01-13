@@ -17,6 +17,7 @@
 import { Messages, Org, SfProject } from '@salesforce/core';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { ComponentSet, DeployResult, MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import { Duration } from '@salesforce/kit';
 import { DeployStages } from '../../../utils/deployStages.js';
 import { buildComponentSet } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
@@ -137,7 +138,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
           title: 'Deploying Metadata',
           jsonEnabled: this.jsonEnabled(),
         }).start({ deploy: mdapiDeploy, username: org.getUsername() });
-        result = await mdapiDeploy.pollStatus(500, wait.seconds);
+        result = await mdapiDeploy.pollStatus(Duration.seconds(1).milliseconds, wait.seconds);
       } catch (error) {
         if (error instanceof Error && error.message.includes('The client has timed out')) {
           this.debug('[project deploy report] polling timed out. Requesting status...');
