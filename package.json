@@ -10,6 +10,7 @@
     "@oclif/multi-stage-output": "^0.8.28",
     "@salesforce/apex-node": "^8.3.5",
     "@salesforce/core": "^8.24.1-dev.0",
+    "@jsforce/jsforce-node": "3.10.12-dev.1",
     "@salesforce/kit": "^3.2.4",
     "@salesforce/plugin-info": "^3.4.93",
     "@salesforce/sf-plugins-core": "^12.2.5",
@@ -21,7 +22,11 @@
   },
   "resolutions": {
     "@salesforce/core": "^8.24.1-dev.0",
-    "@salesforce/source-deploy-retrieve": "^12.31.3-dev.0"
+    "@salesforce/source-deploy-retrieve": "^12.31.3-dev.0",
+    "@jsforce/jsforce-node": "3.10.12-dev.1"
+  },
+  "overrides": {
+    "@jsforce/jsforce-node": "3.10.12-dev.1"
   },
   "devDependencies": {
     "@oclif/plugin-command-snapshot": "^5.3.8",
