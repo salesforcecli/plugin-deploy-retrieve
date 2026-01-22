@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EnvironmentVariable, Messages, Org, SfError } from '@salesforce/core';
+import { Messages, Org, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
@@ -89,7 +89,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     }),
   };
 
-  public static envVariablesSection = toHelpSection('ENVIRONMENT VARIABLES', EnvironmentVariable.SF_USE_PROGRESS_BAR);
+  public static envVariablesSection = toHelpSection('ENVIRONMENT VARIABLES');
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
