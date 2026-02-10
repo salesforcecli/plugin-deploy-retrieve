@@ -127,7 +127,7 @@ This operation will deploy the following:
 
 # cascadeDeleteWarning
 
-Deleting components of type "%s" may cause the org to also delete the following related metadata (cascade delete): %s.
+When you delete components of type "%s", the org also deletes the following related metadata (known as a "cascade delete"): %s.
 
 # areYouSure
 
