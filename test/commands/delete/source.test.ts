@@ -74,6 +74,13 @@ const agentComponents: SourceComponent[] = [
   }),
 ];
 
+// Component with type that triggers cascade delete warning (AiAuthoringBundle)
+const aiAuthoringBundleComponent = new SourceComponent({
+  name: 'MyAiBundle',
+  type: registry.getTypeByName('AiAuthoringBundle'),
+  xml: '/dreamhouse-lwc/force-app/main/default/aiAuthoringBundles/MyAiBundle.agent-meta.xml',
+});
+
 export const exampleDeleteResponse = {
   // required but ignored by the delete UT
   getFileResponses: (): void => {},
@@ -168,6 +175,7 @@ describe('project delete source', () => {
     options?: {
       sourceApiVersion?: string;
       inquirerMock?: { checkbox: sinon.SinonStub };
+      captureConfirmMessage?: { ref: { message: string } };
     }
   ) => {
     const cmd = new TestDelete(params, oclifConfigStub);
@@ -192,7 +200,15 @@ describe('project delete source', () => {
       onCancel: () => {},
       onError: () => {},
     });
-    handlePromptStub = stubMethod($$.SANDBOX, cmd, 'handlePrompt').returns(confirm);
+    if (options?.captureConfirmMessage) {
+      const messageRef = options.captureConfirmMessage.ref;
+      stubMethod($$.SANDBOX, SfCommand.prototype, 'confirm').callsFake(async (opts: { message: string }) => {
+        messageRef.message = opts.message;
+        return true;
+      });
+    } else {
+      handlePromptStub = stubMethod($$.SANDBOX, cmd, 'handlePrompt').returns(confirm);
+    }
     if (options?.inquirerMock) {
       // @ts-expect-error stubbing private member of the command
       cmd.inquirer = options.inquirerMock;
@@ -369,6 +385,26 @@ describe('project delete source', () => {
         directoryPaths: [defaultPackagePath],
       },
     });
+    ensureHookArgs();
+  });
+
+  it('should include cascade delete warning in prompt when deleting AiAuthoringBundle', async () => {
+    buildComponentSetStub.restore();
+    buildComponentSetStub = stubMethod($$.SANDBOX, ComponentSetBuilder, 'build').resolves({
+      toArray: () => [aiAuthoringBundleComponent],
+      forceIgnoredPaths: undefined,
+      apiVersion: '65.0',
+      sourceApiVersion: '65.0',
+    });
+
+    const captured = { message: '' };
+    await runDeleteCmd(['--metadata', 'AiAuthoringBundle:MyAiBundle', '--json'], {
+      captureConfirmMessage: { ref: captured },
+    });
+
+    expect(captured.message).to.include('AiAuthoringBundle');
+    expect(captured.message).to.include('cascade');
+    expect(captured.message).to.include('Bot, BotVersion, GenAiPlannerBundle');
     ensureHookArgs();
   });
 });
