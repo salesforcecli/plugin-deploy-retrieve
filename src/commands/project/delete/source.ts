@@ -59,6 +59,27 @@ Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'delete.source');
 const xorFlags = ['metadata', 'source-dir'];
 
+/**
+ * Metadata types that trigger cascade deletion in the org.
+ */
+const CASCADE_DELETE_TYPES: Record<string, string[]> = {
+  AiAuthoringBundle: ['Bot, BotVersion, GenAiPlannerBundle'],
+};
+
+/**
+ * Returns warning messages for components that trigger cascade deletion in the org.
+ */
+const getCascadeDeleteWarnings = (typesBeingDeleted: Set<string>): string[] => {
+  const warnings: string[] = [];
+  for (const typeName of typesBeingDeleted) {
+    const cascadeTypes = CASCADE_DELETE_TYPES[typeName];
+    if (cascadeTypes?.length) {
+      warnings.push(messages.getMessage('cascadeDeleteWarning', [typeName, cascadeTypes.join(', ')]));
+    }
+  }
+  return warnings;
+};
+
 type MixedDeployDelete = { deploy: string[]; delete: FileResponseSuccess[] };
 export class Source extends SfCommand<DeleteSourceJson> {
   public static readonly summary = messages.getMessage('summary');
@@ -459,6 +480,9 @@ Update the .forceignore file and try again.`);
         )
         .concat(this.mixedDeployDelete.delete.map((fr) => `${fr.fullName} (${fr.filePath})`));
 
+      const typesBeingDeleted = new Set((this.components ?? []).map((comp) => comp.type.name));
+      const cascadeWarnings = getCascadeDeleteWarnings(typesBeingDeleted);
+
       const message: string[] = [
         ...(this.mixedDeployDelete.deploy.length
           ? [messages.getMessage('deployPrompt', [[...new Set(this.mixedDeployDelete.deploy)].join('\n')])]
@@ -469,6 +493,8 @@ Update the .forceignore file and try again.`);
         // add a whitespace between remote and local
         ...(local.length && (this.mixedDeployDelete.deploy.length || remote.length) ? ['\n'] : []),
         ...(local.length ? [messages.getMessage('localPrompt', [[...new Set(local)].join('\n')])] : []),
+
+        ...(cascadeWarnings.length ? [...cascadeWarnings] : []),
 
         this.flags['check-only'] ?? false
           ? messages.getMessage('areYouSureCheckOnly')

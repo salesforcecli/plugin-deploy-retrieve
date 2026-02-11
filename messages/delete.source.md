@@ -125,6 +125,10 @@ This operation will delete the following metadata in your org:
 This operation will deploy the following:
 %s
 
+# cascadeDeleteWarning
+
+When you delete components of type "%s", the org also deletes the following related metadata (known as a "cascade delete"): %s.
+
 # areYouSure
 
 Are you sure you want to proceed?
