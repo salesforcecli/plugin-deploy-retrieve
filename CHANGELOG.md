@@ -1,3 +1,9 @@
+## [3.24.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.8...3.24.9) (2026-02-11)
+
+### Bug Fixes
+
+- add warinng message for AAB cascade delete ([dacba93](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/dacba93a77a70f10e528d5751513282493d783bc))
+
 ## [3.24.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.7...3.24.8) (2026-02-10)
 
 ### Bug Fixes
