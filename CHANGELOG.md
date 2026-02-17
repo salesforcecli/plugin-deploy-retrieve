@@ -1,3 +1,9 @@
+## [3.24.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.9...3.24.10) (2026-02-17)
+
+### Bug Fixes
+
+- add back the project topic description ([#1507](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1507)) ([84b7abe](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/84b7abeee2ee309e04b0eb59bc605dc8943f341b))
+
 ## [3.24.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.8...3.24.9) (2026-02-11)
 
 ### Bug Fixes
