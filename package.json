@@ -67,6 +67,7 @@
     ],
     "topics": {
       "project": {
+        "description": "Work with projects, such as deploy and retrieve metadata.",
         "external": true,
         "subtopics": {
           "deploy": {
