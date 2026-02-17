@@ -1,3 +1,9 @@
+## [3.24.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.10...3.24.11) (2026-02-17)
+
+### Bug Fixes
+
+- enable PDP events via o11y for PFT ([f41351a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f41351a3d6d4ae39151547343ab7cbe74c003769))
+
 ## [3.24.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.9...3.24.10) (2026-02-17)
 
 ### Bug Fixes
