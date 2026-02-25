@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
+import { relative } from 'node:path';
 import { ConfigAggregator, Messages, Org, SfError, SfProject } from '@salesforce/core';
 import { Duration } from '@salesforce/kit';
 import { Nullable } from '@salesforce/ts-types';
 import {
   ComponentSet,
   ComponentSetBuilder,
+  ComponentStatus,
   DeployResult,
+  DestructiveChangesType,
+  FileResponseSuccess,
   MetadataApiDeploy,
   MetadataApiDeployOptions,
   RegistryAccess,
@@ -253,4 +257,85 @@ const buildApiOptions = (opts: Partial<DeployOptions>): MetadataApiDeployOptions
 export function buildDeployUrl(org: Org, deployId: string): string {
   const orgInstanceUrl = String(org.getField(Org.Fields.INSTANCE_URL));
   return `${orgInstanceUrl}/lightning/setup/DeployStatus/page?address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D${deployId}%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp`;
+}
+
+/**
+ * Creates synthetic FileResponse objects for components in pre-destructive changes.
+ * This ensures all file paths (e.g., .cls and .xml for ApexClass, or all LWC bundle files)
+ * are shown in the deployment results table. This is needed because pre-destructive files
+ * are deleted BEFORE the deploy, so getFileResponses() cannot access them.
+ *
+ * @param componentSet - The ComponentSet from the deployment (before deploy executes)
+ * @param project - The SfProject to resolve file paths from
+ * @returns Array of synthetic FileResponseSuccess objects representing pre-deleted files
+ */
+export async function buildPreDestructiveFileResponses(
+  componentSet?: ComponentSet,
+  project?: SfProject
+): Promise<FileResponseSuccess[]> {
+  if (!componentSet || !project) {
+    return [];
+  }
+
+  const fileResponses: FileResponseSuccess[] = [];
+
+  // Get all source components and filter for pre-destructive ones
+  const allComponents = componentSet.getSourceComponents().toArray();
+
+  const preDestructiveComponents = allComponents.filter(
+    (component) => component.getDestructiveChangesType() === DestructiveChangesType.PRE
+  );
+
+  if (preDestructiveComponents.length === 0) {
+    return [];
+  }
+
+  // Build metadata entries for ComponentSetBuilder
+  const metadataEntries = preDestructiveComponents.map((comp) => `${comp.type.name}:${comp.fullName}`);
+
+  // Resolve the components from the project to get their file paths
+  try {
+    const resolvedComponentSet = await ComponentSetBuilder.build({
+      metadata: {
+        metadataEntries,
+        directoryPaths: await getPackageDirs(),
+      },
+      projectDir: project.getPath(),
+    });
+    const resolvedComponents = resolvedComponentSet.getSourceComponents().toArray();
+
+    preDestructiveComponents.length = 0;
+    preDestructiveComponents.push(...resolvedComponents);
+  } catch (error) {
+    // If this's not resolve, try to resolve with registry only
+  }
+
+  for (const component of preDestructiveComponents) {
+    // Get all file paths for this component (metadata XML + content files)
+    const filePaths: string[] = [];
+    const projectPath = project.getPath();
+
+    if (component.xml) {
+      const relativePath = relative(projectPath, component.xml);
+      filePaths.push(relativePath);
+    }
+
+    // Add all content files (for bundles, this includes all files in the directory)
+    const contentPaths = component.walkContent();
+    for (const contentPath of contentPaths) {
+      const relativePath = relative(projectPath, contentPath);
+      filePaths.push(relativePath);
+    }
+
+    for (const filePath of filePaths) {
+      fileResponses.push({
+        fullName: component.fullName,
+        type: component.type.name,
+        state: ComponentStatus.Deleted,
+        filePath,
+      });
+    }
+  }
+
+  return fileResponses;
 }
