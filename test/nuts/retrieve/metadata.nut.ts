@@ -24,7 +24,7 @@ import { RetrieveResultJson } from '../../../src/utils/types.js';
 
 config.truncateThreshold = 0;
 
-const ELECTRON = { id: '04t6A000002zgKSQAY', name: 'ElectronBranding' };
+const DREAMHOUSE = { id: '04tKY000000LP3aYAG', name: 'Dreamhouse-lwc' };
 
 describe('retrieve metadata NUTs', () => {
   let testkit: SourceTestkit;
@@ -182,32 +182,35 @@ describe('retrieve metadata NUTs', () => {
 
   describe('--package-name flag', () => {
     it('should retrieve an installed package', async () => {
-      execCmd(`force:package:install --noprompt --package ${ELECTRON.id} --wait 5 --json`, { silent: true, cli: 'sf' });
+      execCmd(`force:package:install --noprompt --package ${DREAMHOUSE.id} --wait 5 --json`, {
+        silent: true,
+        cli: 'sf',
+      });
 
-      await testkit.retrieve({ args: `--package-name "${ELECTRON.name}"` });
-      await testkit.expect.packagesToBeRetrieved([ELECTRON.name]);
+      await testkit.retrieve({ args: `--package-name "${DREAMHOUSE.name}"` });
+      await testkit.expect.packagesToBeRetrieved([DREAMHOUSE.name]);
     });
 
     it('should retrieve an installed package and write to the output dir', async () => {
-      await testkit.retrieve({ args: `--package-name "${ELECTRON.name}" --target-metadata-dir package-output` });
-      await testkit.expect.packagesToBeRetrieved([ELECTRON.name]);
+      await testkit.retrieve({ args: `--package-name "${DREAMHOUSE.name}" --target-metadata-dir package-output` });
+      await testkit.expect.packagesToBeRetrieved([DREAMHOUSE.name]);
       expect(fs.existsSync(path.join(testkit.projectDir, 'package-output', 'unpackaged.zip'))).to.be.true;
     });
 
     it('should retrieve an installed package and write to the output dir (unzipped)', async () => {
       await testkit.retrieve({
-        args: `--package-name "${ELECTRON.name}" --target-metadata-dir package-output1 --unzip`,
+        args: `--package-name "${DREAMHOUSE.name}" --target-metadata-dir package-output1 --unzip`,
       });
-      await testkit.expect.packagesToBeRetrieved([ELECTRON.name]);
+      await testkit.expect.packagesToBeRetrieved([DREAMHOUSE.name]);
       expect(
         fs.existsSync(
           path.join(
             testkit.projectDir,
             'package-output1',
             'unpackaged',
-            'ElectronBranding',
+            'Dreamhouse-lwc',
             'lightningExperienceThemes',
-            'Electron.lightningExperienceTheme'
+            'Dreamhouse.lightningExperienceTheme'
           )
         )
       ).to.be.true;
@@ -215,18 +218,18 @@ describe('retrieve metadata NUTs', () => {
 
     it('should retrieve an installed package and directory', async () => {
       await testkit.retrieve({
-        args: `--package-name "${ELECTRON.name}" --source-dir "${path.join(
+        args: `--package-name "${DREAMHOUSE.name}" --source-dir "${path.join(
           'force-app',
           'main',
           'default',
           'classes'
         )}"`,
       });
-      await testkit.expect.packagesToBeRetrieved([ELECTRON.name]);
+      await testkit.expect.packagesToBeRetrieved([DREAMHOUSE.name]);
       await testkit.expect.filesToExist([
-        `${ELECTRON.name}/**/brandingSets/*`,
-        `${ELECTRON.name}/**/contentassets/*`,
-        `${ELECTRON.name}/**/lightningExperienceThemes/*`,
+        `${DREAMHOUSE.name}/**/brandingSets/*`,
+        `${DREAMHOUSE.name}/**/contentassets/*`,
+        `${DREAMHOUSE.name}/**/lightningExperienceThemes/*`,
       ]);
     });
   });
