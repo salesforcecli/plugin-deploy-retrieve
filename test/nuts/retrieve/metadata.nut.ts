@@ -24,7 +24,7 @@ import { RetrieveResultJson } from '../../../src/utils/types.js';
 
 config.truncateThreshold = 0;
 
-const DREAMHOUSE = { id: '04tKY000000LP3aYAG', name: 'Dreamhouse-lwc' };
+const DREAMHOUSE = { id: '04tKY000000MF7uYAG', name: 'Dreamhouse-lwc' };
 
 describe('retrieve metadata NUTs', () => {
   let testkit: SourceTestkit;
