@@ -24,7 +24,7 @@ import { RetrieveResultJson } from '../../../src/utils/types.js';
 
 config.truncateThreshold = 0;
 
-const DREAMHOUSE = { id: '04tKY000000MF7uYAG', name: 'Dreamhouse-lwc' };
+const DREAMHOUSE = { id: '04tKY000000MF7uYAG', name: 'DreamhouseLWC' };
 
 describe('retrieve metadata NUTs', () => {
   let testkit: SourceTestkit;
@@ -208,9 +208,9 @@ describe('retrieve metadata NUTs', () => {
             testkit.projectDir,
             'package-output1',
             'unpackaged',
-            'Dreamhouse-lwc',
-            'lightningExperienceThemes',
-            'Dreamhouse.lightningExperienceTheme'
+            'DreamhouseLWC',
+            'objects',
+            'Property__c.object'
           )
         )
       ).to.be.true;
@@ -227,9 +227,9 @@ describe('retrieve metadata NUTs', () => {
       });
       await testkit.expect.packagesToBeRetrieved([DREAMHOUSE.name]);
       await testkit.expect.filesToExist([
-        `${DREAMHOUSE.name}/**/brandingSets/*`,
-        `${DREAMHOUSE.name}/**/contentassets/*`,
-        `${DREAMHOUSE.name}/**/lightningExperienceThemes/*`,
+        `${DREAMHOUSE.name}/main/default/lwc/propertyFilter/*`,
+        `${DREAMHOUSE.name}/main/default/classes/*`,
+        `${DREAMHOUSE.name}/main/default/aura/pageTemplate_2_7_3/*`,
       ]);
     });
   });
