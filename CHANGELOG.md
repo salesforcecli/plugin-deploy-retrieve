@@ -1,3 +1,9 @@
+## [3.24.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.11...3.24.12) (2026-03-04)
+
+### Bug Fixes
+
+- update package id-W-21415556 ([#1510](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1510)) ([4f3171e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4f3171ec08ed6c0f0ac3773b3274ed497376ba69))
+
 ## [3.24.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.10...3.24.11) (2026-02-17)
 
 ### Bug Fixes
