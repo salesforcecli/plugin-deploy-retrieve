@@ -22,7 +22,14 @@ import { DeployStages } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { AsyncDeployResultJson, DeployResultJson, TestLevel } from '../../../utils/types.js';
-import { executeDeploy, resolveApi, validateTests, determineExitCode, buildDeployUrl } from '../../../utils/deploy.js';
+import {
+  executeDeploy,
+  resolveApi,
+  validateTests,
+  determineExitCode,
+  buildDeployUrl,
+  buildPreDestructiveFileResponses,
+} from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { ConfigVars } from '../../../configMeta.js';
@@ -250,7 +257,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return Promise.resolve();
     });
 
-    const { deploy } = await executeDeploy(
+    const { deploy, componentSet } = await executeDeploy(
       {
         ...flags,
         'target-org': username,
@@ -267,6 +274,9 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     if (!deploy.id) {
       throw new SfError('The deploy id is not available.');
     }
+
+    // Capture pre-destructive file responses BEFORE deploy executes
+    const preDestructiveFileResponses = await buildPreDestructiveFileResponses(componentSet, project);
 
     this.stages = new DeployStages({
       title,
@@ -301,7 +311,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     const result = await deploy.pollStatus({ timeout: flags.wait });
     process.exitCode = determineExitCode(result);
     this.stages.stop();
-    const formatter = new DeployResultFormatter(result, flags, undefined, true);
+
+    const formatter = new DeployResultFormatter(result, flags, preDestructiveFileResponses, true);
 
     if (!this.jsonEnabled()) {
       formatter.display();
