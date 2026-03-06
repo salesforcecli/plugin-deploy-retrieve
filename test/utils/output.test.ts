@@ -17,7 +17,13 @@ import path from 'node:path';
 import { stripVTControlCharacters } from 'node:util';
 import { assert, expect, config } from 'chai';
 import sinon from 'sinon';
-import { DeployMessage, DeployResult, Failures, FileResponse } from '@salesforce/source-deploy-retrieve';
+import {
+  DeployMessage,
+  DeployResult,
+  Failures,
+  FileResponse,
+  ComponentStatus,
+} from '@salesforce/source-deploy-retrieve';
 import { Ux } from '@salesforce/sf-plugins-core';
 import { getCoverageFormattersOptions } from '../../src/utils/coverage.js';
 import { getZipFileSize } from '../../src/utils/output.js';
@@ -169,6 +175,82 @@ describe('deployResultFormatter', () => {
       expect(stripVTControlCharacters(uxLogArgs[2][0])).to.equal('Test Failures [1]');
       expect(stripVTControlCharacters(uxLogArgs[3][0])).to.equal(`• ${testFailure1.name}.${testFailure1.methodName}`);
       expect(stripVTControlCharacters(uxLogArgs[4][0])).to.equal(`  message: ${testFailure1.message}`);
+    });
+  });
+
+  describe('displayDeletes', () => {
+    let tableStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      tableStub = sandbox.stub(Ux.prototype, 'table');
+    });
+
+    it('should display pre-destructive delete files in Deleted Source table', () => {
+      const deployResult = getDeployResult('successSync');
+
+      // Create pre-destructive file responses with proper typing
+      const preDestructiveFiles: FileResponse[] = [
+        {
+          fullName: 'CustomObject__c',
+          type: 'CustomObject',
+          state: ComponentStatus.Deleted,
+          filePath: 'force-app/main/default/objects/CustomObject__c/CustomObject__c.object-meta.xml',
+        },
+        {
+          fullName: 'CustomField__c.TestField__c',
+          type: 'CustomField',
+          state: ComponentStatus.Deleted,
+          filePath: 'force-app/main/default/objects/CustomObject__c/fields/TestField__c.field-meta.xml',
+        },
+      ];
+
+      // Pass pre-destructive files as extraDeletes to formatter
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-argument
+      const formatter = new DeployResultFormatter(deployResult, { verbose: true }, preDestructiveFiles as any);
+      formatter.display();
+
+      // The formatter should call table() to display the Deleted Source
+      const deletesTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title && callArg.title.includes('Deleted Source');
+      });
+
+      expect(deletesTableCall).to.exist;
+      if (deletesTableCall) {
+        const tableArg = deletesTableCall.args[0] as {
+          data: Array<{ fullName: string; type: string; filePath: string; state: string }>;
+        };
+        expect(tableArg.data).to.deep.equal([
+          {
+            fullName: 'CustomObject__c',
+            type: 'CustomObject',
+            state: 'Deleted',
+            filePath: 'force-app/main/default/objects/CustomObject__c/CustomObject__c.object-meta.xml',
+          },
+          {
+            fullName: 'CustomField__c.TestField__c',
+            type: 'CustomField',
+            state: 'Deleted',
+            filePath: 'force-app/main/default/objects/CustomObject__c/fields/TestField__c.field-meta.xml',
+          },
+        ]);
+      }
+    });
+
+    it('should not display Deleted Source table when there are no deletes', () => {
+      const deployResult = getDeployResult('successSync');
+
+      // Pass empty pre-destructive files
+      const formatter = new DeployResultFormatter(deployResult, { verbose: true }, []);
+      formatter.display();
+
+      // Verify no Deleted Source table is displayed
+      const deletesTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title && callArg.title.includes('Deleted Source');
+      });
+
+      expect(deletesTableCall).to.not.exist;
     });
   });
 

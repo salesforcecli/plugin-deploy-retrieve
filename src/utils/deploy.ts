@@ -287,7 +287,7 @@ export async function buildPreDestructiveFileResponses(
   );
 
   if (preDestructiveComponents.length === 0) {
-    return [];
+    return [] as FileResponseSuccess[];
   }
 
   // Build metadata entries for ComponentSetBuilder
