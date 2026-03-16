@@ -1,3 +1,9 @@
+## [3.24.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.15...3.24.16) (2026-03-16)
+
+### Bug Fixes
+
+- add deleted file response for pre-destructive-W-21252087 ([#1508](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1508)) ([672e78d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/672e78d5bd60d37cb12174d58e0465eef1354eb0))
+
 ## [3.24.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.14...3.24.15) (2026-03-10)
 
 ### Bug Fixes
