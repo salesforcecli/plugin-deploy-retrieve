@@ -15,8 +15,8 @@
     "@salesforce/kit": "^3.2.4",
     "@salesforce/plugin-info": "^3.4.93",
     "@salesforce/sf-plugins-core": "^12.2.5",
-    "@salesforce/source-deploy-retrieve": "^12.31.19",
-    "@salesforce/source-tracking": "^7.8.4",
+    "@salesforce/source-deploy-retrieve": "^12.31.21",
+    "@salesforce/source-tracking": "^7.8.6",
     "@salesforce/ts-types": "^2.0.12",
     "ansis": "^3.17.0",
     "terminal-link": "^3.0.0"
