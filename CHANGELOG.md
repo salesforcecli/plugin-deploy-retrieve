@@ -1,3 +1,9 @@
+## [3.24.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.17...3.24.18) (2026-03-24)
+
+### Bug Fixes
+
+- W-21732659: bump sdr/core lib to latest ([#1516](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1516)) ([fa4ebad](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fa4ebad545361d66558a900be6e7a6cce913318d))
+
 ## [3.24.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.16...3.24.17) (2026-03-21)
 
 ### Bug Fixes
