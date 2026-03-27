@@ -1,3 +1,9 @@
+## [3.24.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.18...3.24.19) (2026-03-27)
+
+### Bug Fixes
+
+- **deps:** bump handlebars from 4.7.8 to 4.7.9 ([fd03246](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fd0324634ee37c7edc2b51515573b256238292bb))
+
 ## [3.24.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.17...3.24.18) (2026-03-24)
 
 ### Bug Fixes
