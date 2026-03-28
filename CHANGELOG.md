@@ -1,3 +1,9 @@
+## [3.24.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.19...3.24.20) (2026-03-28)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve ([8fc66a5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8fc66a53b7a520172a3a09f7c282be5b7f48917f))
+
 ## [3.24.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.18...3.24.19) (2026-03-27)
 
 ### Bug Fixes
