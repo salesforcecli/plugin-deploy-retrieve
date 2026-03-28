@@ -1529,7 +1529,7 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.1"
 
-"@salesforce/core@^8.18.7", "@salesforce/core@^8.23.1", "@salesforce/core@^8.23.3", "@salesforce/core@^8.24.0", "@salesforce/core@^8.27.1", "@salesforce/core@^8.5.1":
+"@salesforce/core@^8.18.7", "@salesforce/core@^8.23.1", "@salesforce/core@^8.23.3", "@salesforce/core@^8.27.1", "@salesforce/core@^8.5.1":
   version "8.27.1"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-8.27.1.tgz#26b08b0d68dd1fc210d1dd7a7e3770e3b9f27e74"
   integrity sha512-1WpVt9tQAEINGzsQsSiVRmcmYUpKeK4P54624f9HvLIv7o7jTjdARwirJpOqivIihbDE8OJnYOdsr0vV5Dz93A==
@@ -1674,7 +1674,7 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.31.0", "@salesforce/source-deploy-retrieve@^12.31.23", "@salesforce/source-deploy-retrieve@^12.31.25":
+"@salesforce/source-deploy-retrieve@^12.31.23", "@salesforce/source-deploy-retrieve@^12.31.25":
   version "12.31.25"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.31.25.tgz#85bd5d8ef68682e5f4dbff72f5edac24cad9003b"
   integrity sha512-X25mDbpb62BzpZ+g03MfTXckkblSdB1C06Wygd/MBO2bTs2Dg4+5m9yJxTUEzHVe1w8bGuyrZFzkjwzfLhvpZQ==
@@ -1694,15 +1694,15 @@
     proxy-agent "^6.4.0"
     yaml "^2.8.1"
 
-"@salesforce/source-testkit@^2.2.163":
-  version "2.2.172"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.172.tgz#74ea2f84d62f00b89a871b30ec2fdc933d90edb7"
-  integrity sha512-/3h7Fgdt6wk/vh7A4ScHdXztJTld1pOCneT1WYWR9jbdCojN0m+DSnPGWUkJ3aJyCKB3az3eQvceDVzHxvAn7Q==
+"@salesforce/source-testkit@^2.2.179":
+  version "2.2.179"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.179.tgz#19fc28734b020a799f8697f397e851a90d1b96f4"
+  integrity sha512-nLAlfuNk0AHYNuSzIiRfaO0yPx1SrIi+cmlM4ESBUqjlL6yYPbV+ZuZpAWCcxId+GQPrQaaDkiQi8mOy7N+zmQ==
   dependencies:
     "@salesforce/cli-plugins-testkit" "^5.3.41"
-    "@salesforce/core" "^8.24.0"
+    "@salesforce/core" "^8.27.1"
     "@salesforce/kit" "^3.2.4"
-    "@salesforce/source-deploy-retrieve" "^12.31.0"
+    "@salesforce/source-deploy-retrieve" "^12.31.25"
     "@salesforce/ts-types" "^2.0.12"
     chai "^4.5.0"
     debug "^4.4.3"
