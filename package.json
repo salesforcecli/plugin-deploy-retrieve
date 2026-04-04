@@ -11,7 +11,7 @@
     "@oclif/core": "^4.10.3",
     "@oclif/multi-stage-output": "^0.8.34",
     "@salesforce/apex-node": "^8.4.16",
-    "@salesforce/core": "^8.27.1",
+    "@salesforce/core": "^8.28.1",
     "@salesforce/kit": "^3.2.4",
     "@salesforce/plugin-info": "^3.4.93",
     "@salesforce/sf-plugins-core": "^12.2.6",
