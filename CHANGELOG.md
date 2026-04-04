@@ -1,3 +1,9 @@
+## [3.24.24](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.23...3.24.24) (2026-04-04)
+
+### Bug Fixes
+
+- **deps:** bump lodash from 4.17.23 to 4.18.1 ([e7cfada](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e7cfada3b76b66c1e7fcb6991b48f156286db33d))
+
 ## [3.24.23](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.22...3.24.23) (2026-03-30)
 
 ### Bug Fixes
