@@ -1710,10 +1710,10 @@
     shelljs "^0.10.0"
     sinon "^10.0.0"
 
-"@salesforce/source-tracking@^7.8.8":
-  version "7.8.8"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.8.8.tgz#03fcf5938ec098179d073498594bb25334954f29"
-  integrity sha512-+sEJb+AhZRtuxvTu5ADfIyBX+OpQ4hoR4b+HPYjC8dnloJs+xgU3RLWm/pe7xcbP0q2/Tv36HJ7wAPIapcGKdA==
+"@salesforce/source-tracking@^7.8.9":
+  version "7.8.9"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-tracking/-/source-tracking-7.8.9.tgz#b40cd1b2c42a1a5f22294c17c7fc2ef779a8c1ca"
+  integrity sha512-ykXZQvjeG+r0LNxaGGvM4e9Mnn1SHx5KuaXP9ROOHfMqo6D9mxjNuI+VQprPbxOYPsH+ahmlrBaB/Ar3zZ8+Jg==
   dependencies:
     "@salesforce/core" "^8.27.1"
     "@salesforce/kit" "^3.2.4"
