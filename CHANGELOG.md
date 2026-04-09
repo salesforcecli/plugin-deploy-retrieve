@@ -1,3 +1,9 @@
+## [3.24.28](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.27...3.24.28) (2026-04-09)
+
+### Bug Fixes
+
+- **deps:** bump basic-ftp from 5.2.0 to 5.2.1 ([16d60ff](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/16d60ff8c25841eb60d18fd69d2e7aae43ee36a5))
+
 ## [3.24.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.26...3.24.27) (2026-04-05)
 
 ### Bug Fixes
