@@ -1513,7 +1513,7 @@
     istanbul-reports "^3.2.0"
     json-stream-stringify "^3.1.6"
 
-"@salesforce/cli-plugins-testkit@^5.3.49", "@salesforce/cli-plugins-testkit@^5.3.50":
+"@salesforce/cli-plugins-testkit@^5.3.50":
   version "5.3.50"
   resolved "https://registry.yarnpkg.com/@salesforce/cli-plugins-testkit/-/cli-plugins-testkit-5.3.50.tgz#54001ef1c36361751669a5e21832b406b3346f35"
   integrity sha512-mH3jTdb9r2GhNAq/E2xR4LitvWlRRM8Z7lTmYapukEMc0vNjACPOkwnSVYDVCndXmJXRfLdrFnBY5Q4/MTSI/Q==
@@ -1674,7 +1674,7 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@^12.31.30", "@salesforce/source-deploy-retrieve@^12.32.1":
+"@salesforce/source-deploy-retrieve@^12.32.1":
   version "12.32.1"
   resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-12.32.1.tgz#9d027b0fb9e1ef61ebb896af804109518f71bd19"
   integrity sha512-q3u6bxgv3b4UscVvtWXCllgf5WouQd86IG7Kg76kyFryTTMBoSJIygRXNm5EMwlsHwBvfJhTn8zdpesJ1HkgPQ==
@@ -1694,15 +1694,15 @@
     proxy-agent "^6.5.0"
     yaml "^2.8.3"
 
-"@salesforce/source-testkit@^2.2.182":
-  version "2.2.182"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.182.tgz#037a68c63a68d1e73c9197bbcf1783e9b4178a4a"
-  integrity sha512-cCxSfTyVdU43DYu1RsR/Jp/2hmMcfdCU4v503jYstBooZLoRUcKTUgm7ncc9iE+5Ajuab7xFJQghfRFwviZuJw==
+"@salesforce/source-testkit@^2.2.187":
+  version "2.2.187"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.187.tgz#d940ef7dd7e9f922bfd9488f6338d33b2f3c6a46"
+  integrity sha512-sIbgkG7ND0xn7vVyqb/DjlCIKqK9Ll1IsHo1+RBLbQgp8KeFyE+a+P9Hfe/D7xwGBpUAer8aEgdHtjy2Dcy9AA==
   dependencies:
-    "@salesforce/cli-plugins-testkit" "^5.3.49"
-    "@salesforce/core" "^8.27.1"
+    "@salesforce/cli-plugins-testkit" "^5.3.50"
+    "@salesforce/core" "^8.28.1"
     "@salesforce/kit" "^3.2.6"
-    "@salesforce/source-deploy-retrieve" "^12.31.30"
+    "@salesforce/source-deploy-retrieve" "^12.32.1"
     "@salesforce/ts-types" "^2.0.12"
     chai "^4.5.0"
     debug "^4.4.3"
