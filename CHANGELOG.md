@@ -1,3 +1,57 @@
+## [3.24.32](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.31...3.24.32) (2026-04-18)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 3.4.114 to 3.4.122 ([8788729](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8788729fdb603166e349b2caeb4b4dd9fd64a028))
+
+## [3.24.31](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.30...3.24.31) (2026-04-18)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 8.28.1 to 8.28.3 ([4320363](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4320363eb615fe61c48036deda7475afdcd9b7e9))
+
+## [3.24.30](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.29...3.24.30) (2026-04-17)
+
+### Bug Fixes
+
+- **deps:** bump basic-ftp from 5.2.1 to 5.3.0 ([57f8a19](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/57f8a19e7edb22f68984ca6bc5bcc2d1bb8e04d5))
+
+## [3.24.29](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.28...3.24.29) (2026-04-11)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve ([a29d638](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a29d6383e4054b2da29b787e33a4b003197f13ab))
+
+## [3.24.28](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.27...3.24.28) (2026-04-09)
+
+### Bug Fixes
+
+- **deps:** bump basic-ftp from 5.2.0 to 5.2.1 ([16d60ff](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/16d60ff8c25841eb60d18fd69d2e7aae43ee36a5))
+
+## [3.24.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.26...3.24.27) (2026-04-05)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-tracking from 7.8.8 to 7.8.9 ([38752da](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/38752daaf88c58cfe4ed0d7c931efb0125dd7e66))
+
+## [3.24.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.25...3.24.26) (2026-04-04)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/core from 8.27.1 to 8.28.1 ([4b9363e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4b9363e3d20f2d44f3cd7d440879071417a1707c))
+
+## [3.24.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.24...3.24.25) (2026-04-04)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/multi-stage-output from 0.8.33 to 0.8.34 ([81fbcec](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/81fbcecd92eb4b88d311b0a14fd38d949ca4984b))
+
+## [3.24.24](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.23...3.24.24) (2026-04-04)
+
+### Bug Fixes
+
+- **deps:** bump lodash from 4.17.23 to 4.18.1 ([e7cfada](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e7cfada3b76b66c1e7fcb6991b48f156286db33d))
+
 ## [3.24.23](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.22...3.24.23) (2026-03-30)
 
 ### Bug Fixes
