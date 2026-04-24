@@ -26,7 +26,7 @@ export function tableHeader(message: string): string {
 export const makePathRelative = <T extends FileResponse | FileResponseSuccess | FileResponseFailure>(fr: T): T =>
   fr.filePath ? { ...fr, filePath: path.relative(process.cwd(), fr.filePath) } : fr;
 /**
- * Sorts file responds by type, then by filePath, then by fullName
+ * Sorts file responses by type, then by filePath, then by fullName
  */
 export const fileResponseSortFn = (i: FileResponse, j: FileResponse): number => {
   if (i.type === j.type && i.filePath && j.filePath) {
