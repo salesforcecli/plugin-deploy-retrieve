@@ -22,7 +22,7 @@ When deploying or retrieving metadata between your local project and an org, you
 
 # flags.source-dir.summary
 
-File or directory of files that the command checks for foreceignored files.
+File or directory of files that the command checks for forceignored files.
 
 # invalidSourceDir
 

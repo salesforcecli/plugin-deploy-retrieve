@@ -207,4 +207,4 @@ Specifically, to use this command with a production org, scratch org created wit
 
 # outputDirOutsideProject
 
-The output directory must be inside the current project. The path relative you provided %s is outside the project root.
+The output directory must be inside the current project. The relative path you provided %s is outside the project root.
