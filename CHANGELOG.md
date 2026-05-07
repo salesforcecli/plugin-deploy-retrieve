@@ -1,3 +1,9 @@
+## [3.24.42](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.41...3.24.42) (2026-05-07)
+
+### Bug Fixes
+
+- **deps:** bump ip-address from 10.1.0 to 10.2.0 ([3dec045](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3dec045131deb43ed80ef25de730145041d75213))
+
 ## [3.24.41](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.40...3.24.41) (2026-05-03)
 
 ### Bug Fixes
