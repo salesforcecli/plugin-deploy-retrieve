@@ -1,3 +1,9 @@
+## [3.24.44](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.43...3.24.44) (2026-05-09)
+
+### Bug Fixes
+
+- **deps:** bump fast-xml-builder from 1.1.5 to 1.2.0 ([7220d25](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7220d25dbdf6505b00dc87fd0828729b7ff84450))
+
 ## [3.24.43](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.42...3.24.43) (2026-05-09)
 
 ### Bug Fixes
