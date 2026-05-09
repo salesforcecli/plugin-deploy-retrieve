@@ -1,3 +1,9 @@
+## [3.24.43](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.42...3.24.43) (2026-05-09)
+
+### Bug Fixes
+
+- **deps:** bump fast-uri from 3.1.0 to 3.1.2 ([8dc169d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8dc169dd9a6aab1ed41d3ae26aaf51e631d4f3af))
+
 ## [3.24.42](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.41...3.24.42) (2026-05-07)
 
 ### Bug Fixes
