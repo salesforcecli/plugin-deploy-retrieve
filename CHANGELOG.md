@@ -1,3 +1,9 @@
+## [3.24.45](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.44...3.24.45) (2026-05-12)
+
+### Reverts
+
+- Revert "chore: bump core, sdr lib to latest" ([d693296](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d69329661f18020bd05c27a82f1157e8ebe67783))
+
 ## [3.24.44](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.43...3.24.44) (2026-05-09)
 
 ### Bug Fixes
