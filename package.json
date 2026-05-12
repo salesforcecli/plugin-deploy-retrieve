@@ -11,12 +11,12 @@
     "@oclif/core": "^4.10.5",
     "@oclif/multi-stage-output": "^0.8.37",
     "@salesforce/apex-node": "^8.4.22",
-    "@salesforce/core": "^8.29.0",
+    "@salesforce/core": "^8.30.0",
     "@salesforce/kit": "^3.2.4",
     "@salesforce/plugin-info": "^3.4.124",
     "@salesforce/sf-plugins-core": "^12.2.6",
-    "@salesforce/source-deploy-retrieve": "^12.35.0",
-    "@salesforce/source-tracking": "^7.8.14",
+    "@salesforce/source-deploy-retrieve": "^12.35.9",
+    "@salesforce/source-tracking": "^7.8.16",
     "@salesforce/ts-types": "^2.0.12",
     "ansis": "^3.17.0",
     "terminal-link": "^3.0.0"
@@ -256,5 +256,8 @@
     }
   },
   "exports": "./lib/index.js",
-  "type": "module"
+  "type": "module",
+  "resolutions": {
+    "@salesforce/core": "^8.30.0"
+  }
 }
