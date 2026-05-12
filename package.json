@@ -256,8 +256,5 @@
     }
   },
   "exports": "./lib/index.js",
-  "type": "module",
-  "resolutions": {
-    "@salesforce/core": "^8.30.0"
-  }
+  "type": "module"
 }
