@@ -9,7 +9,7 @@
   "dependencies": {
     "@inquirer/prompts": "^7.8.3",
     "@oclif/core": "^4.11.3",
-    "@oclif/multi-stage-output": "^0.8.37",
+    "@oclif/multi-stage-output": "^0.8.41",
     "@salesforce/apex-node": "^8.4.22",
     "@salesforce/core": "^8.30.0",
     "@salesforce/kit": "^3.2.4",
