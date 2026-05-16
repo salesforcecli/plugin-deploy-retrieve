@@ -8,7 +8,7 @@
   "o11yUploadEndpoint": "https://794testsite.my.site.com/byolwr/webruntime/log/metrics",
   "dependencies": {
     "@inquirer/prompts": "^7.8.3",
-    "@oclif/core": "^4.10.5",
+    "@oclif/core": "^4.11.3",
     "@oclif/multi-stage-output": "^0.8.37",
     "@salesforce/apex-node": "^8.4.22",
     "@salesforce/core": "^8.30.0",
