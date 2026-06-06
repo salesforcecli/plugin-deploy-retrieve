@@ -1663,10 +1663,10 @@
     debug "^4.4.3"
     handlebars "^4.7.9"
 
-"@salesforce/plugin-info@^3.4.136":
-  version "3.4.136"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.136.tgz#f55c4ca1d78090e9ad564cc7a4dfa7ee335d10cf"
-  integrity sha512-4MZQcAqbXFcDZFlfZqDt8sfikjjfFZPcsB7KT/Ziw77Y79ydZ9S2v0oSYnNdHwCq9OMYetDDfqG5wafY4kv6Jg==
+"@salesforce/plugin-info@^3.4.139":
+  version "3.4.139"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.139.tgz#d510c8974a34f79aed08986690a92f1fb005a1ed"
+  integrity sha512-OEdfIk8uBeR1o3uQ9VsHRwsl8iQ9Hciza+uUkClmu2aefMiTg9mgAQv1VMV4xy3p3GyImSgb7zTPw4XYiHWUlQ==
   dependencies:
     "@inquirer/input" "^2.3.0"
     "@jsforce/jsforce-node" "^3.10.15"
@@ -1679,7 +1679,7 @@
     marked-terminal "^4.2.0"
     open "^10.2.0"
     proxy-agent "^6.5.0"
-    semver "^7.8.0"
+    semver "^7.8.1"
 
 "@salesforce/prettier-config@^0.0.3":
   version "0.0.3"
