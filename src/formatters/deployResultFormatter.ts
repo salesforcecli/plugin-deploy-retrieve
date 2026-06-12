@@ -68,6 +68,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   private readonly coverageOptions: CoverageReporterOptions;
   private readonly resultsDir: string;
   private readonly junit: boolean | undefined;
+  private reportsWritten = false;
 
   public constructor(
     protected result: DeployResult,
@@ -75,6 +76,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       'test-level': TestLevel;
       verbose: boolean;
       concise: boolean;
+      quiet: boolean;
       'coverage-formatters': string[];
       junit: boolean;
       'results-dir': string;
@@ -116,14 +118,9 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       }
     }
 
-    if (this.coverageOptions.reportFormats?.length) {
-      this.createCoverageReport('no-map');
-    }
-    if (this.junit) {
-      this.createJunitResults();
-    }
+    this.writeRequestedReports(true);
 
-    if (this.verbosity === 'concise') {
+    if (this.verbosity === 'concise' || this.verbosity === 'quiet') {
       return {
         ...this.result.response,
         details: {
@@ -146,7 +143,13 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   }
 
   public display(): void {
-    if (this.verbosity !== 'concise') {
+    if (this.verbosity === 'quiet' && this.result.response.status === RequestStatus.Succeeded) {
+      this.maybeCreateRequestedReports(true);
+      ux.log(this.buildQuietSummary());
+      return;
+    }
+
+    if (this.verbosity === 'normal' || this.verbosity === 'verbose') {
       this.displaySuccesses();
     }
     this.displayFailures();
@@ -158,6 +161,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
 
   public determineVerbosity(): Verbosity {
     if (this.flags.verbose) return 'verbose';
+    if (this.flags.quiet) return 'quiet';
     if (this.flags.concise) return 'concise';
     return 'normal';
   }
@@ -183,22 +187,42 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     return failures;
   }
 
-  private maybeCreateRequestedReports(): void {
+  private maybeCreateRequestedReports(silent = false): void {
+    this.writeRequestedReports(silent);
+  }
+
+  private writeRequestedReports(silent = false): void {
+    if (this.reportsWritten) return;
+    this.reportsWritten = true;
+
     // only generate reports if test results are presented
     if (this.coverageOptions.reportFormats?.length) {
-      ux.log(
-        `Code Coverage formats, [${(this.flags['coverage-formatters'] ?? []).join(', ')}], written to ${join(
-          this.resultsDir,
-          'coverage'
-        )}/`
-      );
+      if (!silent) {
+        ux.log(
+          `Code Coverage formats, [${(this.flags['coverage-formatters'] ?? []).join(', ')}], written to ${join(
+            this.resultsDir,
+            'coverage'
+          )}/`
+        );
+      }
       this.createCoverageReport('no-map');
     }
 
     if (this.junit) {
-      ux.log(`Junit results written to ${this.resultsDir}/junit/junit.xml`);
+      if (!silent) {
+        ux.log(`Junit results written to ${this.resultsDir}/junit/junit.xml`);
+      }
       this.createJunitResults();
     }
+  }
+
+  private buildQuietSummary(): string {
+    const verb = this.result.response.checkOnly ? 'Validated' : 'Deployed';
+    const username = this.flags['target-org']?.getUsername() ?? 'target org';
+    const deployId = this.result.response.id ? ` (Deploy ID ${this.result.response.id})` : '';
+    const deployed = this.result.response.numberComponentsDeployed ?? 0;
+    const total = this.result.response.numberComponentsTotal ?? 0;
+    return `${verb} ${deployed}/${total} components to ${username}${deployId}.`;
   }
 
   private createJunitResults(): void {

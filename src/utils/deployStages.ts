@@ -35,6 +35,13 @@ const mdTransferMessages = Messages.loadMessages('@salesforce/plugin-deploy-retr
 type Options = {
   title: string;
   jsonEnabled: boolean;
+  showProgress?: boolean;
+};
+
+type ShowProgressOptions = {
+  jsonEnabled: boolean;
+  quiet?: boolean;
+  noProgress?: boolean;
 };
 
 type Data = {
@@ -71,7 +78,7 @@ export class DeployStages {
    */
   private printedApexTestFailures: Set<string>;
 
-  public constructor({ title, jsonEnabled }: Options) {
+  public constructor({ title, jsonEnabled, showProgress = true }: Options) {
     this.printedApexTestFailures = new Set();
     this.mso = new MultiStageOutput<Data>({
       title,
@@ -83,7 +90,11 @@ export class DeployStages {
         'Updating Source Tracking',
         'Done',
       ],
-      jsonEnabled,
+      // MultiStageOutput's `jsonEnabled` is really a "non-interactive mode" toggle: when true it
+      // skips rendering the live stage UI (it doesn't change serialization). We OR in `!showProgress`
+      // so a non-JSON suppression request (--quiet / --no-progress / SF_DEPLOY_PROGRESS / CI) reuses
+      // that same "don't paint the terminal" behavior. The name is the only mismatch.
+      jsonEnabled: jsonEnabled || !showProgress,
       preStagesBlock: [
         {
           type: 'message',
@@ -292,6 +303,19 @@ export class DeployStages {
   public done(data?: Partial<Data>): void {
     this.mso.skipTo('Done', data);
   }
+}
+
+export function showDeployProgress(): boolean {
+  const value = process.env.SF_DEPLOY_PROGRESS;
+  return value === undefined ? true : isTruthy(value);
+}
+
+export function shouldShowDeployProgress({ jsonEnabled, quiet, noProgress }: ShowProgressOptions): boolean {
+  if (jsonEnabled) return false;
+  // Deliberately using a simple boolean check rather than nullish coalescing.
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  if ([quiet, noProgress].some((value) => value === true)) return false;
+  return showDeployProgress();
 }
 
 function formatTestFailures(failuresData: Failures[]): string {

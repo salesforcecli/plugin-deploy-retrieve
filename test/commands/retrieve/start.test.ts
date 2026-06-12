@@ -367,6 +367,17 @@ describe('project retrieve start', () => {
     expect(getJsonStub.calledOnce).to.equal(true);
   });
 
+  it('should show a quiet summary with no --json', async () => {
+    const displayStub = $$.SANDBOX.stub(RetrieveResultFormatter.prototype, 'display');
+    const getJsonStub = $$.SANDBOX.stub(RetrieveResultFormatter.prototype, 'getJson');
+    getJsonStub.resolves(expectedResults);
+    await RetrieveMetadata.run(['--source-dir', 'somepath', '--quiet']);
+    expect(displayStub.calledOnce).to.equal(false);
+    expect(getJsonStub.calledOnce).to.equal(true);
+    expect(sfCommandUxStubs.log.calledOnce).to.equal(true);
+    expect(sfCommandUxStubs.log.firstCall.args[0]).to.include('Retrieved');
+  });
+
   it('should NOT display output with --json', async () => {
     const displayStub = $$.SANDBOX.stub(RetrieveResultFormatter.prototype, 'display');
     const getJsonStub = $$.SANDBOX.stub(RetrieveResultFormatter.prototype, 'getJson');

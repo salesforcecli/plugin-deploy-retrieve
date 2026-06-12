@@ -18,7 +18,7 @@ import { EnvironmentVariable, Messages, Org, SfError } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployResult, MetadataApiDeploy } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
-import { DeployStages } from '../../../utils/deployStages.js';
+import { DeployStages, shouldShowDeployProgress } from '../../../utils/deployStages.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
 import {
@@ -37,6 +37,13 @@ const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'de
 
 const testFlags = 'Test';
 
+export const resolveResumeVerbose = (
+  flags: { quiet?: boolean; verbose?: boolean; concise?: boolean },
+  deployOpts: { verbose?: boolean }
+  // a current --quiet/--concise request must override cached verbose; only fall back to the
+  // cache when no explicit verbosity flag is set on this invocation.
+): boolean => (flags.quiet ?? flags.concise ? false : flags.verbose ?? deployOpts.verbose ?? false);
+
 export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
   public static readonly description = messages.getMessage('description');
   public static readonly summary = messages.getMessage('summary');
@@ -47,7 +54,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
   public static readonly flags = {
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
-      exclusive: ['verbose'],
+      exclusive: ['verbose', 'quiet'],
     }),
     'job-id': Flags.salesforceId({
       char: 'i',
@@ -65,7 +72,14 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
-      exclusive: ['concise'],
+      exclusive: ['concise', 'quiet'],
+    }),
+    quiet: Flags.boolean({
+      summary: messages.getMessage('flags.quiet.summary'),
+      exclusive: ['verbose', 'concise'],
+    }),
+    'no-progress': Flags.boolean({
+      summary: messages.getMessage('flags.no-progress.summary'),
     }),
     // we want this to allow undefined so that we can use the default value from the cache
     // eslint-disable-next-line sf-plugin/flag-min-max-default
@@ -89,7 +103,11 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
     }),
   };
 
-  public static envVariablesSection = toHelpSection('ENVIRONMENT VARIABLES', EnvironmentVariable.SF_USE_PROGRESS_BAR);
+  public static envVariablesSection = toHelpSection(
+    'ENVIRONMENT VARIABLES',
+    EnvironmentVariable.SF_USE_PROGRESS_BAR,
+    'SF_DEPLOY_PROGRESS'
+  );
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
@@ -123,6 +141,12 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       result = new DeployResult(deployStatus, componentSet);
     } else {
       const wait = flags.wait ?? Duration.minutes(deployOpts.wait ?? 33);
+      const verbose = resolveResumeVerbose(flags, deployOpts);
+      const showProgress = shouldShowDeployProgress({
+        jsonEnabled: this.jsonEnabled(),
+        quiet: flags.quiet,
+        noProgress: flags['no-progress'],
+      });
       const { deploy } = await executeDeploy(
         // there will always be conflicts on a resume if anything deployed--the changes on the server are not synced to local
         {
@@ -143,6 +167,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       new DeployStages({
         title: 'Resuming Deploy',
         jsonEnabled: this.jsonEnabled(),
+        showProgress,
       }).start(
         {
           deploy,
@@ -150,7 +175,7 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
         },
         {
           deployUrl: this.deployUrl,
-          verbose: flags.verbose ?? deployOpts.verbose,
+          verbose,
         }
       );
 
@@ -168,8 +193,9 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
 
     const formatter = new DeployResultFormatter(result, {
       ...flags,
-      verbose: deployOpts.verbose,
-      concise: deployOpts.concise,
+      verbose: resolveResumeVerbose(flags, deployOpts),
+      concise: flags.concise ?? deployOpts.concise,
+      'target-org': org,
     });
 
     if (!this.jsonEnabled()) formatter.display();

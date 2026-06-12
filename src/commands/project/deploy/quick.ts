@@ -15,7 +15,7 @@
  */
 
 import ansis from 'ansis';
-import { Messages, Org } from '@salesforce/core';
+import { EnvironmentVariable, Messages, Org } from '@salesforce/core';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { MetadataApiDeploy, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
@@ -44,7 +44,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
-      exclusive: ['verbose'],
+      exclusive: ['verbose', 'quiet'],
     }),
     'job-id': Flags.salesforceId({
       char: 'i',
@@ -63,7 +63,14 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
-      exclusive: ['concise'],
+      exclusive: ['concise', 'quiet'],
+    }),
+    quiet: Flags.boolean({
+      summary: messages.getMessage('flags.quiet.summary'),
+      exclusive: ['verbose', 'concise'],
+    }),
+    'no-progress': Flags.boolean({
+      summary: messages.getMessage('flags.no-progress.summary'),
     }),
     wait: Flags.duration({
       char: 'w',
@@ -85,6 +92,13 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
+  public static envVariablesSection = toHelpSection(
+    'ENVIRONMENT VARIABLES',
+    EnvironmentVariable.SF_TARGET_ORG,
+    EnvironmentVariable.SF_USE_PROGRESS_BAR,
+    'SF_DEPLOY_PROGRESS'
+  );
+
   private deployUrl?: string;
 
   public async run(): Promise<DeployResultJson> {
@@ -101,13 +115,21 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       id: jobId,
       rest: api === API['REST'],
     });
-    this.log(`Deploy ID: ${ansis.bold(deployId)}`);
     this.deployUrl = buildDeployUrl(flags['target-org'], deployId);
-    this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
+    if (!flags.quiet) {
+      this.log(`Deploy ID: ${ansis.bold(deployId)}`);
+      this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
+    }
 
     if (flags.async) {
       const asyncFormatter = new AsyncDeployResultFormatter(deployId);
-      if (!this.jsonEnabled()) asyncFormatter.display();
+      if (!this.jsonEnabled()) {
+        if (flags.quiet) {
+          this.log(`Deploy ID: ${ansis.bold(deployId)}`);
+        } else {
+          asyncFormatter.display();
+        }
+      }
       return this.mixinUrlMeta(await asyncFormatter.getJson());
     }
 
@@ -122,7 +144,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       frequency: Duration.seconds(1),
       timeout: flags.wait,
     });
-    const formatter = new DeployResultFormatter(result, flags);
+    const formatter = new DeployResultFormatter(result, { ...flags, 'target-org': targetOrg });
 
     if (!this.jsonEnabled()) formatter.display();
 
@@ -130,9 +152,12 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
 
     process.exitCode = determineExitCode(result);
     if (result.response.status === RequestStatus.Succeeded) {
-      this.log();
-      this.logSuccess(messages.getMessage('info.QuickDeploySuccess', [deployId]));
+      if (!flags.quiet) {
+        this.log();
+        this.logSuccess(messages.getMessage('info.QuickDeploySuccess', [deployId]));
+      }
     } else {
+      // failure detail must survive --quiet; quiet collapses successful output only
       this.log(messages.getMessage('error.QuickDeployFailure', [deployId, result.response.status]));
     }
 

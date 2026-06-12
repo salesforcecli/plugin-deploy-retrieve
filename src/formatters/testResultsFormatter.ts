@@ -44,6 +44,7 @@ export class TestResultsFormatter {
     protected flags: Partial<{
       'test-level': TestLevel;
       verbose: boolean;
+      quiet: boolean;
     }>,
     skipVerboseTestReportOnCI = true
   ) {
@@ -89,6 +90,7 @@ export class TestResultsFormatter {
 
   public determineVerbosity(): Verbosity {
     if (this.flags.verbose) return 'verbose';
+    if (this.flags.quiet) return 'quiet';
     return 'normal';
   }
 }
