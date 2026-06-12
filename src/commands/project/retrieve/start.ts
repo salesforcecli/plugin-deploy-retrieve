@@ -54,6 +54,7 @@ import { getOptionalProject, getPackageDirs } from '../../../utils/project.js';
 import { RetrieveResultJson } from '../../../utils/types.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { promisesQueue } from '../../../utils/promiseQueue.js';
+import { shouldShowDeployProgress } from '../../../utils/deployStages.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('@salesforce/plugin-deploy-retrieve', 'retrieve.start');
@@ -114,6 +115,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       description: messages.getMessage('flags.output-dir.description'),
       exclusive: ['package-name', 'source-dir'],
     }),
+    quiet: Flags.boolean({
+      summary: messages.getMessage('flags.quiet.summary'),
+    }),
+    'no-progress': Flags.boolean({
+      summary: messages.getMessage('flags.no-progress.summary'),
+    }),
     'single-package': Flags.boolean({
       summary: messages.getMessage('flags.single-package.summary'),
       dependsOn: ['target-metadata-dir'],
@@ -171,7 +178,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
   public static envVariablesSection = toHelpSection(
     'ENVIRONMENT VARIABLES',
     EnvironmentVariable.SF_TARGET_ORG,
-    EnvironmentVariable.SF_USE_PROGRESS_BAR
+    EnvironmentVariable.SF_USE_PROGRESS_BAR,
+    'SF_DEPLOY_PROGRESS'
   );
 
   protected retrieveResult!: RetrieveResult;
@@ -217,6 +225,11 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     }
     const format = flags['target-metadata-dir'] ? 'metadata' : 'source';
     const zipFileName = flags['zip-file-name'] ?? DEFAULT_ZIP_FILE_NAME;
+    const showProgress = shouldShowDeployProgress({
+      jsonEnabled: this.jsonEnabled(),
+      quiet: flags.quiet,
+      noProgress: flags['no-progress'],
+    });
 
     const { componentSetFromNonDeletes, fileResponsesFromDelete = [] } = await buildRetrieveAndDeleteTargets(
       flags,
@@ -240,7 +253,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     }>({
       stages,
       title: 'Retrieving Metadata',
-      jsonEnabled: this.jsonEnabled(),
+      jsonEnabled: this.jsonEnabled() || !showProgress,
       preStagesBlock: [
         {
           type: 'message',
@@ -321,9 +334,23 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           flags['package-name'],
           fileResponsesFromDelete
         );
+    if (format === 'metadata' && flags.unzip) {
+      try {
+        await rm(resolve(join(flags['target-metadata-dir'] ?? '', zipFileName)), {
+          recursive: true,
+        });
+      } catch (e) {
+        // do nothing
+      }
+    }
+
+    const result = await formatter.getJson();
+
     if (!this.jsonEnabled()) {
-      // in the case where we didn't retrieve anything, check if we have any deletes
-      if (
+      const username = flags['target-org'].getUsername() ?? 'target org';
+      if (flags.quiet && this.retrieveResult.response.status === RequestStatus.Succeeded) {
+        this.log(`Retrieved ${result.files.length} files from ${username}.`);
+      } else if (
         !this.retrieveResult.response.status ||
         this.retrieveResult.response.status === RequestStatus['Succeeded'] ||
         fileResponsesFromDelete.length !== 0
@@ -337,17 +364,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       }
     }
 
-    if (format === 'metadata' && flags.unzip) {
-      try {
-        await rm(resolve(join(flags['target-metadata-dir'] ?? '', zipFileName)), {
-          recursive: true,
-        });
-      } catch (e) {
-        // do nothing
-      }
-    }
-
-    return formatter.getJson();
+    return result;
   }
 
   protected catch(error: Error | SfError): Promise<never> {

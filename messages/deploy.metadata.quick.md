@@ -56,11 +56,19 @@ If the command continues to run after the wait period, the CLI returns control o
 
 # flags.verbose.summary
 
-Show verbose output of the deploy result.
+Show verbose output of the quick deploy result.
 
 # flags.concise.summary
 
-Show concise output of the deploy result.
+Show concise output of the quick deploy result by omitting the full success table.
+
+# flags.quiet.summary
+
+Show a one-line quick deploy summary. Quick deploy has no live progress stream, so this only trims the final output.
+
+# flags.no-progress.summary
+
+Accepted for parity with other deploy commands; quick deploy has no live progress stream to hide.
 
 # flags.async.summary
 

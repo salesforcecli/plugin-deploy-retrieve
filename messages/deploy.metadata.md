@@ -12,6 +12,17 @@ If your org allows source tracking, then this command tracks the changes in your
 
 To deploy multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --source-dir.
 
+## Output modes
+
+| Switch          | Streaming progress | Final report       |
+| --------------- | ------------------ | ------------------ |
+| default         | full               | full success table |
+| `--concise`     | full               | failures only      |
+| `--no-progress` | off                | full success table |
+| `--quiet`       | off                | one-line summary   |
+
+`--quiet` builds on the same streaming-suppression primitive as `--no-progress`. For token-sensitive workflows, `--json --concise` is already a near-minimal machine-readable payload.
+
 # examples
 
 - Deploy local changes not in the org; uses your default org:
@@ -21,6 +32,14 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 - Deploy all source files in the "force-app" directory to an org with alias "my-scratch"; show only concise output, in other words don't print a list of all the source that was deployed:
 
       <%= config.bin %> <%= command.id %>  --source-dir force-app --target-org my-scratch --concise
+
+- Deploy all source files in the "force-app" directory to an org with alias "my-scratch"; emit the trimmed JSON payload instead of the full success table:
+
+      <%= config.bin %> <%= command.id %> --source-dir force-app --target-org my-scratch --json --concise
+
+- Deploy all source files in the "force-app" directory to an org with alias "my-scratch"; suppress live progress and collapse the final report to one summary line:
+
+      <%= config.bin %> <%= command.id %> --source-dir force-app --target-org my-scratch --quiet
 
 - Deploy all the Apex classes and custom objects that are in the "force-app" directory. The list views, layouts, etc, that are associated with the custom objects are also deployed. Both examples are equivalent:
 
@@ -170,7 +189,15 @@ Show verbose output of the deploy result.
 
 # flags.concise.summary
 
-Show concise output of the deploy result.
+Show concise output of the deploy result by omitting the full success table.
+
+# flags.quiet.summary
+
+Show a one-line deploy summary and suppress live progress to minimize stdout.
+
+# flags.no-progress.summary
+
+Hide the live deploy progress stream while keeping the full final report.
 
 # flags.api-version.summary
 

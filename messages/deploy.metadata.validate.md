@@ -92,7 +92,15 @@ Show verbose output of the validation result.
 
 # flags.concise.summary
 
-Show concise output of the validation result.
+Show concise output of the validation result by omitting the full success table.
+
+# flags.quiet.summary
+
+Show a one-line validation summary and suppress live progress to minimize stdout.
+
+# flags.no-progress.summary
+
+Hide the live validation progress stream while keeping the full final report.
 
 # flags.api-version.summary
 

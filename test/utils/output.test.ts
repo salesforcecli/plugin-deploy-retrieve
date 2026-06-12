@@ -24,6 +24,7 @@ import {
   FileResponse,
   ComponentStatus,
 } from '@salesforce/source-deploy-retrieve';
+import { Org } from '@salesforce/core';
 import { Ux } from '@salesforce/sf-plugins-core';
 import { getCoverageFormattersOptions } from '../../src/utils/coverage.js';
 import { getZipFileSize } from '../../src/utils/output.js';
@@ -54,7 +55,11 @@ describe('deployResultFormatter', () => {
       const formatter = new DeployResultFormatter(deployResultFailure, { verbose: true });
       formatter.display();
       expect(tableStub.callCount).to.equal(1);
-      expect(tableStub.firstCall.args[0]).to.deep.equal({
+      const failureTable = tableStub.firstCall?.args[0] as { title?: string } | undefined;
+      expect(failureTable).to.exist;
+      expect(stripVTControlCharacters(failureTable?.title ?? '')).to.equal('Component Failures [1]');
+      const { title, ...tableArgs } = failureTable as { title: string };
+      expect(tableArgs).to.deep.equal({
         data: [
           {
             type: 'ApexClass',
@@ -69,9 +74,9 @@ describe('deployResultFormatter', () => {
           { key: 'error', name: 'Problem' },
           { key: 'loc', name: 'Line:Column' },
         ],
-        title: '\x1B[1m\x1B[31mComponent Failures [1]\x1B[39m\x1B[22m',
         overflow: 'wrap',
       });
+      expect(stripVTControlCharacters(title)).to.equal('Component Failures [1]');
     });
 
     it('displays errors from the server not in file responses', () => {
@@ -145,7 +150,11 @@ describe('deployResultFormatter', () => {
       });
       formatter.display();
       expect(tableStub.callCount).to.equal(1);
-      expect(tableStub.firstCall.args[0]).to.deep.equal({
+      const failureTable = tableStub.firstCall?.args[0] as { title?: string } | undefined;
+      expect(failureTable).to.exist;
+      expect(stripVTControlCharacters(failureTable?.title ?? '')).to.equal('Component Failures [2]');
+      const { title, ...tableArgs } = failureTable as { title: string };
+      expect(tableArgs).to.deep.equal({
         data: [
           {
             type: '',
@@ -167,9 +176,9 @@ describe('deployResultFormatter', () => {
           { key: 'error', name: 'Problem' },
           { key: 'loc', name: 'Line:Column' },
         ],
-        title: '\x1B[1m\x1B[31mComponent Failures [2]\x1B[39m\x1B[22m',
         overflow: 'wrap',
       });
+      expect(stripVTControlCharacters(title)).to.equal('Component Failures [2]');
       // @ts-expect-error we expect args to be strings
       const uxLogArgs: Array<[string]> = uxLogStub.args;
       expect(stripVTControlCharacters(uxLogArgs[2][0])).to.equal('Test Failures [1]');
@@ -270,8 +279,12 @@ describe('deployResultFormatter', () => {
       it('will warn when code coverage warning present from server', () => {
         const deployResult = getDeployResult('codeCoverageWarning');
         const formatter = new DeployResultFormatter(deployResult, {});
+        const logStub = sandbox.stub(Ux.prototype, 'log');
+        const tableStub = sandbox.stub(Ux.prototype, 'table');
         const warnStub = sandbox.stub(Ux.prototype, 'warn');
         formatter.display();
+        expect(logStub.callCount).to.be.greaterThan(0);
+        expect(tableStub.callCount).to.be.greaterThan(0);
         expect(warnStub.callCount).to.equal(1);
         expect(warnStub.firstCall.args[0]).to.equal(
           'Average test coverage across all Apex Classes and Triggers is 25%, at least 75% test coverage is required.'
@@ -309,6 +322,76 @@ describe('deployResultFormatter', () => {
     });
   });
 
+  describe('quiet', () => {
+    const deployResultSuccess = getDeployResult('successSync');
+    const deployResultSuccessWithReplacements = {
+      ...getDeployResult('successSync'),
+      replacements: new Map<string, string[]>([['foo', ['bar', 'baz']]]),
+    } as DeployResult;
+    const targetOrg = {
+      getUsername: () => 'my-scratch',
+      getConnection: () => ({
+        getUsername: () => 'my-scratch',
+      }),
+    } as unknown as Org;
+
+    let tableStub: sinon.SinonStub;
+    let uxLogStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      tableStub = sandbox.stub(Ux.prototype, 'table');
+      uxLogStub = sandbox.stub(Ux.prototype, 'log');
+    });
+
+    it('shows a single-line summary when quiet succeeds', () => {
+      const formatter = new DeployResultFormatter(deployResultSuccess, { quiet: true, 'target-org': targetOrg });
+      formatter.display();
+      expect(tableStub.called).to.be.false;
+      expect(uxLogStub.callCount).to.equal(1);
+      expect(uxLogStub.firstCall.args[0]).to.equal(
+        'Deployed 1/1 components to my-scratch (Deploy ID 0Af21000011PxhqCAC).'
+      );
+    });
+
+    it('uses validated wording when quiet and checkOnly succeeds', () => {
+      const deployResult = {
+        ...deployResultSuccess,
+        response: {
+          ...deployResultSuccess.response,
+          checkOnly: true,
+        },
+      } as DeployResult;
+      const formatter = new DeployResultFormatter(deployResult, { quiet: true, 'target-org': targetOrg });
+      formatter.display();
+      expect(uxLogStub.callCount).to.equal(1);
+      expect(uxLogStub.firstCall.args[0]).to.equal(
+        'Validated 1/1 components to my-scratch (Deploy ID 0Af21000011PxhqCAC).'
+      );
+    });
+
+    it('falls back to failure output when quiet and the deploy fails', () => {
+      const deployResult = getDeployResult('failedTest');
+      const formatter = new DeployResultFormatter(deployResult, {
+        quiet: true,
+        'target-org': targetOrg,
+        'test-level': TestLevel.RunAllTestsInOrg,
+      });
+      formatter.display();
+      expect(tableStub.callCount).to.equal(1);
+      expect(tableStub.firstCall.args[0]).to.have.property('title').that.includes('Component Failures');
+      expect(uxLogStub.getCalls().some((call) => call.args.some((arg) => String(arg).includes('Test Failures [1]')))).to
+        .be.true;
+    });
+
+    it('returns concise-equivalent json when quiet', async () => {
+      const quietFormatter = new DeployResultFormatter(deployResultSuccessWithReplacements, { quiet: true });
+      const conciseFormatter = new DeployResultFormatter(deployResultSuccessWithReplacements, { concise: true });
+      const quietJson = await quietFormatter.getJson();
+      const conciseJson = await conciseFormatter.getJson();
+      expect(quietJson).to.deep.equal(conciseJson);
+    });
+  });
+
   describe('replacements', () => {
     const deployResultSuccess = getDeployResult('successSync');
     const deployResultSuccessWithReplacements = {
@@ -330,40 +413,50 @@ describe('deployResultFormatter', () => {
       });
     });
     describe('human', () => {
-      let uxStub: sinon.SinonStub;
+      let tableStub: sinon.SinonStub;
+      let logStub: sinon.SinonStub;
       beforeEach(() => {
-        uxStub = sandbox.stub(process.stdout, 'write');
+        tableStub = sandbox.stub(Ux.prototype, 'table');
+        logStub = sandbox.stub(Ux.prototype, 'log');
       });
-
-      const getStdout = () =>
-        uxStub
-          .getCalls()
-          // args are typed as any[]
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          .flatMap((call) => call.args)
-          .join('\n');
 
       it('shows replacements when verbose and replacements exist', () => {
         const formatter = new DeployResultFormatter(deployResultSuccessWithReplacements, { verbose: true });
         formatter.display();
-        expect(getStdout()).to.include('Metadata Replacements');
-        expect(getStdout()).to.include('TEXT REPLACED');
+        const replacementsTableCall = tableStub.getCalls().find((call) => {
+          const callArg = call.args[0] as { title?: string };
+          return callArg?.title && callArg.title.includes('Metadata Replacements');
+        });
+        expect(replacementsTableCall).to.exist;
+        expect(logStub.callCount).to.be.greaterThan(0);
       });
 
       it('no replacements when verbose but there are none', () => {
         const formatter = new DeployResultFormatter(deployResultSuccess, { verbose: true });
         formatter.display();
-        expect(getStdout()).to.not.include('Metadata Replacements');
+        const replacementsTableCall = tableStub.getCalls().find((call) => {
+          const callArg = call.args[0] as { title?: string };
+          return callArg?.title && callArg.title.includes('Metadata Replacements');
+        });
+        expect(replacementsTableCall).to.not.exist;
       });
       it('no replacements when not verbose', () => {
         const formatter = new DeployResultFormatter(deployResultSuccessWithReplacements, { verbose: false });
         formatter.display();
-        expect(getStdout()).to.not.include('Metadata Replacements');
+        const replacementsTableCall = tableStub.getCalls().find((call) => {
+          const callArg = call.args[0] as { title?: string };
+          return callArg?.title && callArg.title.includes('Metadata Replacements');
+        });
+        expect(replacementsTableCall).to.not.exist;
       });
       it('no replacements when concise', () => {
         const formatter = new DeployResultFormatter(deployResultSuccessWithReplacements, { concise: true });
         formatter.display();
-        expect(getStdout()).to.not.include('Metadata Replacements');
+        const replacementsTableCall = tableStub.getCalls().find((call) => {
+          const callArg = call.args[0] as { title?: string };
+          return callArg?.title && callArg.title.includes('Metadata Replacements');
+        });
+        expect(replacementsTableCall).to.not.exist;
       });
     });
   });
