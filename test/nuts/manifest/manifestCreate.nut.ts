@@ -161,6 +161,7 @@ describe('project generate manifest', () => {
         '    </types>\n' +
         '    <types>\n' +
         '        <members>dreamhouse</members>\n' +
+        '        <members>sfdcInternalInt__sfdc_nc_constraints_engine_deploy</members>\n' +
         '        <members>sfdcInternalInt__sfdc_scrt2</members>\n' +
         '        <name>PermissionSet</name>\n' +
         '    </types>\n' +
