@@ -1580,10 +1580,10 @@
     strip-ansi "6.0.1"
     ts-retry-promise "^0.8.1"
 
-"@salesforce/core@^8.23.1", "@salesforce/core@^8.28.3", "@salesforce/core@^8.28.4", "@salesforce/core@^8.30.0", "@salesforce/core@^8.30.2", "@salesforce/core@^8.30.3", "@salesforce/core@^8.31.0", "@salesforce/core@^8.5.1":
-  version "8.31.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-8.31.0.tgz#153beb193af8fce73d31cc39afee794c4c1ee1c0"
-  integrity sha512-TXQoR7Bs0Dk5AuNY8eaNRhMeLDLcpJ8su7LVxn7VVfnRxITrRh4gkSuOAXdBKAqx0WcjRONDs1twedaOE7Xu4Q==
+"@salesforce/core@^8.23.1", "@salesforce/core@^8.28.3", "@salesforce/core@^8.28.4", "@salesforce/core@^8.30.0", "@salesforce/core@^8.30.3", "@salesforce/core@^8.31.0", "@salesforce/core@^8.31.1", "@salesforce/core@^8.5.1":
+  version "8.31.2"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-8.31.2.tgz#968448f423b553f726f42c27da6b55c4ec7eb93a"
+  integrity sha512-naqnq7Z+gbl1LdnyNvrGrNUoeMUQtCOsnrS6DfqeuLMJTFqcL9Dq0/od+xcuqi0+l7HTyH0/gU1BQitWpd1rag==
   dependencies:
     "@jsforce/jsforce-node" "^3.10.13"
     "@salesforce/kit" "^3.2.4"
@@ -1745,13 +1745,13 @@
     proxy-agent "^6.5.0"
     yaml "^2.9.0"
 
-"@salesforce/source-testkit@^2.2.212":
-  version "2.2.212"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.212.tgz#c32dea04e2bbe6d732394fa2a6e9f095753025da"
-  integrity sha512-zdHeSUo09iAqSxV9onpScMw7XKDNsapnakDLxDFqczSX4KKHt556avzetsWdVQ9bv9alZhhQ2uNujRRYvQqu1w==
+"@salesforce/source-testkit@^2.2.216":
+  version "2.2.216"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-testkit/-/source-testkit-2.2.216.tgz#fece9d553f1ea7877fc3392c22c7de0fabe0161d"
+  integrity sha512-suyufpVApG5OCwe6dmdyXune9A9ppGKRVR0eMnadoHKtauSLfz5wnE4ZtDWjCyuu0bS84+VF07EAv9x5qZco7g==
   dependencies:
     "@salesforce/cli-plugins-testkit" "^5.3.58"
-    "@salesforce/core" "^8.30.2"
+    "@salesforce/core" "^8.31.1"
     "@salesforce/kit" "^3.2.6"
     "@salesforce/source-deploy-retrieve" "^12.36.2"
     "@salesforce/ts-types" "^2.0.12"
