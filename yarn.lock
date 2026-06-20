@@ -1305,10 +1305,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsforce/jsforce-node@^3.10.13", "@jsforce/jsforce-node@^3.10.15":
-  version "3.10.15"
-  resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.10.15.tgz#28655302b90c83dbcc15cf0cecebfe56ef27c132"
-  integrity sha512-rtl4MCmy5EzUQ8ehJfjcQCVW2EPCBfopxpZjmXzJrKdtwH6ptjeC5VdyfjS40XNjD7k7heXRZr1jRVU3Ej6kcQ==
+"@jsforce/jsforce-node@^3.10.13", "@jsforce/jsforce-node@^3.10.16":
+  version "3.10.16"
+  resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.10.16.tgz#a7f320896b5d3ff98dce8048a2a26f5c561d8f16"
+  integrity sha512-Fh5Op3vgyWMmPhjsr0d50AwPj6X9rsUNiJOPqA2OmJmv3HduIRY8tK+nc/IdtkOGdYXDk09q1cu0PG5pGERGgA==
   dependencies:
     "@sindresorhus/is" "^4"
     base64url "^3.0.1"
@@ -1663,13 +1663,13 @@
     debug "^4.4.3"
     handlebars "^4.7.9"
 
-"@salesforce/plugin-info@^3.4.136":
-  version "3.4.136"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.136.tgz#f55c4ca1d78090e9ad564cc7a4dfa7ee335d10cf"
-  integrity sha512-4MZQcAqbXFcDZFlfZqDt8sfikjjfFZPcsB7KT/Ziw77Y79ydZ9S2v0oSYnNdHwCq9OMYetDDfqG5wafY4kv6Jg==
+"@salesforce/plugin-info@^3.4.143":
+  version "3.4.143"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-3.4.143.tgz#27dd2819f10f4c91788770a1a2c4a7af312e20b4"
+  integrity sha512-tB7zh3hxQ3++ii9gWZ3B01pCfLL29jeSaiKh5P/01ksrdTSK4mC1UZneAoP0CUJs3nKajl+ibJN+DYlruTKSnw==
   dependencies:
     "@inquirer/input" "^2.3.0"
-    "@jsforce/jsforce-node" "^3.10.15"
+    "@jsforce/jsforce-node" "^3.10.16"
     "@oclif/core" "^4"
     "@salesforce/core" "^8.31.0"
     "@salesforce/kit" "^3.2.6"
@@ -1679,7 +1679,7 @@
     marked-terminal "^4.2.0"
     open "^10.2.0"
     proxy-agent "^6.5.0"
-    semver "^7.8.0"
+    semver "^7.8.1"
 
 "@salesforce/prettier-config@^0.0.3":
   version "0.0.3"
