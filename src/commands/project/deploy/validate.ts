@@ -20,7 +20,7 @@ import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError 
 import { CodeCoverageWarnings, DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
 import { Duration, ensureArray } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
-import { DeployStages } from '../../../utils/deployStages.js';
+import { DeployStages, shouldShowDeployProgress } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
@@ -58,7 +58,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
-      exclusive: ['verbose'],
+      exclusive: ['verbose', 'quiet'],
     }),
     manifest: Flags.file({
       char: 'x',
@@ -109,7 +109,14 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
-      exclusive: ['concise'],
+      exclusive: ['concise', 'quiet'],
+    }),
+    quiet: Flags.boolean({
+      summary: messages.getMessage('flags.quiet.summary'),
+      exclusive: ['verbose', 'concise'],
+    }),
+    'no-progress': Flags.boolean({
+      summary: messages.getMessage('flags.no-progress.summary'),
     }),
     wait: Flags.duration({
       char: 'w',
@@ -164,7 +171,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
   public static envVariablesSection = toHelpSection(
     'ENVIRONMENT VARIABLES',
     EnvironmentVariable.SF_TARGET_ORG,
-    EnvironmentVariable.SF_USE_PROGRESS_BAR
+    EnvironmentVariable.SF_USE_PROGRESS_BAR,
+    'SF_DEPLOY_PROGRESS'
   );
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
@@ -182,17 +190,19 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
 
     // eslint-disable-next-line @typescript-eslint/require-await
     Lifecycle.getInstance().on('apiVersionDeploy', async (apiData: DeployVersionData) => {
-      this.log(
-        deployMessages.getMessage('apiVersionMsgDetailed', [
-          'Validating Deployment of',
-          // technically manifestVersion can be undefined, but only on raw mdapi deployments.
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
-          username,
-          apiData.apiVersion,
-          apiData.webService,
-        ])
-      );
+      if (!flags.quiet) {
+        this.log(
+          deployMessages.getMessage('apiVersionMsgDetailed', [
+            'Validating Deployment of',
+            // technically manifestVersion can be undefined, but only on raw mdapi deployments.
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            flags['metadata-dir'] ? '<version specified in manifest>' : `v${apiData.manifestVersion}`,
+            username,
+            apiData.apiVersion,
+            apiData.webService,
+          ])
+        );
+      }
     });
 
     const { deploy } = await executeDeploy(
@@ -213,18 +223,28 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     }
 
     this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
+    const showProgress = shouldShowDeployProgress({
+      jsonEnabled: this.jsonEnabled(),
+      quiet: flags.quiet,
+      noProgress: flags['no-progress'],
+    });
 
     if (flags.async) {
-      this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
-      this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
+      if (!flags.quiet) {
+        this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+        this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
+      } else {
+        this.log(`Deploy ID: ${ansis.bold(deploy.id)}`);
+      }
       const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
-      if (!this.jsonEnabled()) asyncFormatter.display();
+      if (!this.jsonEnabled() && !flags.quiet) asyncFormatter.display();
       return this.mixinUrlMeta(await asyncFormatter.getJson());
     }
 
     new DeployStages({
       title: 'Validating Deployment',
       jsonEnabled: this.jsonEnabled(),
+      showProgress,
     }).start(
       {
         deploy,
@@ -247,9 +267,11 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     }
 
     if (result.response.status === RequestStatus.Succeeded) {
-      this.log();
-      this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
-      this.log(messages.getMessage('info.suggestedQuickDeploy', [deploy.id]));
+      if (!flags.quiet) {
+        this.log();
+        this.logSuccess(messages.getMessage('info.SuccessfulValidation', [deploy.id]));
+        this.log(messages.getMessage('info.suggestedQuickDeploy', [deploy.id]));
+      }
     } else {
       let componentDeployErrors = result.response.errorMessage;
       if (!result.response.errorMessage) {

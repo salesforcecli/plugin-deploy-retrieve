@@ -55,7 +55,15 @@ Show verbose output of the deploy operation result.
 
 # flags.concise.summary
 
-Show concise output of the deploy operation result.
+Show concise output of the deploy operation result by omitting the full success table.
+
+# flags.quiet.summary
+
+Show a one-line deploy resume summary and suppress live progress to minimize stdout.
+
+# flags.no-progress.summary
+
+Hide the live deploy resume progress stream while keeping the full final report.
 
 # warning.DeployNotResumable
 

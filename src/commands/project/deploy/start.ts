@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
+import ansis from 'ansis';
 import { type DeployVersionData, DeployZipData } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
-import { DeployStages } from '../../../utils/deployStages.js';
+import { DeployStages, shouldShowDeployProgress } from '../../../utils/deployStages.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { AsyncDeployResultJson, DeployResultJson, TestLevel } from '../../../utils/types.js';
@@ -66,7 +67,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }),
     concise: Flags.boolean({
       summary: messages.getMessage('flags.concise.summary'),
-      exclusive: ['verbose'],
+      exclusive: ['verbose', 'quiet'],
     }),
     'dry-run': Flags.boolean({
       summary: messages.getMessage('flags.dry-run.summary'),
@@ -140,7 +141,14 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }),
     verbose: Flags.boolean({
       summary: messages.getMessage('flags.verbose.summary'),
-      exclusive: ['concise'],
+      exclusive: ['concise', 'quiet'],
+    }),
+    quiet: Flags.boolean({
+      summary: messages.getMessage('flags.quiet.summary'),
+      exclusive: ['verbose', 'concise'],
+    }),
+    'no-progress': Flags.boolean({
+      summary: messages.getMessage('flags.no-progress.summary'),
     }),
     wait: Flags.duration({
       char: 'w',
@@ -191,7 +199,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
   public static envVariablesSection = toHelpSection(
     'ENVIRONMENT VARIABLES',
     EnvironmentVariable.SF_TARGET_ORG,
-    EnvironmentVariable.SF_USE_PROGRESS_BAR
+    EnvironmentVariable.SF_USE_PROGRESS_BAR,
+    'SF_DEPLOY_PROGRESS'
   );
 
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
@@ -229,6 +238,11 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     const api = await resolveApi(this.configAggregator);
     const username = flags['target-org'].getUsername();
+    const showProgress = shouldShowDeployProgress({
+      jsonEnabled: this.jsonEnabled(),
+      quiet: flags.quiet,
+      noProgress: flags['no-progress'],
+    });
     const title = flags['dry-run'] ? 'Deploying Metadata (dry-run)' : 'Deploying Metadata';
 
     const lifecycle = Lifecycle.getInstance();
@@ -271,7 +285,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       return { status: 'Nothing to deploy', files: [] };
     }
 
-    if (!deploy.id) {
+    const deployId: string = deploy.id ?? '';
+    if (!deployId) {
       throw new SfError('The deploy id is not available.');
     }
 
@@ -281,9 +296,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     this.stages = new DeployStages({
       title,
       jsonEnabled: this.jsonEnabled(),
+      showProgress,
     });
 
-    this.deployUrl = buildDeployUrl(flags['target-org'], deploy.id);
+    this.deployUrl = buildDeployUrl(flags['target-org'], deployId);
 
     this.stages.start(
       { username, deploy },
@@ -296,17 +312,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       }
     );
 
-    if (flags.async) {
-      this.stages.done({ status: 'Queued', username });
-      this.stages.stop();
-      if (flags['coverage-formatters']) {
-        this.warn(messages.getMessage('asyncCoverageJunitWarning'));
-      }
-      const asyncFormatter = new AsyncDeployResultFormatter(deploy.id);
-      if (!this.jsonEnabled()) asyncFormatter.display();
-
-      return this.mixinZipMeta(await asyncFormatter.getJson());
-    }
+    if (flags.async) return this.handleAsyncDeploy(deployId, username, flags);
 
     const result = await deploy.pollStatus({ timeout: flags.wait });
     process.exitCode = determineExitCode(result);
@@ -316,10 +322,10 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
 
     if (!this.jsonEnabled()) {
       formatter.display();
-      if (flags['dry-run']) this.logSuccess('Dry-run complete.');
+      if (flags['dry-run'] && !flags.quiet) this.logSuccess('Dry-run complete.');
     }
 
-    await DeployCache.update(deploy.id, { status: result.response.status });
+    await DeployCache.update(deployId, { status: result.response.status });
 
     return this.mixinZipMeta(await formatter.getJson());
   }
@@ -349,6 +355,31 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
       });
     }
     return super.catch(error);
+  }
+
+  private async handleAsyncDeploy(
+    deployId: string,
+    username: string | undefined,
+    flags: {
+      quiet?: boolean;
+      'coverage-formatters'?: string[];
+    }
+  ): Promise<DeployResultJson> {
+    this.stages.done({ status: 'Queued', username });
+    this.stages.stop();
+    if (flags['coverage-formatters']) {
+      this.warn(messages.getMessage('asyncCoverageJunitWarning'));
+    }
+    const asyncFormatter = new AsyncDeployResultFormatter(deployId);
+    if (!this.jsonEnabled()) {
+      if (flags.quiet) {
+        this.log(`Deploy ID: ${ansis.bold(deployId)}`);
+      } else {
+        asyncFormatter.display();
+      }
+    }
+
+    return this.mixinZipMeta(await asyncFormatter.getJson());
   }
 
   private mixinZipMeta(json: AsyncDeployResultJson | DeployResultJson): AsyncDeployResultJson | DeployResultJson {

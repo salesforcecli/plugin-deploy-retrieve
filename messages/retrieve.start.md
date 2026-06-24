@@ -12,11 +12,19 @@ If your org allows source tracking, then this command tracks the changes in your
 
 To retrieve multiple metadata components, either use multiple --metadata <name> flags or use a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --source-dir.
 
+## Output modes
+
+`--quiet` suppresses the live retrieve progress stream and collapses the final output to a single summary line. `--no-progress` only hides the streaming block; it keeps the normal final output.
+
 # examples
 
 - Retrieve all remote changes from your default org:
 
   <%= config.bin %> <%= command.id %>
+
+- Retrieve all remote changes from your default org and keep the output to a single summary line:
+
+  <%= config.bin %> <%= command.id %> --quiet
 
 - Retrieve the source files in the "force-app" directory from an org with alias "my-scratch":
 
@@ -176,6 +184,14 @@ Running the command multiple times with the same target adds new files and overw
 # flags.output-dir.summary
 
 Directory root for the retrieved source files.
+
+# flags.quiet.summary
+
+Show a one-line retrieve summary and suppress live progress to minimize stdout.
+
+# flags.no-progress.summary
+
+Hide the live retrieve progress stream while keeping the final result.
 
 # retrieveTargetDirOverlapsPackage
 
