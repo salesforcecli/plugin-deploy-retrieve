@@ -60,7 +60,7 @@ export const getPackageDirectoriesForPreset = async (
     )
   ).filter(componentSetIsNonEmpty);
   if (output.length === 0) {
-    messages.createError('error.noTargetTypes', [preset]);
+    throw messages.createError('error.noTargetTypes', [preset]);
   }
 
   return output;
