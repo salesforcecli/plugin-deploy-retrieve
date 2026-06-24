@@ -123,7 +123,7 @@ export const getCoveragePct = (cov: CodeCoverage): number => {
   return lineCount > 0 ? coverageDecimal * 100 : 100;
 };
 
-/** returns the number of total line for which coverage should apply, and the total uncovered line  */
+/** returns the number of total lines for which coverage should apply, and the total uncovered lines  */
 export const getCoverageNumbers = (cov: CodeCoverage): [lineCount: number, uncoveredLineCount: number] => [
   parseInt(cov.numLocations, 10),
   parseInt(cov.numLocationsNotCovered, 10),
