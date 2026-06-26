@@ -1,3 +1,9 @@
+## [3.24.55](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.54...3.24.55) (2026-06-26)
+
+### Bug Fixes
+
+- bumping salesforce-core to latest version ([#1598](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1598)) ([a6cf803](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a6cf8035e58e9bd34a8351764e5f24a846e28559))
+
 ## [3.24.54](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.53...3.24.54) (2026-05-30)
 
 ### Bug Fixes
