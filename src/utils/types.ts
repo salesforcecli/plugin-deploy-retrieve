@@ -48,7 +48,7 @@ export type PathInfo = {
   path: string;
 };
 
-export type Verbosity = 'verbose' | 'concise' | 'normal';
+export type Verbosity = 'verbose' | 'concise' | 'quiet' | 'normal';
 
 export type AsyncDeployResultJson = Omit<Partial<MetadataApiDeployStatus>, 'status'> & {
   status: RequestStatus | 'Queued' | 'Nothing to deploy';
@@ -136,5 +136,7 @@ export const isFileResponseDeleted = (fileResponse: FileResponseSuccess): boolea
 export const isDefined = <T>(value?: T): value is T => value !== undefined;
 
 export function isTruthy(value: string | undefined): boolean {
-  return value !== '0' && value !== 'false';
+  if (value === undefined) return true;
+  const normalized = value.toLowerCase();
+  return normalized !== '0' && normalized !== 'false' && normalized !== 'no';
 }
