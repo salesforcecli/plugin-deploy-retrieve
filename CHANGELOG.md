@@ -1,3 +1,9 @@
+## [3.24.60](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.59...3.24.60) (2026-07-25)
+
+### Bug Fixes
+
+- **deps:** bump linkify-it from 5.0.1 to 5.0.2 ([40fcc8c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/40fcc8c9e6a0587925a6f33e69ad7d58975e5f88))
+
 ## [3.24.59](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.58...3.24.59) (2026-07-18)
 
 ### Bug Fixes
