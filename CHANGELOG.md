@@ -1,3 +1,9 @@
+## [4.0.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.0.0...4.0.1) (2026-07-30)
+
+### Bug Fixes
+
+- bump plugin-info ([#1616](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1616)) ([b774fc1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/b774fc1cf677617c3691ff1e34e13ac85b352bf2))
+
 # [4.0.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.61...4.0.0) (2026-07-30)
 
 - feat!: require Node >=22, drop EOL Node versions @W-23480655@ (#1615) ([f8960da](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f8960da7e046cd35a2f0b706057a07e7a7012faa)), closes [#1615](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1615)
