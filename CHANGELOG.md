@@ -1,3 +1,11 @@
+# [4.0.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.61...4.0.0) (2026-07-30)
+
+- feat!: require Node >=22, drop EOL Node versions @W-23480655@ (#1615) ([f8960da](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f8960da7e046cd35a2f0b706057a07e7a7012faa)), closes [#1615](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1615)
+
+### BREAKING CHANGES
+
+- engines.node raised to >=22.0.0, dropping support for Node 18 and 20
+
 ## [3.24.61](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/3.24.60...3.24.61) (2026-07-25)
 
 ### Bug Fixes
