@@ -10,14 +10,14 @@
     "@inquirer/prompts": "^7.8.3",
     "@oclif/core": "^4.11.14",
     "@oclif/multi-stage-output": "^0.8.42",
-    "@salesforce/apex-node": "^8.4.22",
-    "@salesforce/core": "^8.31.4",
-    "@salesforce/kit": "^3.2.4",
+    "@salesforce/apex-node": "^9.0.0",
+    "@salesforce/core": "^9.0.0",
+    "@salesforce/kit": "^4.0.0",
     "@salesforce/plugin-info": "^3.4.136",
-    "@salesforce/sf-plugins-core": "^12.2.25",
-    "@salesforce/source-deploy-retrieve": "^12.36.7",
-    "@salesforce/source-tracking": "^7.8.19",
-    "@salesforce/ts-types": "^2.0.12",
+    "@salesforce/sf-plugins-core": "^13.0.0",
+    "@salesforce/source-deploy-retrieve": "^13.0.0",
+    "@salesforce/source-tracking": "^8.0.0",
+    "@salesforce/ts-types": "^3.0.0",
     "ansis": "^3.17.0",
     "terminal-link": "^3.0.0"
   },
@@ -37,7 +37,7 @@
   },
   "config": {},
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "files": [
     "/lib",
