@@ -121,23 +121,27 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
 }
 
 /**
+ * Whether any requested component uses the Data Cloud dataspace-scoped adapter strategy
+ * (CalculatedInsight, DataModelObject). This is the gate for the dataspace-only dependency
+ * expansion below — every other deploy short-circuits before touching that code path.
+ */
+const hasDataspaceScopedComponents = (requested: ComponentSet): boolean =>
+  [...requested.getSourceComponents()].some((c) => c.type.strategies?.adapter === 'dataspaceScoped');
+
+/**
  * Data Cloud dataspace-scoped types (CalculatedInsight, DataModelObject) declare their
  * dependencies inline (a CI `dependsOn` its DataModelObject(s)). When the user asks to deploy such a
  * component, the referenced dependencies must ride along in the same deploy, but nothing else in the
  * project should. This resolves the whole project, then returns the requested set expanded with just
- * the transitive dataspace-scoped dependency closure. If the requested set has no dataspace-scoped
- * components, the original set is returned untouched (cheap no-op for every other deploy).
+ * the transitive dataspace-scoped dependency closure.
+ *
+ * Only call this when {@link hasDataspaceScopedComponents} is true — it is not a no-op for ordinary
+ * deploys (it resolves the entire project).
  */
 async function expandDataspaceScopedDependencies(
   requested: ComponentSet,
   registry?: RegistryAccess
 ): Promise<ComponentSet> {
-  const hasDataspaceScoped = [...requested.getSourceComponents()].some(
-    (c) => c.type.strategies?.adapter === 'dataspaceScoped'
-  );
-  if (!hasDataspaceScoped) {
-    return requested;
-  }
   // Resolve the full project so dependsOn references (by entityPayload.name) can be located.
   const full = await ComponentSetBuilder.build({ sourcepath: await getPackageDirs() });
   return expandDataspaceScopedComponentSet(full, requested, registry);
@@ -190,7 +194,11 @@ export async function executeDeploy(
     registry = stl.registry;
 
     componentSet = await buildComponentSet(opts, stl);
-    componentSet = await expandDataspaceScopedDependencies(componentSet, registry);
+    // Data Cloud only: dataspace-scoped components (CI/DMO) pull their inline dependency closure
+    // into the same deploy. Every other deploy skips this entirely and leaves componentSet as-is.
+    if (hasDataspaceScopedComponents(componentSet)) {
+      componentSet = await expandDataspaceScopedDependencies(componentSet, registry);
+    }
     if (componentSet.size === 0) {
       if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
         // the user specified something to deploy, but there isn't anything
