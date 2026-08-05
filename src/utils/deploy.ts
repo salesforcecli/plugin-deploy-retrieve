@@ -24,6 +24,7 @@ import {
   ComponentStatus,
   DeployResult,
   DestructiveChangesType,
+  expandDataspaceScopedComponentSet,
   FileResponseSuccess,
   MetadataApiDeploy,
   MetadataApiDeployOptions,
@@ -119,6 +120,29 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
   });
 }
 
+/**
+ * Data Cloud dataspace-scoped types (CalculatedInsight, DataModelObject) declare their
+ * dependencies inline (a CI `dependsOn` its DataModelObject(s)). When the user asks to deploy such a
+ * component, the referenced dependencies must ride along in the same deploy, but nothing else in the
+ * project should. This resolves the whole project, then returns the requested set expanded with just
+ * the transitive dataspace-scoped dependency closure. If the requested set has no dataspace-scoped
+ * components, the original set is returned untouched (cheap no-op for every other deploy).
+ */
+async function expandDataspaceScopedDependencies(
+  requested: ComponentSet,
+  registry?: RegistryAccess
+): Promise<ComponentSet> {
+  const hasDataspaceScoped = [...requested.getSourceComponents()].some(
+    (c) => c.type.strategies?.adapter === 'dataspaceScoped'
+  );
+  if (!hasDataspaceScoped) {
+    return requested;
+  }
+  // Resolve the full project so dependsOn references (by entityPayload.name) can be located.
+  const full = await ComponentSetBuilder.build({ sourcepath: await getPackageDirs() });
+  return expandDataspaceScopedComponentSet(full, requested, registry);
+}
+
 export async function executeDeploy(
   opts: Partial<DeployOptions>,
   project?: SfProject,
@@ -166,6 +190,7 @@ export async function executeDeploy(
     registry = stl.registry;
 
     componentSet = await buildComponentSet(opts, stl);
+    componentSet = await expandDataspaceScopedDependencies(componentSet, registry);
     if (componentSet.size === 0) {
       if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
         // the user specified something to deploy, but there isn't anything
