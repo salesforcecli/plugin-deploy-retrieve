@@ -1,3 +1,9 @@
+## [4.0.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.0.1...4.0.2) (2026-08-07)
+
+### Bug Fixes
+
+- update ebikes NUT expected component count and filter NavigationMenu ([fd2bff8](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/fd2bff8be1f9cf64d8269631f89bb7f4c4bd8697))
+
 ## [4.0.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.0.0...4.0.1) (2026-07-30)
 
 ### Bug Fixes
