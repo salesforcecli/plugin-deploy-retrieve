@@ -33,6 +33,7 @@ config.truncateThreshold = 0;
 const filterIgnored = (r: PreviewFile): boolean => r.ignored !== true;
 const noAudience = (pf: PreviewFile | FileResponse) => pf.type !== 'Audience';
 const noReportType = (pf: PreviewFile | FileResponse) => pf.type !== 'ReportType';
+const noNavigationMenu = (pf: PreviewFile | FileResponse) => pf.type !== 'NavigationMenu';
 
 describe('remote changes', () => {
   before(async () => {
@@ -173,8 +174,8 @@ describe('remote changes', () => {
       const result = execCmd<PreviewResult>('retrieve metadata preview --json', {
         ensureExitCode: 0,
       }).jsonOutput?.result;
-      // Audience created as a side effect of experiences
-      expect(result?.toRetrieve.filter(noAudience)).to.deep.equal([]);
+      // Audience and NavigationMenu created as a side effect of experiences
+      expect(result?.toRetrieve.filter(noAudience).filter(noNavigationMenu)).to.deep.equal([]);
     });
   });
 

@@ -13,4 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const eBikesDeployResultCount = 213;
+export const eBikesDeployResultCount = 297;
