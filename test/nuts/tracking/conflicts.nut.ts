@@ -72,7 +72,7 @@ describe('conflict detection and resolution', () => {
     );
     await conn.tooling.sobject('CustomApplication').update({
       ...app,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+       
       Metadata: {
         ...app.Metadata,
         description: 'modified',

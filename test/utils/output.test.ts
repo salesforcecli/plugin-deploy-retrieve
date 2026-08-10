@@ -212,7 +212,7 @@ describe('deployResultFormatter', () => {
       // The formatter should call table() to display the Deleted Source
       const deletesTableCall = tableStub.getCalls().find((call) => {
         const callArg = call.args[0] as { title?: string };
-        return callArg?.title && callArg.title.includes('Deleted Source');
+        return callArg?.title?.includes('Deleted Source');
       });
 
       expect(deletesTableCall).to.exist;
@@ -247,7 +247,7 @@ describe('deployResultFormatter', () => {
       // Verify no Deleted Source table is displayed
       const deletesTableCall = tableStub.getCalls().find((call) => {
         const callArg = call.args[0] as { title?: string };
-        return callArg?.title && callArg.title.includes('Deleted Source');
+        return callArg?.title?.includes('Deleted Source');
       });
 
       expect(deletesTableCall).to.not.exist;

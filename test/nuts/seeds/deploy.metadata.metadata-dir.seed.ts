@@ -56,7 +56,7 @@ context('deploy metadata --metadata-dir NUTs [name: %REPO_NAME%]', () => {
 
         const deploy = await testkit.deploy<DeployResultJson>({ args: '--metadata-dir out' });
         assert(deploy);
-        testkit.expect.toHavePropertyAndValue(deploy.result as unknown as JsonMap, 'status', RequestStatus.Succeeded);
+        testkit.expect.toHavePropertyAndValue(deploy.result, 'status', RequestStatus.Succeeded);
       });
     }
 
