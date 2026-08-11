@@ -446,7 +446,7 @@ const wantsToRetrieveCustomFields = (cs: ComponentSet, registry: RegistryAccess)
   return hasCustomField && !hasCustomObject;
 };
 
-// eslint-disable-next-line complexity
+ 
 const buildRetrieveAndDeleteTargets = async (
   flags: RetrieveMetadataFlags,
   format: Format
@@ -490,7 +490,7 @@ const buildRetrieveAndDeleteTargets = async (
     }
     const hasRegexMatch = flags.metadata?.some(isRegexMatch);
     // Deliberately using logical or
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+     
     const retrieveFromOrg = hasRegexMatch || shouldResolvePseudoFromOrg ? flags['target-org'].getUsername() : undefined;
     if (format === 'source' && (await flags['target-org'].supportsSourceTracking())) {
       await SourceTracking.create({
