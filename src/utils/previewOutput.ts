@@ -74,7 +74,7 @@ const resolvePaths = (
     .flatMap((filename) => {
       try {
         return resolver.getComponentsFromPath(filename);
-      } catch (e) {
+      } catch {
         // resolver will do logging before throw we don't do it here
         return [];
       }
@@ -91,6 +91,7 @@ const calculateDeployOperation = (destructiveChangesType?: DestructiveChangesTyp
       return 'deletePost';
     case DestructiveChangesType.PRE:
       return 'deletePre';
+    case undefined:
     default:
       return 'deploy';
   }

@@ -65,7 +65,7 @@ export const writeManifest = async (
 export const maybeDestroyManifest = async (jobId: string): Promise<void> => {
   try {
     return await fs.promises.rm(getManifestFilePath(jobId));
-  } catch (e) {
+  } catch {
     // that's ok in a maybe
   }
 };

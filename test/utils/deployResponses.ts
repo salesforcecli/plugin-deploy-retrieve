@@ -380,10 +380,9 @@ export const getDeployResult = (
   return {
     response,
     getFileResponses() {
-      let fileProps: DeployMessage[] = [];
       if (type === 'failed') {
         const failures = response.details.componentFailures ?? [];
-        fileProps = ensureArray(failures);
+        const fileProps = ensureArray(failures);
         return fileProps.map((comp) => ({
           fullName: comp.fullName,
           filePath: comp.fileName,
@@ -396,7 +395,7 @@ export const getDeployResult = (
         }));
       } else {
         const successes = response.details.componentSuccesses;
-        fileProps = ensureArray(successes);
+        const fileProps = ensureArray(successes);
         return fileProps
           .filter((p) => p.fileName !== 'package.xml')
           .map((comp) => ({

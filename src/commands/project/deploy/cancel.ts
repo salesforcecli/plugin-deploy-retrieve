@@ -56,7 +56,6 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
       exactlyOne: ['use-most-recent', 'job-id'],
     }),
     // we want to allow undefined to use the value from the cache
-    // eslint-disable-next-line sf-plugin/flag-min-max-default
     wait: Flags.duration({
       char: 'w',
       summary: messages.getMessage('flags.wait.summary'),

@@ -44,7 +44,7 @@ export class MetadataRetrieveResultFormatter implements Formatter<MetadataRetrie
     return { ...responseWithoutZipFile, zipFilePath: this.zipFilePath, files: this.files };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
+  // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-misused-promises
   public async display(): Promise<void> {
     ux.log(retrieveMessages.getMessage('info.WroteZipFile', [this.zipFilePath]));
     if (this.opts.unzip) {

@@ -164,7 +164,9 @@ export class DeployStages {
         {
           label: 'Failed',
           alwaysPrintInCI: true,
+          // eslint-disable-next-line complexity
           get: (data): string | undefined => {
+            // eslint-disable-next-line no-useless-assignment
             let testFailures: Failures[] = [];
 
             // only render new test failures
