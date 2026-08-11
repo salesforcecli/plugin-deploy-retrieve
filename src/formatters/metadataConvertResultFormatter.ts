@@ -49,6 +49,7 @@ export class MetadataConvertResultFormatter implements Formatter<ConvertMdapiJso
     return this.convertResults;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   public async display(): Promise<void> {
     const convertData = await this.getJson();
     if (convertData?.length) {

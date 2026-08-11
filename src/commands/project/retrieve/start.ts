@@ -244,7 +244,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       preStagesBlock: [
         {
           type: 'message',
-          get: (data) =>
+          get: (data): string | undefined =>
             data?.apiData &&
             messages.getMessage('apiVersionMsgDetailed', [
               'Retrieving',
@@ -257,7 +257,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       postStagesBlock: [
         {
           label: 'Status',
-          get: (data) => data?.status,
+          get: (data): string | undefined => data?.status,
           bold: true,
           type: 'dynamic-key-value',
         },
@@ -342,7 +342,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         await rm(resolve(join(flags['target-metadata-dir'] ?? '', zipFileName)), {
           recursive: true,
         });
-      } catch (e) {
+      } catch {
         // do nothing
       }
     }
@@ -447,10 +447,8 @@ const wantsToRetrieveCustomFields = (cs: ComponentSet, registry: RegistryAccess)
 };
 
  
-const buildRetrieveAndDeleteTargets = async (
-  flags: RetrieveMetadataFlags,
-  format: Format
-): Promise<RetrieveAndDeleteTargets> => {
+const buildRetrieveAndDeleteTargets = // eslint-disable-next-line complexity
+  async (flags: RetrieveMetadataFlags, format: Format): Promise<RetrieveAndDeleteTargets> => {
   const isChanges =
     !flags['source-dir'] &&
     !flags['manifest'] &&

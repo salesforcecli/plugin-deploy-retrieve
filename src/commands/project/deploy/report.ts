@@ -64,7 +64,6 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
       helpGroup: testFlags,
     }),
     // we want to allow undefined for a simple check deploy status
-    // eslint-disable-next-line sf-plugin/flag-min-max-default
     wait: Flags.duration({
       char: 'w',
       summary: deployMessages.getMessage('flags.wait.summary'),
@@ -99,7 +98,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
           this.project = await SfProject.resolve();
           const sourcepath = this.project.getUniquePackageDirectories().map((pDir) => pDir.fullPath);
           componentSet = await buildComponentSet({ 'source-dir': sourcepath, wait });
-        } catch (err) {
+        } catch {
           // ignore the error. this was just to get improved command output.
         }
       } else if (deployOpts.status !== RequestStatus.Succeeded) {
@@ -109,7 +108,6 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
     }
     const mdapiDeploy = new MetadataApiDeploy({
       // setting an API version here won't matter since we're just checking deploy status
-      // eslint-disable-next-line sf-plugin/get-connection-with-version
       usernameOrConnection: org.getConnection(),
       id: jobId,
       components: componentSet,

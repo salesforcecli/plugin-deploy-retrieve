@@ -68,7 +68,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       exclusive: ['concise'],
     }),
     // we want this to allow undefined so that we can use the default value from the cache
-    // eslint-disable-next-line sf-plugin/flag-min-max-default
     wait: Flags.duration({
       char: 'w',
       summary: messages.getMessage('flags.wait.summary'),
@@ -111,7 +110,6 @@ export default class DeployMetadataResume extends SfCommand<DeployResultJson> {
       const componentSet = await buildComponentSet({ ...deployOpts, wait: Duration.seconds(0) });
       const mdapiDeploy = new MetadataApiDeploy({
         // setting an API version here won't matter since we're just checking deploy status
-        // eslint-disable-next-line sf-plugin/get-connection-with-version
         usernameOrConnection: org.getConnection(),
         id: jobId,
         components: componentSet,

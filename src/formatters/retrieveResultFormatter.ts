@@ -34,10 +34,12 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getJson(): Promise<RetrieveResultJson> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { zipFile, ...responseWithoutZip } = this.result.response;
     return { ...responseWithoutZip, files: this.files };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   public async display(): Promise<void> {
     this.displaySuccesses();
     await this.displayPackages();
