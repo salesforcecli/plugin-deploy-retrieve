@@ -286,6 +286,7 @@
       "api-version",
       "flags-dir",
       "ignore-conflicts",
+      "include-dependents",
       "json",
       "manifest",
       "metadata",

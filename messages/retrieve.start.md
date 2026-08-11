@@ -113,6 +113,14 @@ Package names to retrieve. Use of this flag is for reference only; don't use it 
 
 The metadata of the supplied package name(s) will be retrieved into a child directory of the project. The name of that child directory matches the name of the package. The retrieved metadata is meant for your reference only, don't add it to a source control system for development and deployment. For package development, retrieve the metadata using a manifest (`--manifest` flag) or by targeting a source controlled package directory within your project (`--source-dir` flag).
 
+# flags.include-dependents.summary
+
+Metadata types whose dependencies should also be retrieved.
+
+# flags.include-dependents.description
+
+Specify one or more metadata type names; the retrieve request includes the dependencies of those types in addition to the components you requested. Valid values: Bot, AiAgentDefinitionVersion. This flag requires API version 64.0 or later.
+
 # flags.source-dir.summary
 
 File paths for source to retrieve from the org.

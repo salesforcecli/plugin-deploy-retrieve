@@ -108,6 +108,12 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       description: messages.getMessage('flags.package-name.description'),
       multiple: true,
     }),
+    'include-dependents': Flags.string({
+      summary: messages.getMessage('flags.include-dependents.summary'),
+      description: messages.getMessage('flags.include-dependents.description'),
+      multiple: true,
+      options: ['Bot', 'AiAgentDefinitionVersion'],
+    }),
     'output-dir': Flags.directory({
       char: 'r',
       summary: messages.getMessage('flags.output-dir.summary'),
@@ -556,7 +562,11 @@ const buildRetrieveOptions = async (
     merge: true,
     packageOptions: flags['package-name'],
     format,
-    ...(hasRootTypesWithDependencies(flags, apiVersion) ? { rootTypesWithDependencies: ['Bot'] } : {}),
+    ...(flags['include-dependents']?.length
+      ? { rootTypesWithDependencies: flags['include-dependents'] }
+      : hasRootTypesWithDependencies(flags, apiVersion)
+        ? { rootTypesWithDependencies: ['Bot'] }
+        : {}),
     ...(format === 'metadata'
       ? {
           singlePackage: flags['single-package'],
