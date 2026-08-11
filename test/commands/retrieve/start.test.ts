@@ -268,7 +268,7 @@ describe('project retrieve start', () => {
     ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['Bot', 'AiAgentDefinitionVersion'] });
   });
 
-  it('should let --include-dependents override the auto-detected Bot value', async () => {
+  it('should merge --include-dependents with auto-detected Bot for pseudo-types', async () => {
     const metadata = ['Agent:My_Agent'];
     const apiversion = '64.0';
     const result = await RetrieveMetadata.run([
@@ -281,7 +281,7 @@ describe('project retrieve start', () => {
       '--json',
     ]);
     expect(result).to.deep.equal(expectedResults);
-    ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['AiAgentDefinitionVersion'] });
+    ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['Bot', 'AiAgentDefinitionVersion'] });
   });
 
   it('should pass along metadata and org for pseudo-type wildcard matching', async () => {

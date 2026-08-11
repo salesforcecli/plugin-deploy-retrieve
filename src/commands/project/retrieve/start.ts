@@ -562,11 +562,12 @@ const buildRetrieveOptions = async (
     merge: true,
     packageOptions: flags['package-name'],
     format,
-    ...(flags['include-dependents']?.length
-      ? { rootTypesWithDependencies: flags['include-dependents'] }
-      : hasRootTypesWithDependencies(flags, apiVersion)
-        ? { rootTypesWithDependencies: ['Bot'] }
-        : {}),
+    ...(() => {
+      const auto = hasRootTypesWithDependencies(flags, apiVersion) ? ['Bot'] : [];
+      const explicit = flags['include-dependents'] ?? [];
+      const merged = [...new Set([...auto, ...explicit])];
+      return merged.length ? { rootTypesWithDependencies: merged } : {};
+    })(),
     ...(format === 'metadata'
       ? {
           singlePackage: flags['single-package'],
