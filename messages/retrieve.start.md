@@ -115,11 +115,11 @@ The metadata of the supplied package name(s) will be retrieved into a child dire
 
 # flags.include-dependents.summary
 
-Metadata types whose dependencies should also be retrieved.
+Retrieve dependent metadata types of this type
 
 # flags.include-dependents.description
 
-Specify one or more metadata type names; the retrieve request includes the dependencies of those types in addition to the components you requested. Valid values: Bot, AiAgentDefinitionVersion. This flag requires API version 64.0 or later.
+Sets the rootTypesWithDependencies Metadata API value. Will retrieve additional metadata types that depend on the type passed, currently only supports 'Bots' and 'AiAgentDefinitionVersion'
 
 # flags.source-dir.summary
 
