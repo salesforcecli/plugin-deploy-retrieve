@@ -45,15 +45,15 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 - Retrieve a custom object called ExcitingObject that's in the SBQQ namespace:
 
-  <%= config.bin %> <%= command.id %> --metadata CustomObject:SBQQ\_\_ExcitingObject
+  <%= config.bin %> <%= command.id %> --metadata CustomObject:SBQQ__ExcitingObject
 
 - Retrieve all custom objects in the SBQQ namespace by using a wildcard and quotes:
 
-  <%= config.bin %> <%= command.id %> --metadata 'CustomObject:SBQQ\_\_\*'
+  <%= config.bin %> <%= command.id %> --metadata 'CustomObject:SBQQ__*'
 
 - Retrieve all list views for the Case standard object:
 
-  <%= config.bin %> <%= command.id %> --metadata 'ListView:Case\*'
+  <%= config.bin %> <%= command.id %> --metadata 'ListView:Case*'
 
 - Retrieve all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
