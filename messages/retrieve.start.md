@@ -37,7 +37,7 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 - Retrieve specific Apex classes that match a pattern; in this example, retrieve Apex classes whose names contain the string "MyApex":
 
-  <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex\*'
+  <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
 
 - Retrieve the source files in the "force-app" directory; if any of the retrieved metadata is of type "Bot", also retrieve all dependent components of the Bot, such as GenAiPlannerBundles, GenAiPlugins, and GenAiFunctions:
 
