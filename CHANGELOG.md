@@ -1,3 +1,9 @@
+# [4.1.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.0.2...4.1.0) (2026-08-12)
+
+### Features
+
+- add --root-with-dependencies flag to sf project retrieve start @W-23818734@ ([#1626](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1626)) ([7a9acfa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/7a9acfa356a2dcc182eb4d969a84259b93f6a632))
+
 ## [4.0.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.0.1...4.0.2) (2026-08-07)
 
 ### Bug Fixes

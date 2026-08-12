@@ -141,7 +141,7 @@ FLAG DESCRIPTIONS
     If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/convert/mdapi.ts)_
+_See code: [src/commands/project/convert/mdapi.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/convert/mdapi.ts)_
 
 ## `sf project convert source`
 
@@ -214,7 +214,7 @@ FLAG DESCRIPTIONS
     Override the api version used for api requests made by this command
 ```
 
-_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/convert/source.ts)_
+_See code: [src/commands/project/convert/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/convert/source.ts)_
 
 ## `sf project convert source-behavior`
 
@@ -273,7 +273,7 @@ EXAMPLES
     $ sf project convert source-behavior --behavior decomposePermissionSetBeta --dry-run --preserve-temp-dir
 ```
 
-_See code: [src/commands/project/convert/source-behavior.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/convert/source-behavior.ts)_
+_See code: [src/commands/project/convert/source-behavior.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/convert/source-behavior.ts)_
 
 ## `sf project delete source`
 
@@ -426,7 +426,7 @@ FLAG DESCRIPTIONS
     - Separate the test names with spaces: --tests Test1 Test2 "Test With Space"
 ```
 
-_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/delete/source.ts)_
+_See code: [src/commands/project/delete/source.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/delete/source.ts)_
 
 ## `sf project delete tracking`
 
@@ -463,7 +463,7 @@ EXAMPLES
     $ sf project delete tracking --target-org my-scratch
 ```
 
-_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/delete/tracking.ts)_
+_See code: [src/commands/project/delete/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/delete/tracking.ts)_
 
 ## `sf project deploy cancel`
 
@@ -535,7 +535,7 @@ FLAG DESCRIPTIONS
     project deploy report".
 ```
 
-_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/deploy/cancel.ts)_
+_See code: [src/commands/project/deploy/cancel.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/deploy/cancel.ts)_
 
 ## `sf project deploy preview`
 
@@ -618,7 +618,7 @@ FLAG DESCRIPTIONS
     All child components are included. If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/deploy/preview.ts)_
+_See code: [src/commands/project/deploy/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/deploy/preview.ts)_
 
 ## `sf project deploy quick`
 
@@ -702,7 +702,7 @@ FLAG DESCRIPTIONS
     deploy report".
 ```
 
-_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/deploy/quick.ts)_
+_See code: [src/commands/project/deploy/quick.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/deploy/quick.ts)_
 
 ## `sf project deploy report`
 
@@ -794,7 +794,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/deploy/report.ts)_
+_See code: [src/commands/project/deploy/report.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/deploy/report.ts)_
 
 ## `sf project deploy resume`
 
@@ -879,7 +879,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/deploy/resume.ts)_
+_See code: [src/commands/project/deploy/resume.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/deploy/resume.ts)_
 
 ## `sf project deploy start`
 
@@ -1128,7 +1128,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/deploy/start.ts)_
+_See code: [src/commands/project/deploy/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/deploy/start.ts)_
 
 ## `sf project deploy validate`
 
@@ -1315,7 +1315,7 @@ FLAG DESCRIPTIONS
     --coverage-formatters lcov --coverage-formatters clover
 ```
 
-_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/deploy/validate.ts)_
+_See code: [src/commands/project/deploy/validate.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/deploy/validate.ts)_
 
 ## `sf project generate manifest`
 
@@ -1411,7 +1411,7 @@ EXAMPLES
     $ sf project generate manifest --from-org test@myorg.com --excluded-metadata StandardValueSet
 ```
 
-_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/generate/manifest.ts)_
+_See code: [src/commands/project/generate/manifest.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/generate/manifest.ts)_
 
 ## `sf project list ignored`
 
@@ -1453,7 +1453,7 @@ EXAMPLES
     $ sf project list ignored --source-dir package.xml
 ```
 
-_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/list/ignored.ts)_
+_See code: [src/commands/project/list/ignored.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/list/ignored.ts)_
 
 ## `sf project reset tracking`
 
@@ -1502,7 +1502,7 @@ EXAMPLES
     $ sf project reset tracking --revision 30
 ```
 
-_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/reset/tracking.ts)_
+_See code: [src/commands/project/reset/tracking.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/reset/tracking.ts)_
 
 ## `sf project retrieve preview`
 
@@ -1556,7 +1556,7 @@ FLAG DESCRIPTIONS
     production orgs.
 ```
 
-_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/retrieve/preview.ts)_
+_See code: [src/commands/project/retrieve/preview.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/retrieve/preview.ts)_
 
 ## `sf project retrieve start`
 
@@ -1565,24 +1565,27 @@ Retrieve metadata from an org to your local project.
 ```
 USAGE
   $ sf project retrieve start -o <value> [--json] [--flags-dir <value>] [-a <value>] [-c] [-x <value> | -m <value>... | -d
-    <value>...] [-r <value> | -n <value>... | ] [--single-package -t <value>] [-w <value>] [-z ] [--zip-file-name
-    <value> ]
+    <value>...] [--root-type-with-dependencies Bot|AiAgentDefinitionVersion...] [-r <value> | -n <value>... | ]
+    [--single-package -t <value>] [-w <value>] [-z ] [--zip-file-name <value> ]
 
 FLAGS
-  -a, --api-version=<value>      Target API version for the retrieve.
-  -c, --ignore-conflicts         Ignore conflicts and retrieve and save files to your local filesystem, even if they
-                                 overwrite your local changes.
-  -d, --source-dir=<value>...    File paths for source to retrieve from the org.
-  -m, --metadata=<value>...      Metadata component names to retrieve. Wildcards (`*`) supported as long as you use
-                                 quotes, such as `ApexClass:MyClass*`.
-  -n, --package-name=<value>...  Package names to retrieve. Use of this flag is for reference only; don't use it to
-                                 retrieve packaged metadata for development.
-  -o, --target-org=<value>       (required) Username or alias of the target org. Not required if the `target-org`
-                                 configuration variable is already set.
-  -r, --output-dir=<value>       Directory root for the retrieved source files.
-  -w, --wait=<value>             [default: 33 minutes] Number of minutes to wait for the command to complete and display
-                                 results to the terminal window.
-  -x, --manifest=<value>         File path for the manifest (package.xml) that specifies the components to retrieve.
+  -a, --api-version=<value>                      Target API version for the retrieve.
+  -c, --ignore-conflicts                         Ignore conflicts and retrieve and save files to your local filesystem,
+                                                 even if they overwrite your local changes.
+  -d, --source-dir=<value>...                    File paths for source to retrieve from the org.
+  -m, --metadata=<value>...                      Metadata component names to retrieve. Wildcards (`*`) supported as long
+                                                 as you use quotes, such as `ApexClass:MyClass*`.
+  -n, --package-name=<value>...                  Package names to retrieve. Use of this flag is for reference only;
+                                                 don't use it to retrieve packaged metadata for development.
+  -o, --target-org=<value>                       (required) Username or alias of the target org. Not required if the
+                                                 `target-org` configuration variable is already set.
+  -r, --output-dir=<value>                       Directory root for the retrieved source files.
+  -w, --wait=<value>                             [default: 33 minutes] Number of minutes to wait for the command to
+                                                 complete and display results to the terminal window.
+  -x, --manifest=<value>                         File path for the manifest (package.xml) that specifies the components
+                                                 to retrieve.
+      --root-type-with-dependencies=<option>...  Metadata type whose dependent types should also be retrieved.
+                                                 <options: Bot|AiAgentDefinitionVersion>
 
 METADATA API FORMAT FLAGS
   -t, --target-metadata-dir=<value>  Directory that will contain the retrieved metadata format files or ZIP.
@@ -1643,6 +1646,11 @@ EXAMPLES
   string "MyApex":
 
     $ sf project retrieve start --metadata 'ApexClass:MyApex*'
+
+  Retrieve the source files in the "force-app" directory; if any of the retrieved metadata is of type "Bot", also
+  retrieve all dependent components of the Bot, such as GenAiPlannerBundles, GenAiPlugins, and GenAiFunctions:
+
+    $ sf project retrieve start --source-dir force-app -root-type-with-dependencies Bot
 
   Retrieve a custom object called ExcitingObject that's in the SBQQ namespace:
 
@@ -1729,6 +1737,6 @@ FLAG DESCRIPTIONS
     If you specify this flag, don’t specify --metadata or --source-dir.
 ```
 
-_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.0.2/src/commands/project/retrieve/start.ts)_
+_See code: [src/commands/project/retrieve/start.ts](https://github.com/salesforcecli/plugin-deploy-retrieve/blob/4.1.0/src/commands/project/retrieve/start.ts)_
 
 <!-- commandsstop -->
