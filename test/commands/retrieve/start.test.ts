@@ -253,14 +253,14 @@ describe('project retrieve start', () => {
     ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['Bot'] });
   });
 
-  it('should pass along rootTypesWithDependencies from the --include-dependents flag', async () => {
+  it('should pass along rootTypesWithDependencies from the --root-with-dependencies flag', async () => {
     const metadata = ['ApexClass:MyClass'];
     const result = await RetrieveMetadata.run([
       '--metadata',
       metadata[0],
-      '--include-dependents',
+      '--root-with-dependencies',
       'Bot',
-      '--include-dependents',
+      '--root-with-dependencies',
       'AiAgentDefinitionVersion',
       '--json',
     ]);
@@ -268,7 +268,7 @@ describe('project retrieve start', () => {
     ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['Bot', 'AiAgentDefinitionVersion'] });
   });
 
-  it('should merge --include-dependents with auto-detected Bot for pseudo-types', async () => {
+  it('should merge --root-with-dependencies with auto-detected Bot for pseudo-types', async () => {
     const metadata = ['Agent:My_Agent'];
     const apiversion = '64.0';
     const result = await RetrieveMetadata.run([
@@ -276,7 +276,7 @@ describe('project retrieve start', () => {
       metadata[0],
       '--api-version',
       apiversion,
-      '--include-dependents',
+      '--root-with-dependencies',
       'AiAgentDefinitionVersion',
       '--json',
     ]);

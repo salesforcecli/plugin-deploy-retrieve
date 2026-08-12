@@ -113,11 +113,11 @@ Package names to retrieve. Use of this flag is for reference only; don't use it 
 
 The metadata of the supplied package name(s) will be retrieved into a child directory of the project. The name of that child directory matches the name of the package. The retrieved metadata is meant for your reference only, don't add it to a source control system for development and deployment. For package development, retrieve the metadata using a manifest (`--manifest` flag) or by targeting a source controlled package directory within your project (`--source-dir` flag).
 
-# flags.include-dependents.summary
+# flags.root-with-dependencies.summary
 
 Retrieve dependent metadata types of this type
 
-# flags.include-dependents.description
+# flags.root-with-dependencies.description
 
 Sets the rootTypesWithDependencies Metadata API value. Will retrieve additional metadata types that depend on the type passed, currently only supports 'Bots' and 'AiAgentDefinitionVersion'
 
