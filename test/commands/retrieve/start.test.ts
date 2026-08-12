@@ -253,6 +253,37 @@ describe('project retrieve start', () => {
     ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['Bot'] });
   });
 
+  it('should pass along rootTypesWithDependencies from the --root-type-with-dependencies flag', async () => {
+    const metadata = ['ApexClass:MyClass'];
+    const result = await RetrieveMetadata.run([
+      '--metadata',
+      metadata[0],
+      '--root-type-with-dependencies',
+      'Bot',
+      '--root-type-with-dependencies',
+      'AiAgentDefinitionVersion',
+      '--json',
+    ]);
+    expect(result).to.deep.equal(expectedResults);
+    ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['Bot', 'AiAgentDefinitionVersion'] });
+  });
+
+  it('should merge --root-type-with-dependencies with auto-detected Bot for pseudo-types', async () => {
+    const metadata = ['Agent:My_Agent'];
+    const apiversion = '64.0';
+    const result = await RetrieveMetadata.run([
+      '--metadata',
+      metadata[0],
+      '--api-version',
+      apiversion,
+      '--root-type-with-dependencies',
+      'AiAgentDefinitionVersion',
+      '--json',
+    ]);
+    expect(result).to.deep.equal(expectedResults);
+    ensureRetrieveArgs({ format: 'source', rootTypesWithDependencies: ['Bot', 'AiAgentDefinitionVersion'] });
+  });
+
   it('should pass along metadata and org for pseudo-type wildcard matching', async () => {
     const metadata = ['ApexClass', 'Agent'];
     const result = await RetrieveMetadata.run(['--metadata', metadata[0], '--metadata', metadata[1], '--json']);

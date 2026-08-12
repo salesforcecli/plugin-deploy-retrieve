@@ -37,19 +37,23 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
 - Retrieve specific Apex classes that match a pattern; in this example, retrieve Apex classes whose names contain the string "MyApex":
 
-      <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
+  <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
+
+- Retrieve the source files in the "force-app" directory; if any of the retrieved metadata is of type "Bot", also retrieve all dependent components of the Bot, such as GenAiPlannerBundles, GenAiPlugins, and GenAiFunctions:
+
+  <%= config.bin %> <%= command.id %> --source-dir force-app -root-type-with-dependencies Bot
 
 - Retrieve a custom object called ExcitingObject that's in the SBQQ namespace:
 
-      sf <%= command.id %> --metadata CustomObject:SBQQ__ExcitingObject
+  <%= config.bin %> <%= command.id %> --metadata CustomObject:SBQQ__ExcitingObject
 
 - Retrieve all custom objects in the SBQQ namespace by using a wildcard and quotes:
 
-      sf <%= command.id %> --metadata 'CustomObject:SBQQ__*'
+  <%= config.bin %> <%= command.id %> --metadata 'CustomObject:SBQQ__*'
 
 - Retrieve all list views for the Case standard object:
 
-      sf <%= command.id %> --metadata 'ListView:Case*'
+  <%= config.bin %> <%= command.id %> --metadata 'ListView:Case*'
 
 - Retrieve all custom objects and Apex classes found in all defined package directories (both examples are equivalent):
 
@@ -112,6 +116,10 @@ Package names to retrieve. Use of this flag is for reference only; don't use it 
 # flags.package-name.description
 
 The metadata of the supplied package name(s) will be retrieved into a child directory of the project. The name of that child directory matches the name of the package. The retrieved metadata is meant for your reference only, don't add it to a source control system for development and deployment. For package development, retrieve the metadata using a manifest (`--manifest` flag) or by targeting a source controlled package directory within your project (`--source-dir` flag).
+
+# flags.root-type-with-dependencies.summary
+
+Metadata type whose dependent types should also be retrieved.
 
 # flags.source-dir.summary
 

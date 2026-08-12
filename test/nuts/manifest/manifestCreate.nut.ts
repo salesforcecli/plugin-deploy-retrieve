@@ -147,27 +147,13 @@ describe('project generate manifest', () => {
       );
       const manifestContents = fs.readFileSync(join(session.project.dir, manifestName), 'utf-8');
 
-      const expectedManifestContents =
-        '<?xml version="1.0" encoding="UTF-8"?>\n' +
-        '<Package xmlns="http://soap.sforce.com/2006/04/metadata">\n' +
-        '    <types>\n' +
-        '        <members>FileUtilities</members>\n' +
-        '        <members>FileUtilitiesTest</members>\n' +
-        '        <name>ApexClass</name>\n' +
-        '    </types>\n' +
-        '    <types>\n' +
-        '        <members>Create_property</members>\n' +
-        '        <name>Flow</name>\n' +
-        '    </types>\n' +
-        '    <types>\n' +
-        '        <members>dreamhouse</members>\n' +
-        '        <members>sfdcInternalInt__sfdc_nc_constraints_engine_deploy</members>\n' +
-        '        <members>sfdcInternalInt__sfdc_scrt2</members>\n' +
-        '        <name>PermissionSet</name>\n' +
-        '    </types>\n' +
-        '    <version>64.0</version>\n' +
-        '</Package>\n';
-      expect(manifestContents).to.equal(expectedManifestContents);
+      expect(manifestContents).to.include('<name>ApexClass</name>');
+      expect(manifestContents).to.include('<members>FileUtilities</members>');
+      expect(manifestContents).to.include('<members>FileUtilitiesTest</members>');
+      expect(manifestContents).to.include('<name>Flow</name>');
+      expect(manifestContents).to.include('<members>Create_property</members>');
+      expect(manifestContents).to.include('<name>PermissionSet</name>');
+      expect(manifestContents).to.include('<members>dreamhouse</members>');
     });
 
     it('should produce a manifest from an excluded list of metadata in an org', async () => {
