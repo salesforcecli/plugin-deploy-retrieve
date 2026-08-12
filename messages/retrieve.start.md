@@ -115,7 +115,7 @@ The metadata of the supplied package name(s) will be retrieved into a child dire
 
 # flags.root-type-with-dependencies.summary
 
-Retrieve dependent metadata types of this type
+Metadata type whose dependent types should also be retrieved. 
 
 # flags.root-type-with-dependencies.description
 
