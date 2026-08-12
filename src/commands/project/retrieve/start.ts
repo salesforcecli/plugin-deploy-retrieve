@@ -110,7 +110,6 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     }),
     'root-type-with-dependencies': Flags.string({
       summary: messages.getMessage('flags.root-type-with-dependencies.summary'),
-      description: messages.getMessage('flags.root-type-with-dependencies.description'),
       multiple: true,
       options: ['Bot', 'AiAgentDefinitionVersion'],
     }),

@@ -39,6 +39,10 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
 
       <%= config.bin %> <%= command.id %> --metadata 'ApexClass:MyApex*'
 
+- Retrieve the source files in the "force-app" directory; if any of the retrieved metadata is of type "Bot", also retrieve all dependent components of the Bot, such as GenAiPlannerBundles, GenAiPlugins, and GenAiFunctions:
+
+<%= config.bin %> <%= command.id %> --source-dir force-app -root-type-with-dependencies Bot
+
 - Retrieve a custom object called ExcitingObject that's in the SBQQ namespace:
 
       sf <%= command.id %> --metadata CustomObject:SBQQ__ExcitingObject
@@ -116,10 +120,6 @@ The metadata of the supplied package name(s) will be retrieved into a child dire
 # flags.root-type-with-dependencies.summary
 
 Retrieve dependent metadata types of this type
-
-# flags.root-type-with-dependencies.description
-
-Sets the rootTypesWithDependencies Metadata API value. Will retrieve additional metadata types that depend on the type passed, currently only supports 'Bots' and 'AiAgentDefinitionVersion'
 
 # flags.source-dir.summary
 
