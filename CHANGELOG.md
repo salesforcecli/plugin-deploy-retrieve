@@ -1,3 +1,9 @@
+## [4.1.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.1.0...4.1.1) (2026-08-13)
+
+### Bug Fixes
+
+- bump deps ([#1628](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1628)) ([60d7de2](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/60d7de26ebe1f68272e04677c561d78d5650642d))
+
 # [4.1.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.0.2...4.1.0) (2026-08-12)
 
 ### Features
