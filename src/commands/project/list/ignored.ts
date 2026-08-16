@@ -48,7 +48,7 @@ export class Ignored extends SfCommand<SourceIgnoredResults> {
    * Outputs all forceignored files from package directories of a project,
    * or based on a sourcepath param that points to a specific file or directory.
    */
-  // eslint-disable-next-line @typescript-eslint/require-await
+   
   public async run(): Promise<SourceIgnoredResults> {
     const flags = (await this.parse(Ignored)).flags;
     try {

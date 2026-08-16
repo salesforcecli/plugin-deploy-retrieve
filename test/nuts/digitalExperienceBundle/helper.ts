@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 // existing tests do a lot mutation.  I decided to leave rather than refactor
-/* eslint-disable no-param-reassign */
+ 
 
 import { join, relative } from 'node:path';
 import * as fs from 'node:fs';
