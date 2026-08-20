@@ -380,6 +380,7 @@ export const getDeployResult = (
   return {
     response,
     getFileResponses() {
+      // eslint-disable-next-line no-useless-assignment -- not actually useless
       let fileProps: DeployMessage[] = [];
       if (type === 'failed') {
         const failures = response.details.componentFailures ?? [];

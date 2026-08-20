@@ -164,8 +164,9 @@ export class DeployStages {
         {
           label: 'Failed',
           alwaysPrintInCI: true,
+          // eslint-disable-next-line complexity
           get: (data): string | undefined => {
-            let testFailures: Failures[] = [];
+            let testFailures: Failures[];
 
             // only render new test failures
             if (isCI() && Array.isArray(data?.mdapiDeploy.details.runTestResult?.failures)) {

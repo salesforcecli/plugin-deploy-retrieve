@@ -18,7 +18,6 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SourceTestkit } from '@salesforce/source-testkit';
 import { RequestStatus } from '@salesforce/source-deploy-retrieve';
-import { JsonMap } from '@salesforce/ts-types';
 import { assert } from 'chai';
 import { TEST_REPOS_MAP } from '../testMatrix.js';
 import { DeployResultJson } from '../../../src/utils/types.js';

@@ -48,7 +48,7 @@ describe('project deploy start', () => {
     });
     try {
       await DeployMetadata.run([]);
-    } catch (e) {
+    } catch (_e) {
       expect(warnStub.getCalls().flatMap((call: { args: string[] }) => call.args)).to.deep.include(
         messages.getMessage('pushPackageDirsWarning')
       ); // do nothing, only need to assert that it warns correctly, avoid too much UT setup
@@ -64,7 +64,7 @@ describe('project deploy start', () => {
     });
     try {
       await DeployMetadata.run(['--source-dir', 'test']);
-    } catch (e) {
+    } catch (_e) {
       expect(warnStub.called).to.be.false;
       // do nothing, only need to assert that it warns correctly, avoid too much UT setup
     }
@@ -79,7 +79,7 @@ describe('project deploy start', () => {
     });
     try {
       await DeployMetadata.run(['--source-dir', 'test']);
-    } catch (e) {
+    } catch (_e) {
       expect(warnStub.called).to.be.false;
       // do nothing, only need to assert that it warns correctly, avoid too much UT setup
     }
