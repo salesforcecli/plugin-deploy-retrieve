@@ -31,7 +31,7 @@ export async function getSourceApiVersion(): Promise<Optional<string>> {
 export async function getOptionalProject(): Promise<SfProject | undefined> {
   try {
     return await SfProject.resolve();
-  } catch (e) {
+  } catch (_e) {
     return undefined;
   }
 }

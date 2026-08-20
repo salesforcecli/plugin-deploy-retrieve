@@ -38,6 +38,7 @@ export class RetrieveResultFormatter implements Formatter<RetrieveResultJson> {
     return { ...responseWithoutZip, files: this.files };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   public async display(): Promise<void> {
     this.displaySuccesses();
     await this.displayPackages();

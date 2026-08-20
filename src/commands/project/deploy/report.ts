@@ -99,7 +99,7 @@ export default class DeployMetadataReport extends SfCommand<DeployResultJson> {
           this.project = await SfProject.resolve();
           const sourcepath = this.project.getUniquePackageDirectories().map((pDir) => pDir.fullPath);
           componentSet = await buildComponentSet({ 'source-dir': sourcepath, wait });
-        } catch (err) {
+        } catch (_err) {
           // ignore the error. this was just to get improved command output.
         }
       } else if (deployOpts.status !== RequestStatus.Succeeded) {

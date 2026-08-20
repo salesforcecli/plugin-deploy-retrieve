@@ -32,7 +32,7 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
           if (key === 'status') {
             return result.concat({ key, value: colorStatus(value as RequestStatus) });
           } else {
-            return result.concat({ key, value: value as string | number | boolean });
+            return result.concat({ key, value });
           }
         }
         return result;

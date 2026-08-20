@@ -360,7 +360,7 @@ export const getDeployResponse = (
       deleted: false,
       id: '01p2100000A6XiqAAF',
       fullName: 'testClass1',
-    } as DeployMessage;
+    };
     response.rollbackOnError = true;
     response.numberComponentErrors = 1;
     response.numberComponentsTotal = 2;
@@ -380,6 +380,7 @@ export const getDeployResult = (
   return {
     response,
     getFileResponses() {
+      // eslint-disable-next-line no-useless-assignment -- not actually useless
       let fileProps: DeployMessage[] = [];
       if (type === 'failed') {
         const failures = response.details.componentFailures ?? [];

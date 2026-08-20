@@ -74,7 +74,7 @@ const resolvePaths = (
     .flatMap((filename) => {
       try {
         return resolver.getComponentsFromPath(filename);
-      } catch (e) {
+      } catch (_e) {
         // resolver will do logging before throw we don't do it here
         return [];
       }
@@ -86,6 +86,7 @@ const resolvePaths = (
 };
 
 const calculateDeployOperation = (destructiveChangesType?: DestructiveChangesType): PreviewFile['operation'] => {
+  // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
   switch (destructiveChangesType) {
     case DestructiveChangesType.POST:
       return 'deletePost';

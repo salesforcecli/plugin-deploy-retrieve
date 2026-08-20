@@ -306,7 +306,7 @@ export async function buildPreDestructiveFileResponses(
 
     preDestructiveComponents.length = 0;
     preDestructiveComponents.push(...resolvedComponents);
-  } catch (error) {
+  } catch (_error) {
     // If this's not resolve, try to resolve with registry only
   }
 

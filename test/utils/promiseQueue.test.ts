@@ -47,6 +47,7 @@ describe('promisesQueue', () => {
   it('should reject at entry two', async () => {
     await promisesQueue(
       [1, 2],
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- don't want to mess with code that isn't broken
       (n: number): Promise<number> => (n === 2 ? Promise.reject(n) : Promise.resolve(n)),
       1
     ).catch((e) => expect(e).to.equal(2));
