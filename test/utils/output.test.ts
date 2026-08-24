@@ -254,6 +254,96 @@ describe('deployResultFormatter', () => {
     });
   });
 
+  describe('displayNotifications', () => {
+    let tableStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      tableStub = sandbox.stub(Ux.prototype, 'table');
+    });
+
+    it('displays notifications table when notifications array is present', () => {
+      const deployResult = getDeployResult('successSync', {
+        notifications: [
+          {
+            messageCode: 'ApexApiVersionRetirement',
+            messageText: 'This deployment contains 2 Apex classes with warnings.',
+          },
+          {
+            messageCode: 'ApexApiVersionRetirement',
+            messageText: 'This deployment contains 1 Apex triggers with warnings.',
+          },
+        ],
+      });
+      const formatter = new DeployResultFormatter(deployResult, { verbose: true });
+      formatter.display();
+
+      const notificationsTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Notifications');
+      });
+
+      expect(notificationsTableCall).to.exist;
+      if (notificationsTableCall) {
+        const tableArg = notificationsTableCall.args[0] as {
+          data: Array<{ messageCode: string; messageText: string }>;
+        };
+        expect(tableArg.data).to.have.lengthOf(2);
+        expect(tableArg.data[0].messageCode).to.equal('ApexApiVersionRetirement');
+      }
+    });
+
+    it('displays notifications table when a single notification object is present', () => {
+      const deployResult = getDeployResult('successSync', {
+        notifications: {
+          messageCode: 'ApexApiVersionRetirement',
+          messageText: 'This deployment contains 1 Apex triggers with warnings.',
+        },
+      });
+      const formatter = new DeployResultFormatter(deployResult, { verbose: true });
+      formatter.display();
+
+      const notificationsTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Notifications');
+      });
+
+      expect(notificationsTableCall).to.exist;
+      if (notificationsTableCall) {
+        const tableArg = notificationsTableCall.args[0] as {
+          data: Array<{ messageCode: string; messageText: string }>;
+        };
+        expect(tableArg.data).to.have.lengthOf(1);
+        expect(tableArg.data[0].messageCode).to.equal('ApexApiVersionRetirement');
+      }
+    });
+
+    it('does not display notifications table when notifications are absent', () => {
+      const deployResult = getDeployResult('successSync');
+      const formatter = new DeployResultFormatter(deployResult, { verbose: true });
+      formatter.display();
+
+      const notificationsTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Notifications');
+      });
+
+      expect(notificationsTableCall).to.not.exist;
+    });
+
+    it('includes notifications in JSON output', async () => {
+      const notifications = [
+        {
+          messageCode: 'ApexApiVersionRetirement',
+          messageText: 'This deployment contains 2 Apex classes with warnings.',
+        },
+      ];
+      const deployResult = getDeployResult('successSync', { notifications });
+      const formatter = new DeployResultFormatter(deployResult, {});
+      const json = await formatter.getJson();
+      expect(json).to.have.property('notifications').deep.equal(notifications);
+    });
+  });
+
   describe('coverage functions', () => {
     describe('getCoverageFormattersOptions', () => {
       it('clover, json', () => {

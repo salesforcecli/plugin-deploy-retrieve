@@ -20,6 +20,7 @@ import { join } from 'node:path';
 import { Ux } from '@salesforce/sf-plugins-core';
 import {
   ComponentStatus,
+  DeployNotification,
   DeployResult,
   FileResponse,
   FileResponseFailure,
@@ -154,6 +155,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     this.displayTestResults();
     this.maybeCreateRequestedReports();
     this.displayReplacements();
+    this.displayNotifications();
   }
 
   public determineVerbosity(): Verbosity {
@@ -295,6 +297,22 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         overflow: 'wrap',
       });
     }
+  }
+
+  private displayNotifications(): void {
+    const notifications: DeployNotification[] = ensureArray(this.result.response.notifications);
+    if (!notifications.length) return;
+
+    ux.log();
+    ux.table({
+      data: notifications,
+      columns: [
+        { key: 'messageCode', name: 'Code' },
+        { key: 'messageText', name: 'Message' },
+      ],
+      title: tableHeader('Notifications'),
+      overflow: 'wrap',
+    });
   }
 
   private displaySuccesses(): void {
