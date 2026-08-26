@@ -84,6 +84,19 @@
         "stateDetail": {
           "type": "string"
         },
+        "notifications": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeployNotification"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeployNotification"
+              }
+            }
+          ]
+        },
         "deletedSource": {
           "type": "array",
           "items": {
@@ -442,6 +455,19 @@
       "required": ["id", "methodName", "name", "time"],
       "additionalProperties": false
     },
+    "DeployNotification": {
+      "type": "object",
+      "properties": {
+        "messageCode": {
+          "type": "string"
+        },
+        "messageText": {
+          "type": "string"
+        }
+      },
+      "required": ["messageCode", "messageText"],
+      "additionalProperties": false
+    },
     "FileResponse": {
       "anyOf": [
         {
@@ -586,6 +612,19 @@
         },
         "stateDetail": {
           "type": "string"
+        },
+        "notifications": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeployNotification"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeployNotification"
+              }
+            }
+          ]
         }
       },
       "required": [
