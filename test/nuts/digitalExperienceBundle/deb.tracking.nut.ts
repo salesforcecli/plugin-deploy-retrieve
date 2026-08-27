@@ -19,7 +19,7 @@ import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { assert, expect } from 'chai';
 import { PreviewResult } from '../../../src/utils/previewOutput.js';
 import { DeleteTrackingResult } from '../../../src/commands/project/delete/tracking.js';
-import { DeployResultJson, RetrieveResultJson } from '../../../src/utils/types.js';
+import { RetrieveResultJson } from '../../../src/utils/types.js';
 import { FILE_RELATIVE_PATHS, TEST_SESSION_OPTIONS, TYPES } from './constants.js';
 import {
   assertAllDEBAndTheirDECounts,
@@ -32,6 +32,7 @@ import {
   assertViewHomeStatus,
   createDocumentDetailPageAInLocal,
   deleteDocumentDetailPageAInLocal,
+  deployWithRetry,
   previewFileResponseToFileResponse,
 } from './helper.js';
 
@@ -47,10 +48,7 @@ describe('deb -- tracking/push/pull', () => {
   });
 
   it('should push the whole project', async () => {
-    const pushedSource = execCmd<DeployResultJson>('project deploy start --json', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result.files;
-    assert(pushedSource, 'No source pushed');
+    const pushedSource = await deployWithRetry('project deploy start --json');
     assertAllDEBAndTheirDECounts(pushedSource, 10);
   });
 
@@ -68,11 +66,7 @@ describe('deb -- tracking/push/pull', () => {
   });
 
   it('should push local change in deb_b', async () => {
-    const pushedSource = execCmd<DeployResultJson>('project deploy start --json', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result.files;
-    assert(pushedSource, 'No source pushed');
-
+    const pushedSource = await deployWithRetry('project deploy start --json');
     assertDEBMeta(pushedSource, 'b');
     assertNoLocalChanges();
   });
@@ -94,11 +88,7 @@ describe('deb -- tracking/push/pull', () => {
   });
 
   it('should push local change in de_view_home_content of deb_b', async () => {
-    const pushedSource = execCmd<DeployResultJson>('project deploy start --json', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result.files;
-    assert(pushedSource, 'No source pushed');
-
+    const pushedSource = await deployWithRetry('project deploy start --json');
     assertViewHome(pushedSource, 'b');
     assertNoLocalChanges();
   });
@@ -128,11 +118,7 @@ describe('deb -- tracking/push/pull', () => {
   });
 
   it('should push local change in de_view_home_meta of deb_b', async () => {
-    const pushedSource = execCmd<DeployResultJson>('project deploy start --json', {
-      ensureExitCode: 0,
-    }).jsonOutput?.result.files;
-    assert(pushedSource, 'No source pushed');
-
+    const pushedSource = await deployWithRetry('project deploy start --json');
     assertViewHome(pushedSource, 'b');
     assertNoLocalChanges();
   });
@@ -172,11 +158,7 @@ describe('deb -- tracking/push/pull', () => {
     });
 
     it('should push locally added page (view and route de components) in deb_a', async () => {
-      const pushedSource = execCmd<DeployResultJson>('project deploy start --json', {
-        ensureExitCode: 0,
-      }).jsonOutput?.result.files;
-      assert(pushedSource, 'No source pushed');
-
+      const pushedSource = await deployWithRetry('project deploy start --json');
       assertDocumentDetailPageA(pushedSource);
       assertNoLocalChanges();
     });
@@ -192,11 +174,7 @@ describe('deb -- tracking/push/pull', () => {
     });
 
     it('should push local delete change in deb_a [locally deleted page (view and route de components)]', async () => {
-      const pushedSource = execCmd<DeployResultJson>('project deploy start --json', {
-        ensureExitCode: 0,
-      }).jsonOutput?.result.files;
-      assert(pushedSource, 'No source pushed');
-
+      const pushedSource = await deployWithRetry('project deploy start --json');
       assertDocumentDetailPageA(pushedSource);
       assertNoLocalChanges();
 
