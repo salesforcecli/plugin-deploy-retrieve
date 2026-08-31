@@ -1,3 +1,9 @@
+# [4.2.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.1.2...4.2.0) (2026-08-31)
+
+### Features
+
+- display deploy-level notifications in CLI output @W-23939851@ ([#1630](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1630)) ([bd34f27](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/bd34f27388b742db95de404ddae0cc0e26b0fb25))
+
 ## [4.1.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.1.1...4.1.2) (2026-08-14)
 
 ### Bug Fixes
