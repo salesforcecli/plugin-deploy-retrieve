@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.0...4.2.1) (2026-09-01)
+
+### Bug Fixes
+
+- bump @salesforce/core to v9.1.9 ([621a7e6](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/621a7e6f90843de89fe57ee76d6a540409b934e6))
+- dedupe salesforce/core versions in yarn.lock ([012e39e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/012e39e9fc0be7ea6f8d30630b334ccc6967a1aa))
+
 # [4.2.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.1.2...4.2.0) (2026-08-31)
 
 ### Features
