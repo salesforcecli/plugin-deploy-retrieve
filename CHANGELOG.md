@@ -1,3 +1,11 @@
+## [4.2.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.1...4.2.2) (2026-09-02)
+
+### Bug Fixes
+
+- bump plugin-info lib:latest ([ecd644a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ecd644ac65cee47a0d0b6456e77e7df47b42703e))
+- remove debuging NUT tests ([1c139a0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/1c139a0d912dc4b8e37d8d12feb47c05183e6658))
+- upgrade @oclif/core to v5 @W-23512455@ ([768963f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/768963ffea63e39128acc4f6699a89ffe152b130))
+
 ## [4.2.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.0...4.2.1) (2026-09-01)
 
 ### Bug Fixes
