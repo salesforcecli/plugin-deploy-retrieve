@@ -139,6 +139,32 @@ describe('project generate manifest', () => {
     it('should produce a manifest from an include list of metadata in an org', async () => {
       const manifestName = 'org-metadata.xml';
       const includeList = 'ApexClass:FileUtil*,PermissionSet,Flow';
+
+      /* eslint-disable no-console */
+      // Diagnostic: run unfiltered first to confirm org has metadata
+      const baselineManifest = 'baseline-org-metadata.xml';
+      execCmd<Dictionary>(`project generate manifest --fromorg ${orgAlias} -n ${baselineManifest} --json`, {
+        ensureExitCode: 0,
+      });
+      const baselineContents = fs.readFileSync(join(session.project.dir, baselineManifest), 'utf-8');
+      console.log('--- DEBUG baseline (no filter) ---');
+      console.log('baseline manifest has ApexClass:', baselineContents.includes('<name>ApexClass</name>'));
+      console.log('baseline manifest length:', baselineContents.length);
+      console.log('--- END baseline ---');
+
+      // Diagnostic: run with just ApexClass (no glob) to isolate the issue
+      const simpleManifest = 'simple-org-metadata.xml';
+      const simpleResult = execCmd<Dictionary>(
+        `project generate manifest --fromorg ${orgAlias} -n ${simpleManifest} --metadata ApexClass --json`,
+        { ensureExitCode: 0 }
+      );
+      const simpleContents = fs.readFileSync(join(session.project.dir, simpleManifest), 'utf-8');
+      console.log('--- DEBUG simple filter (--metadata ApexClass) ---');
+      console.log('simple JSON:', JSON.stringify(simpleResult.jsonOutput, null, 2));
+      console.log('simple manifest:\n', simpleContents);
+      console.log('--- END simple ---');
+      /* eslint-enable no-console */
+
       const cmdResult = execCmd<Dictionary>(
         `project generate manifest --fromorg ${orgAlias} -n ${manifestName} --metadata ${includeList} --json`,
         {
