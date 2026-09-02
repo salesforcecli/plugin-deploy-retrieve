@@ -1,0 +1,8 @@
+{
+  "outputDir": "dist",
+  "apiVersion": "67.0",
+  "i18n": {
+    "defaultLocale": "en-US",
+    "locales": ["en-US"]
+  }
+}
