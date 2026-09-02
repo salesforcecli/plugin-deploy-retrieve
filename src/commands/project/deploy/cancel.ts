@@ -85,7 +85,7 @@ export default class DeployMetadataCancel extends SfCommand<DeployResultJson> {
         deployOpts.status
       )
     ) {
-      messages.createError('error.CannotCancelDeployPre', [jobId, deployOpts.status]);
+      throw messages.createError('error.CannotCancelDeployPre', [jobId, deployOpts.status]);
     }
 
     if (flags.async) {
