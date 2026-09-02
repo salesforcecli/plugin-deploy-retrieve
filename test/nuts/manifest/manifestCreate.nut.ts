@@ -139,13 +139,20 @@ describe('project generate manifest', () => {
     it('should produce a manifest from an include list of metadata in an org', async () => {
       const manifestName = 'org-metadata.xml';
       const includeList = 'ApexClass:FileUtil*,PermissionSet,Flow';
-      execCmd<Dictionary>(
+      const cmdResult = execCmd<Dictionary>(
         `project generate manifest --fromorg ${orgAlias} -n ${manifestName} --metadata ${includeList} --json`,
         {
           ensureExitCode: 0,
         }
       );
       const manifestContents = fs.readFileSync(join(session.project.dir, manifestName), 'utf-8');
+
+      /* eslint-disable no-console */
+      console.log('--- DEBUG include list test ---');
+      console.log('command JSON output:', JSON.stringify(cmdResult.jsonOutput, null, 2));
+      console.log('manifest contents:\n', manifestContents);
+      console.log('--- END DEBUG ---');
+      /* eslint-enable no-console */
 
       expect(manifestContents).to.include('<name>ApexClass</name>');
       expect(manifestContents).to.include('<members>FileUtilities</members>');
@@ -159,13 +166,20 @@ describe('project generate manifest', () => {
     it('should produce a manifest from an excluded list of metadata in an org', async () => {
       const manifestName = 'org-metadata.xml';
       const excludedList = 'ApexClass,CustomObject,StandardValueSet';
-      execCmd<Dictionary>(
+      const cmdResult = execCmd<Dictionary>(
         `project generate manifest --fromorg ${orgAlias} -n ${manifestName} --excluded-metadata ${excludedList} --json`,
         {
           ensureExitCode: 0,
         }
       );
       const manifestContents = fs.readFileSync(join(session.project.dir, manifestName), 'utf-8');
+
+      /* eslint-disable no-console */
+      console.log('--- DEBUG excluded list test ---');
+      console.log('command JSON output:', JSON.stringify(cmdResult.jsonOutput, null, 2));
+      console.log('manifest contents:\n', manifestContents);
+      console.log('--- END DEBUG ---');
+      /* eslint-enable no-console */
 
       // should NOT have these entries
       expect(manifestContents).to.not.contain('<name>ApexClass</name>');
