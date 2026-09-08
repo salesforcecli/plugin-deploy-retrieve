@@ -21,7 +21,7 @@ import { DeployResultJson } from '../../../src/utils/types.js';
 config.truncateThreshold = 0;
 
 import { DEB_NUTS_PATH } from './constants.js';
-import { assertAllDEBAndTheirDECounts } from './helper.js';
+import { assertAllDEBAndTheirDECounts, deployWithRetry } from './helper.js';
 
 describe('deb --metadata option', () => {
   let session: TestSession;
@@ -68,10 +68,8 @@ describe('deb --metadata option', () => {
   });
 
   describe('MPD retrieve', () => {
-    before(() => {
-      execCmd<DeployResultJson>('project deploy start --json', {
-        ensureExitCode: 0,
-      });
+    before(async () => {
+      await deployWithRetry('project deploy start --json');
     });
 
     it('should retrieve and write all debs to their package dir', () => {

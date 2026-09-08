@@ -29,6 +29,7 @@ import {
   assertViewHome,
   createDocumentDetailPageAInLocal,
   deleteLocalSource,
+  deployWithRetry,
   metadataToArray,
 } from './helper.js';
 
@@ -53,77 +54,46 @@ describe('deb -- metadata option', () => {
       );
     });
 
-    it('should deploy complete enhanced lwr sites deb_a and deb_b (including de config, network and customsite)', () => {
-      const deployedSource = execCmd<DeployResultJson>(
-        `project deploy start ${metadataToArray(METADATA.FULL_SITE_DEB_A_AND_B)} --json`,
-        {
-          ensureExitCode: 0,
-        }
-      ).jsonOutput?.result.files;
-      assert(deployedSource);
+    it('should deploy complete enhanced lwr sites deb_a and deb_b (including de config, network and customsite)', async () => {
+      const deployedSource = await deployWithRetry(
+        `project deploy start ${metadataToArray(METADATA.FULL_SITE_DEB_A_AND_B)} --json`
+      );
       assertAllDEBAndTheirDECounts(deployedSource, 6);
     });
 
     describe('individual metadata type', () => {
-      it('should deploy deb type (all debs - deb_a and deb_b)', () => {
-        const deployedSource = execCmd<DeployResultJson>(
-          `project deploy start ${metadataToArray(METADATA.ALL_DEBS)} --json`,
-          {
-            ensureExitCode: 0,
-          }
-        ).jsonOutput?.result.files;
-        assert(deployedSource);
-
+      it('should deploy deb type (all debs - deb_a and deb_b)', async () => {
+        const deployedSource = await deployWithRetry(
+          `project deploy start ${metadataToArray(METADATA.ALL_DEBS)} --json`
+        );
         assertAllDEBAndTheirDECounts(deployedSource);
       });
 
-      it('should deploy de type (all de components of deb_a and deb_b)', () => {
-        const deployedSource = execCmd<DeployResultJson>(
-          `project deploy start ${metadataToArray(METADATA.ALL_DE)} --json`,
-          {
-            ensureExitCode: 0,
-          }
-        ).jsonOutput?.result.files;
-        assert(deployedSource);
-
+      it('should deploy de type (all de components of deb_a and deb_b)', async () => {
+        const deployedSource = await deployWithRetry(`project deploy start ${metadataToArray(METADATA.ALL_DE)} --json`);
         assertDECountsOfAllDEB(deployedSource);
       });
     });
 
     describe('individual metadata item', () => {
-      it('should deploy all de components of deb_b', () => {
-        const deployedSource = execCmd<DeployResultJson>(
-          `project deploy start ${metadataToArray(METADATA.ALL_DE_OF_DEB_B)} --json`,
-          {
-            ensureExitCode: 0,
-          }
-        ).jsonOutput?.result.files;
-        assert(deployedSource);
-
+      it('should deploy all de components of deb_b', async () => {
+        const deployedSource = await deployWithRetry(
+          `project deploy start ${metadataToArray(METADATA.ALL_DE_OF_DEB_B)} --json`
+        );
         assertDECountOfSingleDEB(deployedSource);
       });
 
-      it('should deploy just deb_b', () => {
-        const deployedSource = execCmd<DeployResultJson>(
-          `project deploy start ${metadataToArray(METADATA.JUST_DEB_B)} --json`,
-          {
-            ensureExitCode: 0,
-          }
-        ).jsonOutput?.result.files;
-        assert(deployedSource);
-
+      it('should deploy just deb_b', async () => {
+        const deployedSource = await deployWithRetry(
+          `project deploy start ${metadataToArray(METADATA.JUST_DEB_B)} --json`
+        );
         assertSingleDEBAndItsDECounts(deployedSource, FULL_NAMES.DEB_B);
       });
 
-      it('should deploy de_view_home of deb_b', () => {
-        const deployedSource = execCmd<DeployResultJson>(
-          `project deploy start ${metadataToArray(METADATA.DE_VIEW_HOME_OF_DEB_B)} --json`,
-          {
-            ensureExitCode: 0,
-          }
-        ).jsonOutput?.result.files;
-        assert(deployedSource);
-
+      it('should deploy de_view_home of deb_b', async () => {
+        const deployedSource = await deployWithRetry(
+          `project deploy start ${metadataToArray(METADATA.DE_VIEW_HOME_OF_DEB_B)} --json`
+        );
         assertViewHome(deployedSource, 'b');
       });
     });
@@ -203,13 +173,9 @@ describe('deb -- metadata option', () => {
     it('should deploy new page (view and route de components) of deb_a', async () => {
       createDocumentDetailPageAInLocal(session.project.dir);
 
-      const deployedSource = execCmd<DeployResultJson>(
-        `project deploy start ${metadataToArray(METADATA.DE_DOCUMENT_DETAIL_PAGE_A)} --json`,
-        {
-          ensureExitCode: 0,
-        }
-      ).jsonOutput?.result.files;
-      assert(deployedSource);
+      const deployedSource = await deployWithRetry(
+        `project deploy start ${metadataToArray(METADATA.DE_DOCUMENT_DETAIL_PAGE_A)} --json`
+      );
       assertDocumentDetailPageA(deployedSource);
     });
 
