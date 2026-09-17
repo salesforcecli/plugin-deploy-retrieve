@@ -40,7 +40,13 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
       []
     );
 
-    for (const ext of [this.result.response.deployExtensionResults].flat()) {
+    const extensions = (
+      this.result.response as {
+        deployExtensionResults?: Array<{ type?: string; status?: string; message?: string | null }>;
+      }
+    ).deployExtensionResults;
+
+    for (const ext of [extensions].flat()) {
       if (ext?.type) {
         const payload =
           ext.status === 'Failed' ? { message: ext.message ?? '', status: ext.status } : { status: ext.status };
