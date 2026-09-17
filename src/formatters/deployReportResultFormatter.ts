@@ -40,6 +40,17 @@ export class DeployReportResultFormatter extends DeployResultFormatter {
       []
     );
 
+    for (const ext of [this.result.response.deployExtensionResults].flat()) {
+      if (ext?.type) {
+        const payload =
+          ext.status === 'Failed' ? { message: ext.message ?? '', status: ext.status } : { status: ext.status };
+        response.push({
+          key: `deployextension.${ext.type}`,
+          value: JSON.stringify(payload),
+        });
+      }
+    }
+
     ux.log();
     ux.table({
       data: response,
