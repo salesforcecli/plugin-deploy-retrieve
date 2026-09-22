@@ -24,7 +24,7 @@ import {
   ComponentStatus,
   DeployResult,
   DestructiveChangesType,
-  expandDataspaceScopedComponentSet,
+  expandD360ComponentSet,
   FileResponseSuccess,
   MetadataApiDeploy,
   MetadataApiDeployOptions,
@@ -121,8 +121,8 @@ export async function buildComponentSet(opts: Partial<DeployOptions>, stl?: Sour
 }
 
 /** True when the deploy includes at least one Data Cloud dataspace-scoped component. */
-const hasDataspaceScopedComponents = (requested: ComponentSet): boolean =>
-  [...requested.getSourceComponents()].some((c) => c.type.strategies?.adapter === 'dataspaceScoped');
+const hasD360Components = (requested: ComponentSet): boolean =>
+  [...requested.getSourceComponents()].some((c) => c.type.strategies?.adapter === 'd360');
 
 /**
  * A dataspace-scoped component's sidecar lists the peers it has to be deployed alongside, under
@@ -130,13 +130,10 @@ const hasDataspaceScopedComponents = (requested: ComponentSet): boolean =>
  * and so on) — but nothing else from the project. To find them we resolve the whole project once,
  * then hand back the requested set plus that closure.
  */
-async function expandDataspaceScopedClosure(
-  requested: ComponentSet,
-  registry?: RegistryAccess
-): Promise<ComponentSet> {
+async function expandD360Closure(requested: ComponentSet, registry?: RegistryAccess): Promise<ComponentSet> {
   // Resolve the whole project so we can look up the retrieveWith peers by their sidecar componentName.
   const full = await ComponentSetBuilder.build({ sourcepath: await getPackageDirs() });
-  return expandDataspaceScopedComponentSet(full, requested, registry);
+  return expandD360ComponentSet(full, requested, registry);
 }
 
 export async function executeDeploy(
@@ -188,8 +185,8 @@ export async function executeDeploy(
     componentSet = await buildComponentSet(opts, stl);
     // Dataspace-scoped components need their retrieveWith peers in the same deploy, so pull those in.
     // Every other deploy leaves the component set untouched.
-    if (hasDataspaceScopedComponents(componentSet)) {
-      componentSet = await expandDataspaceScopedClosure(componentSet, registry);
+    if (hasD360Components(componentSet)) {
+      componentSet = await expandD360Closure(componentSet, registry);
     }
     if (componentSet.size === 0) {
       if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
