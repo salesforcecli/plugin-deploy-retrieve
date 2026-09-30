@@ -1,3 +1,9 @@
+## [4.2.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.2...4.2.3) (2026-09-30)
+
+### Bug Fixes
+
+- **deps:** bump js-yaml in /test/nuts/specialTypes/nestedLWCProject ([faa2c90](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/faa2c904944d3da3e257bf69660c31135c346270))
+
 ## [4.2.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.1...4.2.2) (2026-09-02)
 
 ### Bug Fixes
