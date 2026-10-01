@@ -1,3 +1,9 @@
+## [4.2.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.3...4.2.4) (2026-10-01)
+
+### Bug Fixes
+
+- label deploy zip count as entries (files + folders) to match SDR count ([4606ace](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/4606ace3240440f59db3aedeec85b3765c38a07d))
+
 ## [4.2.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.2...4.2.3) (2026-09-30)
 
 ### Bug Fixes
