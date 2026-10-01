@@ -133,7 +133,7 @@ export class DeployStages {
           type: 'static-key-value',
         },
         {
-          label: 'Files',
+          label: 'Entries',
           get: (data): string | undefined =>
             data?.deployFileCount && data?.verbose ? `${data.deployFileCount} of 10,000 limit` : undefined,
           type: 'static-key-value',

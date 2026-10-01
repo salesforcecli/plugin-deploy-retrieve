@@ -43,7 +43,8 @@ describe('Deploy --verbose', () => {
     ).jsonOutput;
 
     expect(cmdJson?.result.zipSize).to.be.within(1775, 1795);
-    expect(cmdJson?.result.zipFileCount).to.equal(5);
+    // 5 files + 1 folder entry (classes/)
+    expect(cmdJson?.result.zipFileCount).to.equal(6);
   });
 
   it('should have zip file size and file count in the output', () => {
@@ -55,7 +56,7 @@ describe('Deploy --verbose', () => {
     ).shellOutput;
 
     expect(shellOutput.stdout).to.contain('Size: ').and.contain('KB of ~39 MB limit');
-    expect(shellOutput.stdout).to.contain('Files: 5 of 10,000 limit');
+    expect(shellOutput.stdout).to.contain('Entries: 6 of 10,000 limit');
   });
 
   it('should have zip file size and file count returned with --json --async', () => {
@@ -67,7 +68,8 @@ describe('Deploy --verbose', () => {
     ).jsonOutput;
 
     expect(cmdJson?.result.zipSize).to.be.within(1775, 1795);
-    expect(cmdJson?.result.zipFileCount).to.equal(5);
+    // 5 files + 1 folder entry (classes/)
+    expect(cmdJson?.result.zipFileCount).to.equal(6);
   });
 
   it('should have zip file size and file count in the output with --async', () => {
@@ -79,7 +81,7 @@ describe('Deploy --verbose', () => {
     ).shellOutput;
 
     expect(shellOutput.stdout).to.contain('Size: ').and.contain('KB of ~39 MB limit');
-    expect(shellOutput.stdout).to.contain('Files: 5 of 10,000 limit');
+    expect(shellOutput.stdout).to.contain('Entries: 6 of 10,000 limit');
   });
 
   it('should have test successes in the output', () => {
