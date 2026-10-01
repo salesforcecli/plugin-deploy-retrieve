@@ -1332,10 +1332,10 @@
     ts-retry-promise "^0.8.1"
     zod "^4.1.12"
 
-"@salesforce/core@^9.1.10", "@salesforce/core@^9.1.11", "@salesforce/core@^9.1.4", "@salesforce/core@^9.1.7":
-  version "9.2.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-9.2.2.tgz#e20561e763fef210c8a9f585a2fea84f7606e63e"
-  integrity sha512-7D4VqZuCzYbbrW5Yr4ECbVb3+fUa//YG7UMmWGBy3IwI/f65U5NuZ6ZTBOYuC0AM2/LXF97j2jASf5WubQVERg==
+"@salesforce/core@^9.1.10", "@salesforce/core@^9.1.4", "@salesforce/core@^9.1.7", "@salesforce/core@^9.2.2":
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-9.3.0.tgz#6fd952edcf2cee5fcd97d9807a46f2626b6ed842"
+  integrity sha512-ouDf96KpZHdm81LUKVbPMFBKvyPpmW8+37nhSsYBUL1PSQ+98PJTUxzcuQekglgYBuqiaoETBclz75NYJfdEOw==
   dependencies:
     "@jsforce/jsforce-node" "^3.10.24"
     "@salesforce/kit" "^4.0.0"
@@ -1507,12 +1507,12 @@
     proxy-agent "^6.5.0"
     yaml "^2.9.0"
 
-"@salesforce/source-deploy-retrieve@^13.2.0", "@salesforce/source-deploy-retrieve@^13.3.1":
-  version "13.4.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-13.4.0.tgz#d63375263ecb01aebc66b62bd1cbead202492f6b"
-  integrity sha512-6qSxudnqiiz5FgvSm1CjVHf/We+x6gV5uzhFH3fDRlF1xqCWUaLsuAxfRmwmxG9Q8ESqEdUnLgXLV3aZQbHYkw==
+"@salesforce/source-deploy-retrieve@^13.2.0", "@salesforce/source-deploy-retrieve@^13.4.3":
+  version "13.4.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-13.4.3.tgz#5fb0517f42d37d96a2ce7097cd7afaf5046093dd"
+  integrity sha512-Oj6tqoJDjV1QySUNPVWpg9eqAySP360z24DP4+bbxvvHqU+QEm08Z1/3eowRXSlwB4mUaJJBbraHTkSCycRRaw==
   dependencies:
-    "@salesforce/core" "^9.1.11"
+    "@salesforce/core" "^9.2.2"
     "@salesforce/kit" "^4.0.0"
     "@salesforce/ts-types" "^3.2.0"
     "@salesforce/types" "^1.6.0"
