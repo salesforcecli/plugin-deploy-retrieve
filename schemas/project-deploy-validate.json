@@ -389,6 +389,19 @@
         "id": {
           "type": "string"
         },
+        "locationsCovered": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LocationsCovered"
+              }
+            },
+            {
+              "$ref": "#/definitions/LocationsCovered"
+            }
+          ]
+        },
         "locationsNotCovered": {
           "anyOf": [
             {
@@ -416,6 +429,16 @@
         }
       },
       "required": ["id", "name", "numLocations", "numLocationsNotCovered", "type"],
+      "additionalProperties": false
+    },
+    "LocationsCovered": {
+      "type": "object",
+      "properties": {
+        "line": {
+          "type": "string"
+        }
+      },
+      "required": ["line"],
       "additionalProperties": false
     },
     "LocationsNotCovered": {

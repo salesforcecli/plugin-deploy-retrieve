@@ -247,7 +247,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         ...mapTestResults(ensureArray(runTestResult.failures)),
       ],
       codecoverage: ensureArray(runTestResult?.codeCoverage).map((cov): CodeCoverageResult => {
-        const [uncoveredLines, coveredLines] = generateCoveredLines(cov);
+        const [uncoveredLines, coveredLines] = generateCoveredLines(cov, this.getApiVersion());
         const [numLocationsNum, numLinesUncovered] = getCoverageNumbers(cov);
 
         return {
@@ -271,12 +271,18 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   private createCoverageReport(sourceDir: string): void {
     if (this.resultsDir) {
       const apexCoverage = transformCoverageToApexCoverage(
-        ensureArray(this.result.response?.details?.runTestResult?.codeCoverage)
+        ensureArray(this.result.response?.details?.runTestResult?.codeCoverage),
+        this.getApiVersion()
       );
       fs.mkdirSync(this.resultsDir, { recursive: true });
       const coverageReport = new CoverageReporter(apexCoverage, this.resultsDir, sourceDir, this.coverageOptions);
       coverageReport.generateReports();
     }
+  }
+
+  private getApiVersion(): number | undefined {
+    const apiVersion = this.flags['target-org']?.getConnection().getApiVersion();
+    return apiVersion === undefined ? undefined : Number(apiVersion);
   }
 
   private displayReplacements(): void {

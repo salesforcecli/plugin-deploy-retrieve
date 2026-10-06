@@ -17,7 +17,13 @@
 import { expect } from 'chai';
 import { ApexTestResultOutcome } from '@salesforce/apex-node';
 import { StandardColors } from '@salesforce/sf-plugins-core';
-import { coverageOutput, generateCoveredLines, getCoveragePct, mapTestResults } from '../../src/utils/coverage.js';
+import {
+  coverageOutput,
+  generateCoveredLines,
+  getCoveragePct,
+  mapTestResults,
+  transformCoverageToApexCoverage,
+} from '../../src/utils/coverage.js';
 
 // methods are mutating the object instead of returning new ones
 function getSampleTestResult() {
@@ -385,6 +391,33 @@ describe('coverage utils', () => {
     it('will generate covered lines correctly', () => {
       expect(generateCoveredLines(getSampleTestResult().codeCoverage[0])).to.deep.equal([[12], [13, 14, 15]]);
     });
+
+    it('uses locationsCovered at API version 68 or later', () => {
+      const coverage = {
+        ...getSampleTestResult().codeCoverage[0],
+        locationsCovered: [{ line: '4' }, { line: '8' }, { line: '10' }],
+      };
+
+      expect(generateCoveredLines(coverage, 68)).to.deep.equal([[12], [4, 8, 10]]);
+      expect(transformCoverageToApexCoverage([coverage], 68).records[0].Coverage).to.deep.equal({
+        coveredLines: [4, 8, 10],
+        uncoveredLines: [12],
+      });
+    });
+
+    it('uses inferred covered lines before API version 68', () => {
+      const coverage = {
+        ...getSampleTestResult().codeCoverage[0],
+        locationsCovered: [{ line: '4' }, { line: '8' }, { line: '10' }],
+      };
+
+      expect(generateCoveredLines(coverage, 67)).to.deep.equal([[12], [13, 14, 15]]);
+    });
+
+    it('uses inferred covered lines when a v68 response omits locationsCovered', () => {
+      expect(generateCoveredLines(getSampleTestResult().codeCoverage[0], 68)).to.deep.equal([[12], [13, 14, 15]]);
+    });
+
     it('rounds 3 uncovered out of 44 to the nearest integer', () => {
       expect(getCoveragePct(getSampleTestResult().codeCoverage[1])).equal(93);
     });
