@@ -44,9 +44,14 @@ export const mapTestResults = <T extends Failures | Successes>(testResults: T[])
     testTimestamp: '',
   }));
 
-export const generateCoveredLines = (cov: CodeCoverage): [number[], number[]] => {
-  const [lineCount] = getCoverageNumbers(cov);
+export const generateCoveredLines = (cov: CodeCoverage, apiVersion?: number): [number[], number[]] => {
   const uncoveredLines = ensureArray(cov.locationsNotCovered).map((location) => parseInt(location.line, 10));
+
+  if (apiVersion !== undefined && apiVersion >= 68.0 && cov.locationsCovered !== undefined) {
+    return [uncoveredLines, ensureArray(cov.locationsCovered).map((location) => parseInt(location.line, 10))];
+  }
+
+  const [lineCount] = getCoverageNumbers(cov);
   const minLineNumber = uncoveredLines.length ? Math.min(...uncoveredLines) : 1;
   const lines = [...Array(lineCount).keys()].map((i) => i + minLineNumber);
   const coveredLines = lines.filter((line) => !uncoveredLines.includes(line));
@@ -78,10 +83,13 @@ export const getCoverageFormattersOptions = (formatters: string[] = []): Coverag
   };
 };
 
-export const transformCoverageToApexCoverage = (mdCoverage: CodeCoverage[]): ApexCodeCoverageAggregate => {
+export const transformCoverageToApexCoverage = (
+  mdCoverage: CodeCoverage[],
+  apiVersion?: number
+): ApexCodeCoverageAggregate => {
   const apexCoverage = mdCoverage.map((cov): ApexCodeCoverageAggregateRecord => {
     const [NumLinesCovered, NumLinesUncovered] = getCoverageNumbers(cov);
-    const [uncoveredLines, coveredLines] = generateCoveredLines(cov);
+    const [uncoveredLines, coveredLines] = generateCoveredLines(cov, apiVersion);
 
     return {
       ApexClassOrTrigger: {
