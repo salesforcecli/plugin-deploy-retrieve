@@ -1,3 +1,9 @@
+## [4.2.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.5...4.2.6) (2026-10-06)
+
+### Bug Fixes
+
+- use reported covered lines (W-16286380) ([#1660](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1660)) ([c7af718](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c7af718056132d8714411b977021531aebd40667))
+
 ## [4.2.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.4...4.2.5) (2026-10-05)
 
 ### Bug Fixes
