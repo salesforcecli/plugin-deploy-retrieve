@@ -1,3 +1,9 @@
+## [4.2.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.6...4.2.7) (2026-10-07)
+
+### Bug Fixes
+
+- **deps:** bump undici from 8.5.0 to 8.11.2 ([2929371](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2929371762aecd95464b67f0e7c97a052633483c))
+
 ## [4.2.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.5...4.2.6) (2026-10-06)
 
 ### Bug Fixes
