@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { type DeployVersionData, DeployZipData } from '@salesforce/source-deploy-retrieve';
+import { type DeployVersionData, DeployZipData, type TransportStageEvent } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
@@ -254,6 +254,22 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         this.zipFileCount = zipData.zipFileCount;
       }
 
+      return Promise.resolve();
+    });
+
+    lifecycle.on('transportStage', (event: TransportStageEvent) => {
+      if (this.jsonEnabled()) return Promise.resolve();
+      const names =
+        event.componentNames.length <= 5
+          ? event.componentNames.join(', ')
+          : `${event.componentNames.slice(0, 5).join(', ')} +${event.componentNames.length - 5} more`;
+      if (event.stage === 'start') {
+        this.log(`${event.label}: uploading ${event.componentCount} component(s) (${names})`);
+      } else if (event.stage === 'complete') {
+        this.log(`${event.label}: upload complete`);
+      } else if (event.stage === 'error') {
+        this.warn(`${event.label}: upload failed${event.errorMessage ? ` — ${event.errorMessage}` : ''}`);
+      }
       return Promise.resolve();
     });
 
