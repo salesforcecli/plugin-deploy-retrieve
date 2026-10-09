@@ -1,3 +1,9 @@
+## [4.2.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.7...4.2.8) (2026-10-09)
+
+### Bug Fixes
+
+- **deps:** bump source-map-js from 1.2.1 to 1.2.2 ([bb358ab](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/bb358abc1bf28f855a35cae3261e7ff2af48323f))
+
 ## [4.2.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.6...4.2.7) (2026-10-07)
 
 ### Bug Fixes
