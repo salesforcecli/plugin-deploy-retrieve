@@ -1,3 +1,9 @@
+## [4.2.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.9...4.2.10) (2026-10-09)
+
+### Bug Fixes
+
+- **deps:** bump fast-copy from 3.0.2 to 3.1.0 ([957b5a6](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/957b5a626457fdf72c8681293c04225315465b53))
+
 ## [4.2.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.8...4.2.9) (2026-10-09)
 
 ### Bug Fixes
