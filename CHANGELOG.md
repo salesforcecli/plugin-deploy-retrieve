@@ -1,3 +1,9 @@
+## [4.2.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.8...4.2.9) (2026-10-09)
+
+### Bug Fixes
+
+- **deps:** bump handlebars from 4.7.9 to 4.7.10 ([ca9c9e9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ca9c9e9260e79e46d31530569b2b2d01ae477f6a))
+
 ## [4.2.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.7...4.2.8) (2026-10-09)
 
 ### Bug Fixes
