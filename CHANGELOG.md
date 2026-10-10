@@ -1,3 +1,9 @@
+## [4.2.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.10...4.2.11) (2026-10-10)
+
+### Bug Fixes
+
+- **deps:** bump joi in /test/nuts/specialTypes/nestedLWCProject ([57cb693](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/57cb69320ac5e0a0927b4725db7f7f0b515c01db))
+
 ## [4.2.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.9...4.2.10) (2026-10-09)
 
 ### Bug Fixes
