@@ -1,3 +1,9 @@
+## [4.2.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.12...4.2.13) (2026-10-11)
+
+### Bug Fixes
+
+- **deps:** bump nanoid in /test/nuts/specialTypes/nestedLWCProject ([f002d00](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f002d004fac70525999446fad9e6779d1359d61c))
+
 ## [4.2.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.11...4.2.12) (2026-10-11)
 
 ### Bug Fixes
