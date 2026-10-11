@@ -1,3 +1,9 @@
+## [4.2.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.11...4.2.12) (2026-10-11)
+
+### Bug Fixes
+
+- **deps:** bump browserslist in /test/nuts/specialTypes/nestedLWCProject ([851141f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/851141f850b2046c66258ccce4abd86bc32d8acc))
+
 ## [4.2.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.10...4.2.11) (2026-10-10)
 
 ### Bug Fixes
