@@ -1,3 +1,5 @@
+## [4.2.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.13...4.2.14) (2026-10-13)
+
 ## [4.2.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.12...4.2.13) (2026-10-11)
 
 ### Bug Fixes
