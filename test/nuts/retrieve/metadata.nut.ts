@@ -25,6 +25,11 @@ import { RetrieveResultJson } from '../../../src/utils/types.js';
 config.truncateThreshold = 0;
 
 const DREAMHOUSE = { id: '04tKY000000MF7uYAG', name: 'DreamhouseLWC' };
+const CONTACTS_AND_ORGS = {
+  id: '04t4w0000004ALTAA2',
+  namespace: 'npe01',
+  accountField: 'npe01__One2OneContact__c',
+};
 
 describe('retrieve metadata NUTs', () => {
   let testkit: SourceTestkit;
@@ -82,6 +87,28 @@ describe('retrieve metadata NUTs', () => {
           .split('\n').length
         // 4 lines would be overwritten - ensures like W-15896939 is fixed
       ).to.be.greaterThanOrEqual(30);
+    });
+
+    it('should retrieve namespaced fields on standard objects', async () => {
+      execCmd(`package:install --package ${CONTACTS_AND_ORGS.id} --wait 5 --no-prompt --json`, {
+        ensureExitCode: 0,
+        silent: true,
+      });
+
+      const response = await testkit.retrieve({
+        args: `--metadata CustomField:${CONTACTS_AND_ORGS.namespace}__* --json`,
+      });
+      expect(response?.status).to.equal(0);
+
+      const result = response?.result as unknown as RetrieveResultJson;
+      expect(
+        result.files.some(
+          (file) => file.type === 'CustomField' && file.fullName === `Account.${CONTACTS_AND_ORGS.accountField}`
+        )
+      ).to.equal(true);
+      await testkit.expect.filesToExist([
+        `force-app/main/default/objects/Account/fields/${CONTACTS_AND_ORGS.accountField}.field-meta.xml`,
+      ]);
     });
 
     it('should retrieve multiple metadata types', async () => {
