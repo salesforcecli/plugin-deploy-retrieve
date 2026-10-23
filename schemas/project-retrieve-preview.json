@@ -34,6 +34,9 @@
           "items": {
             "$ref": "#/definitions/PreviewFile"
           }
+        },
+        "transportPlan": {
+          "$ref": "#/definitions/TransportPlan"
         }
       },
       "required": ["ignored", "conflicts", "toDeploy", "toDelete", "toRetrieve"],
@@ -66,6 +69,52 @@
         }
       },
       "required": ["fullName", "type", "conflict", "ignored"],
+      "additionalProperties": false
+    },
+    "TransportPlan": {
+      "type": "object",
+      "properties": {
+        "phases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransportPlanPhase"
+          }
+        }
+      },
+      "required": ["phases"],
+      "additionalProperties": false
+    },
+    "TransportPlanPhase": {
+      "type": "object",
+      "properties": {
+        "phase": {
+          "type": "string",
+          "enum": ["before-metadata", "metadata-api", "after-metadata"]
+        },
+        "label": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "fullName": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": ["fullName", "type"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["phase", "label", "endpoint", "components"],
       "additionalProperties": false
     }
   }
