@@ -26,6 +26,7 @@ import {
   FileResponseFailure,
   FileResponseSuccess,
   RequestStatus,
+  TransportOperationResult,
 } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError, Lifecycle } from '@salesforce/core';
 import { Duration, ensureArray, sortBy } from '@salesforce/kit';
@@ -156,6 +157,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     this.maybeCreateRequestedReports();
     this.displayReplacements();
     this.displayNotifications();
+    this.displayTransportOperations();
   }
 
   public determineVerbosity(): Verbosity {
@@ -319,6 +321,30 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       title: tableHeader('Notifications'),
       overflow: 'wrap',
     });
+  }
+
+  private displayTransportOperations(): void {
+    const operationResults = this.getTransportOperationResults();
+    if (!operationResults.length) return;
+
+    ux.log();
+    ux.table({
+      data: operationResults,
+      columns: [
+        { key: 'transportLabel', name: 'Provider' },
+        { key: 'operation', name: 'Operation' },
+        { key: 'status', name: 'Status' },
+      ],
+      title: tableHeader('Transport Operations'),
+      overflow: 'wrap',
+    });
+  }
+
+  private getTransportOperationResults(): TransportOperationResult[] {
+    const result = this.result as DeployResult & {
+      getTransportOperationResults?: () => TransportOperationResult[];
+    };
+    return result.getTransportOperationResults?.() ?? [];
   }
 
   private displaySuccesses(): void {

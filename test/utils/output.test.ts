@@ -344,6 +344,52 @@ describe('deployResultFormatter', () => {
     });
   });
 
+  describe('displayTransportOperations', () => {
+    let tableStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      tableStub = sandbox.stub(Ux.prototype, 'table');
+    });
+
+    it('displays one row per transport operation', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getTransportOperationResults: () => [
+          { transportLabel: 'Heroku Compute', operation: 'Upload App1', status: 'Succeeded' },
+          { transportLabel: 'Heroku Compute', operation: 'Upload App2', status: 'Succeeded' },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const operationsTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Transport Operations');
+      });
+      expect(operationsTableCall).to.exist;
+      expect(operationsTableCall?.args[0]).to.deep.include({
+        data: [
+          { transportLabel: 'Heroku Compute', operation: 'Upload App1', status: 'Succeeded' },
+          { transportLabel: 'Heroku Compute', operation: 'Upload App2', status: 'Succeeded' },
+        ],
+        columns: [
+          { key: 'transportLabel', name: 'Provider' },
+          { key: 'operation', name: 'Operation' },
+          { key: 'status', name: 'Status' },
+        ],
+      });
+    });
+
+    it('does not display a table when no transport operations are available', () => {
+      new DeployResultFormatter(getDeployResult('successSync'), {}).display();
+
+      const operationsTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Transport Operations');
+      });
+      expect(operationsTableCall).to.not.exist;
+    });
+  });
+
   describe('coverage functions', () => {
     describe('getCoverageFormattersOptions', () => {
       it('clover, json', () => {
