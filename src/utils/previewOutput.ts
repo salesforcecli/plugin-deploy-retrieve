@@ -27,6 +27,8 @@ import {
   MetadataType,
   SourceComponent,
   RegistryAccess,
+  TransportPlan,
+  TransportPlanPhase,
 } from '@salesforce/source-deploy-retrieve';
 import { filePathsFromMetadataComponent } from '@salesforce/source-deploy-retrieve/lib/src/utils/filePathGenerator.js';
 
@@ -58,6 +60,7 @@ export type PreviewResult = {
   toDeploy: PreviewFile[];
   toDelete: PreviewFile[];
   toRetrieve: PreviewFile[];
+  transportPlan?: TransportPlan;
 };
 
 const ensureAbsolutePath = (f: string): string => (isAbsolute(f) ? f : resolve(f));
@@ -207,12 +210,23 @@ export const compileResults = ({
     })
   );
 
+  const pipeline = componentSet.transportPipeline;
+  const willGoFiles = actionableFiles.filter(willGo);
+  const willGoComponents = willGoFiles
+    .map((f) => sourceBackedComponents.get(`${f.type}#${f.fullName}`))
+    .filter((c): c is SourceComponent => c !== undefined);
+  const transportPlan =
+    pipeline?.hasTransports(willGoComponents)
+      ? pipeline.explain(willGoComponents, baseOperation)
+      : undefined;
+
   return {
     ignored: ignoredSourceComponents.concat(actionableFiles.filter((f) => f.ignored)),
     toDeploy: getWillDeploy(actionableFiles),
     toRetrieve: getWillRetrieve(actionableFiles),
     toDelete: getWillDelete(actionableFiles),
     conflicts: getNonIgnoredConflicts(actionableFiles),
+    transportPlan,
   };
 };
 
@@ -287,7 +301,32 @@ const printIgnoredTable = (files: PreviewFile[], baseOperation: BaseOperation): 
   }
 };
 
+const phaseLabel = (phase: TransportPlanPhase): string => {
+  if (phase.phase === 'metadata-api') return phase.label;
+  return phase.endpoint ? `${phase.label} (${phase.endpoint})` : phase.label;
+};
+
+const printTransportStages = (plan: TransportPlan, baseOperation: BaseOperation): void => {
+  ux.log();
+  const verb = baseOperation === 'deploy' ? 'Deploy' : 'Retrieve';
+  ux.log(StandardColors.info(`${verb} Stages [${plan.phases.length}]:`));
+  plan.phases.forEach((phase, i) => {
+    const count = phase.components.length;
+    const names =
+      count <= 3
+        ? phase.components.map((c) => c.fullName).join(', ')
+        : `${phase.components
+            .slice(0, 3)
+            .map((c) => c.fullName)
+            .join(', ')} +${count - 3} more`;
+    ux.log(`  ${i + 1}. ${phaseLabel(phase)} — ${count} component${count !== 1 ? 's' : ''} (${names})`);
+  });
+};
+
 export const printTables = (result: PreviewResult, baseOperation: BaseOperation, concise = false): void => {
+  if (result.transportPlan) {
+    printTransportStages(result.transportPlan, baseOperation);
+  }
   printConflictsTable(result.conflicts);
   printDeleteTable(result.toDelete);
   if (baseOperation === 'deploy') {

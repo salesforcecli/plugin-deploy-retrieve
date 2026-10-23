@@ -40,6 +40,7 @@ import {
   RegistryAccess,
   RequestStatus,
   ComponentStatus,
+  type TransportStageEvent,
 } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { getString, isString } from '@salesforce/ts-types';
@@ -280,9 +281,25 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
     if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
-      Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) =>
+      const lifecycle = Lifecycle.getInstance();
+      lifecycle.on('apiVersionRetrieve', async (apiData: RetrieveVersionData) =>
         Promise.resolve(this.ms?.updateData({ apiData }))
       );
+      lifecycle.on('transportStage', (event: TransportStageEvent) => {
+        if (this.jsonEnabled()) return Promise.resolve();
+        const names =
+          event.componentNames.length <= 5
+            ? event.componentNames.join(', ')
+            : `${event.componentNames.slice(0, 5).join(', ')} +${event.componentNames.length - 5} more`;
+        if (event.stage === 'start') {
+          this.log(`${event.label}: downloading ${event.componentCount} component(s) (${names})`);
+        } else if (event.stage === 'complete') {
+          this.log(`${event.label}: download complete`);
+        } else if (event.stage === 'error') {
+          this.warn(`${event.label}: download failed${event.errorMessage ? ` — ${event.errorMessage}` : ''}`);
+        }
+        return Promise.resolve();
+      });
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
       this.ms.goto('Waiting for the org to respond', { status: 'Pending' });
 
