@@ -1,3 +1,9 @@
+## [4.2.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.20...4.2.21) (2026-10-24)
+
+### Bug Fixes
+
+- **deps:** bump zod from 4.4.3 to 4.6.7 ([568f5f9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/568f5f93622da5ae1136f57ee03a886e46477ea5))
+
 ## [4.2.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.19...4.2.20) (2026-10-24)
 
 ### Bug Fixes
