@@ -35,7 +35,7 @@
     "@types/sinon": "^10.0.20",
     "cross-env": "^7.0.3",
     "eslint": "^10.4.0",
-    "eslint-config-salesforce-typescript": "^7.0.0",
+    "eslint-config-salesforce-typescript": "^7.0.1",
     "eslint-plugin-sf-plugin": "^3.0.0",
     "oclif": "^5.0.2",
     "ts-node": "^10.9.2",
