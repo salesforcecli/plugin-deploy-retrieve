@@ -15,14 +15,14 @@
     "@salesforce/kit": "^4.0.0",
     "@salesforce/plugin-info": "^4.0.10",
     "@salesforce/sf-plugins-core": "^13.0.4",
-    "@salesforce/source-deploy-retrieve": "13.7.1-compute.2",
+    "@salesforce/source-deploy-retrieve": "13.7.1-compute.3",
     "@salesforce/source-tracking": "^8.1.7",
     "@salesforce/ts-types": "^3.2.0",
     "ansis": "^3.17.0",
     "terminal-link": "^3.0.0"
   },
   "resolutions": {
-    "@salesforce/source-tracking/@salesforce/source-deploy-retrieve": "13.7.1-compute.2"
+    "@salesforce/source-tracking/@salesforce/source-deploy-retrieve": "13.7.1-compute.3"
   },
   "devDependencies": {
     "@oclif/plugin-command-snapshot": "^6.0.0",

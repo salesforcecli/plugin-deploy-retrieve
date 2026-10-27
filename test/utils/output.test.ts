@@ -404,13 +404,13 @@ describe('deployResultFormatter', () => {
             type: 'ComputeApp',
             fullName: 'orders-api',
             state: ComponentStatus.Created,
-            filePath: 'force-app/main/default/platformComputeApps/orders-api/orders-api.compute-meta.xml',
+            filePath: 'force-app/main/default/computeApps/orders-api/orders-api.computeApp-meta.xml',
           },
           {
             type: 'ComputeApp',
             fullName: 'billing',
             state: ComponentStatus.Changed,
-            filePath: 'force-app/main/default/platformComputeApps/billing/billing.compute-meta.xml',
+            filePath: 'force-app/main/default/computeApps/billing/billing.computeApp-meta.xml',
           },
         ],
       });
@@ -440,7 +440,7 @@ describe('deployResultFormatter', () => {
             type: 'ComputeApp',
             fullName: 'orders-api',
             state: ComponentStatus.Created,
-            filePath: 'force-app/main/default/platformComputeApps/orders-api/orders-api.compute-meta.xml',
+            filePath: 'force-app/main/default/computeApps/orders-api/orders-api.computeApp-meta.xml',
           },
         ],
       });
