@@ -239,7 +239,13 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       }
     }
 
-    const stages = ['Preparing retrieve request', 'Sending request to org', 'Waiting for the org to respond', 'Done'];
+    const stages = [
+      'Preparing retrieve request',
+      'Sending request to org',
+      'Waiting for the org to respond',
+      'Retrieving Metadata',
+      'Done',
+    ];
     this.ms = new MultiStageOutput<{
       status: string;
       apiData: RetrieveVersionData;
@@ -304,7 +310,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       this.ms.goto('Waiting for the org to respond', { status: 'Pending' });
 
       retrieve.onUpdate((data) => {
-        this.ms?.goto('Waiting for the org to respond', { status: mdTransferMessages.getMessage(data.status) });
+        this.ms?.goto('Retrieving Metadata', { status: mdTransferMessages.getMessage(data.status) });
       });
       retrieve.onFinish((data) => {
         this.ms?.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
@@ -322,6 +328,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         throw error;
       });
 
+      this.ms.goto('Retrieving Metadata');
       this.retrieveResult = await retrieve.pollStatus(Duration.seconds(1).milliseconds, flags.wait.seconds);
     }
 

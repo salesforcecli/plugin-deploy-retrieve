@@ -351,7 +351,7 @@ describe('deployResultFormatter', () => {
       tableStub = sandbox.stub(Ux.prototype, 'table');
     });
 
-    it('displays one row per transport operation', () => {
+    it('displays one row per pre-deploy operation', () => {
       const deployResult = Object.assign(getDeployResult('successSync'), {
         getTransportOperationResults: () => [
           { transportLabel: 'Heroku Compute', operation: 'Upload App1', status: 'Succeeded' },
@@ -363,7 +363,7 @@ describe('deployResultFormatter', () => {
 
       const operationsTableCall = tableStub.getCalls().find((call) => {
         const callArg = call.args[0] as { title?: string };
-        return callArg?.title?.includes('Transport Operations');
+        return callArg?.title?.includes('Pre-Deploy Operations');
       });
       expect(operationsTableCall).to.exist;
       expect(operationsTableCall?.args[0]).to.deep.include({
@@ -384,7 +384,7 @@ describe('deployResultFormatter', () => {
 
       const operationsTableCall = tableStub.getCalls().find((call) => {
         const callArg = call.args[0] as { title?: string };
-        return callArg?.title?.includes('Transport Operations');
+        return callArg?.title?.includes('Pre-Deploy Operations');
       });
       expect(operationsTableCall).to.not.exist;
     });

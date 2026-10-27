@@ -215,10 +215,9 @@ export const compileResults = ({
   const willGoComponents = willGoFiles
     .map((f) => sourceBackedComponents.get(`${f.type}#${f.fullName}`))
     .filter((c): c is SourceComponent => c !== undefined);
-  const transportPlan =
-    pipeline?.hasTransports(willGoComponents)
-      ? pipeline.explain(willGoComponents, baseOperation)
-      : undefined;
+  const transportPlan = pipeline?.hasTransports(willGoComponents)
+    ? pipeline.explain(willGoComponents, baseOperation)
+    : undefined;
 
   return {
     ignored: ignoredSourceComponents.concat(actionableFiles.filter((f) => f.ignored)),
@@ -306,10 +305,10 @@ const phaseLabel = (phase: TransportPlanPhase): string => {
   return phase.endpoint ? `${phase.label} (${phase.endpoint})` : phase.label;
 };
 
-const printTransportStages = (plan: TransportPlan, baseOperation: BaseOperation): void => {
+const printTransportOperations = (plan: TransportPlan, baseOperation: BaseOperation): void => {
   ux.log();
   const verb = baseOperation === 'deploy' ? 'Deploy' : 'Retrieve';
-  ux.log(StandardColors.info(`${verb} Stages [${plan.phases.length}]:`));
+  ux.log(StandardColors.info(`${verb} Operations [${plan.phases.length}]:`));
   plan.phases.forEach((phase, i) => {
     const count = phase.components.length;
     const names =
@@ -319,13 +318,20 @@ const printTransportStages = (plan: TransportPlan, baseOperation: BaseOperation)
             .slice(0, 3)
             .map((c) => c.fullName)
             .join(', ')} +${count - 3} more`;
-    ux.log(`  ${i + 1}. ${phaseLabel(phase)} — ${count} component${count !== 1 ? 's' : ''} (${names})`);
+    const operationPrefix =
+      phase.phase === 'before-metadata'
+        ? `Pre-${verb}`
+        : phase.phase === 'after-metadata'
+        ? `Post-${verb}`
+        : phaseLabel(phase);
+    const operation = phase.phase === 'metadata-api' ? operationPrefix : `${operationPrefix} (${phaseLabel(phase)})`;
+    ux.log(`  ${i + 1}. ${operation} — ${count} component${count !== 1 ? 's' : ''} (${names})`);
   });
 };
 
 export const printTables = (result: PreviewResult, baseOperation: BaseOperation, concise = false): void => {
   if (result.transportPlan) {
-    printTransportStages(result.transportPlan, baseOperation);
+    printTransportOperations(result.transportPlan, baseOperation);
   }
   printConflictsTable(result.conflicts);
   printDeleteTable(result.toDelete);

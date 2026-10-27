@@ -335,7 +335,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         { key: 'operation', name: 'Operation' },
         { key: 'status', name: 'Status' },
       ],
-      title: tableHeader('Transport Operations'),
+      title: tableHeader('Pre-Deploy Operations'),
       overflow: 'wrap',
     });
   }
