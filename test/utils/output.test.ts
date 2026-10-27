@@ -390,6 +390,71 @@ describe('deployResultFormatter', () => {
     });
   });
 
+  describe('displayComputeOperations', () => {
+    let tableStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      tableStub = sandbox.stub(Ux.prototype, 'table');
+    });
+
+    it('shows monitor commands for successfully deployed Compute apps', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getFileResponses: () => [
+          {
+            type: 'ComputeApp',
+            fullName: 'orders-api',
+            state: ComponentStatus.Created,
+            filePath: 'force-app/main/default/platformComputeApps/orders-api/orders-api.compute-meta.xml',
+          },
+          {
+            type: 'ComputeApp',
+            fullName: 'billing',
+            state: ComponentStatus.Changed,
+            filePath: 'force-app/main/default/platformComputeApps/billing/billing.compute-meta.xml',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const computeTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Compute provisioning and build queued [2]');
+      });
+      expect(computeTableCall?.args[0]).to.deep.include({
+        data: [
+          { app: 'billing', nextStep: 'sf compute display --name billing' },
+          { app: 'orders-api', nextStep: 'sf compute display --name orders-api' },
+        ],
+        columns: [
+          { key: 'app', name: 'App' },
+          { key: 'nextStep', name: 'Next step' },
+        ],
+      });
+    });
+
+    it('does not show a monitor command for validations', () => {
+      const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {
+        getFileResponses: () => [
+          {
+            type: 'ComputeApp',
+            fullName: 'orders-api',
+            state: ComponentStatus.Created,
+            filePath: 'force-app/main/default/platformComputeApps/orders-api/orders-api.compute-meta.xml',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const computeTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Compute provisioning and build queued');
+      });
+      expect(computeTableCall).to.not.exist;
+    });
+  });
+
   describe('coverage functions', () => {
     describe('getCoverageFormattersOptions', () => {
       it('clover, json', () => {

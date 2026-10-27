@@ -148,6 +148,8 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   }
 
   public display(): void {
+    this.displayTransportOperations();
+    this.displayComputeOperations();
     if (this.verbosity !== 'concise') {
       this.displaySuccesses();
     }
@@ -157,7 +159,6 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     this.maybeCreateRequestedReports();
     this.displayReplacements();
     this.displayNotifications();
-    this.displayTransportOperations();
   }
 
   public determineVerbosity(): Verbosity {
@@ -336,6 +337,35 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         { key: 'status', name: 'Status' },
       ],
       title: tableHeader('Pre-Deploy Operations'),
+      overflow: 'wrap',
+    });
+  }
+
+  private displayComputeOperations(): void {
+    if (this.result.response.status !== RequestStatus.Succeeded || this.result.response.checkOnly) return;
+
+    const apps = [
+      ...new Set(
+        this.relativeFiles
+          .filter(isSdrSuccess)
+          .filter((file) => file.type === 'ComputeApp')
+          .map((file) => file.fullName)
+      ),
+    ];
+    if (!apps.length) return;
+
+    const username = this.flags['target-org']?.getUsername();
+    ux.log();
+    ux.table({
+      data: apps.map((app) => ({
+        app,
+        nextStep: `sf compute display --name ${app}${username ? ` --target-org ${username}` : ''}`,
+      })),
+      columns: [
+        { key: 'app', name: 'App' },
+        { key: 'nextStep', name: 'Next step' },
+      ],
+      title: tableHeader(`Compute provisioning and build queued${apps.length === 1 ? '' : ` [${apps.length}]`}`),
       overflow: 'wrap',
     });
   }
