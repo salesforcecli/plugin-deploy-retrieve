@@ -1460,10 +1460,10 @@
     proxy-agent "^6.5.0"
     yaml "^2.9.0"
 
-"@salesforce/source-deploy-retrieve@^13.8.3":
-  version "13.8.3"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-13.8.3.tgz#01c3bd123ec57a5758191cf63e8e85698a38e1f3"
-  integrity sha512-KBjE+zapmCCBEU8BiVG//WwYsbkkq03A/jCTjuMFH+brob8RkDz6a94Nymhtje7uTMmzxlhZRdx+/2i76+DKYQ==
+"@salesforce/source-deploy-retrieve@^13.10.0", "@salesforce/source-deploy-retrieve@^13.8.3":
+  version "13.10.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-13.10.0.tgz#39688a859d33c5cf886cd18dfe9e67edd5e763f2"
+  integrity sha512-wTZJRHwRLFGC1CVthoc8PsgwrzmYk/sjAbVAVzuKApEx/BVshbod6Ha8gmB0CRidU41LQIHGmKB+LRupdiGvrw==
   dependencies:
     "@salesforce/core" "^9.4.1"
     "@salesforce/kit" "^4.0.0"
