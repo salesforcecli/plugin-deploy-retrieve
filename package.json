@@ -12,7 +12,7 @@
     "@oclif/multi-stage-output": "^1.0.6",
     "@salesforce/apex-node": "^9.0.7",
     "@salesforce/core": "^9.4.1",
-    "@salesforce/kit": "^4.0.1",
+    "@salesforce/kit": "^4.0.8",
     "@salesforce/plugin-info": "^4.0.22",
     "@salesforce/sf-plugins-core": "^13.0.7",
     "@salesforce/source-deploy-retrieve": "^13.8.3",
