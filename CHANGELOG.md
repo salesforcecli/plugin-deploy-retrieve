@@ -1,3 +1,9 @@
+## [4.2.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.25...4.2.26) (2026-10-31)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/kit from 4.0.1 to 4.0.8 ([68347dd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/68347dd10780b401ea51ff9326f001cf89b147d8))
+
 ## [4.2.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.24...4.2.25) (2026-10-31)
 
 ### Bug Fixes
