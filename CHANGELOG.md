@@ -1,3 +1,9 @@
+## [4.2.28](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.27...4.2.28) (2026-11-01)
+
+### Bug Fixes
+
+- **deps:** bump brace-expansion from 1.1.15 to 1.1.21 ([f41b38d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f41b38ddcfb88c10107d7401d3e6f891e876e1c1))
+
 ## [4.2.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.26...4.2.27) (2026-11-01)
 
 ### Bug Fixes
