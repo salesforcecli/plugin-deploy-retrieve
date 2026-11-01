@@ -1,3 +1,9 @@
+## [4.2.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.26...4.2.27) (2026-11-01)
+
+### Bug Fixes
+
+- **deps:** bump follow-redirects ([40ed7a5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/40ed7a5d7ca0905dde14e527d339101efe8fce02))
+
 ## [4.2.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.25...4.2.26) (2026-10-31)
 
 ### Bug Fixes
