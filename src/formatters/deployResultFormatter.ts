@@ -156,6 +156,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     this.maybeCreateRequestedReports();
     this.displayReplacements();
     this.displayNotifications();
+    this.displayDeployExtensions();
   }
 
   public determineVerbosity(): Verbosity {
@@ -317,6 +318,27 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         { key: 'messageText', name: 'Message' },
       ],
       title: tableHeader('Notifications'),
+      overflow: 'wrap',
+    });
+  }
+
+  private displayDeployExtensions(): void {
+    const extensions = ensureArray(this.result.response.deployExtensionResults).filter((ext) => ext?.type);
+    if (!extensions.length) return;
+
+    ux.log();
+    ux.table({
+      data: extensions.map((ext) => ({
+        type: ext.type,
+        status: ext.status,
+        message: ext.status === 'Failed' ? ext.message ?? '' : '',
+      })),
+      columns: [
+        { key: 'type', name: 'Type' },
+        { key: 'status', name: 'Status' },
+        { key: 'message', name: 'Message' },
+      ],
+      title: tableHeader('Deploy Extensions'),
       overflow: 'wrap',
     });
   }
