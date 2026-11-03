@@ -1,3 +1,9 @@
+# [4.3.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.28...4.3.0) (2026-11-03)
+
+### Features
+
+- **W-24557716:** add deploy extension results to deploy results ([#1690](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1690)) ([8e88741](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8e88741901f387935f65fa34383575671a38e298))
+
 ## [4.2.28](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.27...4.2.28) (2026-11-01)
 
 ### Bug Fixes
