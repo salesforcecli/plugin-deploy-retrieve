@@ -326,18 +326,34 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     const extensions = ensureArray(this.result.response.deployExtensionResults).filter((ext) => ext?.type);
     if (!extensions.length) return;
 
+    const tableData = extensions.map((extension) => {
+      if (extension.status === 'Failed') {
+        return {
+          type: extension.type,
+          status: extension.status,
+          message: extension.message ?? '',
+        };
+      }
+
+      return {
+        type: extension.type,
+        status: extension.status,
+      };
+    });
+
+    const hasFailures = tableData.some((extension) => extension.status === 'Failed');
+
+    const tableColumns: Array<{ key: 'type' | 'status' | 'message'; name: string }> = [
+      { key: 'type', name: 'Type' },
+      { key: 'status', name: 'Status' },
+    ];
+
+    if (hasFailures) tableColumns.push({ key: 'message', name: 'Message' });
+
     ux.log();
     ux.table({
-      data: extensions.map((ext) => ({
-        type: ext.type,
-        status: ext.status,
-        message: ext.status === 'Failed' ? ext.message ?? '' : '',
-      })),
-      columns: [
-        { key: 'type', name: 'Type' },
-        { key: 'status', name: 'Status' },
-        { key: 'message', name: 'Message' },
-      ],
+      data: tableData,
+      columns: tableColumns,
       title: tableHeader('Deploy Extensions'),
       overflow: 'wrap',
     });

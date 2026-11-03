@@ -21,20 +21,29 @@ import { Ux } from '@salesforce/sf-plugins-core';
 import { DeployResultFormatter } from '../../src/formatters/deployResultFormatter.js';
 import { getDeployResult } from '../utils/deployResponses.js';
 
-type TableArgs = { title: string; data: Array<{ type: string; status: string; message: string }> };
+type TableArgs = {
+  title: string;
+  data: Array<{ type: string; status: string; message?: string }>;
+  columns: Array<{ key: string; name: string }>;
+};
 
 describe('deployResultFormatter', () => {
   const sandbox = sinon.createSandbox();
   let tableStub: sinon.SinonStub;
 
-  const getExtensionRows = (deployExtensionResults?: DeployExtensionResult | DeployExtensionResult[]) => {
+  const getExtensionTable = (deployExtensionResults?: DeployExtensionResult | DeployExtensionResult[]) => {
     new DeployResultFormatter(getDeployResult('successSync', { deployExtensionResults }), {}).display();
-    const table = tableStub
+    return tableStub
       .getCalls()
       .map((call) => call.args[0] as TableArgs)
       .find(({ title }) => stripVTControlCharacters(title) === 'Deploy Extensions');
-    return table?.data;
   };
+
+  const getExtensionRows = (deployExtensionResults?: DeployExtensionResult | DeployExtensionResult[]) =>
+    getExtensionTable(deployExtensionResults)?.data;
+
+  const getExtensionColumnKeys = (deployExtensionResults?: DeployExtensionResult | DeployExtensionResult[]) =>
+    getExtensionTable(deployExtensionResults)?.columns.map(({ key }) => key);
 
   beforeEach(() => {
     tableStub = sandbox.stub(Ux.prototype, 'table');
@@ -48,14 +57,32 @@ describe('deployResultFormatter', () => {
   describe('deploy extension results', () => {
     it('shows only the status for a successful extension', () => {
       expect(getExtensionRows([{ type: 'Foo', status: 'Succeeded' }])).to.deep.equal([
-        { type: 'Foo', status: 'Succeeded', message: '' },
+        { type: 'Foo', status: 'Succeeded' },
       ]);
     });
 
     it('shows only the status for an extension that is not finished', () => {
       expect(getExtensionRows([{ type: 'Foo', status: 'InProgress', message: 'ignored' }])).to.deep.equal([
-        { type: 'Foo', status: 'InProgress', message: '' },
+        { type: 'Foo', status: 'InProgress' },
       ]);
+    });
+
+    it('omits the Message column when no extension failed', () => {
+      expect(
+        getExtensionColumnKeys([
+          { type: 'Foo', status: 'Succeeded' },
+          { type: 'Bar', status: 'InProgress' },
+        ])
+      ).to.deep.equal(['type', 'status']);
+    });
+
+    it('adds the Message column when any extension failed', () => {
+      expect(
+        getExtensionColumnKeys([
+          { type: 'Foo', status: 'Succeeded' },
+          { type: 'Bar', status: 'Failed', message: 'boom' },
+        ])
+      ).to.deep.equal(['type', 'status', 'message']);
     });
 
     it('shows the message for a failed extension', () => {
@@ -81,7 +108,7 @@ describe('deployResultFormatter', () => {
 
     it('handles a single extension result that is not in an array', () => {
       expect(getExtensionRows({ type: 'Foo', status: 'Succeeded' })).to.deep.equal([
-        { type: 'Foo', status: 'Succeeded', message: '' },
+        { type: 'Foo', status: 'Succeeded' },
       ]);
     });
 
