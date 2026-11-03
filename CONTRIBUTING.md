@@ -14,7 +14,7 @@
 ### One-Time Setup
 
 1. Install [Node.js](https://nodejs.org). Use the version specified in the `engines` field of package.json. If you work with multiple Node versions, consider using [nvm](https://github.com/nvm-sh/nvm).
-1. Install [Yarn](https://yarnpkg.com): `npm install --global yarn`
+1. Install [Yarn v1](https://yarnpkg.com): `npm install --global yarn`
 1. Configure [git commit signing](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification).
 
 ### CLA
