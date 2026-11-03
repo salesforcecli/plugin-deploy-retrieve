@@ -1,3 +1,9 @@
+## [4.3.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.0...4.3.1) (2026-11-03)
+
+### Bug Fixes
+
+- Update Yarn installation instructions ([47601b1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/47601b1821df01319b303d00df21f792c7d1cd41))
+
 # [4.3.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.28...4.3.0) (2026-11-03)
 
 ### Features
