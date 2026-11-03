@@ -350,6 +350,19 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
 
     if (hasFailures) tableColumns.push({ key: 'message', name: 'Message' });
 
+    if (this.verbosity === 'concise') {
+      if (hasFailures) {
+        const failedExtensions = tableData.filter((extension) => extension.status === 'Failed');
+        ux.table({
+          data: failedExtensions,
+          columns: tableColumns,
+          title: tableHeader('Failed Deploy Extensions'),
+          overflow: 'wrap',
+        });
+      }
+      return;
+    }
+
     ux.log();
     ux.table({
       data: tableData,

@@ -119,5 +119,49 @@ describe('deployResultFormatter', () => {
     it('shows no table when the response has no extension results', () => {
       expect(getExtensionRows()).to.equal(undefined);
     });
+
+    describe('with the concise flag', () => {
+      const getConciseExtensionTables = (deployExtensionResults?: DeployExtensionResult | DeployExtensionResult[]) => {
+        new DeployResultFormatter(getDeployResult('successSync', { deployExtensionResults }), {
+          concise: true,
+        }).display();
+        return tableStub
+          .getCalls()
+          .map((call) => call.args[0] as TableArgs)
+          .filter(({ title }) => stripVTControlCharacters(title).endsWith('Deploy Extensions'));
+      };
+
+      it('shows only the failed extensions', () => {
+        const [table] = getConciseExtensionTables([
+          { type: 'Foo', status: 'Succeeded' },
+          { type: 'Bar', status: 'Failed', message: 'boom' },
+          { type: 'Baz', status: 'InProgress' },
+        ]);
+        expect(table.data).to.deep.equal([{ type: 'Bar', status: 'Failed', message: 'boom' }]);
+      });
+
+      it('titles the table "Failed Deploy Extensions"', () => {
+        const tables = getConciseExtensionTables([{ type: 'Foo', status: 'Failed', message: 'boom' }]);
+        expect(tables.map(({ title }) => stripVTControlCharacters(title))).to.deep.equal(['Failed Deploy Extensions']);
+      });
+
+      it('includes the Message column', () => {
+        const [table] = getConciseExtensionTables([{ type: 'Foo', status: 'Failed', message: 'boom' }]);
+        expect(table.columns.map(({ key }) => key)).to.deep.equal(['type', 'status', 'message']);
+      });
+
+      it('shows no table when no extension failed', () => {
+        expect(
+          getConciseExtensionTables([
+            { type: 'Foo', status: 'Succeeded' },
+            { type: 'Bar', status: 'InProgress' },
+          ])
+        ).to.deep.equal([]);
+      });
+
+      it('shows no table when the response has no extension results', () => {
+        expect(getConciseExtensionTables()).to.deep.equal([]);
+      });
+    });
   });
 });
