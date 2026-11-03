@@ -1,7 +1,9 @@
 ## Contributing
 
+1. Please read our [Code of Conduct](CODE_OF_CONDUCT.md).
 1. Please create a new issue [here](https://github.com/forcedotcom/cli/issues) before starting any work so that we can also offer suggestions or let you know if there is already an effort in progress.
 1. Fork this repository (external contributors) or branch off `main` (committers).
+1. [Build the plugin locally](README.md#build).
 1. Create a topic branch based on `main`. This is recommended but not required if contributing using a fork.
 1. Edit the code in your fork/branch.
 1. Write appropriate tests for your changes. Try to achieve at least 95% code coverage on any new code. No pull request will be accepted without associated tests.
