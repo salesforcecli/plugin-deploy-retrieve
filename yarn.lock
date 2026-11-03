@@ -1460,10 +1460,10 @@
     proxy-agent "^6.5.0"
     yaml "^2.9.0"
 
-"@salesforce/source-deploy-retrieve@^13.10.0", "@salesforce/source-deploy-retrieve@^13.8.3":
-  version "13.10.0"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-13.10.0.tgz#39688a859d33c5cf886cd18dfe9e67edd5e763f2"
-  integrity sha512-wTZJRHwRLFGC1CVthoc8PsgwrzmYk/sjAbVAVzuKApEx/BVshbod6Ha8gmB0CRidU41LQIHGmKB+LRupdiGvrw==
+"@salesforce/source-deploy-retrieve@^13.11.0", "@salesforce/source-deploy-retrieve@^13.8.3":
+  version "13.11.0"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-13.11.0.tgz#56c85d2d38b8ead8116ffb209e7e17ca5a919070"
+  integrity sha512-3b66tBuAE5qq0tG5X/8JH+OPjTcqNxyLDUOltVqSM68/6lYBMlnZCxFWR1E8FfGekGNCRbr6JXeTPzFgwnbKQw==
   dependencies:
     "@salesforce/core" "^9.4.1"
     "@salesforce/kit" "^4.0.0"
@@ -2012,15 +2012,10 @@
     debug "^4.4.3"
     ts-api-utils "^2.5.0"
 
-"@typescript-eslint/types@8.72.0", "@typescript-eslint/types@^8.72.0":
+"@typescript-eslint/types@8.72.0", "@typescript-eslint/types@^8.56.0", "@typescript-eslint/types@^8.65.0", "@typescript-eslint/types@^8.72.0":
   version "8.72.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.72.0.tgz#d90bb9954fefa13acbcdb43bb7c0155f74d60fca"
   integrity sha512-Adfoy59kxNEjT5E5fnyrp7GpHYuWs8ONbdohu4ez6IU46qDq8LltG90tLmkucZB2uhYL8mqBjtXqGd8yhfjXqQ==
-
-"@typescript-eslint/types@^8.56.0", "@typescript-eslint/types@^8.65.0":
-  version "8.67.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.67.0.tgz#4a8d00cc1faba5c14feabc60f85b7a32652f34b6"
-  integrity sha512-sBtgslww8nsMYUjhdPBiSyUqSzT8uR6g93A2QXnQC8+cGdjz0CyaOdqHDRJb1AtORbZCNUJBBeFA/tNR2uQmww==
 
 "@typescript-eslint/typescript-estree@8.72.0":
   version "8.72.0"
