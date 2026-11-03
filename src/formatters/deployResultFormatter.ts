@@ -156,6 +156,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     this.maybeCreateRequestedReports();
     this.displayReplacements();
     this.displayNotifications();
+    this.displayDeployExtensions();
   }
 
   public determineVerbosity(): Verbosity {
@@ -317,6 +318,56 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         { key: 'messageText', name: 'Message' },
       ],
       title: tableHeader('Notifications'),
+      overflow: 'wrap',
+    });
+  }
+
+  private displayDeployExtensions(): void {
+    const extensions = ensureArray(this.result.response.deployExtensionResults).filter((ext) => ext?.type);
+    if (!extensions.length) return;
+
+    const tableData = extensions.map((extension) => {
+      if (extension.status === 'Failed') {
+        return {
+          type: extension.type,
+          status: extension.status,
+          message: extension.message ?? '',
+        };
+      }
+
+      return {
+        type: extension.type,
+        status: extension.status,
+      };
+    });
+
+    const hasFailures = tableData.some((extension) => extension.status === 'Failed');
+
+    const tableColumns: Array<{ key: 'type' | 'status' | 'message'; name: string }> = [
+      { key: 'type', name: 'Type' },
+      { key: 'status', name: 'Status' },
+    ];
+
+    if (hasFailures) tableColumns.push({ key: 'message', name: 'Message' });
+
+    if (this.verbosity === 'concise') {
+      if (hasFailures) {
+        const failedExtensions = tableData.filter((extension) => extension.status === 'Failed');
+        ux.table({
+          data: failedExtensions,
+          columns: tableColumns,
+          title: tableHeader('Failed Deploy Extensions'),
+          overflow: 'wrap',
+        });
+      }
+      return;
+    }
+
+    ux.log();
+    ux.table({
+      data: tableData,
+      columns: tableColumns,
+      title: tableHeader('Deploy Extensions'),
       overflow: 'wrap',
     });
   }
