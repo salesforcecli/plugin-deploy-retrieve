@@ -301,9 +301,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
           this.log(`${event.label}: downloading ${event.componentCount} component(s) (${names})`);
         } else if (event.stage === 'complete') {
           this.log(`${event.label}: download complete`);
-        } else if (event.stage === 'error') {
-          this.warn(`${event.label}: download failed${event.errorMessage ? ` — ${event.errorMessage}` : ''}`);
         }
+        // the 'error' stage is reported once, by the error the pipeline rethrows
         return Promise.resolve();
       });
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
