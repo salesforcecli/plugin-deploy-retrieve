@@ -268,9 +268,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         this.log(`${event.label}: uploading ${event.componentCount} component(s) (${names})`);
       } else if (event.stage === 'complete') {
         this.log(`${event.label}: upload complete`);
-      } else if (event.stage === 'error') {
-        this.warn(`${event.label}: upload failed${event.errorMessage ? ` — ${event.errorMessage}` : ''}`);
       }
+      // the 'error' stage is reported once, by the error the pipeline rethrows
       return Promise.resolve();
     });
 
