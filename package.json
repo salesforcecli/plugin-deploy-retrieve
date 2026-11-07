@@ -27,7 +27,7 @@
     "@salesforce/dev-scripts": "^15.0.0",
     "@salesforce/plugin-command-reference": "^3.1.141",
     "@salesforce/schemas": "^1.9.0",
-    "@salesforce/source-testkit": "^2.2.212",
+    "@salesforce/source-testkit": "^2.2.259",
     "@salesforce/ts-sinon": "^1.4.34",
     "@types/chai": "^4.3.17",
     "@types/mocha": "^10.0.10",
