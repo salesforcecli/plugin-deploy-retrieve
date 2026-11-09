@@ -1,3 +1,9 @@
+## [4.3.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.2...4.3.3) (2026-11-09)
+
+### Bug Fixes
+
+- **deps:** bump to source-tracking v8.1.16 to pick up bug fix ([d1ec54e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d1ec54e71be38b8783f3035f863ef17e2e24f1f2))
+
 ## [4.3.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.1...4.3.2) (2026-11-03)
 
 ### Bug Fixes
