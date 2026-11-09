@@ -100,22 +100,33 @@
         "components": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "fullName": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              }
-            },
-            "required": ["fullName", "type"],
-            "additionalProperties": false
+            "$ref": "#/definitions/TransportPlanComponent"
           }
         }
       },
       "required": ["phase", "label", "endpoint", "components"],
       "additionalProperties": false
+    },
+    "TransportPlanComponent": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "destructiveChangesType": {
+          "$ref": "#/definitions/DestructiveChangesType",
+          "description": "Set when the component is deleted by the metadata API instead of deployed."
+        }
+      },
+      "required": ["fullName", "type"],
+      "additionalProperties": false
+    },
+    "DestructiveChangesType": {
+      "type": "string",
+      "enum": ["post", "pre"]
     }
   }
 }

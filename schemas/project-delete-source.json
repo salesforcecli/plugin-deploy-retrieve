@@ -97,6 +97,19 @@
             }
           ]
         },
+        "deployExtensionResults": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeployExtensionResult"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeployExtensionResult"
+              }
+            }
+          ]
+        },
         "deletedSource": {
           "type": "array",
           "items": {
@@ -491,6 +504,26 @@
       "required": ["messageCode", "messageText"],
       "additionalProperties": false
     },
+    "DeployExtensionResult": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/DeployExtensionStatus"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": ["type", "status"],
+      "additionalProperties": false
+    },
+    "DeployExtensionStatus": {
+      "type": "string",
+      "enum": ["New", "InProgress", "Succeeded", "Failed"]
+    },
     "FileResponse": {
       "anyOf": [
         {
@@ -645,6 +678,19 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/DeployNotification"
+              }
+            }
+          ]
+        },
+        "deployExtensionResults": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DeployExtensionResult"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeployExtensionResult"
               }
             }
           ]
