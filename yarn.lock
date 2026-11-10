@@ -1584,10 +1584,10 @@
     cli-progress "^3.12.0"
     terminal-link "^3.0.0"
 
-"@salesforce/source-deploy-retrieve@13.12.0-compute.5", "@salesforce/source-deploy-retrieve@^13.4.6":
-  version "13.12.0-compute.5"
-  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-13.12.0-compute.5.tgz#8e4ad9e126cede9e28ce7a6218ab490e1d070b67"
-  integrity sha512-wYrYZ8/h/97zA53+abaY0btRs0uiAWZZIC9QTSffDjZYRv/c3TCnzXHFG+VNxg2w9Mdy7lILYZ67rGJK0nrXPg==
+"@salesforce/source-deploy-retrieve@13.12.0-compute.6", "@salesforce/source-deploy-retrieve@^13.4.6":
+  version "13.12.0-compute.6"
+  resolved "https://registry.yarnpkg.com/@salesforce/source-deploy-retrieve/-/source-deploy-retrieve-13.12.0-compute.6.tgz#61d9e84243de03cd1ed04642ee0da27159c1b8ae"
+  integrity sha512-qfQOYimLFXJ/U0uCMWUMqen7Srt4VlR/xPiyiPg870BMgWkRaj1qOiwHgEaispO5hy9Et6UUmBrdBiia9lSsqQ==
   dependencies:
     "@salesforce/core" "^9.4.4"
     "@salesforce/kit" "^4.0.9"
