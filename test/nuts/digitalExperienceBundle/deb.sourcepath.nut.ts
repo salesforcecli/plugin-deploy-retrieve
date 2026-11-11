@@ -32,8 +32,9 @@ import {
   assertDocumentDetailPageADelete,
   assertSingleDEBAndItsDECounts,
   assertViewHome,
-  metadataToArray,
   createDocumentDetailPageAInLocal,
+  deployWithRetry,
+  metadataToArray,
 } from './helper.js';
 
 describe('deb -- sourcepath option', () => {
@@ -57,53 +58,30 @@ describe('deb -- sourcepath option', () => {
       );
     });
 
-    it('should deploy complete enhanced lwr sites deb_a and deb_b (including de config, network and customsite)', () => {
-      const deployedSource = execCmd<DeployResultJson>(
-        `project deploy start --source-dir ${DEBS_RELATIVE_PATH} --source-dir ${DIR_RELATIVE_PATHS.DIGITAL_EXPERIENCE_CONFIGS} --source-dir ${DIR_RELATIVE_PATHS.NETWORKS} --source-dir ${DIR_RELATIVE_PATHS.SITES} --json`,
-        {
-          ensureExitCode: 0,
-        }
-      ).jsonOutput?.result.files;
-      assert(deployedSource);
+    it('should deploy complete enhanced lwr sites deb_a and deb_b (including de config, network and customsite)', async () => {
+      const deployedSource = await deployWithRetry(
+        `project deploy start --source-dir ${DEBS_RELATIVE_PATH} --source-dir ${DIR_RELATIVE_PATHS.DIGITAL_EXPERIENCE_CONFIGS} --source-dir ${DIR_RELATIVE_PATHS.NETWORKS} --source-dir ${DIR_RELATIVE_PATHS.SITES} --json`
+      );
       assertAllDEBAndTheirDECounts(deployedSource, 6);
     });
 
     describe('individual metadata type', () => {
-      it('should deploy deb type (all debs - deb_a and deb_b)', () => {
-        const deployedSource = execCmd<DeployResultJson>(
-          `project deploy start --source-dir ${DEBS_RELATIVE_PATH} --json`,
-          {
-            ensureExitCode: 0,
-          }
-        ).jsonOutput?.result.files;
-        assert(deployedSource);
-
+      it('should deploy deb type (all debs - deb_a and deb_b)', async () => {
+        const deployedSource = await deployWithRetry(`project deploy start --source-dir ${DEBS_RELATIVE_PATH} --json`);
         assertAllDEBAndTheirDECounts(deployedSource);
       });
     });
 
     describe('individual metadata item', () => {
-      it('should deploy just deb_a', () => {
-        const deployedSource = execCmd<DeployResultJson>(
-          `project deploy start --source-dir ${DEB_A_RELATIVE_PATH} --json`,
-          {
-            ensureExitCode: 0,
-          }
-        ).jsonOutput?.result.files;
-        assert(deployedSource);
-
+      it('should deploy just deb_a', async () => {
+        const deployedSource = await deployWithRetry(`project deploy start --source-dir ${DEB_A_RELATIVE_PATH} --json`);
         assertSingleDEBAndItsDECounts(deployedSource, FULL_NAMES.DEB_A);
       });
 
-      it('should deploy de_view_home of deb_a', () => {
-        const deployedSource = execCmd<DeployResultJson>(
-          `project deploy start --source-dir ${DIR_RELATIVE_PATHS.DE_VIEW_HOME_A} --json`,
-          {
-            ensureExitCode: 0,
-          }
-        ).jsonOutput?.result.files;
-        assert(deployedSource);
-
+      it('should deploy de_view_home of deb_a', async () => {
+        const deployedSource = await deployWithRetry(
+          `project deploy start --source-dir ${DIR_RELATIVE_PATHS.DE_VIEW_HOME_A} --json`
+        );
         assertViewHome(deployedSource, 'a');
       });
     });
@@ -154,14 +132,9 @@ describe('deb -- sourcepath option', () => {
     it('should deploy new page (view and route de components) of deb_a', async () => {
       createDocumentDetailPageAInLocal(session.project.dir);
 
-      const deployedSource = execCmd<DeployResultJson>(
-        `project deploy start --source-dir ${DIR_RELATIVE_PATHS.DE_VIEW_DOCUMENT_DETAIL_A} --source-dir ${DIR_RELATIVE_PATHS.DE_ROUTE_DOCUMENT_DETAIL_A} --json`,
-        {
-          ensureExitCode: 0,
-        }
-      ).jsonOutput?.result.files;
-      assert(deployedSource);
-
+      const deployedSource = await deployWithRetry(
+        `project deploy start --source-dir ${DIR_RELATIVE_PATHS.DE_VIEW_DOCUMENT_DETAIL_A} --source-dir ${DIR_RELATIVE_PATHS.DE_ROUTE_DOCUMENT_DETAIL_A} --json`
+      );
       assertDocumentDetailPageA(deployedSource);
     });
 
