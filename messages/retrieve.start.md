@@ -27,6 +27,10 @@ To retrieve multiple metadata components, either use multiple --metadata <name> 
   <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes force-app/main/default/objects
   <%= config.bin %> <%= command.id %> --source-dir force-app/main/default/classes --source-dir force-app/main/default/objects
 
+- Retrieve a compute app called MyApp:
+
+  <%= config.bin %> <%= command.id %> --metadata ComputeApp:MyApp --target-org my-org
+
 - Retrieve all Apex classes that are in all package directories defined in the "sfdx-project.json" file:
 
   <%= config.bin %> <%= command.id %> --metadata ApexClass
