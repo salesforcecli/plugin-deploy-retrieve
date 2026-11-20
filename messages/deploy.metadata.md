@@ -64,6 +64,10 @@ To deploy multiple metadata components, either set multiple --metadata <name> fl
 
       <%= config.bin %> <%= command.id %> --metadata ApexClass --test-level RunLocalTests
 
+- Deploy a compute app called MyApp; the app needs a Procfile and an api-spec.yaml in its directory:
+
+      <%= config.bin %> <%= command.id %> --metadata ComputeApp:MyApp --target-org my-org
+
 - Deploy all metadata formatted files in the "MDAPI" directory:
 
       <%= config.bin %> <%= command.id %> --metadata-dir MDAPI
@@ -137,6 +141,10 @@ All child components are included. If you specify this flag, don’t specify --m
 # flags.dry-run.summary
 
 Validate deploy and run Apex tests but don’t save to the org.
+
+# flags.dry-run.description
+
+Compute apps are packaged and checked but not uploaded. The org validates a compute app against the last source you uploaded, not your local files, so an app that was never uploaded fails with "No uploaded source found".
 
 # flags.ignore-conflicts.summary
 

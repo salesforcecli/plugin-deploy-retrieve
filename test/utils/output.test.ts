@@ -453,6 +453,67 @@ describe('deployResultFormatter', () => {
       });
       expect(computeTableCall).to.not.exist;
     });
+
+    it('shows no Compute or pre-deploy output when no ComputeApp is deployed', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getFileResponses: () => [
+          {
+            type: 'ApexClass',
+            fullName: 'ProductController',
+            state: ComponentStatus.Created,
+            filePath: 'force-app/main/default/classes/ProductController.cls',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const titles = tableStub.getCalls().map((call) => (call.args[0] as { title?: string }).title ?? '');
+      expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
+      expect(titles.some((title) => title.includes('Pre-Deploy Operations'))).to.be.false;
+    });
+
+    it('shows Validate in Pre-Deploy Operations but no provisioning table for a validated ComputeApp', () => {
+      const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {
+        getFileResponses: () => [
+          {
+            type: 'ComputeApp',
+            fullName: 'MyApp',
+            state: ComponentStatus.Changed,
+            filePath: 'force-app/main/default/computeApps/MyApp/MyApp.computeApp-meta.xml',
+          },
+        ],
+        getTransportOperationResults: () => [
+          { transportLabel: 'Elastic Compute', operation: 'Validate MyApp', status: 'Succeeded' },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const preDeploy = tableStub
+        .getCalls()
+        .find((call) => (call.args[0] as { title?: string }).title?.includes('Pre-Deploy Operations'));
+      expect((preDeploy?.args[0] as { data: Array<{ operation: string }> }).data[0].operation).to.equal(
+        'Validate MyApp'
+      );
+      const titles = tableStub.getCalls().map((call) => (call.args[0] as { title?: string }).title ?? '');
+      expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
+    });
+
+    it('prints a transport note once under the Pre-Deploy table', () => {
+      const note = 'Packaged and checked only. The org validates against the last uploaded source.';
+      const logStub = sandbox.stub(Ux.prototype, 'log');
+      const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {
+        getTransportOperationResults: () => [
+          { transportLabel: 'Elastic Compute', operation: 'Validate App1', status: 'Succeeded', message: note },
+          { transportLabel: 'Elastic Compute', operation: 'Validate App2', status: 'Succeeded', message: note },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      expect(logStub.getCalls().filter((call) => call.args[0] === note)).to.have.lengthOf(1);
+    });
   });
 
   describe('coverage functions', () => {

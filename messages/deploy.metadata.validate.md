@@ -12,6 +12,8 @@ This command doesn't support source-tracking. When you quick deploy with the res
 
 To validate the deployment of multiple metadata components, either set multiple --metadata <name> flags or a single --metadata flag with multiple names separated by spaces. Enclose names that contain spaces in one set of double quotes. The same syntax applies to --source-dir.
 
+Compute apps (ComputeApp) are packaged and checked, but their source is not uploaded. The org validates against the last source you uploaded, not your local files. A quick deploy of the validation doesn't upload the source either, so run "<%= config.bin %> project deploy start" for the app to publish it.
+
 Note: Don't use this command on sandboxes; the command is intended to be used on production orgs. By default, sandboxes don't run tests during a deploy. If you want to validate a deployment with tests on a sandbox, use "<%= config.bin %> project deploy start --dry-run --test-level RunLocalTests" instead.
 
 # examples
@@ -21,6 +23,10 @@ Note: Don't use this command on sandboxes; the command is intended to be used on
 - Validate the deployment of all source files in the "force-app" directory to the default org:
 
       <%= config.bin %> <%= command.id %> --source-dir force-app
+
+- Validate a compute app called MyApp; the org checks the last uploaded source, not your local files:
+
+      <%= config.bin %> <%= command.id %> --metadata ComputeApp:MyApp --target-org my-org
 
 - Validate the deployment of all source files in two directories: "force-app" and "force-app-utils":
 
