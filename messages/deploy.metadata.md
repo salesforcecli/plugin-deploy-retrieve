@@ -140,7 +140,11 @@ All child components are included. If you specify this flag, don’t specify --m
 
 # flags.dry-run.summary
 
-Validate deploy and run Apex tests but don’t save to the org. Compute apps are packaged and checked but not uploaded.
+Validate deploy and run Apex tests but don’t save to the org.
+
+# flags.dry-run.description
+
+Compute apps are packaged and checked but not uploaded. The org validates a compute app against the last source you uploaded, not your local files, so an app that was never uploaded fails with "No uploaded source found".
 
 # flags.ignore-conflicts.summary
 

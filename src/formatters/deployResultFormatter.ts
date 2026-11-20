@@ -339,6 +339,11 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       title: tableHeader('Pre-Deploy Operations'),
       overflow: 'wrap',
     });
+
+    // Show each distinct note once, e.g. what a dry run did and did not check.
+    new Set(operationResults.map((result) => result.message).filter((message): message is string => !!message)).forEach(
+      (message) => ux.log(message)
+    );
   }
 
   private displayComputeOperations(): void {
