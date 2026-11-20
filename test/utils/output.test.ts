@@ -453,6 +453,30 @@ describe('deployResultFormatter', () => {
       });
       expect(computeTableCall).to.not.exist;
     });
+
+    it('shows no Compute or pre-deploy output when no ComputeApp is deployed', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getFileResponses: () => [
+          {
+            type: 'ApexClass',
+            fullName: 'ProductController',
+            state: ComponentStatus.Created,
+            filePath: 'force-app/main/default/classes/ProductController.cls',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const titles = tableStub.getCalls().map((call) => (call.args[0] as { title?: string }).title ?? '');
+      expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
+      expect(titles.some((title) => title.includes('Pre-Deploy Operations'))).to.be.false;
+    });
+
+    it('does not add deployExtensionResults to the JSON when no ComputeApp is deployed', async () => {
+      const json = await new DeployResultFormatter(getDeployResult('successSync'), {}).getJson();
+      expect(json).to.not.have.property('deployExtensionResults');
+    });
   });
 
   describe('coverage functions', () => {
