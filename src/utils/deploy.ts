@@ -126,14 +126,14 @@ const hasD360Components = (requested: ComponentSet): boolean =>
 
 /**
  * A dataspace-scoped component's sidecar lists the peers it has to be deployed alongside, under
- * `retrieveWith`. So when someone deploys one of these, we also pull in those peers (and their peers,
- * and so on) — but nothing else from the project. To find them we resolve the whole project once,
- * then hand back the requested set plus that closure.
+ * `retrieveWith`. So when someone deploys one of these, we also pull in those peers, and their peers,
+ * but nothing else from the project. To find them we resolve the whole project once, then add that
+ * closure to the requested set.
  */
-async function expandD360Closure(requested: ComponentSet, registry?: RegistryAccess): Promise<ComponentSet> {
+async function expandD360Closure(requested: ComponentSet): Promise<ComponentSet> {
   // Resolve the whole project so we can look up the retrieveWith peers by their sidecar componentName.
   const full = await ComponentSetBuilder.build({ sourcepath: await getPackageDirs() });
-  return expandD360ComponentSet(full, requested, registry);
+  return expandD360ComponentSet(full, requested);
 }
 
 export async function executeDeploy(
@@ -186,7 +186,7 @@ export async function executeDeploy(
     // Dataspace-scoped components need their retrieveWith peers in the same deploy, so pull those in.
     // Every other deploy leaves the component set untouched.
     if (hasD360Components(componentSet)) {
-      componentSet = await expandD360Closure(componentSet, registry);
+      componentSet = await expandD360Closure(componentSet);
     }
     if (componentSet.size === 0) {
       if (opts['source-dir'] ?? opts.manifest ?? opts.metadata ?? throwOnEmpty) {
