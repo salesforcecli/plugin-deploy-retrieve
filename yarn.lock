@@ -1046,10 +1046,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsforce/jsforce-node@^3.10.17", "@jsforce/jsforce-node@^3.10.25", "@jsforce/jsforce-node@^3.12.0":
-  version "3.13.1"
-  resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.13.1.tgz#f7780c42d711a59ec33ba961279b37c15e7d0e44"
-  integrity sha512-vpHhwc+Wcufk9vARzL4oxYSzg8ndNButSn88D6pMImjns7/NTkwPZ9qQwD2F/P4c+A0lwTyDl4Alry0BMgFsTg==
+"@jsforce/jsforce-node@^3.10.17", "@jsforce/jsforce-node@^3.12.0", "@jsforce/jsforce-node@^3.13.1":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@jsforce/jsforce-node/-/jsforce-node-3.13.3.tgz#16942d26ff6dd380b21ba7f003261e67d27db62a"
+  integrity sha512-agRQQDaUiptVn8bdx0AhOkS/oX0HDVldwQivs/rMNnc7RoZHwNumiKXhGGtBrIyb8+mpsaqrVHpTE7n+NYePiw==
   dependencies:
     "@sindresorhus/is" "^4"
     base64url "^3.0.1"
@@ -1269,7 +1269,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oclif/core@^5.0.0", "@oclif/core@^5.1.11", "@oclif/core@^5.1.2", "@oclif/core@^5.1.7", "@oclif/core@^5.1.8":
+"@oclif/core@^5.0.0", "@oclif/core@^5.1.11", "@oclif/core@^5.1.2", "@oclif/core@^5.1.7":
   version "5.1.12"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-5.1.12.tgz#19ea10358248b169b67cfd98eef7be2b43a8cbd4"
   integrity sha512-t8W/ljOb9DIsFNXbfLU4UpZ8+C/X0QuvJOuQXQVCthiw5zSdwKnKoq7HmyBUJwwo28302eiN0rRj8vN9k1U1Mw==
@@ -1526,7 +1526,7 @@
   dependencies:
     "@salesforce/ts-types" "^2.0.12"
 
-"@salesforce/kit@^4.0.0", "@salesforce/kit@^4.0.1", "@salesforce/kit@^4.0.7", "@salesforce/kit@^4.0.8", "@salesforce/kit@^4.0.9":
+"@salesforce/kit@^4.0.0", "@salesforce/kit@^4.0.7", "@salesforce/kit@^4.0.8", "@salesforce/kit@^4.0.9":
   version "4.0.10"
   resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-4.0.10.tgz#1d85a4d6733f1e2edc0b7aa158117716dab92a5f"
   integrity sha512-LXCswafab7AYmpaEvjHmpI3Ueg4dk9c/vFfHSEenVyx/dF1ABlxmf8kpVyox6iRBBh3RvM5/LkQMtXUv7iSd7w==
@@ -1547,16 +1547,16 @@
     debug "^4.4.3"
     handlebars "^4.7.10"
 
-"@salesforce/plugin-info@^4.0.22":
-  version "4.0.22"
-  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-4.0.22.tgz#75fe57159eeba5d12c245d9bffbbb22cb1836b43"
-  integrity sha512-UNcBIxeq2jxGdeWaw88TYBT1R6BszvsrqTiDDRPa6wvEdogccTap0bSg1yLpeo8wxb/G+8N1suy02bhLag228A==
+"@salesforce/plugin-info@^4.0.27":
+  version "4.0.27"
+  resolved "https://registry.yarnpkg.com/@salesforce/plugin-info/-/plugin-info-4.0.27.tgz#6af2a754196d9d937aa3b33b1eb0dc9c59525b6d"
+  integrity sha512-4czNjQsoNx2kvcY76LKE6Yo/wb1vTV3oZf6fhSIj2GMliBWFuX/WxFSTwWbNfD/S9dkW21efjiVFwWW3I7A8eg==
   dependencies:
     "@inquirer/prompts" "^7.10.1"
-    "@jsforce/jsforce-node" "^3.10.25"
-    "@oclif/core" "^5.1.8"
+    "@jsforce/jsforce-node" "^3.13.1"
+    "@oclif/core" "^5.1.11"
     "@salesforce/core" "^9.1.11"
-    "@salesforce/kit" "^4.0.1"
+    "@salesforce/kit" "^4.0.8"
     "@salesforce/sf-plugins-core" "^13.0.4"
     got "^13.0.0"
     marked "^4.3.0"
