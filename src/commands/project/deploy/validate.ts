@@ -202,7 +202,7 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
     });
 
     Lifecycle.getInstance().on('transportStage', (event: TransportStageEvent) => {
-      const progress = formatTransportStage(event, 'upload');
+      const progress = formatTransportStage(event, 'check');
       if (progress) this.log(progress);
       return Promise.resolve();
     });

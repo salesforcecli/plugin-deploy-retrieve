@@ -55,6 +55,11 @@ describe('formatTransportStage', () => {
     );
   });
 
+  it('says checking rather than uploading for check-only deploys', () => {
+    expect(formatTransportStage(event({}), 'check')).to.equal('Elastic Compute: checking 2 component(s) (App1, App2)');
+    expect(formatTransportStage(event({ stage: 'complete' }), 'check')).to.equal('Elastic Compute: check complete');
+  });
+
   it('returns nothing for the error stage, which is reported by the rethrown error', () => {
     expect(formatTransportStage(event({ stage: 'error', errorMessage: 'boom' }), 'upload')).to.be.undefined;
   });

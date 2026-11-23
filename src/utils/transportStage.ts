@@ -21,11 +21,14 @@ const MAX_NAMES = 5;
  * Build the progress line for a transport stage event, e.g.
  * `Elastic Compute: uploading 2 component(s) (App1, App2)`.
  *
+ * Use `check` for check-only deploys (validate, --dry-run), where the transport packages and checks
+ * components without uploading them.
+ *
  * Returns undefined for the `error` stage: that failure is reported once, by the error the pipeline rethrows.
  */
 export const formatTransportStage = (
   event: TransportStageEvent,
-  direction: 'upload' | 'download'
+  direction: 'upload' | 'download' | 'check'
 ): string | undefined => {
   if (event.stage === 'start') {
     const { componentNames } = event;

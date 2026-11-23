@@ -260,7 +260,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     });
 
     lifecycle.on('transportStage', (event: TransportStageEvent) => {
-      const progress = formatTransportStage(event, 'upload');
+      const progress = formatTransportStage(event, flags['dry-run'] ? 'check' : 'upload');
       if (progress && !this.jsonEnabled()) this.log(progress);
       return Promise.resolve();
     });
