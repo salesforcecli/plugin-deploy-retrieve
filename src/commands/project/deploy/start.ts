@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { type DeployVersionData, DeployZipData } from '@salesforce/source-deploy-retrieve';
+import { type DeployVersionData, DeployZipData, type TransportStageEvent } from '@salesforce/source-deploy-retrieve';
 import { Duration } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { SourceConflictError } from '@salesforce/source-tracking';
@@ -31,6 +31,7 @@ import {
   buildPreDestructiveFileResponses,
 } from '../../../utils/deploy.js';
 import { DeployCache } from '../../../utils/deployCache.js';
+import { formatTransportStage } from '../../../utils/transportStage.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
@@ -70,6 +71,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }),
     'dry-run': Flags.boolean({
       summary: messages.getMessage('flags.dry-run.summary'),
+      description: messages.getMessage('flags.dry-run.description'),
       default: false,
     }),
     'ignore-conflicts': Flags.boolean({
@@ -254,6 +256,12 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
         this.zipFileCount = zipData.zipFileCount;
       }
 
+      return Promise.resolve();
+    });
+
+    lifecycle.on('transportStage', (event: TransportStageEvent) => {
+      const progress = formatTransportStage(event, flags['dry-run'] ? 'check' : 'upload');
+      if (progress && !this.jsonEnabled()) this.log(progress);
       return Promise.resolve();
     });
 

@@ -21,6 +21,7 @@ import {
   DeployMessage,
   MetadataApiDeployStatus,
   RequestStatus,
+  TransportOperationResult,
 } from '@salesforce/source-deploy-retrieve';
 import { ensureArray } from '@salesforce/kit';
 
@@ -408,5 +409,6 @@ export const getDeployResult = (
           }));
       }
     },
+    getTransportOperationResults: (): TransportOperationResult[] => [],
   } as DeployResult;
 };

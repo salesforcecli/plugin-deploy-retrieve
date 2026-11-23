@@ -40,6 +40,7 @@ import {
   RegistryAccess,
   RequestStatus,
   ComponentStatus,
+  type TransportStageEvent,
 } from '@salesforce/source-deploy-retrieve';
 import { SfCommand, toHelpSection, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { getString, isString } from '@salesforce/ts-types';
@@ -52,6 +53,7 @@ import { RetrieveResultFormatter } from '../../../formatters/retrieveResultForma
 import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter.js';
 import { getOptionalProject, getPackageDirs } from '../../../utils/project.js';
 import { RetrieveResultJson } from '../../../utils/types.js';
+import { formatTransportStage } from '../../../utils/transportStage.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { promisesQueue } from '../../../utils/promiseQueue.js';
 
@@ -238,7 +240,13 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
       }
     }
 
-    const stages = ['Preparing retrieve request', 'Sending request to org', 'Waiting for the org to respond', 'Done'];
+    const stages = [
+      'Preparing retrieve request',
+      'Sending request to org',
+      'Waiting for the org to respond',
+      'Retrieving Metadata',
+      'Done',
+    ];
     this.ms = new MultiStageOutput<{
       status: string;
       apiData: RetrieveVersionData;
@@ -280,14 +288,20 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
     this.retrieveResult = new RetrieveResult({} as MetadataApiRetrieveStatus, componentSetFromNonDeletes);
 
     if (componentSetFromNonDeletes.size !== 0 || retrieveOpts.packageOptions?.length) {
-      Lifecycle.getInstance().on('apiVersionRetrieve', async (apiData: RetrieveVersionData) =>
+      const lifecycle = Lifecycle.getInstance();
+      lifecycle.on('apiVersionRetrieve', async (apiData: RetrieveVersionData) =>
         Promise.resolve(this.ms?.updateData({ apiData }))
       );
+      lifecycle.on('transportStage', (event: TransportStageEvent) => {
+        const progress = formatTransportStage(event, 'download');
+        if (progress && !this.jsonEnabled()) this.log(progress);
+        return Promise.resolve();
+      });
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
       this.ms.goto('Waiting for the org to respond', { status: 'Pending' });
 
       retrieve.onUpdate((data) => {
-        this.ms?.goto('Waiting for the org to respond', { status: mdTransferMessages.getMessage(data.status) });
+        this.ms?.goto('Retrieving Metadata', { status: mdTransferMessages.getMessage(data.status) });
       });
       retrieve.onFinish((data) => {
         this.ms?.goto('Done', { status: mdTransferMessages.getMessage(data.response.status) });
@@ -305,6 +319,7 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         throw error;
       });
 
+      this.ms.goto('Retrieving Metadata');
       this.retrieveResult = await retrieve.pollStatus(Duration.seconds(1).milliseconds, flags.wait.seconds);
     }
 

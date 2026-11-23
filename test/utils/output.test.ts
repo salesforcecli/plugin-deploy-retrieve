@@ -344,6 +344,221 @@ describe('deployResultFormatter', () => {
     });
   });
 
+  describe('displayTransportOperations', () => {
+    let tableStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      tableStub = sandbox.stub(Ux.prototype, 'table');
+    });
+
+    it('displays one row per transport operation', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getTransportOperationResults: () => [
+          { transportLabel: 'Elastic Compute', operation: 'Upload App1', status: 'Succeeded' },
+          { transportLabel: 'Elastic Compute', operation: 'Upload App2', status: 'Succeeded' },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const operationsTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Pre- and Post-Deploy Operations');
+      });
+      expect(operationsTableCall).to.exist;
+      expect(operationsTableCall?.args[0]).to.deep.include({
+        data: [
+          { transportLabel: 'Elastic Compute', operation: 'Upload App1', status: 'Succeeded' },
+          { transportLabel: 'Elastic Compute', operation: 'Upload App2', status: 'Succeeded' },
+        ],
+        columns: [
+          { key: 'transportLabel', name: 'Provider' },
+          { key: 'operation', name: 'Operation' },
+          { key: 'status', name: 'Status' },
+        ],
+      });
+    });
+
+    it('does not display a table when no transport operations are available', () => {
+      new DeployResultFormatter(getDeployResult('successSync'), {}).display();
+
+      const operationsTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Pre- and Post-Deploy Operations');
+      });
+      expect(operationsTableCall).to.not.exist;
+    });
+
+    it('includes transport operations in the JSON output', async () => {
+      const operations = [{ transportLabel: 'Elastic Compute', operation: 'Upload App1', status: 'Succeeded' }];
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getTransportOperationResults: () => operations,
+      });
+
+      expect(await new DeployResultFormatter(deployResult, {}).getJson())
+        .to.have.property('transportOperations')
+        .deep.equal(operations);
+      expect(await new DeployResultFormatter(deployResult, { concise: true }).getJson())
+        .to.have.property('transportOperations')
+        .deep.equal(operations);
+    });
+
+    it('omits transportOperations from the JSON output when there are none', async () => {
+      const json = await new DeployResultFormatter(getDeployResult('successSync'), {}).getJson();
+      expect(json).to.not.have.property('transportOperations');
+    });
+  });
+
+  describe('displayComputeOperations', () => {
+    let tableStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      tableStub = sandbox.stub(Ux.prototype, 'table');
+    });
+
+    it('shows monitor commands for successfully deployed Compute apps', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getFileResponses: () => [
+          {
+            type: 'ComputeApp',
+            fullName: 'orders-api',
+            state: ComponentStatus.Created,
+            filePath: 'force-app/main/default/computeApps/orders-api/orders-api.computeApp-meta.xml',
+          },
+          {
+            type: 'ComputeApp',
+            fullName: 'billing',
+            state: ComponentStatus.Changed,
+            filePath: 'force-app/main/default/computeApps/billing/billing.computeApp-meta.xml',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const computeTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Compute provisioning and build queued [2]');
+      });
+      expect(computeTableCall?.args[0]).to.deep.include({
+        data: [
+          { app: 'billing', nextStep: 'sf compute display --name billing' },
+          { app: 'orders-api', nextStep: 'sf compute display --name orders-api' },
+        ],
+        columns: [
+          { key: 'app', name: 'App' },
+          { key: 'nextStep', name: 'Next step' },
+        ],
+      });
+    });
+
+    it('does not show a monitor command for deleted or unchanged Compute apps', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getFileResponses: () => [
+          {
+            type: 'ComputeApp',
+            fullName: 'orders-api',
+            state: ComponentStatus.Deleted,
+            filePath: 'force-app/main/default/computeApps/orders-api/orders-api.computeApp-meta.xml',
+          },
+          {
+            type: 'ComputeApp',
+            fullName: 'billing',
+            state: ComponentStatus.Unchanged,
+            filePath: 'force-app/main/default/computeApps/billing/billing.computeApp-meta.xml',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const titles = tableStub.getCalls().map((call) => (call.args[0] as { title?: string }).title ?? '');
+      expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
+    });
+
+    it('does not show a monitor command for validations', () => {
+      const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {
+        getFileResponses: () => [
+          {
+            type: 'ComputeApp',
+            fullName: 'orders-api',
+            state: ComponentStatus.Created,
+            filePath: 'force-app/main/default/computeApps/orders-api/orders-api.computeApp-meta.xml',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const computeTableCall = tableStub.getCalls().find((call) => {
+        const callArg = call.args[0] as { title?: string };
+        return callArg?.title?.includes('Compute provisioning and build queued');
+      });
+      expect(computeTableCall).to.not.exist;
+    });
+
+    it('shows no Compute or transport operations output when no ComputeApp is deployed', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getFileResponses: () => [
+          {
+            type: 'ApexClass',
+            fullName: 'ProductController',
+            state: ComponentStatus.Created,
+            filePath: 'force-app/main/default/classes/ProductController.cls',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const titles = tableStub.getCalls().map((call) => (call.args[0] as { title?: string }).title ?? '');
+      expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
+      expect(titles.some((title) => title.includes('Pre- and Post-Deploy Operations'))).to.be.false;
+    });
+
+    it('shows Validate in Pre- and Post-Deploy Operations but no provisioning table for a validated ComputeApp', () => {
+      const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {
+        getFileResponses: () => [
+          {
+            type: 'ComputeApp',
+            fullName: 'MyApp',
+            state: ComponentStatus.Changed,
+            filePath: 'force-app/main/default/computeApps/MyApp/MyApp.computeApp-meta.xml',
+          },
+        ],
+        getTransportOperationResults: () => [
+          { transportLabel: 'Elastic Compute', operation: 'Validate MyApp', status: 'Succeeded' },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const preDeploy = tableStub
+        .getCalls()
+        .find((call) => (call.args[0] as { title?: string }).title?.includes('Pre- and Post-Deploy Operations'));
+      expect((preDeploy?.args[0] as { data: Array<{ operation: string }> }).data[0].operation).to.equal(
+        'Validate MyApp'
+      );
+      const titles = tableStub.getCalls().map((call) => (call.args[0] as { title?: string }).title ?? '');
+      expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
+    });
+
+    it('prints a transport note once under the transport operations table', () => {
+      const note = 'Packaged and checked only. The org validates against the last uploaded source.';
+      const logStub = sandbox.stub(Ux.prototype, 'log');
+      const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {
+        getTransportOperationResults: () => [
+          { transportLabel: 'Elastic Compute', operation: 'Validate App1', status: 'Succeeded', message: note },
+          { transportLabel: 'Elastic Compute', operation: 'Validate App2', status: 'Succeeded', message: note },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      expect(logStub.getCalls().filter((call) => call.args[0] === note)).to.have.lengthOf(1);
+    });
+  });
+
   describe('coverage functions', () => {
     describe('getCoverageFormattersOptions', () => {
       it('clover, json', () => {

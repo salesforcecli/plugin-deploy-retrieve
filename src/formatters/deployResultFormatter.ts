@@ -26,6 +26,7 @@ import {
   FileResponseFailure,
   FileResponseSuccess,
   RequestStatus,
+  TransportOperationResult,
 } from '@salesforce/source-deploy-retrieve';
 import { Org, SfError, Lifecycle } from '@salesforce/core';
 import { Duration, ensureArray, sortBy } from '@salesforce/kit';
@@ -124,6 +125,9 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       this.createJunitResults();
     }
 
+    const transportOperations = this.getTransportOperationResults();
+    const transportJson = transportOperations.length ? { transportOperations } : {};
+
     if (this.verbosity === 'concise') {
       return {
         ...this.result.response,
@@ -132,11 +136,13 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
           runTestResult: this.result.response.details.runTestResult,
         },
         files: this.absoluteFiles.filter(isSdrFailure),
+        ...transportJson,
       };
     } else {
       return {
         ...this.result.response,
         files: this.absoluteFiles,
+        ...transportJson,
         ...(this.result.replacements?.size
           ? {
               replacements: Object.fromEntries(this.result.replacements),
@@ -147,6 +153,8 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   }
 
   public display(): void {
+    this.displayTransportOperations();
+    this.displayComputeOperations();
     if (this.verbosity !== 'concise') {
       this.displaySuccesses();
     }
@@ -322,6 +330,60 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     });
   }
 
+  private displayTransportOperations(): void {
+    const operationResults = this.getTransportOperationResults();
+    if (!operationResults.length) return;
+
+    ux.log();
+    ux.table({
+      data: operationResults,
+      columns: [
+        { key: 'transportLabel', name: 'Provider' },
+        { key: 'operation', name: 'Operation' },
+        { key: 'status', name: 'Status' },
+      ],
+      title: tableHeader('Pre- and Post-Deploy Operations'),
+      overflow: 'wrap',
+    });
+
+    // Show each distinct note once, e.g. what a dry run did and did not check.
+    new Set(operationResults.map((result) => result.message).filter((message): message is string => !!message)).forEach(
+      (message) => ux.log(message)
+    );
+  }
+
+  private displayComputeOperations(): void {
+    if (this.result.response.status !== RequestStatus.Succeeded || this.result.response.checkOnly) return;
+
+    const apps = [
+      ...new Set(
+        this.relativeFiles
+          .filter(
+            (file) =>
+              file.type === 'ComputeApp' &&
+              (file.state === ComponentStatus.Created || file.state === ComponentStatus.Changed)
+          )
+          .map((file) => file.fullName)
+      ),
+    ];
+    if (!apps.length) return;
+
+    const username = this.flags['target-org']?.getUsername();
+    ux.log();
+    ux.table({
+      data: apps.map((app) => ({
+        app,
+        nextStep: `sf compute display --name ${app}${username ? ` --target-org ${username}` : ''}`,
+      })),
+      columns: [
+        { key: 'app', name: 'App' },
+        { key: 'nextStep', name: 'Next step' },
+      ],
+      title: tableHeader(`Compute provisioning and build queued${apps.length === 1 ? '' : ` [${apps.length}]`}`),
+      overflow: 'wrap',
+    });
+  }
+
   private displayDeployExtensions(): void {
     const extensions = ensureArray(this.result.response.deployExtensionResults).filter((ext) => ext?.type);
     if (!extensions.length) return;
@@ -370,6 +432,10 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       title: tableHeader('Deploy Extensions'),
       overflow: 'wrap',
     });
+  }
+
+  private getTransportOperationResults(): TransportOperationResult[] {
+    return this.result.getTransportOperationResults();
   }
 
   private displaySuccesses(): void {

@@ -70,6 +70,7 @@ export class DeployStages {
    * This is used in the `Failed` stage block for CI output to ensure test failures aren't duplicated when rendering new failures on polling.
    */
   private printedApexTestFailures: Set<string>;
+  private metadataStageStarted = false;
 
   public constructor({ title, jsonEnabled }: Options) {
     this.printedApexTestFailures = new Set();
@@ -226,6 +227,7 @@ export class DeployStages {
     // for sourceMember polling events
     lifecycle.on<SourceMemberPollingEvent>('sourceMemberPollingEvent', (event: SourceMemberPollingEvent) => {
       if (event.original > 0) {
+        this.startMetadataStage();
         return Promise.resolve(this.mso.skipTo('Updating Source Tracking', { sourceMemberPolling: event }));
       }
 
@@ -238,6 +240,7 @@ export class DeployStages {
         data.numberTestsTotal > 0 &&
         data.numberComponentsDeployed > 0
       ) {
+        this.startMetadataStage();
         this.mso.skipTo('Running Tests', { mdapiDeploy: data, status: mdTransferMessages.getMessage(data?.status) });
       } else if (data.status === RequestStatus.Pending) {
         this.mso.skipTo('Waiting for the org to respond', {
@@ -245,7 +248,7 @@ export class DeployStages {
           status: mdTransferMessages.getMessage(data?.status),
         });
       } else {
-        this.mso.skipTo('Deploying Metadata', {
+        this.startMetadataStage({
           mdapiDeploy: data,
           status: mdTransferMessages.getMessage(data?.status),
         });
@@ -253,7 +256,10 @@ export class DeployStages {
     });
 
     deploy.onFinish((data) => {
-      this.mso.updateData({ mdapiDeploy: data.response, status: mdTransferMessages.getMessage(data.response.status) });
+      this.startMetadataStage({
+        mdapiDeploy: data.response,
+        status: mdTransferMessages.getMessage(data.response.status),
+      });
       if (data.response.status === RequestStatus.Failed) {
         this.mso.error();
       } else {
@@ -291,7 +297,17 @@ export class DeployStages {
   }
 
   public done(data?: Partial<Data>): void {
+    this.startMetadataStage();
     this.mso.skipTo('Done', data);
+  }
+
+  private startMetadataStage(data?: Partial<Data>): void {
+    if (this.metadataStageStarted) {
+      if (data) this.mso.updateData(data);
+    } else {
+      this.metadataStageStarted = true;
+      this.mso.skipTo('Deploying Metadata', data);
+    }
   }
 }
 

@@ -24,6 +24,7 @@ import { DeployCache } from '../../../utils/deployCache.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResultFormatter.js';
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
+import { DeployStages } from '../../../utils/deployStages.js';
 import { API, DeployResultJson } from '../../../utils/types.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -86,6 +87,7 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   public static errorCodes = toHelpSection('ERROR CODES', DEPLOY_STATUS_CODES_DESCRIPTIONS);
 
   private deployUrl?: string;
+  private stages?: DeployStages;
 
   public async run(): Promise<DeployResultJson> {
     const [{ flags }, cache] = await Promise.all([this.parse(DeployMetadataQuick), DeployCache.create()]);
@@ -102,14 +104,8 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
       rest: api === API['REST'],
     });
     this.log(`Deploy ID: ${ansis.bold(deployId)}`);
-    this.deployUrl = buildDeployUrl(flags['target-org'], deployId);
+    this.deployUrl = buildDeployUrl(targetOrg, deployId);
     this.log(`Deploy URL: ${ansis.bold(this.deployUrl)}`);
-
-    if (flags.async) {
-      const asyncFormatter = new AsyncDeployResultFormatter(deployId);
-      if (!this.jsonEnabled()) asyncFormatter.display();
-      return this.mixinUrlMeta(await asyncFormatter.getJson());
-    }
 
     const mdapiDeploy = new MetadataApiDeploy({
       usernameOrConnection: connection,
@@ -118,6 +114,23 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
         rest: api === API['REST'],
       },
     });
+    this.stages = new DeployStages({
+      title: 'Deploying Metadata',
+      jsonEnabled: this.jsonEnabled(),
+    });
+    this.stages.start(
+      { username: targetOrg.getUsername(), deploy: mdapiDeploy },
+      { deployUrl: this.deployUrl, verbose: flags.verbose }
+    );
+
+    if (flags.async) {
+      this.stages.done({ status: 'Queued' });
+      this.stages.stop();
+      const asyncFormatter = new AsyncDeployResultFormatter(deployId);
+      if (!this.jsonEnabled()) asyncFormatter.display();
+      return this.mixinUrlMeta(await asyncFormatter.getJson());
+    }
+
     const result = await mdapiDeploy.pollStatus({
       frequency: Duration.seconds(1),
       timeout: flags.wait,
@@ -140,6 +153,8 @@ export default class DeployMetadataQuick extends SfCommand<DeployResultJson> {
   }
 
   protected catch(error: SfCommand.Error): Promise<never> {
+    this.stages?.update({ status: 'Failed' });
+    this.stages?.error();
     if (error.name.includes('INVALID_ID_FIELD')) {
       const err = messages.createError('error.CannotQuickDeploy');
       return super.catch({
