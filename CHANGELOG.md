@@ -1,3 +1,157 @@
+## [4.3.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.3...4.3.4) (2026-11-21)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 4.0.22 to 4.0.27 ([ccf4fbe](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ccf4fbe0bb84396709df402f216d68859d282d31))
+
+## [4.3.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.2...4.3.3) (2026-11-09)
+
+### Bug Fixes
+
+- **deps:** bump to source-tracking v8.1.16 to pick up bug fix ([d1ec54e](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d1ec54e71be38b8783f3035f863ef17e2e24f1f2))
+
+## [4.3.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.1...4.3.2) (2026-11-03)
+
+### Bug Fixes
+
+- bump SDR ([#1692](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1692)) ([88ac46a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/88ac46a30cd48201f14324432321390484489ea0))
+
+## [4.3.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.0...4.3.1) (2026-11-03)
+
+### Bug Fixes
+
+- Update Yarn installation instructions ([47601b1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/47601b1821df01319b303d00df21f792c7d1cd41))
+
+# [4.3.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.28...4.3.0) (2026-11-03)
+
+### Features
+
+- **W-24557716:** add deploy extension results to deploy results ([#1690](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1690)) ([8e88741](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/8e88741901f387935f65fa34383575671a38e298))
+
+## [4.2.28](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.27...4.2.28) (2026-11-01)
+
+### Bug Fixes
+
+- **deps:** bump brace-expansion from 1.1.15 to 1.1.21 ([f41b38d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f41b38ddcfb88c10107d7401d3e6f891e876e1c1))
+
+## [4.2.27](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.26...4.2.27) (2026-11-01)
+
+### Bug Fixes
+
+- **deps:** bump follow-redirects ([40ed7a5](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/40ed7a5d7ca0905dde14e527d339101efe8fce02))
+
+## [4.2.26](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.25...4.2.26) (2026-10-31)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/kit from 4.0.1 to 4.0.8 ([68347dd](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/68347dd10780b401ea51ff9326f001cf89b147d8))
+
+## [4.2.25](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.24...4.2.25) (2026-10-31)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/plugin-info from 4.0.10 to 4.0.22 ([9c3a33a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/9c3a33a29d1354827bd6c8264f3756abf4e29eb3))
+
+## [4.2.24](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.23...4.2.24) (2026-10-27)
+
+## [4.2.23](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.22...4.2.23) (2026-10-25)
+
+### Bug Fixes
+
+- **deps:** bump fast-uri from 3.1.8 to 3.1.9 ([e0f2b6a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/e0f2b6af931fc8f3dafb34ffc6b80313a86fa373))
+
+## [4.2.22](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.21...4.2.22) (2026-10-25)
+
+### Bug Fixes
+
+- **deps:** bump undici from 8.11.2 to 8.12.3 ([f0d60c0](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f0d60c0553ad450da5600f2c1d895216b4f4f60d))
+
+## [4.2.21](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.20...4.2.21) (2026-10-24)
+
+### Bug Fixes
+
+- **deps:** bump zod from 4.4.3 to 4.6.7 ([568f5f9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/568f5f93622da5ae1136f57ee03a886e46477ea5))
+
+## [4.2.20](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.19...4.2.20) (2026-10-24)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/source-deploy-retrieve from 13.4.6 to 13.7.0 ([80948fa](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/80948fa251961e71cdf84e5462e43365620bd4c4))
+
+## [4.2.19](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.18...4.2.19) (2026-10-21)
+
+### Bug Fixes
+
+- **deps:** bump follow-redirects ([d6bae41](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/d6bae41ad77a63e21b683598197a8e0143cfa85c))
+
+## [4.2.18](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.17...4.2.18) (2026-10-17)
+
+### Bug Fixes
+
+- **deps:** bump ip-address from 10.2.0 to 10.7.4 ([ddaf24f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ddaf24f1618d63cb7f93272b8a117bff63fe9449))
+
+## [4.2.17](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.16...4.2.17) (2026-10-17)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/kit from 4.0.0 to 4.0.1 ([a1d1479](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/a1d1479ad4bbde0b8801dc72905fdde891155ae1))
+
+## [4.2.16](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.15...4.2.16) (2026-10-17)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/multi-stage-output from 1.0.0 to 1.0.6 ([465d12d](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/465d12d6f068dd3451ea51f94c64f40e67fa8a8f))
+
+## [4.2.15](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.14...4.2.15) (2026-10-14)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 5.0.0 to 5.1.7 ([3140b65](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/3140b65100a8dfb408569b3e891e8be568341607))
+
+## [4.2.14](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.13...4.2.14) (2026-10-13)
+
+## [4.2.13](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.12...4.2.13) (2026-10-11)
+
+### Bug Fixes
+
+- **deps:** bump nanoid in /test/nuts/specialTypes/nestedLWCProject ([f002d00](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/f002d004fac70525999446fad9e6779d1359d61c))
+
+## [4.2.12](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.11...4.2.12) (2026-10-11)
+
+### Bug Fixes
+
+- **deps:** bump browserslist in /test/nuts/specialTypes/nestedLWCProject ([851141f](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/851141f850b2046c66258ccce4abd86bc32d8acc))
+
+## [4.2.11](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.10...4.2.11) (2026-10-10)
+
+### Bug Fixes
+
+- **deps:** bump joi in /test/nuts/specialTypes/nestedLWCProject ([57cb693](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/57cb69320ac5e0a0927b4725db7f7f0b515c01db))
+
+## [4.2.10](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.9...4.2.10) (2026-10-09)
+
+### Bug Fixes
+
+- **deps:** bump fast-copy from 3.0.2 to 3.1.0 ([957b5a6](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/957b5a626457fdf72c8681293c04225315465b53))
+
+## [4.2.9](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.8...4.2.9) (2026-10-09)
+
+### Bug Fixes
+
+- **deps:** bump handlebars from 4.7.9 to 4.7.10 ([ca9c9e9](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/ca9c9e9260e79e46d31530569b2b2d01ae477f6a))
+
+## [4.2.8](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.7...4.2.8) (2026-10-09)
+
+### Bug Fixes
+
+- **deps:** bump source-map-js from 1.2.1 to 1.2.2 ([bb358ab](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/bb358abc1bf28f855a35cae3261e7ff2af48323f))
+
+## [4.2.7](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.6...4.2.7) (2026-10-07)
+
+### Bug Fixes
+
+- **deps:** bump undici from 8.5.0 to 8.11.2 ([2929371](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/2929371762aecd95464b67f0e7c97a052633483c))
+
 ## [4.2.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.2.5...4.2.6) (2026-10-06)
 
 ### Bug Fixes

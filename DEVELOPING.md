@@ -104,7 +104,7 @@ There should be no differences when running via the Salesforce CLI or using the 
 
 ```bash
 # Link your plugin to the sf cli
-sf plugins:link .
+sf plugins link .
 # To verify
 sf plugins
 # To run
