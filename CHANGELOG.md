@@ -1,3 +1,9 @@
+# [4.4.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.4...4.4.0) (2026-11-23)
+
+### Features
+
+- display transport progress in deploy/retrieve and preview stages @W-24222968@- [#1840](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1840) ([#1676](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1676)) ([df88a89](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/df88a89747fde76b2dc49b40ad07cc79148353e4)), closes [#1693](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1693) [#1702](https://github.com/salesforcecli/plugin-deploy-retrieve/issues/1702)
+
 ## [4.3.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.3...4.3.4) (2026-11-21)
 
 ### Bug Fixes
