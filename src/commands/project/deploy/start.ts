@@ -71,6 +71,7 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     }),
     'dry-run': Flags.boolean({
       summary: messages.getMessage('flags.dry-run.summary'),
+      description: messages.getMessage('flags.dry-run.description'),
       default: false,
     }),
     'ignore-conflicts': Flags.boolean({

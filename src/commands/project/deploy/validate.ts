@@ -17,7 +17,12 @@ import * as os from 'node:os';
 
 import ansis from 'ansis';
 import { EnvironmentVariable, Lifecycle, Messages, OrgConfigProperties, SfError } from '@salesforce/core';
-import { CodeCoverageWarnings, DeployVersionData, RequestStatus } from '@salesforce/source-deploy-retrieve';
+import {
+  CodeCoverageWarnings,
+  DeployVersionData,
+  RequestStatus,
+  type TransportStageEvent,
+} from '@salesforce/source-deploy-retrieve';
 import { Duration, ensureArray } from '@salesforce/kit';
 import { SfCommand, toHelpSection, Flags } from '@salesforce/sf-plugins-core';
 import { DeployStages } from '../../../utils/deployStages.js';
@@ -25,6 +30,7 @@ import { AsyncDeployResultFormatter } from '../../../formatters/asyncDeployResul
 import { DeployResultFormatter } from '../../../formatters/deployResultFormatter.js';
 import { DeployResultJson, TestLevel } from '../../../utils/types.js';
 import { executeDeploy, resolveApi, determineExitCode, validateTests, buildDeployUrl } from '../../../utils/deploy.js';
+import { formatTransportStage } from '../../../utils/transportStage.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
@@ -193,6 +199,12 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
           apiData.webService,
         ])
       );
+    });
+
+    Lifecycle.getInstance().on('transportStage', (event: TransportStageEvent) => {
+      const progress = formatTransportStage(event, 'upload');
+      if (progress) this.log(progress);
+      return Promise.resolve();
     });
 
     const { deploy } = await executeDeploy(

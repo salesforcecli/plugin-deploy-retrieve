@@ -358,8 +358,11 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
     const apps = [
       ...new Set(
         this.relativeFiles
-          .filter(isSdrSuccess)
-          .filter((file) => file.type === 'ComputeApp')
+          .filter(
+            (file) =>
+              file.type === 'ComputeApp' &&
+              (file.state === ComponentStatus.Created || file.state === ComponentStatus.Changed)
+          )
           .map((file) => file.fullName)
       ),
     ];

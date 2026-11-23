@@ -452,6 +452,30 @@ describe('deployResultFormatter', () => {
       });
     });
 
+    it('does not show a monitor command for deleted or unchanged Compute apps', () => {
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getFileResponses: () => [
+          {
+            type: 'ComputeApp',
+            fullName: 'orders-api',
+            state: ComponentStatus.Deleted,
+            filePath: 'force-app/main/default/computeApps/orders-api/orders-api.computeApp-meta.xml',
+          },
+          {
+            type: 'ComputeApp',
+            fullName: 'billing',
+            state: ComponentStatus.Unchanged,
+            filePath: 'force-app/main/default/computeApps/billing/billing.computeApp-meta.xml',
+          },
+        ],
+      });
+
+      new DeployResultFormatter(deployResult, {}).display();
+
+      const titles = tableStub.getCalls().map((call) => (call.args[0] as { title?: string }).title ?? '');
+      expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
+    });
+
     it('does not show a monitor command for validations', () => {
       const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {
         getFileResponses: () => [
