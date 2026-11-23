@@ -30,8 +30,8 @@ import {
   buildDeployUrl,
   buildPreDestructiveFileResponses,
 } from '../../../utils/deploy.js';
-
 import { DeployCache } from '../../../utils/deployCache.js';
+import { formatTransportStage } from '../../../utils/transportStage.js';
 import { DEPLOY_STATUS_CODES_DESCRIPTIONS } from '../../../utils/errorCodes.js';
 import { ConfigVars } from '../../../configMeta.js';
 import { coverageFormattersFlag, fileOrDirFlag, testLevelFlag, testsFlag } from '../../../utils/flags.js';
@@ -259,17 +259,8 @@ export default class DeployMetadata extends SfCommand<DeployResultJson> {
     });
 
     lifecycle.on('transportStage', (event: TransportStageEvent) => {
-      if (this.jsonEnabled()) return Promise.resolve();
-      const names =
-        event.componentNames.length <= 5
-          ? event.componentNames.join(', ')
-          : `${event.componentNames.slice(0, 5).join(', ')} +${event.componentNames.length - 5} more`;
-      if (event.stage === 'start') {
-        this.log(`${event.label}: uploading ${event.componentCount} component(s) (${names})`);
-      } else if (event.stage === 'complete') {
-        this.log(`${event.label}: upload complete`);
-      }
-      // the 'error' stage is reported once, by the error the pipeline rethrows
+      const progress = formatTransportStage(event, 'upload');
+      if (progress && !this.jsonEnabled()) this.log(progress);
       return Promise.resolve();
     });
 

@@ -28,8 +28,9 @@ import {
   MetadataType,
   RequestStatus,
   RetrieveOptions,
+  type TransportStageEvent,
 } from '@salesforce/source-deploy-retrieve';
-import { Messages, SfProject } from '@salesforce/core';
+import { Lifecycle, Messages, SfProject } from '@salesforce/core';
 import { stubMethod, stubInterface } from '@salesforce/ts-sinon';
 import { stubSfCommandUx, stubSpinner, stubUx } from '@salesforce/sf-plugins-core';
 import { MockTestOrgData, TestContext } from '@salesforce/core/testSetup';
@@ -536,5 +537,60 @@ describe('project retrieve start', () => {
     });
     await RetrieveMetadata.run(['--manifest', manifest]);
     expect(sfCommandUxStubs.warn.called).to.be.false;
+  });
+  describe('transport stage progress', () => {
+    const stageEvent = (stage: TransportStageEvent['stage']): TransportStageEvent => ({
+      transportName: 'computeApp',
+      label: 'Elastic Compute',
+      operation: 'retrieve',
+      stage,
+      componentCount: 1,
+      componentNames: ['App1'],
+      ...(stage === 'error' ? { errorMessage: 'boom' } : {}),
+    });
+
+    const emitStagesDuringRetrieve = (): void => {
+      const retrieveHandle = retrieveStub.firstCall?.returnValue as unknown;
+      retrieveStub.callsFake(async () => {
+        const lifecycle = Lifecycle.getInstance();
+        await lifecycle.emit('transportStage', stageEvent('start'));
+        await lifecycle.emit('transportStage', stageEvent('error'));
+        await lifecycle.emit('transportStage', stageEvent('complete'));
+        return (
+          retrieveHandle ?? {
+            onUpdate: pollStub,
+            onFinish: pollStub,
+            pollStatus: pollStub,
+            onCancel: () => {},
+            onError: () => {},
+            retrieveId: retrieveResult.response.id,
+          }
+        );
+      });
+    };
+
+    const loggedLines = (): string[] => sfCommandUxStubs.log.getCalls().map((call) => String(call.args[0]));
+
+    // Lifecycle is a process-wide singleton, so each run's listener would otherwise leak into the next test.
+    afterEach(() => {
+      Lifecycle.getInstance().removeAllListeners('transportStage');
+    });
+
+    it('logs download progress for transport stages, but not the error stage', async () => {
+      emitStagesDuringRetrieve();
+      await RetrieveMetadata.run(['--source-dir', 'somepath']);
+
+      const lines = loggedLines();
+      expect(lines).to.include('Elastic Compute: downloading 1 component(s) (App1)');
+      expect(lines).to.include('Elastic Compute: download complete');
+      expect(lines.some((line) => line.includes('boom'))).to.be.false;
+    });
+
+    it('does not log transport stages with --json', async () => {
+      emitStagesDuringRetrieve();
+      await RetrieveMetadata.run(['--source-dir', 'somepath', '--json']);
+
+      expect(loggedLines().some((line) => line.startsWith('Elastic Compute:'))).to.be.false;
+    });
   });
 });

@@ -351,11 +351,11 @@ describe('deployResultFormatter', () => {
       tableStub = sandbox.stub(Ux.prototype, 'table');
     });
 
-    it('displays one row per pre-deploy operation', () => {
+    it('displays one row per transport operation', () => {
       const deployResult = Object.assign(getDeployResult('successSync'), {
         getTransportOperationResults: () => [
-          { transportLabel: 'Heroku Compute', operation: 'Upload App1', status: 'Succeeded' },
-          { transportLabel: 'Heroku Compute', operation: 'Upload App2', status: 'Succeeded' },
+          { transportLabel: 'Elastic Compute', operation: 'Upload App1', status: 'Succeeded' },
+          { transportLabel: 'Elastic Compute', operation: 'Upload App2', status: 'Succeeded' },
         ],
       });
 
@@ -363,13 +363,13 @@ describe('deployResultFormatter', () => {
 
       const operationsTableCall = tableStub.getCalls().find((call) => {
         const callArg = call.args[0] as { title?: string };
-        return callArg?.title?.includes('Pre-Deploy Operations');
+        return callArg?.title?.includes('Pre- and Post-Deploy Operations');
       });
       expect(operationsTableCall).to.exist;
       expect(operationsTableCall?.args[0]).to.deep.include({
         data: [
-          { transportLabel: 'Heroku Compute', operation: 'Upload App1', status: 'Succeeded' },
-          { transportLabel: 'Heroku Compute', operation: 'Upload App2', status: 'Succeeded' },
+          { transportLabel: 'Elastic Compute', operation: 'Upload App1', status: 'Succeeded' },
+          { transportLabel: 'Elastic Compute', operation: 'Upload App2', status: 'Succeeded' },
         ],
         columns: [
           { key: 'transportLabel', name: 'Provider' },
@@ -384,9 +384,28 @@ describe('deployResultFormatter', () => {
 
       const operationsTableCall = tableStub.getCalls().find((call) => {
         const callArg = call.args[0] as { title?: string };
-        return callArg?.title?.includes('Pre-Deploy Operations');
+        return callArg?.title?.includes('Pre- and Post-Deploy Operations');
       });
       expect(operationsTableCall).to.not.exist;
+    });
+
+    it('includes transport operations in the JSON output', async () => {
+      const operations = [{ transportLabel: 'Elastic Compute', operation: 'Upload App1', status: 'Succeeded' }];
+      const deployResult = Object.assign(getDeployResult('successSync'), {
+        getTransportOperationResults: () => operations,
+      });
+
+      expect(await new DeployResultFormatter(deployResult, {}).getJson())
+        .to.have.property('transportOperations')
+        .deep.equal(operations);
+      expect(await new DeployResultFormatter(deployResult, { concise: true }).getJson())
+        .to.have.property('transportOperations')
+        .deep.equal(operations);
+    });
+
+    it('omits transportOperations from the JSON output when there are none', async () => {
+      const json = await new DeployResultFormatter(getDeployResult('successSync'), {}).getJson();
+      expect(json).to.not.have.property('transportOperations');
     });
   });
 
@@ -454,7 +473,7 @@ describe('deployResultFormatter', () => {
       expect(computeTableCall).to.not.exist;
     });
 
-    it('shows no Compute or pre-deploy output when no ComputeApp is deployed', () => {
+    it('shows no Compute or transport operations output when no ComputeApp is deployed', () => {
       const deployResult = Object.assign(getDeployResult('successSync'), {
         getFileResponses: () => [
           {
@@ -470,10 +489,10 @@ describe('deployResultFormatter', () => {
 
       const titles = tableStub.getCalls().map((call) => (call.args[0] as { title?: string }).title ?? '');
       expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
-      expect(titles.some((title) => title.includes('Pre-Deploy Operations'))).to.be.false;
+      expect(titles.some((title) => title.includes('Pre- and Post-Deploy Operations'))).to.be.false;
     });
 
-    it('shows Validate in Pre-Deploy Operations but no provisioning table for a validated ComputeApp', () => {
+    it('shows Validate in Pre- and Post-Deploy Operations but no provisioning table for a validated ComputeApp', () => {
       const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {
         getFileResponses: () => [
           {
@@ -492,7 +511,7 @@ describe('deployResultFormatter', () => {
 
       const preDeploy = tableStub
         .getCalls()
-        .find((call) => (call.args[0] as { title?: string }).title?.includes('Pre-Deploy Operations'));
+        .find((call) => (call.args[0] as { title?: string }).title?.includes('Pre- and Post-Deploy Operations'));
       expect((preDeploy?.args[0] as { data: Array<{ operation: string }> }).data[0].operation).to.equal(
         'Validate MyApp'
       );
@@ -500,7 +519,7 @@ describe('deployResultFormatter', () => {
       expect(titles.some((title) => title.includes('Compute provisioning and build queued'))).to.be.false;
     });
 
-    it('prints a transport note once under the Pre-Deploy table', () => {
+    it('prints a transport note once under the transport operations table', () => {
       const note = 'Packaged and checked only. The org validates against the last uploaded source.';
       const logStub = sandbox.stub(Ux.prototype, 'log');
       const deployResult = Object.assign(getDeployResult('successSync', { checkOnly: true }), {

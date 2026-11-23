@@ -125,6 +125,9 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
       this.createJunitResults();
     }
 
+    const transportOperations = this.getTransportOperationResults();
+    const transportJson = transportOperations.length ? { transportOperations } : {};
+
     if (this.verbosity === 'concise') {
       return {
         ...this.result.response,
@@ -133,11 +136,13 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
           runTestResult: this.result.response.details.runTestResult,
         },
         files: this.absoluteFiles.filter(isSdrFailure),
+        ...transportJson,
       };
     } else {
       return {
         ...this.result.response,
         files: this.absoluteFiles,
+        ...transportJson,
         ...(this.result.replacements?.size
           ? {
               replacements: Object.fromEntries(this.result.replacements),
@@ -337,7 +342,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
         { key: 'operation', name: 'Operation' },
         { key: 'status', name: 'Status' },
       ],
-      title: tableHeader('Pre-Deploy Operations'),
+      title: tableHeader('Pre- and Post-Deploy Operations'),
       overflow: 'wrap',
     });
 
@@ -427,10 +432,7 @@ export class DeployResultFormatter extends TestResultsFormatter implements Forma
   }
 
   private getTransportOperationResults(): TransportOperationResult[] {
-    const result = this.result as DeployResult & {
-      getTransportOperationResults?: () => TransportOperationResult[];
-    };
-    return result.getTransportOperationResults?.() ?? [];
+    return this.result.getTransportOperationResults();
   }
 
   private displaySuccesses(): void {

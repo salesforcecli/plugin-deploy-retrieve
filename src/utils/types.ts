@@ -24,6 +24,7 @@ import {
   FileResponseFailure,
   FileResponseSuccess,
   ComponentLike,
+  TransportOperationResult,
 } from '@salesforce/source-deploy-retrieve';
 import { isObject } from '@salesforce/ts-types';
 import { DefaultReportOptions } from '@salesforce/apex-node';
@@ -88,6 +89,8 @@ export type DeployResultJson =
   | (MetadataApiDeployStatus & {
       files: FileResponse[];
       replacements?: Record<string, string[]>;
+      /** Operations run by non-metadata transports (e.g. Elastic Compute) before or after the metadata deploy. */
+      transportOperations?: TransportOperationResult[];
       zipSize?: number;
       zipFileCount?: number;
       deployUrl?: string;

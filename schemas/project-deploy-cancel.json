@@ -23,6 +23,13 @@
                 }
               }
             },
+            "transportOperations": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TransportOperationResult"
+              },
+              "description": "Operations run by non-metadata transports (e.g. Elastic Compute) before or after the metadata deploy."
+            },
             "zipSize": {
               "type": "number"
             },
@@ -227,6 +234,29 @@
         }
       },
       "required": ["error", "fullName", "problemType", "state", "type"]
+    },
+    "TransportOperationResult": {
+      "type": "object",
+      "properties": {
+        "transportLabel": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/TransportStatus"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": ["transportLabel", "operation", "status"],
+      "additionalProperties": false
+    },
+    "TransportStatus": {
+      "type": "string",
+      "enum": ["Pending", "InProgress", "Succeeded", "Failed", "Unknown"]
     },
     "RequestStatus": {
       "type": "string",

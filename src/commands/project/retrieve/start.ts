@@ -53,6 +53,7 @@ import { RetrieveResultFormatter } from '../../../formatters/retrieveResultForma
 import { MetadataRetrieveResultFormatter } from '../../../formatters/metadataRetrieveResultFormatter.js';
 import { getOptionalProject, getPackageDirs } from '../../../utils/project.js';
 import { RetrieveResultJson } from '../../../utils/types.js';
+import { formatTransportStage } from '../../../utils/transportStage.js';
 import { writeConflictTable } from '../../../utils/conflicts.js';
 import { promisesQueue } from '../../../utils/promiseQueue.js';
 
@@ -292,17 +293,8 @@ export default class RetrieveMetadata extends SfCommand<RetrieveResultJson> {
         Promise.resolve(this.ms?.updateData({ apiData }))
       );
       lifecycle.on('transportStage', (event: TransportStageEvent) => {
-        if (this.jsonEnabled()) return Promise.resolve();
-        const names =
-          event.componentNames.length <= 5
-            ? event.componentNames.join(', ')
-            : `${event.componentNames.slice(0, 5).join(', ')} +${event.componentNames.length - 5} more`;
-        if (event.stage === 'start') {
-          this.log(`${event.label}: downloading ${event.componentCount} component(s) (${names})`);
-        } else if (event.stage === 'complete') {
-          this.log(`${event.label}: download complete`);
-        }
-        // the 'error' stage is reported once, by the error the pipeline rethrows
+        const progress = formatTransportStage(event, 'download');
+        if (progress && !this.jsonEnabled()) this.log(progress);
         return Promise.resolve();
       });
       const retrieve = await componentSetFromNonDeletes.retrieve(retrieveOpts);
