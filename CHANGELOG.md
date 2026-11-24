@@ -1,3 +1,9 @@
+## [4.4.4](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.4.3...4.4.4) (2026-11-24)
+
+### Bug Fixes
+
+- **deps:** bump js-yaml from 3.14.2 to 3.15.2 ([16421e1](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/16421e177019cda2e239a2ee5d7f6e14d909333a))
+
 ## [4.4.3](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.4.2...4.4.3) (2026-11-24)
 
 ### Bug Fixes
