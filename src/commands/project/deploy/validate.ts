@@ -108,7 +108,8 @@ export default class DeployMetadataValidate extends SfCommand<DeployResultJson> 
         TestLevel.RunSpecifiedTests,
         TestLevel.RunRelevantTests,
       ],
-      default: TestLevel.RunLocalTests,
+      default: async (context) =>
+        Promise.resolve(context.flags.tests ? TestLevel.RunSpecifiedTests : TestLevel.RunLocalTests),
       description: messages.getMessage('flags.test-level.description'),
       summary: messages.getMessage('flags.test-level.summary'),
       helpGroup: testFlags,
