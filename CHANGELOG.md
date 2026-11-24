@@ -1,3 +1,9 @@
+## [4.4.2](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.4.1...4.4.2) (2026-11-24)
+
+### Bug Fixes
+
+- **deps:** bump minimatch in /test/nuts/specialTypes/nestedLWCProject ([052359a](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/052359a330be0dad587837836571904d6181edd7))
+
 ## [4.4.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.4.0...4.4.1) (2026-11-24)
 
 ### Bug Fixes
