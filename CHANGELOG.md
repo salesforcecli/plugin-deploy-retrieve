@@ -1,3 +1,9 @@
+## [4.4.1](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.4.0...4.4.1) (2026-11-24)
+
+### Bug Fixes
+
+- **deps:** bump fast-xml-parser from 5.11.2 to 5.12.1 ([c019e7c](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/c019e7c9df4bebfba65da377c7bfdabda537e164))
+
 # [4.4.0](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.3.4...4.4.0) (2026-11-23)
 
 ### Features
