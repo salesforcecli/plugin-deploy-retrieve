@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 // existing tests do a lot mutation.  I decided to leave rather than refactor
- 
 
 import { join, relative } from 'node:path';
 import * as fs from 'node:fs';
@@ -23,7 +22,46 @@ import { assert, expect } from 'chai';
 import { execCmd, TestSession } from '@salesforce/cli-plugins-testkit';
 import { AuthInfo, Connection } from '@salesforce/core';
 import { PreviewFile, PreviewResult } from '../../../src/utils/previewOutput.js';
+import { DeployResultJson } from '../../../src/utils/types.js';
 import { DIR_RELATIVE_PATHS, FILE_RELATIVE_PATHS, FULL_NAMES, STORE, TYPES } from './constants.js';
+
+const TRANSIENT_ERRORS = ['unable to obtain exclusive access to this record'];
+const RETRY_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 15_000;
+
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+const hasOnlyTransientFailures = (jsonOutput: { status: number; result: DeployResultJson }): boolean => {
+  if (jsonOutput.status === 0) return false;
+  const files = 'files' in jsonOutput.result ? jsonOutput.result.files : [];
+  const failures = files.filter(
+    (f): f is FileResponse & { error: string } => 'error' in f && (f.state as string) === 'Failed'
+  );
+  return (
+    failures.length > 0 && failures.every((f) => TRANSIENT_ERRORS.some((te) => f.error.toLowerCase().includes(te)))
+  );
+};
+
+export async function deployWithRetry(cmd: string): Promise<FileResponse[]> {
+  for (let attempt = 0; attempt <= RETRY_ATTEMPTS; attempt++) {
+    const result = execCmd<DeployResultJson>(cmd, { ensureExitCode: attempt === RETRY_ATTEMPTS ? 0 : undefined });
+    if (result.shellOutput.code === 0) {
+      const files = result.jsonOutput?.result.files;
+      assert(files, 'deploy result should have files');
+      return files;
+    }
+    if (result.jsonOutput && hasOnlyTransientFailures(result.jsonOutput)) {
+      if (attempt < RETRY_ATTEMPTS) {
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(RETRY_DELAY_MS * (attempt + 1));
+        continue;
+      }
+    }
+    // Non-transient failure — fail immediately
+    expect(result.shellOutput.code, `deploy failed with non-transient error: ${result.shellOutput.stdout}`).to.equal(0);
+  }
+  throw new Error('unreachable');
+}
 
 type CustomFileResponses = Array<Pick<FileResponse, 'filePath' | 'fullName' | 'type'>>;
 
