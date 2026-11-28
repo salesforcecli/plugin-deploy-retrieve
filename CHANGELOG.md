@@ -1,3 +1,9 @@
+## [4.4.6](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.4.5...4.4.6) (2026-11-28)
+
+### Bug Fixes
+
+- **deps:** bump @salesforce/apex-node from 9.0.7 to 9.1.18 ([5f35bfe](https://github.com/salesforcecli/plugin-deploy-retrieve/commit/5f35bfe8448da62e8f107c27d909182b07945614))
+
 ## [4.4.5](https://github.com/salesforcecli/plugin-deploy-retrieve/compare/4.4.4...4.4.5) (2026-11-28)
 
 ### Bug Fixes
