@@ -1397,20 +1397,20 @@
     "@pnpm/network.ca-file" "^1.0.1"
     config-chain "^1.1.11"
 
-"@salesforce/apex-node@^9.0.7":
-  version "9.0.7"
-  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-9.0.7.tgz#f7c9f4542514f09b8fa7a0b44c98d05398466d42"
-  integrity sha512-dXDCEE/3VYspBjChATh3teKfEc2ynqB7JZh7cjzJaINXdqIC5n8YkIq2qrLkbdceqBdNn7bC5kID5ljRmfK1SA==
+"@salesforce/apex-node@^9.1.18":
+  version "9.1.18"
+  resolved "https://registry.yarnpkg.com/@salesforce/apex-node/-/apex-node-9.1.18.tgz#195a85e470e640f8db39027856376797b21c4252"
+  integrity sha512-0etM2Ws4Ng0at77XLl745gSr0y6ZhP7UaZABrjVbY6hb7EHWi4shm/ZoMhryhGx719IeoXfTIs5SxibuOlD7KA==
   dependencies:
-    "@salesforce/core" "^9.1.7"
-    "@salesforce/kit" "^4.0.0"
+    "@salesforce/core" "^9.5.0"
+    "@salesforce/kit" "^4.0.10"
     "@types/istanbul-reports" "^3.0.4"
-    fast-glob "^3.3.2"
-    faye "1.4.1"
+    faye "1.5.1"
     istanbul-lib-coverage "^3.2.2"
     istanbul-lib-report "^3.0.1"
     istanbul-reports "^3.2.0"
     json-stream-stringify "^3.1.7"
+    tinyglobby "^0.2.17"
 
 "@salesforce/cli-plugins-testkit@^5.3.81", "@salesforce/cli-plugins-testkit@^5.3.93":
   version "5.3.93"
@@ -1453,7 +1453,7 @@
     ts-retry-promise "^0.8.1"
     zod "^4.1.12"
 
-"@salesforce/core@^9.1.10", "@salesforce/core@^9.1.11", "@salesforce/core@^9.1.7", "@salesforce/core@^9.3.0", "@salesforce/core@^9.4.1", "@salesforce/core@^9.4.4", "@salesforce/core@^9.6.0":
+"@salesforce/core@^9.1.10", "@salesforce/core@^9.1.11", "@salesforce/core@^9.3.0", "@salesforce/core@^9.4.1", "@salesforce/core@^9.4.4", "@salesforce/core@^9.5.0", "@salesforce/core@^9.6.0":
   version "9.6.0"
   resolved "https://registry.yarnpkg.com/@salesforce/core/-/core-9.6.0.tgz#7b5427beb5693c5555dbbdd900df332db9f94bd5"
   integrity sha512-zaKpx/G5ECPPTAD/V9qHsYEXA7Q74KmuUHUyKNMDZts5L6j4SwcJOIjSkOSQQNstQQt0sbaVuY8vEUne+xYjKw==
@@ -1526,7 +1526,7 @@
   dependencies:
     "@salesforce/ts-types" "^2.0.12"
 
-"@salesforce/kit@^4.0.0", "@salesforce/kit@^4.0.7", "@salesforce/kit@^4.0.8", "@salesforce/kit@^4.0.9":
+"@salesforce/kit@^4.0.0", "@salesforce/kit@^4.0.10", "@salesforce/kit@^4.0.7", "@salesforce/kit@^4.0.8", "@salesforce/kit@^4.0.9":
   version "4.0.10"
   resolved "https://registry.yarnpkg.com/@salesforce/kit/-/kit-4.0.10.tgz#1d85a4d6733f1e2edc0b7aa158117716dab92a5f"
   integrity sha512-LXCswafab7AYmpaEvjHmpI3Ueg4dk9c/vFfHSEenVyx/dF1ABlxmf8kpVyox6iRBBh3RvM5/LkQMtXUv7iSd7w==
@@ -2469,11 +2469,6 @@ arrify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
   integrity sha512-3CYzex9M9FGQjCGMGyi6/31c8GJbgb0qGyrx5HWxPd0aCwh4cB2YjMb2Xf9UuoogrMrlO9cTqnB5rI5GHZTcUA==
-
-asap@*:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
-  integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
 assertion-error@^1.1.0:
   version "1.1.0"
@@ -3904,32 +3899,20 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-faye-websocket@>=0.9.1:
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/faye-websocket/-/faye-websocket-0.11.4.tgz#7f0d9275cfdd86a1c963dc8b65fcc451edcbb1da"
-  integrity sha512-CzbClwlXAuiRQAlUyfqPgvPoNKTckTPGfwZV4ZdAhVcP2lh9KUxJg2b5GkE7XbjKQ3YJnQ9z6D9ntLAlB+tP8g==
+faye-websocket@>=0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/faye-websocket/-/faye-websocket-0.12.0.tgz#d935ad27e3e0565420e44f5f6dc0bd966e221a57"
+  integrity sha512-k4SrrWTHgtilT0hPMzS/kbYx9OHs+ITVv3VGqEI45SOsveVyFSES4DA4Opi2UMrba2MZhQe9yjsVz7uwVKa1qQ==
   dependencies:
-    websocket-driver ">=0.5.1"
+    websocket-driver ">=0.8.0"
 
-faye@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/faye/-/faye-1.4.1.tgz#fd2f84e21d62b1cced1bd34968925b466d44a381"
-  integrity sha512-Cg/khikhqlvumHO3efwx2tps2ZgQRjUMrO24G0quz7MMzRYYaEjU224YFXOeuPIvanRegIchVxj6pmHK1W0ikA==
-  dependencies:
-    asap "*"
-    csprng "*"
-    faye-websocket ">=0.9.1"
-    safe-buffer "*"
-    tough-cookie "*"
-    tunnel-agent "*"
-
-faye@^1.4.1, faye@^1.4.2:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/faye/-/faye-1.4.3.tgz#00ac170e0d45b872726f883c68333eb3c521d5d6"
-  integrity sha512-MVbPkUDW31a8tWgdGppHrkuV8+/9eq5u5T5AnrS95HU52YJyy9sx1DYGY7xRL0u/suckuctgxRMunTXIDdxRTg==
+faye@1.5.1, faye@^1.4.1, faye@^1.4.2:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/faye/-/faye-1.5.1.tgz#1096a60e4c261c505d97f66918fdf6e903dbe7e5"
+  integrity sha512-2I62UFeZDfAgwm/GgfPlNmMTc5vG39L7fwe0U2mfRTu4nuLEd7WXtvdyi+N2a6OCu6mpcX9vLIvlu9E8GrZNKA==
   dependencies:
     csprng "*"
-    faye-websocket ">=0.9.1"
+    faye-websocket ">=0.12.0"
     tough-cookie "*"
     tunnel-agent "*"
 
@@ -6719,7 +6702,7 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
-safe-buffer@*, safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.2.1, safe-buffer@~5.2.0:
+safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.2.1, safe-buffer@~5.2.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
@@ -7733,19 +7716,19 @@ webidl-conversions@^3.0.0:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
   integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
 
-websocket-driver@>=0.5.1:
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/websocket-driver/-/websocket-driver-0.7.5.tgz#569d22764ab21f2de20af0e74b411e8ae5a0fa46"
-  integrity sha512-ZL2+3c7kMBdIRCMz6l8jQMHyGVxj+UL+xVk74Ombiciboca8rHa15L86B19E5oh1pL9Ii/uj54gtsIrZGMo6zA==
+websocket-driver@>=0.8.0:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/websocket-driver/-/websocket-driver-0.8.1.tgz#8f0032e8bed906f190a31ae13ecc68bc4b669073"
+  integrity sha512-Pp2Dio/XE6xCI5if9noFTRpnFsHI6g/bC2IPzKWWtjHodk9v8v8xOHE/XQl64fLiNuJlDSK7gsFdVB+W08Z7Zw==
   dependencies:
     http-parser-js ">=0.5.1"
     safe-buffer ">=5.1.0"
-    websocket-extensions ">=0.1.1"
+    websocket-extensions ">=0.2.0"
 
-websocket-extensions@>=0.1.1:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
-  integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
+websocket-extensions@>=0.2.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.3.0.tgz#c91b2cf99bacff7cc520819673b660f138d5647b"
+  integrity sha512-BPYQfFy0QTIibncavBZWTnHn1SpJzq1f+2u6qPN6SnoaTwKNV5U/PKhgddcmGdPZuPnXXw41AYi0u8BqOkbEbA==
 
 whatwg-url@^5.0.0:
   version "5.0.0"
